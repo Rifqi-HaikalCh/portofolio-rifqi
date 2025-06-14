@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rifqi Haikal Chairiansyah</title>
+  <link rel="icon" href="assets/removebg.png" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="mediaqueries.css" />
+  <script>
+    const skillBars = document.querySelectorAll('.progress-bar');
+    skillBars.forEach(skill => {
+      const currentValue = parseFloat(skill.style.width);
+      const humanReadable = (currentValue * 100).toFixed(0);
+      skill.textContent = `${humanReadable}%`;
+    });
+  </script>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <!-- Desktop Navigation -->
+    <nav id="desktop-nav">
+      <div class="logo"></div>
+      <div>
+        <ul class="nav-links">
+          <li><a href="#about">About</a></li>
+          <li><a href="#experience">Experience</a></li>
+          <li><a href="#projects">Projects</a></li>
+          <li><a href="#certificate">Certificate</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Mobile Navigation -->
+    <nav id="hamburger-nav">
+      <div class="logo">Rifqi Haikal</div>
+      <div class="hamburger-menu">
+        <div class="hamburger-icon" onclick="toggleMenu()">
+          <span></span><span></span><span></span>
+        </div>
+        <div class="menu-links">
+          <ul>
+            <li><a href="#about" onclick="toggleMenu()">About</a></li>
+            <li><a href="#experience" onclick="toggleMenu()">Experience</a></li>
+            <li><a href="#projects" onclick="toggleMenu()">Projects</a></li>
+            <li><a href="#certificate" onclick="toggleMenu()">Certificate</a></li>
+            <li><a href="#contact" onclick="toggleMenu()">Contact</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Main Content -->
+  <main>
+    <!-- Hero Section -->
+      <section id="profile">
+        <div class="section__text">
+          <p class="section__text__p1">Hi There!</p>
+          <h1 class="title">I'M <span id="rifqi">RIFQI HAIKAL</span></h1> <!-- "RIFQI HAIKAL" dibungkus dengan span dan id="rifqi" -->
+          <p class="section__text__p2">Undergraduate Informatics Major</p>
+          <div class="btn-container">
+            <a href="assets/CV Rifqi Haikal Chairiansyah.pdf" target="_blank">
+              <button class="btn btn-color-2">Download CV</button>
+            </a>
+            <button class="btn btn-color-1" onclick="location.href='https://wa.me/+6285362784585'">
+              Let's Talk
+            </button>
+          </div>
+          <div id="socials-container">
+            <a href="https://www.linkedin.com/in/rifqi-haikal-chairiansyah-b94b12224/?originalSubdomain=id" target="_blank">
+              <img src="assets/linkedin.png" alt="My LinkedIn profile" class="icon" />
+            </a>
+            <a href="https://github.com/Rifqi-HaikalCh" target="_blank">
+              <img src="assets/github.png" alt="My Github profile" class="icon" />
+            </a>
+          </div>
+        </div>
+      </section>
+    <!-- <section id="profile">
+      <div class="section__text">
+        <p class="section__text__p1">Hi There!</p>
+        <h1 class="title">I'M <span id="rifqi">RIFQI HAIKAL</span></h1>
+        <p class="section__text__p2">Undergraduate Informatics Major</p>
+        <div class="btn-container">
+          <a href="assets/CV Rifqi Haikal Chairiansyah.pdf" target="_blank">
+            <button class="btn btn-color-2">Download CV</button>
+          </a>
+          <button class="btn btn-color-1" onclick="location.href='https://wa.me/+6285362784585'">
+            Let's Talk
+          </button>
+        </div>
+        <div id="socials-container">
+          <a href="https://www.linkedin.com/in/rifqi-haikal-chairiansyah-b94b12224/?originalSubdomain=id" target="_blank">
+            <img src="assets/linkedin.png" alt="My LinkedIn profile" class="icon" />
+          </a>
+          <a href="https://github.com/Rifqi-HaikalCh" target="_blank">
+            <img src="assets/github.png" alt="My Github profile" class="icon" />
+          </a>
+        </div>
+      </div>
+    </section> -->
+
+<!-- Bagian About -->
+<section id="about">
+  <div class="section-header">
+    <p class="section-subtitle">Get To Know More</p>
+    <h2 class="section-title">About <span class="highlight">Me</span></h2>
+  </div>
+
+  <!-- Konten About -->
+  <div class="about-content">
+    <!-- Gambar Profil -->
+    <div class="about-image-container">
+      <img src="assets/Profile.jpg" alt="Profile Picture" />
+    </div>
+
+    <!-- Detail tentang pengalaman dan pendidikan -->
+    <article class="about-details">
+      <div class="info-cards">
+        <!-- Kartu Pengalaman -->
+        <div class="info-card">
+          <img src="assets/experience.png" alt="Experience Icon" class="icon" />
+          <h3>Experience</h3>
+          <p>Student Trainee<br>Dicoding X MySkills</p>
+        </div>
+
+        <!-- Kartu Pendidikan -->
+        <div class="info-card">
+          <img src="assets/education.png" alt="Education Icon" class="icon" />
+          <h3>Education</h3>
+          <p>Undergraduate<br>Informatics</p>
+        </div>
+      </div>
+
+      <!-- Deskripsi -->
+      <div class="about-text">
+        <p>
+          A curious teenager experimenting with code to a seasoned Front-End Web Developer, Web Designer, and UI/UX enthusiast reflects his unwavering dedication to creating exceptional digital experiences. The ability to seamlessly integrate design and development has left a lasting mark on the web development landscape, and continues to inspire and empower others in the field. With a passion for excellence and an eye for innovation, contributions to the world of web development are sure to be nothing short of extraordinary.
+        </p>
+      </div>
+    </article>
+  </div>
+</section>
+
+
+    <!-- <section id="about">
+      <div class="section-header">
+        <p class="section-subtitle">Get To Know More</p>
+        <h2 class="section-title">About <span class="highlight">Me</span></h2>
+      </div>
+      <div class="about-content">
+        <div class="about-image-container">
+          <img src="assets/Profile.jpg" alt="Profile Picture" class="about-image" />
+        </div>
+        <article class="about-details">
+          <div class="info-cards">
+            <div class="info-card">
+              <img src="assets/experience.png" alt="Experience" class="icon" />
+              <h3>Experience</h3>
+              <p>Student Trainee<br>Dicoding X MySkills</p>
+            </div>
+            <div class="info-card">
+              <img src="assets/education.png" alt="Education" class="icon" />
+              <h3>Education</h3>
+              <p>Undergraduate<br>Informatics</p>
+            </div>
+          </div>
+          <div class="about-text">
+            <p>
+              A curious teenager experimenting with code to a seasoned Front-End Web Developer, Web Designer, and UI/UX enthusiast...
+            </p>
+          </div>
+        </article>
+      </div>
+    </section> -->
+
+
+      <!-- HTML Section untuk Experience dengan Skill Bars -->
+  <section id="experience">
+    <div class="section-header">
+      <p class="section-subtitle">This is my skills</p>
+      <h2 class="section-title">Exper<span class="highlight">ience</span></h2>
+    </div>
+    
+    <div class="skills-container">
+      <div class="skill">
+        <h3>HTML/CSS</h3>
+        <div class="progress">
+          <div class="progress-bar" style="width: 80%;"></div>
+        </div>
+      </div>
+      <div class="skill">
+        <h3>Bahasa Indonesia</h3>
+        <div class="progress">
+          <div class="progress-bar" style="width: 99%;"></div>
+        </div>
+      </div>
+      <div class="skill">
+        <h3>JavaScript</h3>
+        <div class="progress">
+          <div class="progress-bar" style="width: 40%;"></div>
+        </div>
+      </div>
+      <div class="skill">
+        <h3>English</h3>
+        <div class="progress">
+          <div class="progress-bar" style="width: 70%;"></div>
+        </div>
+      </div>
+      <div class="skill">
+        <h3>SQL Database</h3>
+        <div class="progress">
+          <div class="progress-bar" style="width: 30%;"></div>
+        </div>
+      </div>
+      <div class="skill">
+        <h3>Arabic</h3>
+        <div class="progress">
+          <div class="progress-bar" style="width: 50%;"></div>
+        </div>
+      </div>
+      <div class="skill">
+        <h3>Figma</h3>
+        <div class="progress">
+          <div class="progress-bar" style="width: 70%;"></div>
+        </div>
+      </div>
+      <div class="skill">
+        <h3>Turkish</h3>
+        <div class="progress">
+          <div class="progress-bar" style="width: 20%;"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+    <!-- Projects Section -->
+      <section id="projects">
+        <div class="section-header">
+          <p class="section-subtitle">Browse My Recent</p>
+          <h2 class="section-title">Proj<span class="highlight">ects</span></h2>
+        </div>
+        <div class="projects-container">
+          <!-- Project Card 1 -->
+          <div class="project-card">
+            <div class="project-image-container">
+              <img src="assets/web1.png" alt="Redesign Campus Website" class="project-image" />
+            </div>
+            <h3 class="project-title">Redesign Campus Website</h3>
+            <div class="project-buttons">
+              <button class="btn btn-outline" onclick="location.href='https://www.figma.com/file/rileM7AuecCrGEnA0soMd1/RE-DESIGN-WEBSITE-DEL?type=design&node-id=0%3A1&mode=design&t=sRcaA5pLCqWAnsin-1'">Figma</button>
+              <a href="assets/RE-DESIGN WEBSITE DEL.pdf">
+                <button class="btn btn-outline">View</button>
+              </a>
+            </div>
+          </div>
+          
+          <!-- Project Card 2 -->
+          <div class="project-card">
+            <div class="project-image-container">
+              <img src="assets/Redesign Perpustakaan IT Del.png" alt="Redesign Library Website" class="project-image" />
+            </div>
+            <h3 class="project-title">Redesign Library Website</h3>
+            <div class="project-buttons">
+              <button class="btn btn-outline" onclick="location.href='https://www.figma.com/file/wPzYQukHngynAvLdEUx6jj/Redesign-Perpustakaan-IT-Del?type=design&node-id=0%3A1&mode=design&t=htMWCGVlRIhpmpzQ-1'">Figma</button>
+              <a href="assets/Redesign Perpustakaan IT Del.pdf">
+                <button class="btn btn-outline">View</button>
+              </a>
+            </div>
+          </div>
+          
+          <!-- Project Card 3 -->
+          <div class="project-card">
+            <div class="project-image-container">
+              <img src="assets/game.jpg" alt="Project MiniGame Website" class="project-image" />
+            </div>
+            <h3 class="project-title">Project MiniGame Website</h3>
+            <div class="project-buttons">
+              <button class="btn btn-outline" onclick="location.href='https://github.com/'">Github</button>
+              <a href="https://rifqi-haikalch.github.io/praktikum_w6/">
+                <button class="btn btn-outline">View</button>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    <!-- Certificate Section -->
+      <section id="certificate">
+        <div class="section-header">
+          <p class="section-subtitle">There is what i achieved</p>
+          <h2 class="section-title">Certi<span class="highlight">ficate</span></h2>
+        </div>
+        
+        <!-- Baris Pertama -->
+        <div class="certificate-container">
+          <!-- Certificate Card 1 -->
+          <div class="certificate-card">
+            <div class="certificate-image-container">
+              <img src="assets/p1.png" alt="IELTS Introduction Certificate" class="certificate-image" />
+            </div>
+          </div>
+          
+          <!-- Certificate Card 2 -->
+          <div class="certificate-card">
+            <div class="certificate-image-container">
+              <img src="assets/p2.png" alt="IELTS Listening Certificate" class="certificate-image" />
+            </div>
+          </div>
+          
+          <!-- Certificate Card 3 -->
+          <div class="certificate-card">
+            <div class="certificate-image-container">
+              <img src="assets/p3.png" alt="IELTS Recognizing Certificate" class="certificate-image" />
+            </div>
+          </div>
+        </div>
+        
+        <!-- Baris Kedua -->
+        <div class="certificate-container">
+          <!-- Certificate Card 4 -->
+          <div class="certificate-card">
+            <div class="certificate-image-container">
+              <img src="assets/p5.png" alt="IELTS Actions Certificate" class="certificate-image" />
+            </div>
+          </div>
+          
+          <!-- Certificate Card 5 -->
+          <div class="certificate-card">
+            <div class="certificate-image-container">
+              <img src="assets/p4.png" alt="IELTS Places Certificate" class="certificate-image" />
+            </div>
+          </div>
+          
+          <!-- Certificate Card 6 -->
+          <div class="certificate-card">
+            <div class="certificate-image-container">
+              <img src="assets/p6.png" alt="IELTS Following Certificate" class="certificate-image" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Contact Section yang Diperbarui -->
+<section id="contact">
+  <div class="section-header">
+    <p class="section-subtitle">Get in Touch</p>
+    <h2 class="section-title">Contact <span class="highlight">Me</span></h2>
+  </div>
+  
+  <div class="contact-container">
+    <!-- Form Bagian -->
+    <div class="contact-form-container">
+      <form id="contact-form" onsubmit="return validateForm()">
+        <div class="form-group">
+          <input type="text" id="name" name="name" placeholder="Name" required>
+        </div>
+        
+        <div class="form-group">
+          <input type="email" id="email" name="email" placeholder="Email" required>
+        </div>
+        
+        <div class="form-group">
+          <textarea id="message" name="message" rows="6" placeholder="Message" required></textarea>
+        </div>
+        
+        <div class="form-group">
+          <button type="submit" class="submit-btn">Send Message</button>
+        </div>
+      </form>
+    </div>
+    
+    <!-- Info Kontak Bagian -->
+    <div class="contact-info-container">
+      <!-- Address -->
+      <div class="contact-info-item">
+        <div class="contact-icon">
+          <i class="location-icon"></i>
+        </div>
+        <div class="contact-details">
+          <h3>Address</h3>
+          <p>Medan, Sumatera Utara</p>
+        </div>
+      </div>
+      
+      <!-- Phone -->
+      <div class="contact-info-item">
+        <div class="contact-icon">
+          <i class="phone-icon"></i>
+        </div>
+        <div class="contact-details">
+          <h3>Phone</h3>
+          <p>+62853-6278-4585</p>
+        </div>
+      </div>
+      
+      <!-- Email -->
+      <div class="contact-info-item">
+        <div class="contact-icon">
+          <i class="email-icon"></i>
+        </div>
+        <div class="contact-details">
+          <h3>Email</h3>
+          <p>r.haikal1610@gmail.com</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+      <!-- Contact Links Container -->
+      <div class="contact-links-container">
+        <a href="mailto:r.haikal1610@gmail.com" class="contact-link">
+          <div class="contact-link-icon email-link-icon"></div>
+          <span>r.haikal1610@gmail.com</span>
+        </a>
+        
+        <a href="https://www.linkedin.com/in/rifqi-haikal-chairiansyah-b94b12224/?originalSubdomain=id" class="contact-link" target="_blank">
+          <div class="contact-link-icon linkedin-link-icon"></div>
+          <span>LinkedIn</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-container">
+      <nav class="footer-nav">
+        <ul class="footer-links">
+          <li><a href="#about">About</a></li>
+          <li><a href="#experience">Experience</a></li>
+          <li><a href="#projects">Projects</a></li>
+          <li><a href="#certificate">Certificate</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+      <div class="copyright">
+        <p>&copy; 2023 Rifqi Haikal. All Rights Reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
