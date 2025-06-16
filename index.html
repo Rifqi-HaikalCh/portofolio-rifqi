@@ -1,449 +1,1546 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Rifqi Haikal Chairiansyah</title>
-  <link rel="icon" href="assets/removebg.png" />
-  <link rel="stylesheet" href="style.css" />
-  <link rel="stylesheet" href="mediaqueries.css" />
-  <script>
-    const skillBars = document.querySelectorAll('.progress-bar');
-    skillBars.forEach(skill => {
-      const currentValue = parseFloat(skill.style.width);
-      const humanReadable = (currentValue * 100).toFixed(0);
-      skill.textContent = `${humanReadable}%`;
-    });
-  </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rifqi Haikal Chairiansyah - Portfolio</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-green: #10B981;
+            --secondary-green: #059669;
+            --dark-green: #047857;
+            --light-green: #D1FAE5;
+            --text-dark: #1F2937;
+            --text-light: #6B7280;
+            --bg-white: #FFFFFF;
+            --bg-light: #F9FAFB;
+            --shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            --shadow-hover: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 50%, #f0fdf4 100%);
+        }
+
+        .animated-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="%2310B981" opacity="0.1"><animate attributeName="cy" values="20;80;20" dur="3s" repeatCount="indefinite"/></circle><circle cx="80" cy="80" r="2" fill="%23059669" opacity="0.1"><animate attributeName="cy" values="80;20;80" dur="4s" repeatCount="indefinite"/></circle><circle cx="40" cy="60" r="1.5" fill="%2310B981" opacity="0.15"><animate attributeName="cx" values="40;60;40" dur="2s" repeatCount="indefinite"/></circle></svg>') repeat;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-light);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-green);
+            border-radius: 4px;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: rgba(255, 255, 255, 0.95) !important;
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--primary-green) !important;
+        }
+
+        .nav-link {
+            font-weight: 500;
+            color: var(--text-dark) !important;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-green) !important;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 50%;
+            background-color: var(--primary-green);
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+            left: 0;
+        }
+
+        .language-switch {
+            background: var(--primary-green);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .language-switch:hover {
+            background: var(--secondary-green);
+            transform: translateY(-2px);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            z-index: 1;
+        }
+
+        .hero-title {
+            font-size: 4rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            color: var(--text-light);
+            margin-bottom: 2rem;
+        }
+
+        .typing-text {
+            color: var(--primary-green);
+            font-weight: 600;
+        }
+
+        .btn-primary-custom {
+            background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary-custom:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .btn-outline-custom {
+            border: 2px solid var(--primary-green);
+            color: var(--primary-green);
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: transparent;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-custom:hover {
+            background: var(--primary-green);
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        .social-links {
+            margin-top: 2rem;
+        }
+
+        .social-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            background: white;
+            color: var(--primary-green);
+            border-radius: 50%;
+            margin: 0 10px;
+            font-size: 1.2rem;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .social-icon:hover {
+            background: var(--primary-green);
+            color: white;
+            transform: translateY(-5px) rotate(360deg);
+        }
+
+        /* About Section */
+        .about-card {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .about-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
+        }
+
+        .about-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .profile-img {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid var(--primary-green);
+            margin-bottom: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .profile-img:hover {
+            transform: scale(1.05);
+        }
+
+        /* Skills Section */
+        .skill-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            height: 100%;
+            border: 1px solid rgba(16, 185, 129, 0.1);
+        }
+
+        .skill-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-hover);
+            border-color: var(--primary-green);
+        }
+
+        .skill-icon {
+            font-size: 3rem;
+            color: var(--primary-green);
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .skill-card:hover .skill-icon {
+            transform: scale(1.2) rotate(360deg);
+        }
+
+        .skill-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-dark);
+        }
+
+        .skill-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .skill-list li {
+            background: var(--light-green);
+            color: var(--dark-green);
+            padding: 0.5rem 1rem;
+            margin: 0.5rem 0;
+            border-radius: 20px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .skill-list li:hover {
+            background: var(--primary-green);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        /* Experience Section */
+        .timeline {
+            position: relative;
+            padding: 2rem 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
+            transform: translateX(-50%);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin: 2rem 0;
+            width: 50%;
+        }
+
+        .timeline-item:nth-child(odd) {
+            left: 0;
+            padding-right: 2rem;
+        }
+
+        .timeline-item:nth-child(even) {
+            left: 50%;
+            padding-left: 2rem;
+        }
+
+        .timeline-content {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .timeline-content:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .timeline-content::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            width: 0;
+            height: 0;
+            border: 10px solid;
+        }
+
+        .timeline-item:nth-child(odd) .timeline-content::before {
+            right: -20px;
+            border-color: transparent transparent transparent white;
+        }
+
+        .timeline-item:nth-child(even) .timeline-content::before {
+            left: -20px;
+            border-color: transparent white transparent transparent;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            top: 20px;
+            width: 20px;
+            height: 20px;
+            background: var(--primary-green);
+            border-radius: 50%;
+            border: 4px solid white;
+            box-shadow: var(--shadow);
+        }
+
+        .timeline-item:nth-child(odd) .timeline-dot {
+            right: -10px;
+        }
+
+        .timeline-item:nth-child(even) .timeline-dot {
+            left: -10px;
+        }
+
+        /* Project Cards */
+        .project-card, .certificate-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            height: 100%;
+            position: relative;
+        }
+
+        .project-card:hover, .certificate-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .project-img, .certificate-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            transition: all 0.3s ease;
+        }
+
+        .project-card:hover .project-img,
+        .certificate-card:hover .certificate-img {
+            transform: scale(1.1);
+        }
+
+        .project-content, .certificate-content {
+            padding: 2rem;
+        }
+
+        .project-title, .certificate-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-dark);
+        }
+
+        .project-description, .certificate-description {
+            color: var(--text-light);
+            margin-bottom: 1.5rem;
+        }
+
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .tech-badge {
+            background: var(--light-green);
+            color: var(--dark-green);
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .project-links a {
+            display: inline-flex;
+            align-items: center;
+            background: var(--primary-green);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            text-decoration: none;
+            margin-right: 0.5rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .project-links a:hover {
+            background: var(--secondary-green);
+            transform: translateY(-2px);
+        }
+
+        /* Contact Form */
+        .contact-form {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: var(--shadow);
+        }
+
+        .form-control {
+            border: 2px solid rgba(16, 185, 129, 0.1);
+            border-radius: 10px;
+            padding: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 0.2rem rgba(16, 185, 129, 0.25);
+        }
+
+        /* Section Headings */
+        .section-heading {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-title {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+        }
+
+        .section-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-light);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .timeline::before {
+                left: 20px;
+            }
+
+            .timeline-item {
+                width: 100%;
+                left: 0 !important;
+                padding-left: 3rem !important;
+                padding-right: 0 !important;
+            }
+
+            .timeline-content::before {
+                left: -20px !important;
+                border-color: transparent white transparent transparent !important;
+            }
+
+            .timeline-dot {
+                left: 10px !important;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid var(--light-green);
+            border-top: 5px solid var(--primary-green);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Custom Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        /* Floating Elements */
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+
+        @keyframes floating {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+    </style>
 </head>
 <body>
-  <!-- Header -->
-  <header>
-    <!-- Desktop Navigation -->
-    <nav id="desktop-nav">
-      <div class="logo"></div>
-      <div>
-        <ul class="nav-links">
-          <li><a href="#about">About</a></li>
-          <li><a href="#experience">Experience</a></li>
-          <li><a href="#projects">Projects</a></li>
-          <li><a href="#certificate">Certificate</a></li>
-          <li><a href="#contact">Contact</a></li>
-        </ul>
-      </div>
-    </nav>
+    <!-- Loading Screen -->
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+    </div>
 
-    <!-- Mobile Navigation -->
-    <nav id="hamburger-nav">
-      <div class="logo">Rifqi Haikal</div>
-      <div class="hamburger-menu">
-        <div class="hamburger-icon" onclick="toggleMenu()">
-          <span></span><span></span><span></span>
-        </div>
-        <div class="menu-links">
-          <ul>
-            <li><a href="#about" onclick="toggleMenu()">About</a></li>
-            <li><a href="#experience" onclick="toggleMenu()">Experience</a></li>
-            <li><a href="#projects" onclick="toggleMenu()">Projects</a></li>
-            <li><a href="#certificate" onclick="toggleMenu()">Certificate</a></li>
-            <li><a href="#contact" onclick="toggleMenu()">Contact</a></li>
-          </ul>
-        </div>
-      </div>
-    </nav>
-  </header>
+    <!-- Animated Background -->
+    <div class="animated-bg"></div>
 
-  <!-- Main Content -->
-  <main>
-    <!-- Hero Section -->
-      <section id="profile">
-        <div class="section__text">
-          <p class="section__text__p1">Hi There!</p>
-          <h1 class="title">I'M <span id="rifqi">RIFQI HAIKAL</span></h1> <!-- "RIFQI HAIKAL" dibungkus dengan span dan id="rifqi" -->
-          <p class="section__text__p2">Undergraduate Informatics Major</p>
-          <div class="btn-container">
-            <a href="assets/CV Rifqi Haikal Chairiansyah.pdf" target="_blank">
-              <button class="btn btn-color-2">Download CV</button>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#home">
+                <i class="fas fa-code"></i> Rifqi Haikal
             </a>
-            <button class="btn btn-color-1" onclick="location.href='https://wa.me/+6285362784585'">
-              Let's Talk
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
             </button>
-          </div>
-          <div id="socials-container">
-            <a href="https://www.linkedin.com/in/rifqi-haikal-chairiansyah-b94b12224/?originalSubdomain=id" target="_blank">
-              <img src="assets/linkedin.png" alt="My LinkedIn profile" class="icon" />
-            </a>
-            <a href="https://github.com/Rifqi-HaikalCh" target="_blank">
-              <img src="assets/github.png" alt="My Github profile" class="icon" />
-            </a>
-          </div>
-        </div>
-      </section>
-    <!-- <section id="profile">
-      <div class="section__text">
-        <p class="section__text__p1">Hi There!</p>
-        <h1 class="title">I'M <span id="rifqi">RIFQI HAIKAL</span></h1>
-        <p class="section__text__p2">Undergraduate Informatics Major</p>
-        <div class="btn-container">
-          <a href="assets/CV Rifqi Haikal Chairiansyah.pdf" target="_blank">
-            <button class="btn btn-color-2">Download CV</button>
-          </a>
-          <button class="btn btn-color-1" onclick="location.href='https://wa.me/+6285362784585'">
-            Let's Talk
-          </button>
-        </div>
-        <div id="socials-container">
-          <a href="https://www.linkedin.com/in/rifqi-haikal-chairiansyah-b94b12224/?originalSubdomain=id" target="_blank">
-            <img src="assets/linkedin.png" alt="My LinkedIn profile" class="icon" />
-          </a>
-          <a href="https://github.com/Rifqi-HaikalCh" target="_blank">
-            <img src="assets/github.png" alt="My Github profile" class="icon" />
-          </a>
-        </div>
-      </div>
-    </section> -->
-
-<!-- Bagian About -->
-<section id="about">
-  <div class="section-header">
-    <p class="section-subtitle">Get To Know More</p>
-    <h2 class="section-title">About <span class="highlight">Me</span></h2>
-  </div>
-
-  <!-- Konten About -->
-  <div class="about-content">
-    <!-- Gambar Profil -->
-    <div class="about-image-container">
-      <img src="assets/Profile.jpg" alt="Profile Picture" />
-    </div>
-
-    <!-- Detail tentang pengalaman dan pendidikan -->
-    <article class="about-details">
-      <div class="info-cards">
-        <!-- Kartu Pengalaman -->
-        <div class="info-card">
-          <img src="assets/experience.png" alt="Experience Icon" class="icon" />
-          <h3>Experience</h3>
-          <p>Student Trainee<br>Dicoding X MySkills</p>
-        </div>
-
-        <!-- Kartu Pendidikan -->
-        <div class="info-card">
-          <img src="assets/education.png" alt="Education Icon" class="icon" />
-          <h3>Education</h3>
-          <p>Undergraduate<br>Informatics</p>
-        </div>
-      </div>
-
-      <!-- Deskripsi -->
-      <div class="about-text">
-        <p>
-          A curious teenager experimenting with code to a seasoned Front-End Web Developer, Web Designer, and UI/UX enthusiast reflects his unwavering dedication to creating exceptional digital experiences. The ability to seamlessly integrate design and development has left a lasting mark on the web development landscape, and continues to inspire and empower others in the field. With a passion for excellence and an eye for innovation, contributions to the world of web development are sure to be nothing short of extraordinary.
-        </p>
-      </div>
-    </article>
-  </div>
-</section>
-
-
-    <!-- <section id="about">
-      <div class="section-header">
-        <p class="section-subtitle">Get To Know More</p>
-        <h2 class="section-title">About <span class="highlight">Me</span></h2>
-      </div>
-      <div class="about-content">
-        <div class="about-image-container">
-          <img src="assets/Profile.jpg" alt="Profile Picture" class="about-image" />
-        </div>
-        <article class="about-details">
-          <div class="info-cards">
-            <div class="info-card">
-              <img src="assets/experience.png" alt="Experience" class="icon" />
-              <h3>Experience</h3>
-              <p>Student Trainee<br>Dicoding X MySkills</p>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#home" data-en="Home" data-id="Beranda">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#about" data-en="About" data-id="Tentang">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#skills" data-en="Skills" data-id="Keahlian">Skills</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#experience" data-en="Experience" data-id="Pengalaman">Experience</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#projects" data-en="Projects" data-id="Projek">Projects</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#certificates" data-en="Certificates" data-id="Sertifikat">Certificates</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#contact" data-en="Contact" data-id="Kontak">Contact</a>
+                    </li>
+                    <li class="nav-item">
+                        <button class="language-switch ms-2" onclick="toggleLanguage()" id="langBtn">ID</button>
+                    </li>
+                </ul>
             </div>
-            <div class="info-card">
-              <img src="assets/education.png" alt="Education" class="icon" />
-              <h3>Education</h3>
-              <p>Undergraduate<br>Informatics</p>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6" data-aos="fade-right">
+                    <div class="hero-content">
+                        <h1 class="hero-title floating" data-en="Hi, I'm Rifqi Haikal" data-id="Halo, Saya Rifqi Haikal">Hi, I'm Rifqi Haikal</h1>
+                        <p class="hero-subtitle">
+                            <span data-en="I'm a" data-id="Saya seorang">I'm a</span> 
+                            <span class="typing-text" id="typingText"></span>
+                        </p>
+                        <p class="mb-4" data-en="Passionate Full-Stack Developer and Mobile App Developer from Indonesia, currently studying Informatics at Del Institute of Technology. I love creating innovative solutions through code." data-id="Pengembang Full-Stack dan Aplikasi Mobile yang passionate dari Indonesia, saat ini sedang menempuh studi Informatika di Institut Teknologi Del. Saya suka menciptakan solusi inovatif melalui kode.">
+                            Passionate Full-Stack Developer and Mobile App Developer from Indonesia, currently studying Informatics at Del Institute of Technology. I love creating innovative solutions through code.
+                        </p>
+                        <div class="d-flex gap-3 mb-4">
+                            <a href="#contact" class="btn btn-primary-custom" data-en="Get In Touch" data-id="Hubungi Saya">Get In Touch</a>
+                            <a href="#projects" class="btn btn-outline-custom" data-en="View Projects" data-id="Lihat Projek">View Projects</a>
+                        </div>
+                        <div class="social-links">
+                            <a href="mailto:r.haikal1610@gmail.com" class="social-icon" title="Email">
+                                <i class="fas fa-envelope"></i>
+                            </a>
+                            <a href="https://www.linkedin.com/in/rifqhaikall" class="social-icon" title="LinkedIn" target="_blank">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+                            <a href="https://github.com/Rifqi-HaikalCh" class="social-icon" title="GitHub" target="_blank">
+                                <i class="fab fa-github"></i>
+                            </a>
+                            <a href="https://wa.me/085362784585" class="social-icon" title="WhatsApp" target="_blank">
+                                <i class="fab fa-whatsapp"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="hero-image text-center" data-aos="fade-left">
+                        <img src="assets/Profile.png" alt="Rifqi Haikal Profile" class="profile-img shadow-lg" loading="lazy">
+                    </div>
+                </div>
             </div>
-          </div>
-          <div class="about-text">
-            <p>
-              A curious teenager experimenting with code to a seasoned Front-End Web Developer, Web Designer, and UI/UX enthusiast...
-            </p>
-          </div>
-        </article>
-      </div>
-    </section> -->
+        </div>
+    </section>
 
+    <!-- About Section -->
+    <section id="about" class="py-5">
+        <div class="container">
+            <div class="section-heading" data-aos="fade-up">
+                <h2 class="section-title" data-en="About Me" data-id="Tentang Saya">About Me</h2>
+                <p class="section-subtitle" data-en="Get to know more about me, my background, and what I do." data-id="Pelajari lebih lanjut tentang saya, latar belakang, dan apa yang saya kerjakan.">Get to know more about me, my background, and what I do.</p>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <div class="about-card" data-aos="zoom-in">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h3 class="mb-4" data-en="My Journey" data-id="Perjalanan Saya">My Journey</h3>
+                                <p data-en="I am a dedicated Informatics student at Del Institute of Technology with a GPA of 3.37/4.00, expected to graduate in 2025. My journey in technology has been an exciting exploration, from experimenting with code as a curious teenager to becoming a seasoned Web and Mobile Programmer." data-id="Saya adalah mahasiswa Informatika yang berdedikasi di Institut Teknologi Del dengan IPK 3.37/4.00, diharapkan lulus pada tahun 2025. Perjalanan saya di bidang teknologi telah menjadi eksplorasi yang menarik, dari bereksperimen dengan kode sebagai remaja yang penasaran hingga menjadi Programmer Web dan Mobile yang berpengalaman.">
+                                    I am a dedicated Informatics student at Del Institute of Technology with a GPA of 3.37/4.00, expected to graduate in 2025. My journey in technology has been an exciting exploration, from experimenting with code as a curious teenager to becoming a seasoned Web and Mobile Programmer.
+                                </p>
+                                
+                                <div class="row mt-4">
+                                    <div class="col-md-6">
+                                        <div class="d-flex align-items-center mb-3">
+                                            <i class="fas fa-graduation-cap text-success me-3" style="font-size: 1.5rem;"></i>
+                                            <div>
+                                                <h6 class="mb-0" data-en="Education" data-id="Pendidikan">Education</h6>
+                                                <small class="text-muted" data-en="Del Institute of Technology" data-id="Institut Teknologi Del">Del Institute of Technology</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="d-flex align-items-center mb-3">
+                                            <i class="fas fa-map-marker-alt text-success me-3" style="font-size: 1.5rem;"></i>
+                                            <div>
+                                                <h6 class="mb-0" data-en="Location" data-id="Lokasi">Location</h6>
+                                                <small class="text-muted">Jakarta, Indonesia</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="d-flex align-items-center mb-3">
+                                            <i class="fas fa-briefcase text-success me-3" style="font-size: 1.5rem;"></i>
+                                            <div>
+                                                <h6 class="mb-0" data-en="Experience" data-id="Pengalaman">Experience</h6>
+                                                <small class="text-muted" data-en="3+ Years Coding" data-id="3+ Tahun Coding">3+ Years Coding</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="d-flex align-items-center mb-3">
+                                            <i class="fas fa-language text-success me-3" style="font-size: 1.5rem;"></i>
+                                            <div>
+                                                <h6 class="mb-0" data-en="Languages" data-id="Bahasa">Languages</h6>
+                                                <small class="text-muted" data-en="Indonesian, English" data-id="Indonesia, Inggris">Indonesian, English</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-      <!-- HTML Section untuk Experience dengan Skill Bars -->
-  <section id="experience">
-    <div class="section-header">
-      <p class="section-subtitle">This is my skills</p>
-      <h2 class="section-title">Exper<span class="highlight">ience</span></h2>
-    </div>
-    
-    <div class="skills-container">
-      <div class="skill">
-        <h3>HTML/CSS</h3>
-        <div class="progress">
-          <div class="progress-bar" style="width: 80%;"></div>
+    <!-- Skills Section -->
+    <section id="skills" class="py-5 bg-light">
+        <div class="container">
+            <div class="section-heading" data-aos="fade-up">
+                <h2 class="section-title" data-en="Skills & Technologies" data-id="Keahlian & Teknologi">Skills & Technologies</h2>
+                <p class="section-subtitle" data-en="Here are the technologies and tools I work with on a regular basis." data-id="Berikut adalah teknologi dan alat yang saya gunakan secara rutin.">Here are the technologies and tools I work with on a regular basis.</p>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                    <div class="skill-card">
+                        <div class="skill-icon">
+                            <i class="fas fa-code"></i>
+                        </div>
+                        <h4 class="skill-title" data-en="Programming Languages" data-id="Bahasa Pemrograman">Programming Languages</h4>
+                        <ul class="skill-list">
+                            <li>JavaScript</li>
+                            <li>TypeScript</li>
+                            <li>Java</li>
+                            <li>Python</li>
+                            <li>PHP</li>
+                            <li>HTML/CSS</li>
+                            <li>Kotlin</li>
+                            <li>Dart</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                    <div class="skill-card">
+                        <div class="skill-icon">
+                            <i class="fas fa-laptop-code"></i>
+                        </div>
+                        <h4 class="skill-title" data-en="Frameworks & Libraries" data-id="Framework & Library">Frameworks & Libraries</h4>
+                        <ul class="skill-list">
+                            <li>Angular</li>
+                            <li>React.js</li>
+                            <li>Vue.js</li>
+                            <li>Spring Boot</li>
+                            <li>Express.js</li>
+                            <li>Laravel</li>
+                            <li>Bootstrap</li>
+                            <li>Tailwind CSS</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
+                    <div class="skill-card">
+                        <div class="skill-icon">
+                            <i class="fas fa-database"></i>
+                        </div>
+                        <h4 class="skill-title" data-en="Database & Tools" data-id="Database & Tools">Database & Tools</h4>
+                        <ul class="skill-list">
+                            <li>MySQL</li>
+                            <li>PostgreSQL</li>
+                            <li>Git</li>
+                            <li>Postman</li>
+                            <li>Swagger</li>
+                            <li>Figma</li>
+                            <li>Selenium</li>
+                            <li>Katalon</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="400">
+                    <div class="skill-card">
+                        <div class="skill-icon">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <h4 class="skill-title" data-en="Mobile Development" data-id="Pengembangan Mobile">Mobile Development</h4>
+                        <ul class="skill-list">
+                            <li>Android (Kotlin)</li>
+                            <li>Flutter (Dart)</li>
+                            <li>React Native</li>
+                            <li>Mobile UI/UX</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="500">
+                    <div class="skill-card">
+                        <div class="skill-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <h4 class="skill-title" data-en="Soft Skills" data-id="Soft Skills">Soft Skills</h4>
+                        <ul class="skill-list">
+                            <li data-en="Problem Solving" data-id="Pemecahan Masalah">Problem Solving</li>
+                            <li data-en="Critical Thinking" data-id="Berpikir Kritis">Critical Thinking</li>
+                            <li data-en="Team Work" data-id="Kerja Tim">Team Work</li>
+                            <li data-en="Communication" data-id="Komunikasi">Communication</li>
+                            <li data-en="Leadership" data-id="Kepemimpinan">Leadership</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="600">
+                    <div class="skill-card">
+                        <div class="skill-icon">
+                            <i class="fas fa-cloud"></i>
+                        </div>
+                        <h4 class="skill-title" data-en="Cloud & DevOps" data-id="Cloud & DevOps">Cloud & DevOps</h4>
+                        <ul class="skill-list">
+                            <li>Netlify</li>
+                            <li>Vercel</li>
+                            <li>Docker</li>
+                            <li>AWS Basics</li>
+                            <li>CI/CD</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="skill">
-        <h3>Bahasa Indonesia</h3>
-        <div class="progress">
-          <div class="progress-bar" style="width: 99%;"></div>
+    </section>
+
+    <!-- Experience Section -->
+    <section id="experience" class="py-5">
+        <div class="container">
+            <div class="section-heading" data-aos="fade-up">
+                <h2 class="section-title" data-en="Experience" data-id="Pengalaman">Experience</h2>
+                <p class="section-subtitle" data-en="My professional journey and internship experiences." data-id="Perjalanan profesional dan pengalaman magang saya.">My professional journey and internship experiences.</p>
+            </div>
+            
+            <div class="timeline">
+                <div class="timeline-item" data-aos="fade-right">
+                    <div class="timeline-content">
+                        <div class="timeline-dot"></div>
+                        <h4 data-en="Programmer Intern" data-id="Magang Programmer">Programmer Intern</h4>
+                        <h5 class="text-success">PT. Javan Cipta Solusi</h5>
+                        <p class="text-muted">Sep 2024 - Jan 2025 | Yogyakarta, Indonesia</p>
+                        <ul>
+                            <li data-en="Demonstrated strong expertise as an Angular Programmer Intern by successfully implementing full CRUD operations" data-id="Menunjukkan keahlian yang kuat sebagai Magang Programmer Angular dengan berhasil mengimplementasikan operasi CRUD lengkap">Demonstrated strong expertise as an Angular Programmer Intern by successfully implementing full CRUD operations</li>
+                            <li data-en="Gained practical experience in modern web development by fetching data, displaying API lists, and integrating multiple APIs" data-id="Memperoleh pengalaman praktis dalam pengembangan web modern dengan mengambil data, menampilkan daftar API, dan mengintegrasikan beberapa API">Gained practical experience in modern web development by fetching data, displaying API lists, and integrating multiple APIs</li>
+                            <li data-en="Recognized for deep understanding of Angular, effectively applying its features to build navigations and dashboards" data-id="Diakui karena pemahaman mendalam tentang Angular, secara efektif menerapkan fitur-fiturnya untuk membangun navigasi dan dashboard">Recognized for deep understanding of Angular, effectively applying its features to build navigations and dashboards</li>
+                        </ul>
+                        <div class="tech-stack">
+                            <span class="tech-badge">Angular</span>
+                            <span class="tech-badge">Spring Boot</span>
+                            <span class="tech-badge">Express.js</span>
+                            <span class="tech-badge">React.js</span>
+                            <span class="tech-badge">Vue.js</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="timeline-item" data-aos="fade-left">
+                    <div class="timeline-content">
+                        <div class="timeline-dot"></div>
+                        <h4 data-en="Programmer Intern" data-id="Magang Programmer">Programmer Intern</h4>
+                        <h5 class="text-success">PT. Federal International Finance</h5>
+                        <p class="text-muted">Jun 2024 - Aug 2024 | Jakarta Selatan, Indonesia</p>
+                        <ul>
+                            <li data-en="Gained hands-on experience in full-stack development, utilizing Java Spring Boot for robust back-end services" data-id="Memperoleh pengalaman langsung dalam pengembangan full-stack, menggunakan Java Spring Boot untuk layanan back-end yang kuat">Gained hands-on experience in full-stack development, utilizing Java Spring Boot for robust back-end services</li>
+                            <li data-en="Contributed as an integral member of the IT development team at a leading financial institution" data-id="Berkontribusi sebagai anggota integral tim pengembangan IT di institusi keuangan terkemuka">Contributed as an integral member of the IT development team at a leading financial institution</li>
+                            <li data-en="Mastered effective API management, ensuring seamless data communication between software components" data-id="Menguasai manajemen API yang efektif, memastikan komunikasi data yang mulus antar komponen perangkat lunak">Mastered effective API management, ensuring seamless data communication between software components</li>
+                        </ul>
+                        <div class="tech-stack">
+                            <span class="tech-badge">Angular</span>
+                            <span class="tech-badge">Spring Boot</span>
+                            <span class="tech-badge">Swagger</span>
+                            <span class="tech-badge">MySQL</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="timeline-item" data-aos="fade-right">
+                    <div class="timeline-content">
+                        <div class="timeline-dot"></div>
+                        <h4 data-en="Public Relations - Core Team" data-id="Hubungan Masyarakat - Tim Inti">Public Relations - Core Team</h4>
+                        <h5 class="text-success">Google Developer Student Club IT Del</h5>
+                        <p class="text-muted">Oct 2023 - Dec 2024</p>
+                        <ul>
+                            <li data-en="Played a key role in executing strategic public relations plans aligned with club's objectives" data-id="Berperan kunci dalam menjalankan rencana hubungan masyarakat strategis yang selaras dengan tujuan klub">Played a key role in executing strategic public relations plans aligned with club's objectives</li>
+                            <li data-en="Provided valuable input during planning sessions and offered guidance to fellow members" data-id="Memberikan masukan berharga selama sesi perencanaan dan menawarkan bimbingan kepada sesama anggota">Provided valuable input during planning sessions and offered guidance to fellow members</li>
+                            <li data-en="Demonstrated strong communication skills by serving as Master of Ceremonies during key club events" data-id="Menunjukkan keterampilan komunikasi yang kuat dengan menjabat sebagai Master of Ceremonies selama acara klub utama">Demonstrated strong communication skills by serving as Master of Ceremonies during key club events</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="timeline-item" data-aos="fade-left">
+                    <div class="timeline-content">
+                        <div class="timeline-dot"></div>
+                        <h4 data-en="Head of Social Division" data-id="Kepala Divisi Sosial">Head of Social Division</h4>
+                        <h5 class="text-success">Student Executive Board - IT Del</h5>
+                        <p class="text-muted">Aug 2023 - Sep 2024</p>
+                        <ul>
+                            <li data-en="Acted as primary liaison to build and maintain strong relationships with external parties" data-id="Bertindak sebagai penghubung utama untuk membangun dan mempertahankan hubungan yang kuat dengan pihak eksternal">Acted as primary liaison to build and maintain strong relationships with external parties</li>
+                            <li data-en="Successfully managed and executed various off-campus activities from planning to completion" data-id="Berhasil mengelola dan melaksanakan berbagai kegiatan luar kampus dari perencanaan hingga penyelesaian">Successfully managed and executed various off-campus activities from planning to completion</li>
+                            <li data-en="Drove division's public relations efforts by strategically managing content across social media platforms" data-id="Mendorong upaya hubungan masyarakat divisi dengan secara strategis mengelola konten di platform media sosial">Drove division's public relations efforts by strategically managing content across social media platforms</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="skill">
-        <h3>JavaScript</h3>
-        <div class="progress">
-          <div class="progress-bar" style="width: 40%;"></div>
-        </div>
-      </div>
-      <div class="skill">
-        <h3>English</h3>
-        <div class="progress">
-          <div class="progress-bar" style="width: 70%;"></div>
-        </div>
-      </div>
-      <div class="skill">
-        <h3>SQL Database</h3>
-        <div class="progress">
-          <div class="progress-bar" style="width: 30%;"></div>
-        </div>
-      </div>
-      <div class="skill">
-        <h3>Arabic</h3>
-        <div class="progress">
-          <div class="progress-bar" style="width: 50%;"></div>
-        </div>
-      </div>
-      <div class="skill">
-        <h3>Figma</h3>
-        <div class="progress">
-          <div class="progress-bar" style="width: 70%;"></div>
-        </div>
-      </div>
-      <div class="skill">
-        <h3>Turkish</h3>
-        <div class="progress">
-          <div class="progress-bar" style="width: 20%;"></div>
-        </div>
-      </div>
-    </div>
-  </section>
+    </section>
 
     <!-- Projects Section -->
-      <section id="projects">
-        <div class="section-header">
-          <p class="section-subtitle">Browse My Recent</p>
-          <h2 class="section-title">Proj<span class="highlight">ects</span></h2>
-        </div>
-        <div class="projects-container">
-          <!-- Project Card 1 -->
-          <div class="project-card">
-            <div class="project-image-container">
-              <img src="assets/web1.png" alt="Redesign Campus Website" class="project-image" />
+    <section id="projects" class="py-5 bg-light">
+        <div class="container">
+            <div class="section-heading" data-aos="fade-up">
+                <h2 class="section-title" data-en="Featured Projects" data-id="Projek Unggulan">Featured Projects</h2>
+                <p class="section-subtitle" data-en="Here are some of my recent projects that showcase my skills and creativity." data-id="Berikut adalah beberapa projek terbaru saya yang menunjukkan keahlian dan kreativitas saya.">Here are some of my recent projects that showcase my skills and creativity.</p>
             </div>
-            <h3 class="project-title">Redesign Campus Website</h3>
-            <div class="project-buttons">
-              <button class="btn btn-outline" onclick="location.href='https://www.figma.com/file/rileM7AuecCrGEnA0soMd1/RE-DESIGN-WEBSITE-DEL?type=design&node-id=0%3A1&mode=design&t=sRcaA5pLCqWAnsin-1'">Figma</button>
-              <a href="assets/RE-DESIGN WEBSITE DEL.pdf">
-                <button class="btn btn-outline">View</button>
-              </a>
+            
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                    <div class="project-card">
+                        <img src="https://images.unsplash.com/photo-1551650975-87deedd944c3?w=400&h=200&fit=crop" alt="API Central" class="project-img">
+                        <div class="project-content">
+                            <h4 class="project-title">API Central</h4>
+                            <p class="project-description" data-en="Centralization and standardization of API documentation with Postman-to-Swagger converter tool." data-id="Sentralisasi dan standardisasi dokumentasi API dengan alat konverter Postman-ke-Swagger.">Centralization and standardization of API documentation with Postman-to-Swagger converter tool.</p>
+                            <div class="tech-stack">
+                                <span class="tech-badge">Angular</span>
+                                <span class="tech-badge">Spring Boot</span>
+                                <span class="tech-badge">Java</span>
+                                <span class="tech-badge">TypeScript</span>
+                                <span class="tech-badge">Tailwind CSS</span>
+                            </div>
+                            <div class="project-links">
+                                <a href="https://api-central.netlify.app/" target="_blank">
+                                    <i class="fas fa-external-link-alt me-2"></i>Live Demo
+                                </a>
+                                <a href="https://github.com/Rifqi-HaikalCh/apicentral-frontend" target="_blank">
+                                    <i class="fab fa-github me-2"></i>Code
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                    <div class="project-card">
+                        <img src="https://images.unsplash.com/photo-1557804506-669a67965ba0?w=400&h=200&fit=crop" alt="Employee Management" class="project-img">
+                        <div class="project-content">
+                            <h4 class="project-title">Employee Management System</h4>
+                            <p class="project-description" data-en="Comprehensive employee management application with CRUD functionality and role-based access control." data-id="Aplikasi manajemen karyawan yang komprehensif dengan fungsi CRUD dan kontrol akses berbasis peran.">Comprehensive employee management application with CRUD functionality and role-based access control.</p>
+                            <div class="tech-stack">
+                                <span class="tech-badge">Angular</span>
+                                <span class="tech-badge">Spring Boot</span>
+                                <span class="tech-badge">JWT</span>
+                                <span class="tech-badge">MySQL</span>
+                                <span class="tech-badge">Bootstrap</span>
+                            </div>
+                            <div class="project-links">
+                                <a href="https://employee-web.netlify.app/" target="_blank">
+                                    <i class="fas fa-external-link-alt me-2"></i>Live Demo
+                                </a>
+                                <a href="https://github.com/Rifqi-HaikalCh/employee-frontend" target="_blank">
+                                    <i class="fab fa-github me-2"></i>Code
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
+                    <div class="project-card">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=200&fit=crop" alt="Notes App" class="project-img">
+                        <div class="project-content">
+                            <h4 class="project-title">Notes Web Application</h4>
+                            <p class="project-description" data-en="Responsive single-page note-taking application built with vanilla JavaScript and Web Components API." data-id="Aplikasi pencatat responsif satu halaman yang dibangun dengan vanilla JavaScript dan Web Components API.">Responsive single-page note-taking application built with vanilla JavaScript and Web Components API.</p>
+                            <div class="tech-stack">
+                                <span class="tech-badge">JavaScript</span>
+                                <span class="tech-badge">Web Components</span>
+                                <span class="tech-badge">CSS Grid</span>
+                                <span class="tech-badge">Flexbox</span>
+                                <span class="tech-badge">HTML5</span>
+                            </div>
+                            <div class="project-links">
+                                <a href="https://notes-rifqi.netlify.app/" target="_blank">
+                                    <i class="fas fa-external-link-alt me-2"></i>Live Demo
+                                </a>
+                                <a href="https://github.com/Rifqi-HaikalCh/notes-app" target="_blank">
+                                    <i class="fab fa-github me-2"></i>Code
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="400">
+                    <div class="project-card">
+                        <img src="https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=400&h=200&fit=crop" alt="Bookshelf App" class="project-img">
+                        <div class="project-content">
+                            <h4 class="project-title">Bookshelf Web Application</h4>
+                            <p class="project-description" data-en="Interactive front-end application for managing digital bookshelf with full CRUD operations." data-id="Aplikasi front-end interaktif untuk mengelola rak buku digital dengan operasi CRUD lengkap.">Interactive front-end application for managing digital bookshelf with full CRUD operations.</p>
+                            <div class="tech-stack">
+                                <span class="tech-badge">JavaScript</span>
+                                <span class="tech-badge">HTML5</span>
+                                <span class="tech-badge">CSS3</span>
+                                <span class="tech-badge">Local Storage</span>
+                                <span class="tech-badge">DOM</span>
+                            </div>
+                            <div class="project-links">
+                                <a href="https://bookshelf-rifqi.netlify.app/" target="_blank">
+                                    <i class="fas fa-external-link-alt me-2"></i>Live Demo
+                                </a>
+                                <a href="https://github.com/Rifqi-HaikalCh/bookshelf-app" target="_blank">
+                                    <i class="fab fa-github me-2"></i>Code
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="500">
+                    <div class="project-card">
+                        <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400&h=200&fit=crop" alt="Mini Games" class="project-img">
+                        <div class="project-content">
+                            <h4 class="project-title">Mini Games Web Portal</h4>
+                            <p class="project-description" data-en="Collection of interactive web-based games developed with JavaScript, featuring engaging user experience." data-id="Kumpulan game interaktif berbasis web yang dikembangkan dengan JavaScript, menampilkan pengalaman pengguna yang menarik.">Collection of interactive web-based games developed with JavaScript, featuring engaging user experience.</p>
+                            <div class="tech-stack">
+                                <span class="tech-badge">JavaScript</span>
+                                <span class="tech-badge">HTML5 Canvas</span>
+                                <span class="tech-badge">CSS3</span>
+                                <span class="tech-badge">DOM Manipulation</span>
+                                <span class="tech-badge">Event Handling</span>
+                            </div>
+                            <div class="project-links">
+                                <a href="https://games-rifqi.netlify.app/" target="_blank">
+                                    <i class="fas fa-external-link-alt me-2"></i>Live Demo
+                                </a>
+                                <a href="https://github.com/Rifqi-HaikalCh" target="_blank">
+                                    <i class="fab fa-github me-2"></i>Code
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="600">
+                    <div class="project-card">
+                        <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=400&h=200&fit=crop" alt="SEMAT DEL" class="project-img">
+                        <div class="project-content">
+                            <h4 class="project-title">SEMAT DEL</h4>
+                            <p class="project-description" data-en="Web-based information platform for IT Del student candidates built with Laravel 9 and MySQL." data-id="Platform informasi berbasis web untuk calon mahasiswa IT Del yang dibangun dengan Laravel 9 dan MySQL.">Web-based information platform for IT Del student candidates built with Laravel 9 and MySQL.</p>
+                            <div class="tech-stack">
+                                <span class="tech-badge">Laravel</span>
+                                <span class="tech-badge">PHP</span>
+                                <span class="tech-badge">MySQL</span>
+                                <span class="tech-badge">Blade</span>
+                                <span class="tech-badge">Bootstrap</span>
+                            </div>
+                            <div class="project-links">
+                                <a href="https://github.com/gabrielhtg/project-spmb-pabwe" target="_blank">
+                                    <i class="fab fa-github me-2"></i>Code
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
-          
-          <!-- Project Card 2 -->
-          <div class="project-card">
-            <div class="project-image-container">
-              <img src="assets/Redesign Perpustakaan IT Del.png" alt="Redesign Library Website" class="project-image" />
-            </div>
-            <h3 class="project-title">Redesign Library Website</h3>
-            <div class="project-buttons">
-              <button class="btn btn-outline" onclick="location.href='https://www.figma.com/file/wPzYQukHngynAvLdEUx6jj/Redesign-Perpustakaan-IT-Del?type=design&node-id=0%3A1&mode=design&t=htMWCGVlRIhpmpzQ-1'">Figma</button>
-              <a href="assets/Redesign Perpustakaan IT Del.pdf">
-                <button class="btn btn-outline">View</button>
-              </a>
-            </div>
-          </div>
-          
-          <!-- Project Card 3 -->
-          <div class="project-card">
-            <div class="project-image-container">
-              <img src="assets/game.jpg" alt="Project MiniGame Website" class="project-image" />
-            </div>
-            <h3 class="project-title">Project MiniGame Website</h3>
-            <div class="project-buttons">
-              <button class="btn btn-outline" onclick="location.href='https://github.com/'">Github</button>
-              <a href="https://rifqi-haikalch.github.io/praktikum_w6/">
-                <button class="btn btn-outline">View</button>
-              </a>
-            </div>
-          </div>
         </div>
-      </section>
-
-    <!-- Certificate Section -->
-      <section id="certificate">
-        <div class="section-header">
-          <p class="section-subtitle">There is what i achieved</p>
-          <h2 class="section-title">Certi<span class="highlight">ficate</span></h2>
-        </div>
-        
-        <!-- Baris Pertama -->
-        <div class="certificate-container">
-          <!-- Certificate Card 1 -->
-          <div class="certificate-card">
-            <div class="certificate-image-container">
-              <img src="assets/p1.png" alt="IELTS Introduction Certificate" class="certificate-image" />
-            </div>
-          </div>
-          
-          <!-- Certificate Card 2 -->
-          <div class="certificate-card">
-            <div class="certificate-image-container">
-              <img src="assets/p2.png" alt="IELTS Listening Certificate" class="certificate-image" />
-            </div>
-          </div>
-          
-          <!-- Certificate Card 3 -->
-          <div class="certificate-card">
-            <div class="certificate-image-container">
-              <img src="assets/p3.png" alt="IELTS Recognizing Certificate" class="certificate-image" />
-            </div>
-          </div>
-        </div>
-        
-        <!-- Baris Kedua -->
-        <div class="certificate-container">
-          <!-- Certificate Card 4 -->
-          <div class="certificate-card">
-            <div class="certificate-image-container">
-              <img src="assets/p5.png" alt="IELTS Actions Certificate" class="certificate-image" />
-            </div>
-          </div>
-          
-          <!-- Certificate Card 5 -->
-          <div class="certificate-card">
-            <div class="certificate-image-container">
-              <img src="assets/p4.png" alt="IELTS Places Certificate" class="certificate-image" />
-            </div>
-          </div>
-          
-          <!-- Certificate Card 6 -->
-          <div class="certificate-card">
-            <div class="certificate-image-container">
-              <img src="assets/p6.png" alt="IELTS Following Certificate" class="certificate-image" />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Contact Section yang Diperbarui -->
-<section id="contact">
-  <div class="section-header">
-    <p class="section-subtitle">Get in Touch</p>
-    <h2 class="section-title">Contact <span class="highlight">Me</span></h2>
-  </div>
-  
-  <div class="contact-container">
-    <!-- Form Bagian -->
-    <div class="contact-form-container">
-      <form id="contact-form" onsubmit="return validateForm()">
-        <div class="form-group">
-          <input type="text" id="name" name="name" placeholder="Name" required>
-        </div>
-        
-        <div class="form-group">
-          <input type="email" id="email" name="email" placeholder="Email" required>
-        </div>
-        
-        <div class="form-group">
-          <textarea id="message" name="message" rows="6" placeholder="Message" required></textarea>
-        </div>
-        
-        <div class="form-group">
-          <button type="submit" class="submit-btn">Send Message</button>
-        </div>
-      </form>
-    </div>
-    
-    <!-- Info Kontak Bagian -->
-    <div class="contact-info-container">
-      <!-- Address -->
-      <div class="contact-info-item">
-        <div class="contact-icon">
-          <i class="location-icon"></i>
-        </div>
-        <div class="contact-details">
-          <h3>Address</h3>
-          <p>Medan, Sumatera Utara</p>
-        </div>
-      </div>
-      
-      <!-- Phone -->
-      <div class="contact-info-item">
-        <div class="contact-icon">
-          <i class="phone-icon"></i>
-        </div>
-        <div class="contact-details">
-          <h3>Phone</h3>
-          <p>+62853-6278-4585</p>
-        </div>
-      </div>
-      
-      <!-- Email -->
-      <div class="contact-info-item">
-        <div class="contact-icon">
-          <i class="email-icon"></i>
-        </div>
-        <div class="contact-details">
-          <h3>Email</h3>
-          <p>r.haikal1610@gmail.com</p>
-        </div>
-      </div>
-    </div>
-  </div>
-  
-      <!-- Contact Links Container -->
-      <div class="contact-links-container">
-        <a href="mailto:r.haikal1610@gmail.com" class="contact-link">
-          <div class="contact-link-icon email-link-icon"></div>
-          <span>r.haikal1610@gmail.com</span>
-        </a>
-        
-        <a href="https://www.linkedin.com/in/rifqi-haikal-chairiansyah-b94b12224/?originalSubdomain=id" class="contact-link" target="_blank">
-          <div class="contact-link-icon linkedin-link-icon"></div>
-          <span>LinkedIn</span>
-        </a>
-      </div>
     </section>
-  </main>
 
-  <!-- Footer -->
-  <footer>
-    <div class="footer-container">
-      <nav class="footer-nav">
-        <ul class="footer-links">
-          <li><a href="#about">About</a></li>
-          <li><a href="#experience">Experience</a></li>
-          <li><a href="#projects">Projects</a></li>
-          <li><a href="#certificate">Certificate</a></li>
-          <li><a href="#contact">Contact</a></li>
-        </ul>
-      </nav>
-      <div class="copyright">
-        <p>&copy; 2023 Rifqi Haikal. All Rights Reserved.</p>
-      </div>
-    </div>
-  </footer>
+    <!-- Certificates Section -->
+    <section id="certificates" class="py-5">
+        <div class="container">
+            <div class="section-heading" data-aos="fade-up">
+                <h2 class="section-title" data-en="Certificates & Achievements" data-id="Sertifikat & Prestasi">Certificates & Achievements</h2>
+                <p class="section-subtitle" data-en="My professional certifications and notable achievements in technology and programming." data-id="Sertifikasi profesional saya dan pencapaian terkemuka dalam teknologi dan pemrograman.">My professional certifications and notable achievements in technology and programming.</p>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                    <div class="certificate-card">
+                        <img src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=400&h=200&fit=crop" alt="Dicoding Certificate" class="certificate-img">
+                        <div class="certificate-content">
+                            <h4 class="certificate-title" data-en="Front-End Web Development" data-id="Pengembangan Web Front-End">Front-End Web Development</h4>
+                            <p class="certificate-description" data-en="Comprehensive front-end development course covering HTML forms, CSS Grid, Web Components, and modern JavaScript." data-id="Kursus pengembangan front-end komprehensif yang mencakup formulir HTML, CSS Grid, Komponen Web, dan JavaScript modern.">Comprehensive front-end development course covering HTML forms, CSS Grid, Web Components, and modern JavaScript.</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="text-success fw-bold">Dicoding</span>
+                                <span class="text-muted">May 2025</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                    <div class="certificate-card">
+                        <img src="https://images.unsplash.com/photo-1517180102446-f3ece451e9d8?w=400&h=200&fit=crop" alt="JavaScript Certificate" class="certificate-img">
+                        <div class="certificate-content">
+                            <h4 class="certificate-title" data-en="JavaScript Programming" data-id="Pemrograman JavaScript">JavaScript Programming</h4>
+                            <p class="certificate-description" data-en="Mastering JavaScript fundamentals including ES6+, async programming, OOP, and functional programming paradigms." data-id="Menguasai dasar-dasar JavaScript termasuk ES6+, pemrograman async, OOP, dan paradigma pemrograman fungsional.">Mastering JavaScript fundamentals including ES6+, async programming, OOP, and functional programming paradigms.</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="text-success fw-bold">Dicoding</span>
+                                <span class="text-muted">May 2025</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
+                    <div class="certificate-card">
+                        <img src="https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=400&h=200&fit=crop" alt="Java Certificate" class="certificate-img">
+                        <div class="certificate-content">
+                            <h4 class="certificate-title" data-en="Java Programming" data-id="Pemrograman Java">Java Programming</h4>
+                            <p class="certificate-description" data-en="Comprehensive Java programming course covering OOP principles, data structures, and software development best practices." data-id="Kursus pemrograman Java komprehensif yang mencakup prinsip OOP, struktur data, dan praktik terbaik pengembangan perangkat lunak.">Comprehensive Java programming course covering OOP principles, data structures, and software development best practices.</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="text-success fw-bold">Dicoding</span>
+                                <span class="text-muted">Jun 2024</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="400">
+                    <div class="certificate-card">
+                        <img src="https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?w=400&h=200&fit=crop" alt="MSIB Certificate" class="certificate-img">
+                        <div class="certificate-content">
+                            <h4 class="certificate-title" data-en="MSIB Batch 7 Certification" data-id="Sertifikat MSIB Angkatan 7">MSIB Batch 7 Certification</h4>
+                            <p class="certificate-description" data-en="Completed MSIB program as Angular Programmer, learning modern web development technologies and industry practices." data-id="Menyelesaikan program MSIB sebagai Programmer Angular, mempelajari teknologi pengembangan web modern dan praktik industri.">Completed MSIB program as Angular Programmer, learning modern web development technologies and industry practices.</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="text-success fw-bold">PT. Javan Cipta Solusi</span>
+                                <span class="text-muted">Dec 2024</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="500">
+                    <div class="certificate-card">
+                        <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=200&fit=crop" alt="IELTS Certificate" class="certificate-img">
+                        <div class="certificate-content">
+                            <h4 class="certificate-title" data-en="IELTS Training Certificates" data-id="Sertifikat Pelatihan IELTS">IELTS Training Certificates</h4>
+                            <p class="certificate-description" data-en="Multiple IELTS training certificates covering listening skills, comprehension, and English proficiency development." data-id="Beberapa sertifikat pelatihan IELTS yang mencakup keterampilan mendengarkan, pemahaman, dan pengembangan kemahiran bahasa Inggris.">Multiple IELTS training certificates covering listening skills, comprehension, and English proficiency development.</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="text-success fw-bold">MySkill</span>
+                                <span class="text-muted">2023</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="600">
+                    <div class="certificate-card">
+                        <img src="https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=400&h=200&fit=crop" alt="PKM Achievement" class="certificate-img">
+                        <div class="certificate-content">
+                            <h4 class="certificate-title" data-en="PKM 3rd Place Winner" data-id="Pemenang Tempat Ke-3 PKM">PKM 3rd Place Winner</h4>
+                            <p class="certificate-description" data-en="Led team to develop 'Toba Trip' Android application, securing 3rd place in FITE Festival's Student Creativity Program." data-id="Memimpin tim untuk mengembangkan aplikasi Android 'Toba Trip', meraih tempat ke-3 dalam Program Kreativitas Mahasiswa Festival FITE.">Led team to develop "Toba Trip" Android application, securing 3rd place in FITE Festival's Student Creativity Program.</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="text-success fw-bold">FITE Festival</span>
+                                <span class="text-muted">Nov 2023</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-  <script src="script.js"></script>
+    <!-- Contact Section -->
+    <section id="contact" class="py-5 bg-light">
+        <div class="container">
+            <div class="section-heading" data-aos="fade-up">
+                <h2 class="section-title" data-en="Get In Touch" data-id="Hubungi Saya">Get In Touch</h2>
+                <p class="section-subtitle" data-en="Have a project in mind? Let's discuss how we can work together to bring your ideas to life." data-id="Punya projek dalam pikiran? Mari diskusikan bagaimana kita bisa bekerja sama untuk mewujudkan ide Anda.">Have a project in mind? Let's discuss how we can work together to bring your ideas to life.</p>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <div class="contact-form" data-aos="zoom-in">
+                        <form id="contactForm">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="name" class="form-label" data-en="Full Name" data-id="Nama Lengkap">Full Name</label>
+                                    <input type="text" class="form-control" id="name" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="email" class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="email" required>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="subject" class="form-label" data-en="Subject" data-id="Subjek">Subject</label>
+                                <input type="text" class="form-control" id="subject" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="message" class="form-label" data-en="Message" data-id="Pesan">Message</label>
+                                <textarea class="form-control" id="message" rows="5" required></textarea>
+                            </div>
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-primary-custom" data-en="Send Message" data-id="Kirim Pesan">Send Message</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row mt-5">
+                <div class="col-md-4 text-center" data-aos="fade-up" data-aos-delay="100">
+                    <div class="contact-info p-4">
+                        <i class="fas fa-envelope fa-2x text-success mb-3"></i>
+                        <h5 data-en="Email Me" data-id="Email Saya">Email Me</h5>
+                        <p>r.haikal1610@gmail.com</p>
+                    </div>
+                </div>
+                <div class="col-md-4 text-center" data-aos="fade-up" data-aos-delay="200">
+                    <div class="contact-info p-4">
+                        <i class="fas fa-phone fa-2x text-success mb-3"></i>
+                        <h5 data-en="Call Me" data-id="Telepon Saya">Call Me</h5>
+                        <p>+62 853-6278-4585</p>
+                    </div>
+                </div>
+                <div class="col-md-4 text-center" data-aos="fade-up" data-aos-delay="300">
+                    <div class="contact-info p-4">
+                        <i class="fas fa-map-marker-alt fa-2x text-success mb-3"></i>
+                        <h5 data-en="Location" data-id="Lokasi">Location</h5>
+                        <p>Jakarta, Indonesia</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-4 text-center">
+        <div class="container">
+            <p class="mb-0" data-en="© 2025 Rifqi Haikal Chairiansyah. All rights reserved." data-id="© 2025 Rifqi Haikal Chairiansyah. Semua hak cipta dilindungi.">© 2025 Rifqi Haikal Chairiansyah. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- AOS Animation -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <!-- EmailJS -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 1000,
+            once: true
+        });
+
+        // Loading screen
+        window.addEventListener('load', function() {
+            document.getElementById('loading').style.display = 'none';
+        });
+
+        // Typing animation
+        const typingTexts = {
+            en: ['Full-Stack Developer', 'Mobile App Developer', 'UI/UX Enthusiast', 'Problem Solver'],
+            id: ['Pengembang Full-Stack', 'Pengembang Aplikasi Mobile', 'Penggemar UI/UX', 'Pemecah Masalah']
+        };
+
+        let currentLang = 'en';
+        let textIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+
+        function typeWriter() {
+            const currentTexts = typingTexts[currentLang];
+            const currentText = currentTexts[textIndex];
+            const typingElement = document.getElementById('typingText');
+
+            if (isDeleting) {
+                typingElement.textContent = currentText.substring(0, charIndex - 1);
+                charIndex--;
+            } else {
+                typingElement.textContent = currentText.substring(0, charIndex + 1);
+                charIndex++;
+            }
+
+            let typeSpeed = isDeleting ? 50 : 100;
+
+            if (!isDeleting && charIndex === currentText.length) {
+                typeSpeed = 2000;
+                isDeleting = true;
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                textIndex = (textIndex + 1) % currentTexts.length;
+            }
+
+            setTimeout(typeWriter, typeSpeed);
+        }
+
+        // Start typing animation
+        typeWriter();
+
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.style.background = 'rgba(255, 255, 255, 0.98)';
+            } else {
+                navbar.style.background = 'rgba(255, 255, 255, 0.95)';
+            }
+        });
+
+        // Language switching
+        function toggleLanguage() {
+            currentLang = currentLang === 'en' ? 'id' : 'en';
+            const langBtn = document.getElementById('langBtn');
+            langBtn.textContent = currentLang === 'en' ? 'ID' : 'EN';
+
+            // Update all translatable elements
+            document.querySelectorAll('[data-en][data-id]').forEach(element => {
+                const text = currentLang === 'en' ? element.getAttribute('data-en') : element.getAttribute('data-id');
+                element.textContent = text;
+            });
+
+            // Restart typing animation with new language
+            textIndex = 0;
+            charIndex = 0;
+            isDeleting = false;
+        }
+
+        // Contact form submission
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const subject = document.getElementById('subject').value;
+            const message = document.getElementById('message').value;
+            
+            // Create mailto link
+            const mailtoLink = `mailto:r.haikal1610@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`)}`;
+            
+            // Open default email client
+            window.location.href = mailtoLink;
+            
+            // Show success message
+            alert(currentLang === 'en' ? 'Thank you for your message! Your email client should open now.' : 'Terima kasih atas pesan Anda! Klien email Anda seharusnya terbuka sekarang.');
+            
+            // Reset form
+            this.reset();
+        });
+
+        // Add scroll animations to sections
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('fade-in-up');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('section').forEach(section => {
+            observer.observe(section);
+        });
+
+        // Parallax effect for hero section
+        window.addEventListener('scroll', function() {
+            const scrolled = window.pageYOffset;
+            const parallax = document.querySelector('.hero');
+            const speed = scrolled * 0.5;
+            if (parallax) {
+                parallax.style.transform = `translateY(${speed}px)`;
+            }
+        });
+
+        // Add hover effects to cards
+        document.querySelectorAll('.project-card, .certificate-card, .skill-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-10px) scale(1.02)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+
+        // Add floating animation to social icons
+        document.querySelectorAll('.social-icon').forEach((icon, index) => {
+            icon.style.animationDelay = `${index * 0.1}s`;
+            icon.classList.add('floating');
+        });
+
+        // Preloader for images
+        function preloadImages() {
+            const images = document.querySelectorAll('img');
+            let loadedCount = 0;
+            const totalCount = images.length;
+
+            images.forEach(img => {
+                if (img.complete) {
+                    loadedCount++;
+                } else {
+                    img.addEventListener('load', () => {
+                        loadedCount++;
+                        if (loadedCount === totalCount) {
+                            document.body.classList.add('loaded');
+                        }
+                    });
+                }
+            });
+
+            if (loadedCount === totalCount) {
+                document.body.classList.add('loaded');
+            }
+        }
+
+        // Initialize everything when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            preloadImages();
+            
+            // Add entrance animations
+            setTimeout(() => {
+                document.querySelectorAll('.hero-content > *').forEach((element, index) => {
+                    setTimeout(() => {
+                        element.style.opacity = '1';
+                        element.style.transform = 'translateY(0)';
+                    }, index * 200);
+                });
+            }, 500);
+        });
+
+        // Add custom cursor effect
+        document.addEventListener('mousemove', function(e) {
+            const cursor = document.querySelector('.custom-cursor');
+            if (cursor) {
+                cursor.style.left = e.clientX + 'px';
+                cursor.style.top = e.clientY + 'px';
+            }
+        });
+
+        // Add particles effect (simplified)
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.style.position = 'fixed';
+            particle.style.width = '4px';
+            particle.style.height = '4px';
+            particle.style.background = 'var(--primary-green)';
+            particle.style.borderRadius = '50%';
+            particle.style.opacity = '0.3';
+            particle.style.pointerEvents = 'none';
+            particle.style.zIndex = '-1';
+            particle.style.left = Math.random() * window.innerWidth + 'px';
+            particle.style.top = window.innerHeight + 'px';
+            
+            document.body.appendChild(particle);
+            
+            const animation = particle.animate([
+                { transform: 'translateY(0px) translateX(0px)', opacity: 0.3 },
+                { transform: `translateY(-${window.innerHeight + 100}px) translateX(${Math.random() * 200 - 100}px)`, opacity: 0 }
+            ], {
+                duration: Math.random() * 3000 + 2000,
+                easing: 'linear'
+            });
+            
+            animation.onfinish = () => particle.remove();
+        }
+
+        // Create particles periodically
+        setInterval(createParticle, 300);
+    </script>
 </body>
 </html>
