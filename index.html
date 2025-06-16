@@ -26,6 +26,7 @@
             --bg-light: #F9FAFB;
             --shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
             --shadow-hover: 0 20px 40px rgba(0, 0, 0, 0.15);
+            --gradient-primary: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
         }
 
         * {
@@ -154,7 +155,7 @@
         .hero-title {
             font-size: 4rem;
             font-weight: 800;
-            background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
+            background: var(--gradient-primary);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             margin-bottom: 1rem;
@@ -171,8 +172,60 @@
             font-weight: 600;
         }
 
+        /* Profile Image - Responsive */
+        .profile-image-container {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .profile-image {
+            width: 100%;
+            max-width: 400px;
+            height: auto;
+            border-radius: 20px;
+            object-fit: cover;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+            border: 4px solid var(--primary-green);
+        }
+
+        .profile-image:hover {
+            transform: scale(1.05) rotate(2deg);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .profile-decoration {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            border: 3px solid var(--primary-green);
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: rotate 10s linear infinite;
+        }
+
+        .profile-decoration:nth-child(2) {
+            top: -20px;
+            right: -20px;
+            animation-delay: -2s;
+        }
+
+        .profile-decoration:nth-child(3) {
+            bottom: -20px;
+            left: -20px;
+            animation-delay: -4s;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Buttons */
         .btn-primary-custom {
-            background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
+            background: var(--gradient-primary);
             border: none;
             padding: 1rem 2rem;
             border-radius: 50px;
@@ -233,48 +286,131 @@
             transform: translateY(-5px) rotate(360deg);
         }
 
-        /* About Section */
-        .about-card {
+        /* Enhanced About Section */
+        .about-section {
+            padding: 100px 0;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        }
+
+        .about-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .about-image-section {
+            position: relative;
+        }
+
+        .about-image {
+            width: 100%;
+            max-width: 350px;
+            border-radius: 30px;
+            box-shadow: var(--shadow-hover);
+            transition: all 0.3s ease;
+        }
+
+        .about-image:hover {
+            transform: translateY(-10px);
+        }
+
+        .about-stats {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
             background: white;
+            padding: 1.5rem;
             border-radius: 20px;
-            padding: 3rem;
+            box-shadow: var(--shadow);
+            min-width: 150px;
+        }
+
+        .stat-item {
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-green);
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .about-text-section h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-dark);
+        }
+
+        .about-text-section p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--text-light);
+            margin-bottom: 2rem;
+        }
+
+        .about-highlights {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .highlight-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 15px;
             box-shadow: var(--shadow);
             transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
         }
 
-        .about-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
-        }
-
-        .about-card:hover {
-            transform: translateY(-10px);
+        .highlight-item:hover {
+            transform: translateY(-5px);
             box-shadow: var(--shadow-hover);
         }
 
-        .profile-img {
-            width: 200px;
-            height: 200px;
-            border-radius: 20px;
-            object-fit: cover;
-            margin-bottom: 2rem;
-            transition: all 0.3s ease;
+        .highlight-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
         }
 
-        .profile-img:hover {
-            transform: scale(1.05);
+        .highlight-content h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .highlight-content p {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin: 0;
         }
 
         /* Download CV Button */
         .btn-download-cv {
-            background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
+            background: var(--gradient-primary);
             color: white;
             border: none;
             padding: 0.8rem 1.5rem;
@@ -293,96 +429,97 @@
             color: white;
         }
 
-        /* Skills Section */
-        .skills-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-            margin-bottom: 3rem;
+        /* Skills Section - Square Grid Layout */
+        .skills-section {
+            padding: 100px 0;
         }
 
-        .skill-category-card {
-            background: white;
-            border-radius: 20px;
-            padding: 2rem;
-            box-shadow: var(--shadow);
+        .skills-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .skill-categories {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .skill-category-btn {
+            background: transparent;
+            border: 2px solid var(--primary-green);
+            color: var(--primary-green);
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            font-weight: 600;
             transition: all 0.3s ease;
             cursor: pointer;
-            border: 2px solid transparent;
+            font-size: 1rem;
         }
 
-        .skill-category-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-hover);
-            border-color: var(--primary-green);
+        .skill-category-btn.active,
+        .skill-category-btn:hover {
+            background: var(--primary-green);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: var(--shadow);
         }
 
-        .skill-category-card.active {
-            border-color: var(--primary-green);
-            background: var(--light-green);
+        .skills-grid {
+            display: none;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1.5rem;
+            max-width: 800px;
+            margin: 0 auto;
         }
 
-        .skill-category-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .skill-category-icon {
-            font-size: 3rem;
-            color: var(--primary-green);
-            margin-bottom: 1rem;
-        }
-
-        .skill-category-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: var(--text-dark);
-            margin-bottom: 0.5rem;
-        }
-
-        .skill-expand-icon {
-            font-size: 1.2rem;
-            color: var(--primary-green);
-            transition: transform 0.3s ease;
-        }
-
-        .skill-category-card.active .skill-expand-icon {
-            transform: rotate(180deg);
-        }
-
-        .skill-items {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease;
-            margin-top: 1rem;
-        }
-
-        .skill-category-card.active .skill-items {
-            max-height: 500px;
+        .skills-grid.active {
+            display: grid;
+            animation: fadeInUp 0.6s ease forwards;
         }
 
         .skill-item {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            padding: 0.5rem;
-            margin: 0.5rem 0;
             background: white;
-            border-radius: 10px;
+            border-radius: 20px;
+            padding: 2rem 1rem;
+            text-align: center;
+            box-shadow: var(--shadow);
             transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(30px);
+            cursor: pointer;
+        }
+
+        .skill-item.animate {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         .skill-item:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-hover);
             background: var(--primary-green);
             color: white;
-            transform: translateX(10px);
         }
 
-        .skill-item i {
-            font-size: 1.5rem;
-            width: 30px;
-            text-align: center;
+        .skill-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary-green);
+            transition: all 0.3s ease;
+        }
+
+        .skill-item:hover .skill-icon {
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .skill-name {
+            font-size: 1rem;
+            font-weight: 600;
+            margin: 0;
         }
 
         /* Experience Section */
@@ -436,7 +573,7 @@
         }
 
         .modal-header {
-            background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
+            background: var(--gradient-primary);
             color: white;
             border: none;
         }
@@ -564,6 +701,87 @@
             transform: translateY(-2px);
         }
 
+        /* Enhanced Certificate Section */
+        .certificate-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .certificate-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        .certificate-header {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .certificate-header h4 {
+            margin: 0;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .certificate-body {
+            padding: 1.5rem;
+        }
+
+        .certificate-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .certificate-issuer {
+            font-weight: 600;
+            color: var(--primary-green);
+        }
+
+        .certificate-date {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .certificate-description {
+            color: var(--text-light);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .certificate-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .certificate-btn {
+            background: var(--primary-green);
+            color: white;
+            padding: 0.4rem 0.8rem;
+            border-radius: 15px;
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .certificate-btn:hover {
+            background: var(--secondary-green);
+            transform: translateY(-2px);
+            color: white;
+        }
+
         /* Contact Form */
         .contact-form {
             background: white;
@@ -620,7 +838,7 @@
             left: 0;
             right: 0;
             height: 4px;
-            background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
+            background: var(--gradient-primary);
         }
 
         .footer-content {
@@ -691,13 +909,29 @@
         }
 
         /* Responsive Design */
+        @media (max-width: 968px) {
+            .about-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .about-highlights {
+                grid-template-columns: 1fr;
+            }
+        }
+
         @media (max-width: 768px) {
             .hero-title {
                 font-size: 2.5rem;
             }
 
-            .skills-container {
-                grid-template-columns: 1fr;
+            .skills-grid {
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+                gap: 1rem;
+            }
+
+            .skill-item {
+                padding: 1.5rem 0.5rem;
             }
 
             .experience-section {
@@ -712,6 +946,15 @@
             .project-tabs {
                 flex-direction: column;
                 align-items: center;
+            }
+
+            .skill-categories {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .certificate-grid {
+                grid-template-columns: 1fr;
             }
         }
 
@@ -856,79 +1099,97 @@
                     </div>
                 </div>
                 <div class="col-lg-6">
-                    <div class="hero-image text-center" data-aos="fade-left">
-                        <img src="assets/Profile.png" alt="Rifqi Haikal Profile" loading="lazy">
+                    <div class="profile-image-container" data-aos="fade-left">
+                        <div class="profile-decoration"></div>
+                        <div class="profile-decoration"></div>
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=500&fit=crop&crop=face" alt="Rifqi Haikal Profile" class="profile-image" loading="lazy">
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- About Section -->
-    <section id="about" class="py-5">
+    <!-- Enhanced About Section -->
+    <section id="about" class="about-section">
         <div class="container">
             <div class="section-heading" data-aos="fade-up">
                 <h2 class="section-title" data-en="About Me" data-id="Tentang Saya">About Me</h2>
-                <p class="section-subtitle" data-en="Get to know more about me, my background, and what I do." data-id="Pelajari lebih lanjut tentang saya, latar belakang, dan apa yang saya kerjakan.">Get to know more about me, my background, and what I do.</p>
+                <p class="section-subtitle" data-en="Get to know more about me, my background, and what drives my passion for technology." data-id="Pelajari lebih lanjut tentang saya, latar belakang, dan apa yang mendorong passion saya terhadap teknologi.">Get to know more about me, my background, and what drives my passion for technology.</p>
             </div>
             
-            <div class="row">
-                <div class="col-lg-8 mx-auto">
-                    <div class="about-card" data-aos="zoom-in">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <h3 class="mb-4" data-en="My Journey" data-id="Perjalanan Saya">My Journey</h3>
-                                <p data-en="I am a dedicated Informatics student at Del Institute of Technology with a GPA of 3.37/4.00, expected to graduate in 2025. My journey in technology has been an exciting exploration, from experimenting with code as a curious teenager to becoming a seasoned Web and Mobile Programmer." data-id="Saya adalah mahasiswa Informatika yang berdedikasi di Institut Teknologi Del dengan IPK 3.37/4.00, diharapkan lulus pada tahun 2025. Perjalanan saya di bidang teknologi telah menjadi eksplorasi yang menarik, dari bereksperimen dengan kode sebagai remaja yang penasaran hingga menjadi Programmer Web dan Mobile yang berpengalaman.">
-                                    I am a dedicated Informatics student at Del Institute of Technology with a GPA of 3.37/4.00, expected to graduate in 2025. My journey in technology has been an exciting exploration, from experimenting with code as a curious teenager to becoming a seasoned Web and Mobile Programmer.
-                                </p>
-                                
-                                <div class="row mt-4">
-                                    <div class="col-md-6">
-                                        <div class="d-flex align-items-center mb-3">
-                                            <i class="fas fa-graduation-cap text-success me-3" style="font-size: 1.5rem;"></i>
-                                            <div>
-                                                <h6 class="mb-0" data-en="Education" data-id="Pendidikan">Education</h6>
-                                                <small class="text-muted" data-en="Del Institute of Technology" data-id="Institut Teknologi Del">Del Institute of Technology</small>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="d-flex align-items-center mb-3">
-                                            <i class="fas fa-map-marker-alt text-success me-3" style="font-size: 1.5rem;"></i>
-                                            <div>
-                                                <h6 class="mb-0" data-en="Location" data-id="Lokasi">Location</h6>
-                                                <small class="text-muted">Jakarta, Indonesia</small>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="d-flex align-items-center mb-3">
-                                            <i class="fas fa-briefcase text-success me-3" style="font-size: 1.5rem;"></i>
-                                            <div>
-                                                <h6 class="mb-0" data-en="Experience" data-id="Pengalaman">Experience</h6>
-                                                <small class="text-muted" data-en="3+ Years Coding" data-id="3+ Tahun Coding">3+ Years Coding</small>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="d-flex align-items-center mb-3">
-                                            <i class="fas fa-language text-success me-3" style="font-size: 1.5rem;"></i>
-                                            <div>
-                                                <h6 class="mb-0" data-en="Languages" data-id="Bahasa">Languages</h6>
-                                                <small class="text-muted" data-en="Indonesian, English" data-id="Indonesia, Inggris">Indonesian, English</small>
-                                            </div>
-                                        </div>
-                                    </div>
+            <div class="about-container">
+                <div class="about-content" data-aos="fade-up">
+                    <div class="about-image-section">
+                        <img src="https://images.unsplash.com/photo-1551434678-e076c223a692?w=400&h=500&fit=crop" alt="About Rifqi" class="about-image">
+                        <div class="about-stats">
+                            <div class="stat-item">
+                                <div class="stat-number">3+</div>
+                                <div class="stat-label" data-en="Years Coding" data-id="Tahun Coding">Years Coding</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">15+</div>
+                                <div class="stat-label" data-en="Projects" data-id="Projek">Projects</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">2</div>
+                                <div class="stat-label" data-en="Internships" data-id="Magang">Internships</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="about-text-section">
+                        <h2 data-en="My Journey in Technology" data-id="Perjalanan Saya di Teknologi">My Journey in Technology</h2>
+                        <p data-en="I am a dedicated Informatics student at Del Institute of Technology with a GPA of 3.37/4.00, expected to graduate in 2025. My journey in technology has been an exciting exploration, from experimenting with code as a curious teenager to becoming a seasoned Web and Mobile Programmer with hands-on industry experience." data-id="Saya adalah mahasiswa Informatika yang berdedikasi di Institut Teknologi Del dengan IPK 3.37/4.00, diharapkan lulus pada tahun 2025. Perjalanan saya di bidang teknologi telah menjadi eksplorasi yang menarik, dari bereksperimen dengan kode sebagai remaja yang penasaran hingga menjadi Programmer Web dan Mobile yang berpengalaman dengan pengalaman industri langsung.">
+                            I am a dedicated Informatics student at Del Institute of Technology with a GPA of 3.37/4.00, expected to graduate in 2025. My journey in technology has been an exciting exploration, from experimenting with code as a curious teenager to becoming a seasoned Web and Mobile Programmer with hands-on industry experience.
+                        </p>
+                        
+                        <div class="about-highlights">
+                            <div class="highlight-item">
+                                <div class="highlight-icon">
+                                    <i class="fas fa-graduation-cap"></i>
                                 </div>
-                                
-                                <!-- Download CV Button -->
-                                <div class="text-center mt-4">
-                                    <a href="assets/CV Rifqi Haikal Chairiansyah.pdf" download class="btn-download-cv">
-                                        <i class="fas fa-download"></i>
-                                        <span data-en="Download CV" data-id="Unduh CV">Download CV</span>
-                                    </a>
+                                <div class="highlight-content">
+                                    <h4 data-en="Education Excellence" data-id="Keunggulan Pendidikan">Education Excellence</h4>
+                                    <p data-en="Studying Informatics at Del Institute of Technology" data-id="Belajar Informatika di Institut Teknologi Del">Studying Informatics at Del Institute of Technology</p>
                                 </div>
                             </div>
+                            
+                            <div class="highlight-item">
+                                <div class="highlight-icon">
+                                    <i class="fas fa-briefcase"></i>
+                                </div>
+                                <div class="highlight-content">
+                                    <h4 data-en="Industry Experience" data-id="Pengalaman Industri">Industry Experience</h4>
+                                    <p data-en="Internships at PT. Javan Cipta Solusi & FIFGROUP" data-id="Magang di PT. Javan Cipta Solusi & FIFGROUP">Internships at PT. Javan Cipta Solusi & FIFGROUP</p>
+                                </div>
+                            </div>
+                            
+                            <div class="highlight-item">
+                                <div class="highlight-icon">
+                                    <i class="fas fa-trophy"></i>
+                                </div>
+                                <div class="highlight-content">
+                                    <h4 data-en="Achievements" data-id="Prestasi">Achievements</h4>
+                                    <p data-en="3rd Place PKM Competition Winner" data-id="Juara 3 Kompetisi PKM">3rd Place PKM Competition Winner</p>
+                                </div>
+                            </div>
+                            
+                            <div class="highlight-item">
+                                <div class="highlight-icon">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <div class="highlight-content">
+                                    <h4 data-en="Leadership" data-id="Kepemimpinan">Leadership</h4>
+                                    <p data-en="GDSC Core Team & BEM Social Division Head" data-id="Tim Inti GDSC & Kepala Divisi Sosial BEM">GDSC Core Team & BEM Social Division Head</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="text-center">
+                            <a href="assets/CV Rifqi Haikal Chairiansyah.pdf" download class="btn-download-cv">
+                                <i class="fas fa-download"></i>
+                                <span data-en="Download CV" data-id="Unduh CV">Download CV</span>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -936,128 +1197,113 @@
         </div>
     </section>
 
-    <!-- Skills Section -->
-    <section id="skills" class="py-5 bg-light">
+    <!-- Enhanced Skills Section -->
+    <section id="skills" class="skills-section bg-light">
         <div class="container">
             <div class="section-heading" data-aos="fade-up">
                 <h2 class="section-title" data-en="Skills & Technologies" data-id="Keahlian & Teknologi">Skills & Technologies</h2>
-                <p class="section-subtitle" data-en="Click on each category to explore my skills and technologies." data-id="Klik pada setiap kategori untuk menjelajahi keahlian dan teknologi saya.">Click on each category to explore my skills and technologies.</p>
+                <p class="section-subtitle" data-en="Click on each category to explore my technical and soft skills." data-id="Klik pada setiap kategori untuk menjelajahi keahlian teknis dan lunak saya.">Click on each category to explore my technical and soft skills.</p>
             </div>
             
             <div class="skills-container" data-aos="fade-up">
-                <!-- Hard Skills -->
-                <div class="skill-category-card" onclick="toggleSkillCategory(this)">
-                    <div class="skill-category-header">
-                        <div>
-                            <i class="fas fa-code skill-category-icon"></i>
-                            <h3 class="skill-category-title" data-en="Hard Skills" data-id="Keahlian Teknis">Hard Skills</h3>
-                            <p class="text-muted" data-en="Technical expertise and programming languages" data-id="Keahlian teknis dan bahasa pemrograman">Technical expertise and programming languages</p>
-                        </div>
-                        <i class="fas fa-chevron-down skill-expand-icon"></i>
+                <div class="skill-categories">
+                    <button class="skill-category-btn active" onclick="showSkillCategory('hard-skills')" data-en="Hard Skills" data-id="Keahlian Teknis">Hard Skills</button>
+                    <button class="skill-category-btn" onclick="showSkillCategory('soft-skills')" data-en="Soft Skills" data-id="Keahlian Lunak">Soft Skills</button>
+                </div>
+                
+                <!-- Hard Skills Grid -->
+                <div id="hard-skills" class="skills-grid active">
+                    <div class="skill-item">
+                        <i class="fab fa-html5 skill-icon" style="color: #E34F26;"></i>
+                        <p class="skill-name">HTML5</p>
                     </div>
-                    <div class="skill-items">
-                        <div class="skill-item">
-                            <i class="fab fa-html5" style="color: #E34F26;"></i>
-                            <span>HTML5</span>
-                        </div>
-                        <div class="skill-item">
-                            <i class="fab fa-css3-alt" style="color: #1572B6;"></i>
-                            <span>CSS3</span>
-                        </div>
-                        <div class="skill-item">
-                            <i class="fab fa-js-square" style="color: #F7DF1E;"></i>
-                            <span>JavaScript</span>
-                        </div>
-                        <div class="skill-item">
-                            <i class="fab fa-js-square" style="color: #3178C6;"></i>
-                            <span>TypeScript</span>
-                        </div>
-                        <div class="skill-item">
-                            <i class="fab fa-java" style="color: #007396;"></i>
-                            <span>Java</span>
-                        </div>
-                        <div class="skill-item">
-                            <i class="fab fa-python" style="color: #3776AB;"></i>
-                            <span>Python</span>
-                        </div>
-                        <div class="skill-item">
-                            <i class="fab fa-php" style="color: #777BB4;"></i>
-                            <span>PHP</span>
-                        </div>
-                        <div class="skill-item">
-                            <i class="fab fa-angular" style="color: #DD0031;"></i>
-                            <span>Angular</span>
-                        </div>
-                        <div class="skill-item">
-                            <i class="fab fa-react" style="color: #61DAFB;"></i>
-                            <span>React.js</span>
-                        </div>
-                        <div class="skill-item">
-                            <i class="fab fa-vuejs" style="color: #4FC08D;"></i>
-                            <span>Vue.js</span>
-                        </div>
-                        <div class="skill-item">
-                            <i class="fas fa-leaf" style="color: #6DB33F;"></i>
-                            <span>Spring Boot</span>
-                        </div>
-                        <div class="skill-item">
-                            <i class="fab fa-laravel" style="color: #FF2D20;"></i>
-                            <span>Laravel</span>
-                        </div>
-                        <div class="skill-item">
-                            <i class="fas fa-database" style="color: #4479A1;"></i>
-                            <span>MySQL</span>
-                        </div>
-                        <div class="skill-item">
-                            <i class="fab fa-git-alt" style="color: #F05032;"></i>
-                            <span>Git</span>
-                        </div>
+                    <div class="skill-item">
+                        <i class="fab fa-css3-alt skill-icon" style="color: #1572B6;"></i>
+                        <p class="skill-name">CSS3</p>
+                    </div>
+                    <div class="skill-item">
+                        <i class="fab fa-js-square skill-icon" style="color: #F7DF1E;"></i>
+                        <p class="skill-name">JavaScript</p>
+                    </div>
+                    <div class="skill-item">
+                        <i class="fab fa-js-square skill-icon" style="color: #3178C6;"></i>
+                        <p class="skill-name">TypeScript</p>
+                    </div>
+                    <div class="skill-item">
+                        <i class="fab fa-java skill-icon" style="color: #007396;"></i>
+                        <p class="skill-name">Java</p>
+                    </div>
+                    <div class="skill-item">
+                        <i class="fab fa-python skill-icon" style="color: #3776AB;"></i>
+                        <p class="skill-name">Python</p>
+                    </div>
+                    <div class="skill-item">
+                        <i class="fab fa-php skill-icon" style="color: #777BB4;"></i>
+                        <p class="skill-name">PHP</p>
+                    </div>
+                    <div class="skill-item">
+                        <i class="fab fa-angular skill-icon" style="color: #DD0031;"></i>
+                        <p class="skill-name">Angular</p>
+                    </div>
+                    <div class="skill-item">
+                        <i class="fab fa-react skill-icon" style="color: #61DAFB;"></i>
+                        <p class="skill-name">React.js</p>
+                    </div>
+                    <div class="skill-item">
+                        <i class="fab fa-vuejs skill-icon" style="color: #4FC08D;"></i>
+                        <p class="skill-name">Vue.js</p>
+                    </div>
+                    <div class="skill-item">
+                        <i class="fas fa-leaf skill-icon" style="color: #6DB33F;"></i>
+                        <p class="skill-name">Spring Boot</p>
+                    </div>
+                    <div class="skill-item">
+                        <i class="fab fa-laravel skill-icon" style="color: #FF2D20;"></i>
+                        <p class="skill-name">Laravel</p>
+                    </div>
+                    <div class="skill-item">
+                        <i class="fas fa-database skill-icon" style="color: #4479A1;"></i>
+                        <p class="skill-name">MySQL</p>
+                    </div>
+                    <div class="skill-item">
+                        <i class="fab fa-git-alt skill-icon" style="color: #F05032;"></i>
+                        <p class="skill-name">Git</p>
                     </div>
                 </div>
 
-                <!-- Soft Skills -->
-                <div class="skill-category-card" onclick="toggleSkillCategory(this)">
-                    <div class="skill-category-header">
-                        <div>
-                            <i class="fas fa-brain skill-category-icon"></i>
-                            <h3 class="skill-category-title" data-en="Soft Skills" data-id="Keahlian Lunak">Soft Skills</h3>
-                            <p class="text-muted" data-en="Personal and professional competencies" data-id="Kompetensi personal dan profesional">Personal and professional competencies</p>
-                        </div>
-                        <i class="fas fa-chevron-down skill-expand-icon"></i>
+                <!-- Soft Skills Grid -->
+                <div id="soft-skills" class="skills-grid">
+                    <div class="skill-item">
+                        <i class="fas fa-puzzle-piece skill-icon" style="color: #10B981;"></i>
+                        <p class="skill-name" data-en="Problem Solving" data-id="Pemecahan Masalah">Problem Solving</p>
                     </div>
-                    <div class="skill-items">
-                        <div class="skill-item">
-                            <i class="fas fa-puzzle-piece" style="color: #10B981;"></i>
-                            <span data-en="Problem Solving" data-id="Pemecahan Masalah">Problem Solving</span>
-                        </div>
-                        <div class="skill-item">
-                            <i class="fas fa-lightbulb" style="color: #F59E0B;"></i>
-                            <span data-en="Critical Thinking" data-id="Berpikir Kritis">Critical Thinking</span>
-                        </div>
-                        <div class="skill-item">
-                            <i class="fas fa-users" style="color: #3B82F6;"></i>
-                            <span data-en="Team Work" data-id="Kerja Tim">Team Work</span>
-                        </div>
-                        <div class="skill-item">
-                            <i class="fas fa-comments" style="color: #8B5CF6;"></i>
-                            <span data-en="Communication" data-id="Komunikasi">Communication</span>
-                        </div>
-                        <div class="skill-item">
-                            <i class="fas fa-user-tie" style="color: #EF4444;"></i>
-                            <span data-en="Leadership" data-id="Kepemimpinan">Leadership</span>
-                        </div>
-                        <div class="skill-item">
-                            <i class="fas fa-clock" style="color: #06B6D4;"></i>
-                            <span data-en="Time Management" data-id="Manajemen Waktu">Time Management</span>
-                        </div>
-                        <div class="skill-item">
-                            <i class="fas fa-palette" style="color: #EC4899;"></i>
-                            <span data-en="Creativity" data-id="Kreativitas">Creativity</span>
-                        </div>
-                        <div class="skill-item">
-                            <i class="fas fa-sync-alt" style="color: #84CC16;"></i>
-                            <span data-en="Adaptability" data-id="Kemampuan Adaptasi">Adaptability</span>
-                        </div>
+                    <div class="skill-item">
+                        <i class="fas fa-lightbulb skill-icon" style="color: #F59E0B;"></i>
+                        <p class="skill-name" data-en="Critical Thinking" data-id="Berpikir Kritis">Critical Thinking</p>
+                    </div>
+                    <div class="skill-item">
+                        <i class="fas fa-users skill-icon" style="color: #3B82F6;"></i>
+                        <p class="skill-name" data-en="Team Work" data-id="Kerja Tim">Team Work</p>
+                    </div>
+                    <div class="skill-item">
+                        <i class="fas fa-comments skill-icon" style="color: #8B5CF6;"></i>
+                        <p class="skill-name" data-en="Communication" data-id="Komunikasi">Communication</p>
+                    </div>
+                    <div class="skill-item">
+                        <i class="fas fa-user-tie skill-icon" style="color: #EF4444;"></i>
+                        <p class="skill-name" data-en="Leadership" data-id="Kepemimpinan">Leadership</p>
+                    </div>
+                    <div class="skill-item">
+                        <i class="fas fa-clock skill-icon" style="color: #06B6D4;"></i>
+                        <p class="skill-name" data-en="Time Management" data-id="Manajemen Waktu">Time Management</p>
+                    </div>
+                    <div class="skill-item">
+                        <i class="fas fa-palette skill-icon" style="color: #EC4899;"></i>
+                        <p class="skill-name" data-en="Creativity" data-id="Kreativitas">Creativity</p>
+                    </div>
+                    <div class="skill-item">
+                        <i class="fas fa-sync-alt skill-icon" style="color: #84CC16;"></i>
+                        <p class="skill-name" data-en="Adaptability" data-id="Kemampuan Adaptasi">Adaptability</p>
                     </div>
                 </div>
             </div>
@@ -1156,7 +1402,7 @@
                 <div class="row g-4">
                     <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
                         <div class="project-card">
-                            <img src="assets/api-central.png" alt="API Central" class="project-img">
+                            <img src="https://images.unsplash.com/photo-1551434678-e076c223a692?w=400&h=200&fit=crop" alt="API Central" class="project-img">
                             <div class="project-content-card">
                                 <h4 class="project-title">API Central</h4>
                                 <p class="project-description" data-en="Centralization and standardization of API documentation with Postman-to-Swagger converter tool." data-id="Sentralisasi dan standardisasi dokumentasi API dengan alat konverter Postman-ke-Swagger.">Centralization and standardization of API documentation with Postman-to-Swagger converter tool.</p>
@@ -1181,7 +1427,7 @@
                     
                     <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
                         <div class="project-card">
-                            <img src="assets/employee.png" alt="Employee Management" class="project-img">
+                            <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=200&fit=crop" alt="Employee Management" class="project-img">
                             <div class="project-content-card">
                                 <h4 class="project-title">Employee Management System</h4>
                                 <p class="project-description" data-en="Comprehensive employee management application with CRUD functionality and role-based access control." data-id="Aplikasi manajemen karyawan yang komprehensif dengan fungsi CRUD dan kontrol akses berbasis peran.">Comprehensive employee management application with CRUD functionality and role-based access control.</p>
@@ -1206,7 +1452,7 @@
                     
                     <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
                         <div class="project-card">
-                            <img src="assets/notes.png" alt="Notes App" class="project-img">
+                            <img src="https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=400&h=200&fit=crop" alt="Notes App" class="project-img">
                             <div class="project-content-card">
                                 <h4 class="project-title">Notes Web Application</h4>
                                 <p class="project-description" data-en="Responsive single-page note-taking application built with vanilla JavaScript and Web Components API." data-id="Aplikasi pencatat responsif satu halaman yang dibangun dengan vanilla JavaScript dan Web Components API.">Responsive single-page note-taking application built with vanilla JavaScript and Web Components API.</p>
@@ -1231,7 +1477,7 @@
                     
                     <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="400">
                         <div class="project-card">
-                            <img src="assets/bookshelf.png" alt="Bookshelf App" class="project-img">
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=200&fit=crop" alt="Bookshelf App" class="project-img">
                             <div class="project-content-card">
                                 <h4 class="project-title">Bookshelf Web Application</h4>
                                 <p class="project-description" data-en="Interactive front-end application for managing digital bookshelf with full CRUD operations." data-id="Aplikasi front-end interaktif untuk mengelola rak buku digital dengan operasi CRUD lengkap.">Interactive front-end application for managing digital bookshelf with full CRUD operations.</p>
@@ -1256,7 +1502,7 @@
                     
                     <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="500">
                         <div class="project-card">
-                            <img src="assets/game.jpg" alt="Mini Games" class="project-img">
+                            <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=400&h=200&fit=crop" alt="Mini Games" class="project-img">
                             <div class="project-content-card">
                                 <h4 class="project-title">Mini Games Web Portal</h4>
                                 <p class="project-description" data-en="Collection of interactive web-based games developed with JavaScript, featuring engaging user experience." data-id="Kumpulan game interaktif berbasis web yang dikembangkan dengan JavaScript, menampilkan pengalaman pengguna yang menarik.">Collection of interactive web-based games developed with JavaScript, featuring engaging user experience.</p>
@@ -1286,7 +1532,7 @@
                 <div class="row g-4">
                     <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
                         <div class="project-card">
-                            <img src="assets/spmb.png" alt="SEMAT DEL" class="project-img">
+                            <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=400&h=200&fit=crop" alt="SEMAT DEL" class="project-img">
                             <div class="project-content-card">
                                 <h4 class="project-title">SEMAT DEL</h4>
                                 <p class="project-description" data-en="Web-based information platform for IT Del student candidates built with Laravel 9 and MySQL." data-id="Platform informasi berbasis web untuk calon mahasiswa IT Del yang dibangun dengan Laravel 9 dan MySQL.">Web-based information platform for IT Del student candidates built with Laravel 9 and MySQL.</p>
@@ -1357,7 +1603,7 @@
         </div>
     </section>
 
-    <!-- Certificates Section -->
+    <!-- Enhanced Certificates Section -->
     <section id="certificates" class="py-5">
         <div class="container">
             <div class="section-heading" data-aos="fade-up">
@@ -1365,153 +1611,142 @@
                 <p class="section-subtitle" data-en="My professional certifications and notable achievements in technology and programming." data-id="Sertifikasi profesional saya dan pencapaian terkemuka dalam teknologi dan pemrograman.">My professional certifications and notable achievements in technology and programming.</p>
             </div>
             
-            <div class="row g-4">
-                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
-                    <div class="certificate-card">
-                        <img src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=400&h=200&fit=crop" alt="Dicoding Certificate" class="certificate-img">
-                        <div class="certificate-content">
-                            <h4 class="certificate-title" data-en="Front-End Web Development" data-id="Pengembangan Web Front-End">Front-End Web Development</h4>
-                            <p class="certificate-description" data-en="Comprehensive front-end development course covering HTML forms, CSS Grid, Web Components, and modern JavaScript." data-id="Kursus pengembangan front-end komprehensif yang mencakup formulir HTML, CSS Grid, Komponen Web, dan JavaScript modern.">Comprehensive front-end development course covering HTML forms, CSS Grid, Web Components, and modern JavaScript.</p>
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <span class="text-success fw-bold">Dicoding</span>
-                                <span class="text-muted">May 2025</span>
-                            </div>
-                            <div class="certificate-links">
-                                <a href="https://drive.google.com/file/d/1E1CQ4q_is9Hi459mvd55A3wSnj_egeC6/view?usp=drive_link" target="_blank">
-                                    <i class="fas fa-certificate me-2"></i>Basic Web
-                                </a>
-                                <a href="https://drive.google.com/file/d/1OjpIDsFmiQjvc_1Q45RljiMvXRhEKiFC/view?usp=drive_link" target="_blank">
-                                    <i class="fas fa-certificate me-2"></i>Fundamental
-                                </a>
-                                <a href="https://drive.google.com/file/d/10OdGjQpLWbu9nV8dE9jtPCz9Wskwrwrr/view?usp=drive_link" target="_blank">
-                                    <i class="fas fa-certificate me-2"></i>Front-End
-                                </a>
-                            </div>
+            <div class="certificate-grid" data-aos="fade-up">
+                <!-- Dicoding Certificates -->
+                <div class="certificate-card">
+                    <div class="certificate-header">
+                        <h4 data-en="Front-End Web Development" data-id="Pengembangan Web Front-End">Front-End Web Development</h4>
+                    </div>
+                    <div class="certificate-body">
+                        <div class="certificate-meta">
+                            <span class="certificate-issuer">Dicoding</span>
+                            <span class="certificate-date">May 2025</span>
+                        </div>
+                        <p class="certificate-description" data-en="Comprehensive front-end development course covering HTML forms, CSS Grid, Web Components, and modern JavaScript." data-id="Kursus pengembangan front-end komprehensif yang mencakup formulir HTML, CSS Grid, Komponen Web, dan JavaScript modern.">Comprehensive front-end development course covering HTML forms, CSS Grid, Web Components, and modern JavaScript.</p>
+                        <div class="certificate-actions">
+                            <a href="https://drive.google.com/file/d/1E1CQ4q_is9Hi459mvd55A3wSnj_egeC6/view?usp=drive_link" target="_blank" class="certificate-btn">
+                                <i class="fas fa-certificate"></i> Basic Web
+                            </a>
+                            <a href="https://drive.google.com/file/d/1OjpIDsFmiQjvc_1Q45RljiMvXRhEKiFC/view?usp=drive_link" target="_blank" class="certificate-btn">
+                                <i class="fas fa-certificate"></i> Fundamental
+                            </a>
+                            <a href="https://drive.google.com/file/d/10OdGjQpLWbu9nV8dE9jtPCz9Wskwrwrr/view?usp=drive_link" target="_blank" class="certificate-btn">
+                                <i class="fas fa-certificate"></i> Front-End
+                            </a>
                         </div>
                     </div>
                 </div>
                 
-                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
-                    <div class="certificate-card">
-                        <img src="https://images.unsplash.com/photo-1517180102446-f3ece451e9d8?w=400&h=200&fit=crop" alt="JavaScript Certificate" class="certificate-img">
-                        <div class="certificate-content">
-                            <h4 class="certificate-title" data-en="JavaScript Programming" data-id="Pemrograman JavaScript">JavaScript Programming</h4>
-                            <p class="certificate-description" data-en="Mastering JavaScript fundamentals including ES6+, async programming, OOP, and functional programming paradigms." data-id="Menguasai dasar-dasar JavaScript termasuk ES6+, pemrograman async, OOP, dan paradigma pemrograman fungsional.">Mastering JavaScript fundamentals including ES6+, async programming, OOP, and functional programming paradigms.</p>
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <span class="text-success fw-bold">Dicoding</span>
-                                <span class="text-muted">May 2025</span>
-                            </div>
-                            <div class="certificate-links">
-                                <a href="https://drive.google.com/file/d/1NPoH8AX1vf9UOTixjfPeTFrOmuRg-8ni/view?usp=drive_link" target="_blank">
-                                    <i class="fas fa-certificate me-2"></i>View Certificate
-                                </a>
-                            </div>
+                <div class="certificate-card">
+                    <div class="certificate-header">
+                        <h4 data-en="JavaScript Programming" data-id="Pemrograman JavaScript">JavaScript Programming</h4>
+                    </div>
+                    <div class="certificate-body">
+                        <div class="certificate-meta">
+                            <span class="certificate-issuer">Dicoding</span>
+                            <span class="certificate-date">May 2025</span>
+                        </div>
+                        <p class="certificate-description" data-en="Mastering JavaScript fundamentals including ES6+, async programming, OOP, and functional programming paradigms." data-id="Menguasai dasar-dasar JavaScript termasuk ES6+, pemrograman async, OOP, dan paradigma pemrograman fungsional.">Mastering JavaScript fundamentals including ES6+, async programming, OOP, and functional programming paradigms.</p>
+                        <div class="certificate-actions">
+                            <a href="https://drive.google.com/file/d/1NPoH8AX1vf9UOTixjfPeTFrOmuRg-8ni/view?usp=drive_link" target="_blank" class="certificate-btn">
+                                <i class="fas fa-certificate"></i> View Certificate
+                            </a>
                         </div>
                     </div>
                 </div>
                 
-                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
-                    <div class="certificate-card">
-                        <img src="https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=400&h=200&fit=crop" alt="Java Certificate" class="certificate-img">
-                        <div class="certificate-content">
-                            <h4 class="certificate-title" data-en="Java Programming" data-id="Pemrograman Java">Java Programming</h4>
-                            <p class="certificate-description" data-en="Comprehensive Java programming course covering OOP principles, data structures, and software development best practices." data-id="Kursus pemrograman Java komprehensif yang mencakup prinsip OOP, struktur data, dan praktik terbaik pengembangan perangkat lunak.">Comprehensive Java programming course covering OOP principles, data structures, and software development best practices.</p>
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <span class="text-success fw-bold">Dicoding</span>
-                                <span class="text-muted">Jun 2024</span>
-                            </div>
-                            <div class="certificate-links">
-                                <a href="https://drive.google.com/file/d/17G8-ZnCrqeGmxIzt83JdebGGyw7Dk3so/view?usp=drive_link" target="_blank">
-                                    <i class="fas fa-certificate me-2"></i>View Certificate
-                                </a>
-                            </div>
+                <div class="certificate-card">
+                    <div class="certificate-header">
+                        <h4 data-en="Java Programming" data-id="Pemrograman Java">Java Programming</h4>
+                    </div>
+                    <div class="certificate-body">
+                        <div class="certificate-meta">
+                            <span class="certificate-issuer">Dicoding</span>
+                            <span class="certificate-date">Jun 2024</span>
+                        </div>
+                        <p class="certificate-description" data-en="Comprehensive Java programming course covering OOP principles, data structures, and software development best practices." data-id="Kursus pemrograman Java komprehensif yang mencakup prinsip OOP, struktur data, dan praktik terbaik pengembangan perangkat lunak.">Comprehensive Java programming course covering OOP principles, data structures, and software development best practices.</p>
+                        <div class="certificate-actions">
+                            <a href="https://drive.google.com/file/d/17G8-ZnCrqeGmxIzt83JdebGGyw7Dk3so/view?usp=drive_link" target="_blank" class="certificate-btn">
+                                <i class="fas fa-certificate"></i> View Certificate
+                            </a>
                         </div>
                     </div>
                 </div>
                 
-                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="400">
-                    <div class="certificate-card">
-                        <img src="https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?w=400&h=200&fit=crop" alt="MSIB Certificate" class="certificate-img">
-                        <div class="certificate-content">
-                            <h4 class="certificate-title" data-en="MSIB Batch 7 Certification" data-id="Sertifikat MSIB Angkatan 7">MSIB Batch 7 Certification</h4>
-                            <p class="certificate-description" data-en="Completed MSIB program as Angular Programmer, learning modern web development technologies and industry practices." data-id="Menyelesaikan program MSIB sebagai Programmer Angular, mempelajari teknologi pengembangan web modern dan praktik industri.">Completed MSIB program as Angular Programmer, learning modern web development technologies and industry practices.</p>
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <span class="text-success fw-bold">PT. Javan Cipta Solusi</span>
-                                <span class="text-muted">Dec 2024</span>
-                            </div>
-                            <div class="certificate-links">
-                                <a href="https://drive.google.com/file/d/12aRB0azPi3jvWovB2g3mZuoM7jM0pirL/view?usp=drive_link" target="_blank">
-                                    <i class="fas fa-certificate me-2"></i>Javan Certificate
-                                </a>
-                                <a href="https://drive.google.com/file/d/1ZxdBM1WU0qq_7DRWadC5to952gRQ3n_q/view?usp=drive_link" target="_blank">
-                                    <i class="fas fa-certificate me-2"></i>MSIB Certificate
-                                </a>
-                            </div>
+                <!-- Internship Certificates -->
+                <div class="certificate-card">
+                    <div class="certificate-header">
+                        <h4 data-en="MSIB Batch 7 Certification" data-id="Sertifikat MSIB Angkatan 7">MSIB Batch 7 Certification</h4>
+                    </div>
+                    <div class="certificate-body">
+                        <div class="certificate-meta">
+                            <span class="certificate-issuer">PT. Javan Cipta Solusi</span>
+                            <span class="certificate-date">Dec 2024</span>
+                        </div>
+                        <p class="certificate-description" data-en="Completed MSIB program as Angular Programmer, learning modern web development technologies and industry practices." data-id="Menyelesaikan program MSIB sebagai Programmer Angular, mempelajari teknologi pengembangan web modern dan praktik industri.">Completed MSIB program as Angular Programmer, learning modern web development technologies and industry practices.</p>
+                        <div class="certificate-actions">
+                            <a href="https://drive.google.com/file/d/12aRB0azPi3jvWovB2g3mZuoM7jM0pirL/view?usp=drive_link" target="_blank" class="certificate-btn">
+                                <i class="fas fa-certificate"></i> Javan Certificate
+                            </a>
+                            <a href="https://drive.google.com/file/d/1ZxdBM1WU0qq_7DRWadC5to952gRQ3n_q/view?usp=drive_link" target="_blank" class="certificate-btn">
+                                <i class="fas fa-certificate"></i> MSIB Certificate
+                            </a>
                         </div>
                     </div>
                 </div>
                 
-                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="500">
-                    <div class="certificate-card">
-                        <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=200&fit=crop" alt="IELTS Certificate" class="certificate-img">
-                        <div class="certificate-content">
-                            <h4 class="certificate-title" data-en="IELTS Training Certificates" data-id="Sertifikat Pelatihan IELTS">IELTS Training Certificates</h4>
-                            <p class="certificate-description" data-en="Multiple IELTS training certificates covering listening skills, comprehension, and English proficiency development." data-id="Beberapa sertifikat pelatihan IELTS yang mencakup keterampilan mendengarkan, pemahaman, dan pengembangan kemahiran bahasa Inggris.">Multiple IELTS training certificates covering listening skills, comprehension, and English proficiency development.</p>
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <span class="text-success fw-bold">MySkill</span>
-                                <span class="text-muted">2023</span>
-                            </div>
-                            <div class="certificate-links">
-                                <a href="https://drive.google.com/file/d/1YEVZj5JQ95R2_8NJKK6SBIuLpT4Po4Gh/view?usp=drive_link" target="_blank">
-                                    <i class="fas fa-certificate me-2"></i>Actions & Processes
-                                </a>
-                                <a href="https://drive.google.com/file/d/1iBHwaXkCKOb_qJO0wDx-O3fLrYUfkngY/view?usp=drive_link" target="_blank">
-                                    <i class="fas fa-certificate me-2"></i>Attitude & Opinions
-                                </a>
-                                <a href="https://drive.google.com/file/d/1tcU8uj1_ygTAIYyd_GKfUadVXNLeHwhG/view?usp=drive_link" target="_blank">
-                                    <i class="fas fa-certificate me-2"></i>Lecture & Talk
-                                </a>
-                                <a href="https://drive.google.com/file/d/1-XO_4R_wmOAjCulVnWoOqLJHIE2sMqHF/view?usp=drive_link" target="_blank">
-                                    <i class="fas fa-certificate me-2"></i>Introduction
-                                </a>
-                                <a href="https://drive.google.com/file/d/11Nvka4tUow2JCxhWPm3I70BxaiIYAWeR/view?usp=drive_link" target="_blank">
-                                    <i class="fas fa-certificate me-2"></i>Getting Ready
-                                </a>
-                                <a href="https://drive.google.com/file/d/1vNevFEM5gDz9If0AVHCjPlt4v9P9_lZX/view?usp=drive_link" target="_blank">
-                                    <i class="fas fa-certificate me-2"></i>Places & Directions
-                                </a>
-                                <a href="https://drive.google.com/file/d/1PbNJ3j23AMV_PdQaqCn8Wc6PDXE-lTLD/view?usp=drive_link" target="_blank">
-                                    <i class="fas fa-certificate me-2"></i>Distractors
-                                </a>
-                            </div>
+                <!-- IELTS Certificates -->
+                <div class="certificate-card">
+                    <div class="certificate-header">
+                        <h4 data-en="IELTS Training Certificates" data-id="Sertifikat Pelatihan IELTS">IELTS Training Certificates</h4>
+                    </div>
+                    <div class="certificate-body">
+                        <div class="certificate-meta">
+                            <span class="certificate-issuer">MySkill</span>
+                            <span class="certificate-date">2023</span>
+                        </div>
+                        <p class="certificate-description" data-en="Multiple IELTS training certificates covering listening skills, comprehension, and English proficiency development." data-id="Beberapa sertifikat pelatihan IELTS yang mencakup keterampilan mendengarkan, pemahaman, dan pengembangan kemahiran bahasa Inggris.">Multiple IELTS training certificates covering listening skills, comprehension, and English proficiency development.</p>
+                        <div class="certificate-actions">
+                            <a href="https://drive.google.com/file/d/1YEVZj5JQ95R2_8NJKK6SBIuLpT4Po4Gh/view?usp=drive_link" target="_blank" class="certificate-btn">
+                                <i class="fas fa-certificate"></i> Actions & Processes
+                            </a>
+                            <a href="https://drive.google.com/file/d/1iBHwaXkCKOb_qJO0wDx-O3fLrYUfkngY/view?usp=drive_link" target="_blank" class="certificate-btn">
+                                <i class="fas fa-certificate"></i> Attitude & Opinions
+                            </a>
+                            <a href="https://drive.google.com/file/d/1tcU8uj1_ygTAIYyd_GKfUadVXNLeHwhG/view?usp=drive_link" target="_blank" class="certificate-btn">
+                                <i class="fas fa-certificate"></i> Lecture & Talk
+                            </a>
+                            <a href="https://drive.google.com/file/d/1-XO_4R_wmOAjCulVnWoOqLJHIE2sMqHF/view?usp=drive_link" target="_blank" class="certificate-btn">
+                                <i class="fas fa-certificate"></i> Introduction
+                            </a>
                         </div>
                     </div>
                 </div>
                 
-                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="600">
-                    <div class="certificate-card">
-                        <img src="https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=400&h=200&fit=crop" alt="PKM Achievement" class="certificate-img">
-                        <div class="certificate-content">
-                            <h4 class="certificate-title" data-en="Organization & Leadership" data-id="Organisasi & Kepemimpinan">Organization & Leadership</h4>
-                            <p class="certificate-description" data-en="Various certificates from organizational activities and leadership roles in student organizations and competitions." data-id="Berbagai sertifikat dari kegiatan organisasi dan peran kepemimpinan dalam organisasi mahasiswa dan kompetisi.">Various certificates from organizational activities and leadership roles in student organizations and competitions.</p>
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <span class="text-success fw-bold">Various Organizations</span>
-                                <span class="text-muted">2023-2024</span>
-                            </div>
-                            <div class="certificate-links">
-                                <a href="https://drive.google.com/file/d/1jnhJgQn7xF1VV_-m9aCd9zA_qs2292Mo/view?usp=drive_link" target="_blank">
-                                    <i class="fas fa-certificate me-2"></i>Social Division Head
-                                </a>
-                                <a href="https://drive.google.com/file/d/1RRlraRx8fmXToWzUYf6KyxE24VcHZYRC/view?usp=drive_link" target="_blank">
-                                    <i class="fas fa-certificate me-2"></i>BEM Member
-                                </a>
-                                <a href="https://drive.google.com/file/d/12aWZXS03prrymupPBHoi4LPJaXnNXYMO/view?usp=drive_link" target="_blank">
-                                    <i class="fas fa-certificate me-2"></i>IT Del Festival
-                                </a>
-                                <a href="https://drive.google.com/file/d/1rcoi7EcNavuZ16IxpFDD_N_tFQbQ0Ljz/view?usp=drive_link" target="_blank">
-                                    <i class="fas fa-certificate me-2"></i>PKM Competition
-                                </a>
-                            </div>
+                <!-- Organization Certificates -->
+                <div class="certificate-card">
+                    <div class="certificate-header">
+                        <h4 data-en="Organization & Leadership" data-id="Organisasi & Kepemimpinan">Organization & Leadership</h4>
+                    </div>
+                    <div class="certificate-body">
+                        <div class="certificate-meta">
+                            <span class="certificate-issuer">Various Organizations</span>
+                            <span class="certificate-date">2023-2024</span>
+                        </div>
+                        <p class="certificate-description" data-en="Various certificates from organizational activities and leadership roles in student organizations and competitions." data-id="Berbagai sertifikat dari kegiatan organisasi dan peran kepemimpinan dalam organisasi mahasiswa dan kompetisi.">Various certificates from organizational activities and leadership roles in student organizations and competitions.</p>
+                        <div class="certificate-actions">
+                            <a href="https://drive.google.com/file/d/1jnhJgQn7xF1VV_-m9aCd9zA_qs2292Mo/view?usp=drive_link" target="_blank" class="certificate-btn">
+                                <i class="fas fa-certificate"></i> Social Division Head
+                            </a>
+                            <a href="https://drive.google.com/file/d/1RRlraRx8fmXToWzUYf6KyxE24VcHZYRC/view?usp=drive_link" target="_blank" class="certificate-btn">
+                                <i class="fas fa-certificate"></i> BEM Member
+                            </a>
+                            <a href="https://drive.google.com/file/d/12aWZXS03prrymupPBHoi4LPJaXnNXYMO/view?usp=drive_link" target="_blank" class="certificate-btn">
+                                <i class="fas fa-certificate"></i> IT Del Festival
+                            </a>
+                            <a href="https://drive.google.com/file/d/1rcoi7EcNavuZ16IxpFDD_N_tFQbQ0Ljz/view?usp=drive_link" target="_blank" class="certificate-btn">
+                                <i class="fas fa-certificate"></i> PKM Competition
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -1643,7 +1878,7 @@
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <img src="assets/javan.jpg" alt="Javan Office" class="img-fluid mb-3">
+                    <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=600&h=400&fit=crop" alt="Javan Office" class="img-fluid mb-3">
                     <p>During my internship at PT. Javan Cipta Solusi, I had the opportunity to work with cutting-edge technologies and collaborate with experienced developers. This experience significantly enhanced my skills in Angular development and full-stack programming.</p>
                 </div>
             </div>
@@ -1659,7 +1894,7 @@
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <img src="assets/fif.jpeg" alt="FIF Office" class="img-fluid mb-3">
+                    <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&h=400&fit=crop" alt="FIF Office" class="img-fluid mb-3">
                     <p>My internship at PT. Federal International Finance (FIFGROUP) was an incredible learning experience in the financial technology sector. I gained valuable insights into enterprise-level application development and API management.</p>
                 </div>
             </div>
@@ -1675,7 +1910,7 @@
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <img src="assets/gdsc.jpg" alt="GDSC Event" class="img-fluid mb-3">
+                    <img src="https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=600&h=400&fit=crop" alt="GDSC Event" class="img-fluid mb-3">
                     <p>As a core team member of Google Developer Student Club IT Del, I organized various tech events and workshops. This role enhanced my leadership skills and public speaking abilities while contributing to the tech community.</p>
                 </div>
             </div>
@@ -1691,7 +1926,7 @@
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <img src="assets/dhpm.jpeg" alt="BEM Activity" class="img-fluid mb-3">
+                    <img src="https://images.unsplash.com/photo-1529390079861-591de354faf5?w=600&h=400&fit=crop" alt="BEM Activity" class="img-fluid mb-3">
                     <p>Leading the Social Division in the Student Executive Board taught me valuable management and organizational skills. I successfully coordinated multiple off-campus events and managed social media strategies.</p>
                 </div>
             </div>
@@ -1707,7 +1942,7 @@
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <img src="assets/PKM.png" alt="PKM Team" class="img-fluid mb-3">
+                    <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=600&h=400&fit=crop" alt="PKM Team" class="img-fluid mb-3">
                     <p>Leading the team that developed 'Toba Trip' mobile application was an incredible experience. We secured 3rd place in the FITE Festival's Student Creativity Program, showcasing our innovation in solving tourism information challenges in the Toba Samosir region.</p>
                 </div>
             </div>
@@ -1733,8 +1968,8 @@
 
         // Typing animation
         const typingTexts = {
-            en: ['Full-Stack Developer', 'Mobile App Developer', 'UI/UX Enthusiast'],
-            id: ['Pengembang Full-Stack', 'Pengembang Aplikasi Mobile', 'Penggemar UI/UX']
+            en: ['Full-Stack Developer', 'Mobile App Developer', 'UI/UX Enthusiast', 'Problem Solver'],
+            id: ['Pengembang Full-Stack', 'Pengembang Aplikasi Mobile', 'Penggemar UI/UX', 'Pemecah Masalah']
         };
 
         let currentLang = 'en';
@@ -1813,18 +2048,39 @@
             isDeleting = false;
         }
 
-        // Skills category toggle function
-        function toggleSkillCategory(card) {
-            // Remove active class from all cards
-            document.querySelectorAll('.skill-category-card').forEach(c => {
-                if (c !== card) {
-                    c.classList.remove('active');
-                }
+        // Enhanced Skills functionality with animated grid
+        function showSkillCategory(category) {
+            // Remove active class from all buttons
+            document.querySelectorAll('.skill-category-btn').forEach(btn => {
+                btn.classList.remove('active');
             });
             
-            // Toggle active class on clicked card
-            card.classList.toggle('active');
+            // Add active class to clicked button
+            event.target.classList.add('active');
+            
+            // Hide all skill grids
+            document.querySelectorAll('.skills-grid').forEach(grid => {
+                grid.classList.remove('active');
+            });
+            
+            // Show selected grid
+            const targetGrid = document.getElementById(category);
+            targetGrid.classList.add('active');
+            
+            // Animate skill items one by one
+            const skillItems = targetGrid.querySelectorAll('.skill-item');
+            skillItems.forEach((item, index) => {
+                item.classList.remove('animate');
+                setTimeout(() => {
+                    item.classList.add('animate');
+                }, index * 100);
+            });
         }
+
+        // Initialize first category
+        document.addEventListener('DOMContentLoaded', function() {
+            showSkillCategory('hard-skills');
+        });
 
         // Project tabs functionality
         function showProjectTab(tabName) {
@@ -1894,7 +2150,7 @@
         window.addEventListener('scroll', function() {
             const scrolled = window.pageYOffset;
             const parallax = document.querySelector('.hero');
-            const speed = scrolled * 0.5;
+            const speed = scrolled * 0.2;
             if (parallax) {
                 parallax.style.transform = `translateY(${speed}px)`;
             }
@@ -1954,15 +2210,6 @@
                     }, index * 200);
                 });
             }, 500);
-        });
-
-        // Add custom cursor effect
-        document.addEventListener('mousemove', function(e) {
-            const cursor = document.querySelector('.custom-cursor');
-            if (cursor) {
-                cursor.style.left = e.clientX + 'px';
-                cursor.style.top = e.clientY + 'px';
-            }
         });
 
         // Add particles effect (simplified)
@@ -2027,6 +2274,24 @@
                 }, 600);
             });
         });
+
+        // Profile image responsive behavior
+        function adjustProfileImage() {
+            const profileImg = document.querySelector('.profile-image');
+            const container = document.querySelector('.profile-image-container');
+            
+            if (window.innerWidth <= 768) {
+                profileImg.style.maxWidth = '300px';
+                container.style.marginTop = '2rem';
+            } else {
+                profileImg.style.maxWidth = '400px';
+                container.style.marginTop = '0';
+            }
+        }
+
+        // Call on load and resize
+        window.addEventListener('load', adjustProfileImage);
+        window.addEventListener('resize', adjustProfileImage);
     </script>
 
     <style>
@@ -2070,15 +2335,37 @@
                 gap: 2rem;
             }
             
-            .certificate-links {
+            .certificate-actions {
                 flex-direction: column;
                 gap: 0.5rem;
             }
             
-            .certificate-links a {
+            .certificate-btn {
                 margin-right: 0;
                 width: 100%;
                 justify-content: center;
+            }
+
+            .profile-image {
+                max-width: 250px !important;
+            }
+
+            .about-stats {
+                position: static;
+                margin-top: 1rem;
+                width: 100%;
+            }
+
+            .highlight-item {
+                padding: 0.8rem;
+            }
+
+            .skill-item {
+                padding: 1rem 0.5rem;
+            }
+
+            .skill-icon {
+                font-size: 2rem;
             }
         }
 
@@ -2123,6 +2410,22 @@
             .hero-title {
                 color: black !important;
                 font-size: 24pt;
+            }
+        }
+
+        /* Enhanced mobile responsiveness for profile section */
+        @media (max-width: 768px) {
+            .hero {
+                padding: 2rem 0;
+            }
+
+            .profile-image-container {
+                order: -1;
+                margin-bottom: 2rem;
+            }
+
+            .hero .row {
+                flex-direction: column-reverse;
             }
         }
     </style>
