@@ -262,9 +262,8 @@
         .profile-img {
             width: 200px;
             height: 200px;
-            border-radius: 50%;
+            border-radius: 20px;
             object-fit: cover;
-            border: 5px solid var(--primary-green);
             margin-bottom: 2rem;
             transition: all 0.3s ease;
         }
@@ -273,146 +272,217 @@
             transform: scale(1.05);
         }
 
-        /* Skills Section */
-        .skill-card {
-            background: white;
-            border-radius: 15px;
-            padding: 2rem;
-            text-align: center;
-            box-shadow: var(--shadow);
+        /* Download CV Button */
+        .btn-download-cv {
+            background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            font-weight: 600;
             transition: all 0.3s ease;
-            height: 100%;
-            border: 1px solid rgba(16, 185, 129, 0.1);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
-        .skill-card:hover {
-            transform: translateY(-10px);
+        .btn-download-cv:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-hover);
+            color: white;
+        }
+
+        /* Skills Section */
+        .skills-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .skill-category-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .skill-category-card:hover {
+            transform: translateY(-5px);
             box-shadow: var(--shadow-hover);
             border-color: var(--primary-green);
         }
 
-        .skill-icon {
+        .skill-category-card.active {
+            border-color: var(--primary-green);
+            background: var(--light-green);
+        }
+
+        .skill-category-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .skill-category-icon {
             font-size: 3rem;
             color: var(--primary-green);
             margin-bottom: 1rem;
-            transition: all 0.3s ease;
         }
 
-        .skill-card:hover .skill-icon {
-            transform: scale(1.2) rotate(360deg);
-        }
-
-        .skill-title {
-            font-size: 1.2rem;
+        .skill-category-title {
+            font-size: 1.5rem;
             font-weight: 600;
-            margin-bottom: 1rem;
             color: var(--text-dark);
+            margin-bottom: 0.5rem;
         }
 
-        .skill-list {
-            list-style: none;
-            padding: 0;
+        .skill-expand-icon {
+            font-size: 1.2rem;
+            color: var(--primary-green);
+            transition: transform 0.3s ease;
         }
 
-        .skill-list li {
-            background: var(--light-green);
-            color: var(--dark-green);
-            padding: 0.5rem 1rem;
+        .skill-category-card.active .skill-expand-icon {
+            transform: rotate(180deg);
+        }
+
+        .skill-items {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .skill-category-card.active .skill-items {
+            max-height: 500px;
+        }
+
+        .skill-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.5rem;
             margin: 0.5rem 0;
-            border-radius: 20px;
-            font-weight: 500;
+            background: white;
+            border-radius: 10px;
             transition: all 0.3s ease;
         }
 
-        .skill-list li:hover {
+        .skill-item:hover {
             background: var(--primary-green);
             color: white;
-            transform: scale(1.05);
+            transform: translateX(10px);
+        }
+
+        .skill-item i {
+            font-size: 1.5rem;
+            width: 30px;
+            text-align: center;
         }
 
         /* Experience Section */
-        .timeline {
-            position: relative;
-            padding: 2rem 0;
+        .experience-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
         }
 
-        .timeline::before {
-            content: '';
-            position: absolute;
-            left: 50%;
-            top: 0;
-            bottom: 0;
-            width: 4px;
-            background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
-            transform: translateX(-50%);
+        .experience-column h3 {
+            text-align: center;
+            color: var(--primary-green);
+            margin-bottom: 2rem;
+            font-size: 1.8rem;
+            font-weight: 700;
         }
 
-        .timeline-item {
-            position: relative;
-            margin: 2rem 0;
-            width: 50%;
-        }
-
-        .timeline-item:nth-child(odd) {
-            left: 0;
-            padding-right: 2rem;
-        }
-
-        .timeline-item:nth-child(even) {
-            left: 50%;
-            padding-left: 2rem;
-        }
-
-        .timeline-content {
+        .experience-card {
             background: white;
             border-radius: 15px;
             padding: 2rem;
+            margin-bottom: 2rem;
             box-shadow: var(--shadow);
-            position: relative;
             transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
         }
 
-        .timeline-content:hover {
+        .experience-card:hover {
             transform: translateY(-5px);
             box-shadow: var(--shadow-hover);
+            border-left: 4px solid var(--primary-green);
         }
 
-        .timeline-content::before {
-            content: '';
-            position: absolute;
-            top: 20px;
-            width: 0;
-            height: 0;
-            border: 10px solid;
-        }
-
-        .timeline-item:nth-child(odd) .timeline-content::before {
-            right: -20px;
-            border-color: transparent transparent transparent white;
-        }
-
-        .timeline-item:nth-child(even) .timeline-content::before {
-            left: -20px;
-            border-color: transparent white transparent transparent;
-        }
-
-        .timeline-dot {
-            position: absolute;
-            top: 20px;
-            width: 20px;
-            height: 20px;
+        .experience-card .badge {
             background: var(--primary-green);
-            border-radius: 50%;
-            border: 4px solid white;
-            box-shadow: var(--shadow);
+            color: white;
+            font-size: 0.8rem;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
         }
 
-        .timeline-item:nth-child(odd) .timeline-dot {
-            right: -10px;
+        /* Modal Styles */
+        .modal-content {
+            border-radius: 20px;
+            border: none;
+            overflow: hidden;
         }
 
-        .timeline-item:nth-child(even) .timeline-dot {
-            left: -10px;
+        .modal-header {
+            background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
+            color: white;
+            border: none;
+        }
+
+        .modal-body img {
+            width: 100%;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+        }
+
+        /* Projects Section */
+        .project-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+
+        .project-tab {
+            background: transparent;
+            border: 2px solid var(--primary-green);
+            color: var(--primary-green);
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .project-tab.active {
+            background: var(--primary-green);
+            color: white;
+        }
+
+        .project-tab:hover {
+            background: var(--primary-green);
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        .project-content {
+            display: none;
+        }
+
+        .project-content.active {
+            display: block;
         }
 
         /* Project Cards */
@@ -443,7 +513,7 @@
             transform: scale(1.1);
         }
 
-        .project-content, .certificate-content {
+        .project-content-card, .certificate-content {
             padding: 2rem;
         }
 
@@ -475,7 +545,7 @@
             font-weight: 500;
         }
 
-        .project-links a {
+        .project-links a, .certificate-links a {
             display: inline-flex;
             align-items: center;
             background: var(--primary-green);
@@ -484,11 +554,12 @@
             border-radius: 25px;
             text-decoration: none;
             margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
             font-weight: 500;
             transition: all 0.3s ease;
         }
 
-        .project-links a:hover {
+        .project-links a:hover, .certificate-links a:hover {
             background: var(--secondary-green);
             transform: translateY(-2px);
         }
@@ -533,30 +604,114 @@
             margin: 0 auto;
         }
 
+        /* Footer */
+        .footer {
+            background: linear-gradient(135deg, var(--text-dark), #374151);
+            color: white;
+            padding: 4rem 0 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h4 {
+            color: var(--primary-green);
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .footer-section p {
+            color: #D1D5DB;
+            line-height: 1.8;
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-links a {
+            color: #D1D5DB;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-green);
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .footer-social a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: var(--primary-green);
+            color: white;
+            border-radius: 50%;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .footer-social a:hover {
+            background: var(--secondary-green);
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid #374151;
+            padding-top: 2rem;
+            text-align: center;
+            color: #9CA3AF;
+        }
+
         /* Responsive Design */
         @media (max-width: 768px) {
             .hero-title {
                 font-size: 2.5rem;
             }
 
-            .timeline::before {
-                left: 20px;
+            .skills-container {
+                grid-template-columns: 1fr;
             }
 
-            .timeline-item {
-                width: 100%;
-                left: 0 !important;
-                padding-left: 3rem !important;
-                padding-right: 0 !important;
+            .experience-section {
+                grid-template-columns: 1fr;
             }
 
-            .timeline-content::before {
-                left: -20px !important;
-                border-color: transparent white transparent transparent !important;
+            .footer-content {
+                grid-template-columns: 1fr;
+                text-align: center;
             }
 
-            .timeline-dot {
-                left: 10px !important;
+            .project-tabs {
+                flex-direction: column;
+                align-items: center;
             }
         }
 
@@ -702,7 +857,7 @@
                 </div>
                 <div class="col-lg-6">
                     <div class="hero-image text-center" data-aos="fade-left">
-                        <img src="assets/Profile.png" alt="Rifqi Haikal Profile" class="profile-img shadow-lg" loading="lazy">
+                        <img src="assets/Profile.png" alt="Rifqi Haikal Profile" loading="lazy">
                     </div>
                 </div>
             </div>
@@ -765,6 +920,14 @@
                                         </div>
                                     </div>
                                 </div>
+                                
+                                <!-- Download CV Button -->
+                                <div class="text-center mt-4">
+                                    <a href="assets/CV Rifqi Haikal Chairiansyah.pdf" download class="btn-download-cv">
+                                        <i class="fas fa-download"></i>
+                                        <span data-en="Download CV" data-id="Unduh CV">Download CV</span>
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -778,111 +941,123 @@
         <div class="container">
             <div class="section-heading" data-aos="fade-up">
                 <h2 class="section-title" data-en="Skills & Technologies" data-id="Keahlian & Teknologi">Skills & Technologies</h2>
-                <p class="section-subtitle" data-en="Here are the technologies and tools I work with on a regular basis." data-id="Berikut adalah teknologi dan alat yang saya gunakan secara rutin.">Here are the technologies and tools I work with on a regular basis.</p>
+                <p class="section-subtitle" data-en="Click on each category to explore my skills and technologies." data-id="Klik pada setiap kategori untuk menjelajahi keahlian dan teknologi saya.">Click on each category to explore my skills and technologies.</p>
             </div>
             
-            <div class="row g-4">
-                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
-                    <div class="skill-card">
-                        <div class="skill-icon">
-                            <i class="fas fa-code"></i>
+            <div class="skills-container" data-aos="fade-up">
+                <!-- Hard Skills -->
+                <div class="skill-category-card" onclick="toggleSkillCategory(this)">
+                    <div class="skill-category-header">
+                        <div>
+                            <i class="fas fa-code skill-category-icon"></i>
+                            <h3 class="skill-category-title" data-en="Hard Skills" data-id="Keahlian Teknis">Hard Skills</h3>
+                            <p class="text-muted" data-en="Technical expertise and programming languages" data-id="Keahlian teknis dan bahasa pemrograman">Technical expertise and programming languages</p>
                         </div>
-                        <h4 class="skill-title" data-en="Programming Languages" data-id="Bahasa Pemrograman">Programming Languages</h4>
-                        <ul class="skill-list">
-                            <li>JavaScript</li>
-                            <li>TypeScript</li>
-                            <li>Java</li>
-                            <li>Python</li>
-                            <li>PHP</li>
-                            <li>HTML/CSS</li>
-                            <li>Kotlin</li>
-                            <li>Dart</li>
-                        </ul>
+                        <i class="fas fa-chevron-down skill-expand-icon"></i>
+                    </div>
+                    <div class="skill-items">
+                        <div class="skill-item">
+                            <i class="fab fa-html5" style="color: #E34F26;"></i>
+                            <span>HTML5</span>
+                        </div>
+                        <div class="skill-item">
+                            <i class="fab fa-css3-alt" style="color: #1572B6;"></i>
+                            <span>CSS3</span>
+                        </div>
+                        <div class="skill-item">
+                            <i class="fab fa-js-square" style="color: #F7DF1E;"></i>
+                            <span>JavaScript</span>
+                        </div>
+                        <div class="skill-item">
+                            <i class="fab fa-js-square" style="color: #3178C6;"></i>
+                            <span>TypeScript</span>
+                        </div>
+                        <div class="skill-item">
+                            <i class="fab fa-java" style="color: #007396;"></i>
+                            <span>Java</span>
+                        </div>
+                        <div class="skill-item">
+                            <i class="fab fa-python" style="color: #3776AB;"></i>
+                            <span>Python</span>
+                        </div>
+                        <div class="skill-item">
+                            <i class="fab fa-php" style="color: #777BB4;"></i>
+                            <span>PHP</span>
+                        </div>
+                        <div class="skill-item">
+                            <i class="fab fa-angular" style="color: #DD0031;"></i>
+                            <span>Angular</span>
+                        </div>
+                        <div class="skill-item">
+                            <i class="fab fa-react" style="color: #61DAFB;"></i>
+                            <span>React.js</span>
+                        </div>
+                        <div class="skill-item">
+                            <i class="fab fa-vuejs" style="color: #4FC08D;"></i>
+                            <span>Vue.js</span>
+                        </div>
+                        <div class="skill-item">
+                            <i class="fas fa-leaf" style="color: #6DB33F;"></i>
+                            <span>Spring Boot</span>
+                        </div>
+                        <div class="skill-item">
+                            <i class="fab fa-laravel" style="color: #FF2D20;"></i>
+                            <span>Laravel</span>
+                        </div>
+                        <div class="skill-item">
+                            <i class="fas fa-database" style="color: #4479A1;"></i>
+                            <span>MySQL</span>
+                        </div>
+                        <div class="skill-item">
+                            <i class="fab fa-git-alt" style="color: #F05032;"></i>
+                            <span>Git</span>
+                        </div>
                     </div>
                 </div>
-                
-                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
-                    <div class="skill-card">
-                        <div class="skill-icon">
-                            <i class="fas fa-laptop-code"></i>
+
+                <!-- Soft Skills -->
+                <div class="skill-category-card" onclick="toggleSkillCategory(this)">
+                    <div class="skill-category-header">
+                        <div>
+                            <i class="fas fa-brain skill-category-icon"></i>
+                            <h3 class="skill-category-title" data-en="Soft Skills" data-id="Keahlian Lunak">Soft Skills</h3>
+                            <p class="text-muted" data-en="Personal and professional competencies" data-id="Kompetensi personal dan profesional">Personal and professional competencies</p>
                         </div>
-                        <h4 class="skill-title" data-en="Frameworks & Libraries" data-id="Framework & Library">Frameworks & Libraries</h4>
-                        <ul class="skill-list">
-                            <li>Angular</li>
-                            <li>React.js</li>
-                            <li>Vue.js</li>
-                            <li>Spring Boot</li>
-                            <li>Express.js</li>
-                            <li>Laravel</li>
-                            <li>Bootstrap</li>
-                            <li>Tailwind CSS</li>
-                        </ul>
+                        <i class="fas fa-chevron-down skill-expand-icon"></i>
                     </div>
-                </div>
-                
-                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
-                    <div class="skill-card">
-                        <div class="skill-icon">
-                            <i class="fas fa-database"></i>
+                    <div class="skill-items">
+                        <div class="skill-item">
+                            <i class="fas fa-puzzle-piece" style="color: #10B981;"></i>
+                            <span data-en="Problem Solving" data-id="Pemecahan Masalah">Problem Solving</span>
                         </div>
-                        <h4 class="skill-title" data-en="Database & Tools" data-id="Database & Tools">Database & Tools</h4>
-                        <ul class="skill-list">
-                            <li>MySQL</li>
-                            <li>PostgreSQL</li>
-                            <li>Git</li>
-                            <li>Postman</li>
-                            <li>Swagger</li>
-                            <li>Figma</li>
-                            <li>Selenium</li>
-                            <li>Katalon</li>
-                        </ul>
-                    </div>
-                </div>
-                
-                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="400">
-                    <div class="skill-card">
-                        <div class="skill-icon">
-                            <i class="fas fa-mobile-alt"></i>
+                        <div class="skill-item">
+                            <i class="fas fa-lightbulb" style="color: #F59E0B;"></i>
+                            <span data-en="Critical Thinking" data-id="Berpikir Kritis">Critical Thinking</span>
                         </div>
-                        <h4 class="skill-title" data-en="Mobile Development" data-id="Pengembangan Mobile">Mobile Development</h4>
-                        <ul class="skill-list">
-                            <li>Android (Kotlin)</li>
-                            <li>Flutter (Dart)</li>
-                            <li>React Native</li>
-                            <li>Mobile UI/UX</li>
-                        </ul>
-                    </div>
-                </div>
-                
-                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="500">
-                    <div class="skill-card">
-                        <div class="skill-icon">
-                            <i class="fas fa-brain"></i>
+                        <div class="skill-item">
+                            <i class="fas fa-users" style="color: #3B82F6;"></i>
+                            <span data-en="Team Work" data-id="Kerja Tim">Team Work</span>
                         </div>
-                        <h4 class="skill-title" data-en="Soft Skills" data-id="Soft Skills">Soft Skills</h4>
-                        <ul class="skill-list">
-                            <li data-en="Problem Solving" data-id="Pemecahan Masalah">Problem Solving</li>
-                            <li data-en="Critical Thinking" data-id="Berpikir Kritis">Critical Thinking</li>
-                            <li data-en="Team Work" data-id="Kerja Tim">Team Work</li>
-                            <li data-en="Communication" data-id="Komunikasi">Communication</li>
-                            <li data-en="Leadership" data-id="Kepemimpinan">Leadership</li>
-                        </ul>
-                    </div>
-                </div>
-                
-                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="600">
-                    <div class="skill-card">
-                        <div class="skill-icon">
-                            <i class="fas fa-cloud"></i>
+                        <div class="skill-item">
+                            <i class="fas fa-comments" style="color: #8B5CF6;"></i>
+                            <span data-en="Communication" data-id="Komunikasi">Communication</span>
                         </div>
-                        <h4 class="skill-title" data-en="Cloud & DevOps" data-id="Cloud & DevOps">Cloud & DevOps</h4>
-                        <ul class="skill-list">
-                            <li>Netlify</li>
-                            <li>Vercel</li>
-                            <li>Docker</li>
-                            <li>AWS Basics</li>
-                            <li>CI/CD</li>
-                        </ul>
+                        <div class="skill-item">
+                            <i class="fas fa-user-tie" style="color: #EF4444;"></i>
+                            <span data-en="Leadership" data-id="Kepemimpinan">Leadership</span>
+                        </div>
+                        <div class="skill-item">
+                            <i class="fas fa-clock" style="color: #06B6D4;"></i>
+                            <span data-en="Time Management" data-id="Manajemen Waktu">Time Management</span>
+                        </div>
+                        <div class="skill-item">
+                            <i class="fas fa-palette" style="color: #EC4899;"></i>
+                            <span data-en="Creativity" data-id="Kreativitas">Creativity</span>
+                        </div>
+                        <div class="skill-item">
+                            <i class="fas fa-sync-alt" style="color: #84CC16;"></i>
+                            <span data-en="Adaptability" data-id="Kemampuan Adaptasi">Adaptability</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -894,21 +1069,20 @@
         <div class="container">
             <div class="section-heading" data-aos="fade-up">
                 <h2 class="section-title" data-en="Experience" data-id="Pengalaman">Experience</h2>
-                <p class="section-subtitle" data-en="My professional journey and internship experiences." data-id="Perjalanan profesional dan pengalaman magang saya.">My professional journey and internship experiences.</p>
+                <p class="section-subtitle" data-en="Click on any experience card to see photos from that period." data-id="Klik pada kartu pengalaman untuk melihat foto dari periode tersebut.">Click on any experience card to see photos from that period.</p>
             </div>
             
-            <div class="timeline">
-                <div class="timeline-item" data-aos="fade-right">
-                    <div class="timeline-content">
-                        <div class="timeline-dot"></div>
+            <div class="experience-section" data-aos="fade-up">
+                <!-- Work Experience -->
+                <div class="experience-column">
+                    <h3 data-en="Work Experience" data-id="Pengalaman Kerja">Work Experience</h3>
+                    
+                    <div class="experience-card" onclick="showExperienceModal('javan')">
+                        <span class="badge">Latest</span>
                         <h4 data-en="Programmer Intern" data-id="Magang Programmer">Programmer Intern</h4>
                         <h5 class="text-success">PT. Javan Cipta Solusi</h5>
                         <p class="text-muted">Sep 2024 - Jan 2025 | Yogyakarta, Indonesia</p>
-                        <ul>
-                            <li data-en="Demonstrated strong expertise as an Angular Programmer Intern by successfully implementing full CRUD operations" data-id="Menunjukkan keahlian yang kuat sebagai Magang Programmer Angular dengan berhasil mengimplementasikan operasi CRUD lengkap">Demonstrated strong expertise as an Angular Programmer Intern by successfully implementing full CRUD operations</li>
-                            <li data-en="Gained practical experience in modern web development by fetching data, displaying API lists, and integrating multiple APIs" data-id="Memperoleh pengalaman praktis dalam pengembangan web modern dengan mengambil data, menampilkan daftar API, dan mengintegrasikan beberapa API">Gained practical experience in modern web development by fetching data, displaying API lists, and integrating multiple APIs</li>
-                            <li data-en="Recognized for deep understanding of Angular, effectively applying its features to build navigations and dashboards" data-id="Diakui karena pemahaman mendalam tentang Angular, secara efektif menerapkan fitur-fiturnya untuk membangun navigasi dan dashboard">Recognized for deep understanding of Angular, effectively applying its features to build navigations and dashboards</li>
-                        </ul>
+                        <p data-en="Demonstrated strong expertise as an Angular Programmer Intern by successfully implementing full CRUD operations and integrating multiple APIs." data-id="Menunjukkan keahlian yang kuat sebagai Magang Programmer Angular dengan berhasil mengimplementasikan operasi CRUD lengkap dan mengintegrasikan beberapa API.">Demonstrated strong expertise as an Angular Programmer Intern by successfully implementing full CRUD operations and integrating multiple APIs.</p>
                         <div class="tech-stack">
                             <span class="tech-badge">Angular</span>
                             <span class="tech-badge">Spring Boot</span>
@@ -917,19 +1091,12 @@
                             <span class="tech-badge">Vue.js</span>
                         </div>
                     </div>
-                </div>
-                
-                <div class="timeline-item" data-aos="fade-left">
-                    <div class="timeline-content">
-                        <div class="timeline-dot"></div>
+                    
+                    <div class="experience-card" onclick="showExperienceModal('fif')">
                         <h4 data-en="Programmer Intern" data-id="Magang Programmer">Programmer Intern</h4>
                         <h5 class="text-success">PT. Federal International Finance</h5>
                         <p class="text-muted">Jun 2024 - Aug 2024 | Jakarta Selatan, Indonesia</p>
-                        <ul>
-                            <li data-en="Gained hands-on experience in full-stack development, utilizing Java Spring Boot for robust back-end services" data-id="Memperoleh pengalaman langsung dalam pengembangan full-stack, menggunakan Java Spring Boot untuk layanan back-end yang kuat">Gained hands-on experience in full-stack development, utilizing Java Spring Boot for robust back-end services</li>
-                            <li data-en="Contributed as an integral member of the IT development team at a leading financial institution" data-id="Berkontribusi sebagai anggota integral tim pengembangan IT di institusi keuangan terkemuka">Contributed as an integral member of the IT development team at a leading financial institution</li>
-                            <li data-en="Mastered effective API management, ensuring seamless data communication between software components" data-id="Menguasai manajemen API yang efektif, memastikan komunikasi data yang mulus antar komponen perangkat lunak">Mastered effective API management, ensuring seamless data communication between software components</li>
-                        </ul>
+                        <p data-en="Gained hands-on experience in full-stack development, utilizing Java Spring Boot for robust back-end services and mastering effective API management." data-id="Memperoleh pengalaman langsung dalam pengembangan full-stack, menggunakan Java Spring Boot untuk layanan back-end yang kuat dan menguasai manajemen API yang efektif.">Gained hands-on experience in full-stack development, utilizing Java Spring Boot for robust back-end services and mastering effective API management.</p>
                         <div class="tech-stack">
                             <span class="tech-badge">Angular</span>
                             <span class="tech-badge">Spring Boot</span>
@@ -938,32 +1105,32 @@
                         </div>
                     </div>
                 </div>
-                
-                <div class="timeline-item" data-aos="fade-right">
-                    <div class="timeline-content">
-                        <div class="timeline-dot"></div>
+
+                <!-- Organization Experience -->
+                <div class="experience-column">
+                    <h3 data-en="Organization Experience" data-id="Pengalaman Organisasi">Organization Experience</h3>
+                    
+                    <div class="experience-card" onclick="showExperienceModal('gdsc')">
+                        <span class="badge">Core Team</span>
                         <h4 data-en="Public Relations - Core Team" data-id="Hubungan Masyarakat - Tim Inti">Public Relations - Core Team</h4>
                         <h5 class="text-success">Google Developer Student Club IT Del</h5>
                         <p class="text-muted">Oct 2023 - Dec 2024</p>
-                        <ul>
-                            <li data-en="Played a key role in executing strategic public relations plans aligned with club's objectives" data-id="Berperan kunci dalam menjalankan rencana hubungan masyarakat strategis yang selaras dengan tujuan klub">Played a key role in executing strategic public relations plans aligned with club's objectives</li>
-                            <li data-en="Provided valuable input during planning sessions and offered guidance to fellow members" data-id="Memberikan masukan berharga selama sesi perencanaan dan menawarkan bimbingan kepada sesama anggota">Provided valuable input during planning sessions and offered guidance to fellow members</li>
-                            <li data-en="Demonstrated strong communication skills by serving as Master of Ceremonies during key club events" data-id="Menunjukkan keterampilan komunikasi yang kuat dengan menjabat sebagai Master of Ceremonies selama acara klub utama">Demonstrated strong communication skills by serving as Master of Ceremonies during key club events</li>
-                        </ul>
+                        <p data-en="Played a key role in executing strategic public relations plans and served as Master of Ceremonies during key club events." data-id="Berperan kunci dalam menjalankan rencana hubungan masyarakat strategis dan menjabat sebagai Master of Ceremonies selama acara klub utama.">Played a key role in executing strategic public relations plans and served as Master of Ceremonies during key club events.</p>
                     </div>
-                </div>
-                
-                <div class="timeline-item" data-aos="fade-left">
-                    <div class="timeline-content">
-                        <div class="timeline-dot"></div>
+                    
+                    <div class="experience-card" onclick="showExperienceModal('bem')">
                         <h4 data-en="Head of Social Division" data-id="Kepala Divisi Sosial">Head of Social Division</h4>
                         <h5 class="text-success">Student Executive Board - IT Del</h5>
                         <p class="text-muted">Aug 2023 - Sep 2024</p>
-                        <ul>
-                            <li data-en="Acted as primary liaison to build and maintain strong relationships with external parties" data-id="Bertindak sebagai penghubung utama untuk membangun dan mempertahankan hubungan yang kuat dengan pihak eksternal">Acted as primary liaison to build and maintain strong relationships with external parties</li>
-                            <li data-en="Successfully managed and executed various off-campus activities from planning to completion" data-id="Berhasil mengelola dan melaksanakan berbagai kegiatan luar kampus dari perencanaan hingga penyelesaian">Successfully managed and executed various off-campus activities from planning to completion</li>
-                            <li data-en="Drove division's public relations efforts by strategically managing content across social media platforms" data-id="Mendorong upaya hubungan masyarakat divisi dengan secara strategis mengelola konten di platform media sosial">Drove division's public relations efforts by strategically managing content across social media platforms</li>
-                        </ul>
+                        <p data-en="Successfully managed various off-campus activities and drove division's public relations efforts through strategic social media management." data-id="Berhasil mengelola berbagai kegiatan luar kampus dan mendorong upaya hubungan masyarakat divisi melalui manajemen media sosial strategis.">Successfully managed various off-campus activities and drove division's public relations efforts through strategic social media management.</p>
+                    </div>
+
+                    <div class="experience-card" onclick="showExperienceModal('pkm')">
+                        <span class="badge">3rd Place</span>
+                        <h4 data-en="PKM Competition Winner" data-id="Pemenang Kompetisi PKM">PKM Competition Winner</h4>
+                        <h5 class="text-success">FITE Festival</h5>
+                        <p class="text-muted">Nov 2023</p>
+                        <p data-en="Led team to develop 'Toba Trip' Android application, securing 3rd place in FITE Festival's Student Creativity Program." data-id="Memimpin tim untuk mengembangkan aplikasi Android 'Toba Trip', meraih tempat ke-3 dalam Program Kreativitas Mahasiswa Festival FITE.">Led team to develop "Toba Trip" Android application, securing 3rd place in FITE Festival's Student Creativity Program.</p>
                     </div>
                 </div>
             </div>
@@ -975,152 +1142,213 @@
         <div class="container">
             <div class="section-heading" data-aos="fade-up">
                 <h2 class="section-title" data-en="Featured Projects" data-id="Projek Unggulan">Featured Projects</h2>
-                <p class="section-subtitle" data-en="Here are some of my recent projects that showcase my skills and creativity." data-id="Berikut adalah beberapa projek terbaru saya yang menunjukkan keahlian dan kreativitas saya.">Here are some of my recent projects that showcase my skills and creativity.</p>
+                <p class="section-subtitle" data-en="Explore my individual and group projects that showcase my skills and creativity." data-id="Jelajahi projek individu dan kelompok saya yang menunjukkan keahlian dan kreativitas saya.">Explore my individual and group projects that showcase my skills and creativity.</p>
             </div>
             
-            <div class="row g-4">
-                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
-                    <div class="project-card">
-                        <img src="https://images.unsplash.com/photo-1551650975-87deedd944c3?w=400&h=200&fit=crop" alt="API Central" class="project-img">
-                        <div class="project-content">
-                            <h4 class="project-title">API Central</h4>
-                            <p class="project-description" data-en="Centralization and standardization of API documentation with Postman-to-Swagger converter tool." data-id="Sentralisasi dan standardisasi dokumentasi API dengan alat konverter Postman-ke-Swagger.">Centralization and standardization of API documentation with Postman-to-Swagger converter tool.</p>
-                            <div class="tech-stack">
-                                <span class="tech-badge">Angular</span>
-                                <span class="tech-badge">Spring Boot</span>
-                                <span class="tech-badge">Java</span>
-                                <span class="tech-badge">TypeScript</span>
-                                <span class="tech-badge">Tailwind CSS</span>
+            <!-- Project Tabs -->
+            <div class="project-tabs" data-aos="fade-up">
+                <button class="project-tab active" onclick="showProjectTab('individual')" data-en="Individual Projects" data-id="Projek Individu">Individual Projects</button>
+                <button class="project-tab" onclick="showProjectTab('group')" data-en="Group Projects" data-id="Projek Kelompok">Group Projects</button>
+            </div>
+            
+            <!-- Individual Projects -->
+            <div id="individual-projects" class="project-content active">
+                <div class="row g-4">
+                    <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                        <div class="project-card">
+                            <img src="assets/api-central.png" alt="API Central" class="project-img">
+                            <div class="project-content-card">
+                                <h4 class="project-title">API Central</h4>
+                                <p class="project-description" data-en="Centralization and standardization of API documentation with Postman-to-Swagger converter tool." data-id="Sentralisasi dan standardisasi dokumentasi API dengan alat konverter Postman-ke-Swagger.">Centralization and standardization of API documentation with Postman-to-Swagger converter tool.</p>
+                                <div class="tech-stack">
+                                    <span class="tech-badge">Angular</span>
+                                    <span class="tech-badge">Spring Boot</span>
+                                    <span class="tech-badge">Java</span>
+                                    <span class="tech-badge">TypeScript</span>
+                                    <span class="tech-badge">Tailwind CSS</span>
+                                </div>
+                                <div class="project-links">
+                                    <a href="https://api-central.netlify.app/" target="_blank">
+                                        <i class="fas fa-external-link-alt me-2"></i>Live Demo
+                                    </a>
+                                    <a href="https://github.com/Rifqi-HaikalCh/apicentral-frontend" target="_blank">
+                                        <i class="fab fa-github me-2"></i>Code
+                                    </a>
+                                </div>
                             </div>
-                            <div class="project-links">
-                                <a href="https://api-central.netlify.app/" target="_blank">
-                                    <i class="fas fa-external-link-alt me-2"></i>Live Demo
-                                </a>
-                                <a href="https://github.com/Rifqi-HaikalCh/apicentral-frontend" target="_blank">
-                                    <i class="fab fa-github me-2"></i>Code
-                                </a>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                        <div class="project-card">
+                            <img src="assets/employee.png" alt="Employee Management" class="project-img">
+                            <div class="project-content-card">
+                                <h4 class="project-title">Employee Management System</h4>
+                                <p class="project-description" data-en="Comprehensive employee management application with CRUD functionality and role-based access control." data-id="Aplikasi manajemen karyawan yang komprehensif dengan fungsi CRUD dan kontrol akses berbasis peran.">Comprehensive employee management application with CRUD functionality and role-based access control.</p>
+                                <div class="tech-stack">
+                                    <span class="tech-badge">Angular</span>
+                                    <span class="tech-badge">Spring Boot</span>
+                                    <span class="tech-badge">JWT</span>
+                                    <span class="tech-badge">MySQL</span>
+                                    <span class="tech-badge">Bootstrap</span>
+                                </div>
+                                <div class="project-links">
+                                    <a href="https://employee-web.netlify.app/" target="_blank">
+                                        <i class="fas fa-external-link-alt me-2"></i>Live Demo
+                                    </a>
+                                    <a href="https://github.com/Rifqi-HaikalCh/employee-frontend" target="_blank">
+                                        <i class="fab fa-github me-2"></i>Code
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
+                        <div class="project-card">
+                            <img src="assets/notes.png" alt="Notes App" class="project-img">
+                            <div class="project-content-card">
+                                <h4 class="project-title">Notes Web Application</h4>
+                                <p class="project-description" data-en="Responsive single-page note-taking application built with vanilla JavaScript and Web Components API." data-id="Aplikasi pencatat responsif satu halaman yang dibangun dengan vanilla JavaScript dan Web Components API.">Responsive single-page note-taking application built with vanilla JavaScript and Web Components API.</p>
+                                <div class="tech-stack">
+                                    <span class="tech-badge">JavaScript</span>
+                                    <span class="tech-badge">Web Components</span>
+                                    <span class="tech-badge">CSS Grid</span>
+                                    <span class="tech-badge">Flexbox</span>
+                                    <span class="tech-badge">HTML5</span>
+                                </div>
+                                <div class="project-links">
+                                    <a href="https://notes-rifqi.netlify.app/" target="_blank">
+                                        <i class="fas fa-external-link-alt me-2"></i>Live Demo
+                                    </a>
+                                    <a href="https://github.com/Rifqi-HaikalCh/notes-app" target="_blank">
+                                        <i class="fab fa-github me-2"></i>Code
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="400">
+                        <div class="project-card">
+                            <img src="assets/bookshelf.png" alt="Bookshelf App" class="project-img">
+                            <div class="project-content-card">
+                                <h4 class="project-title">Bookshelf Web Application</h4>
+                                <p class="project-description" data-en="Interactive front-end application for managing digital bookshelf with full CRUD operations." data-id="Aplikasi front-end interaktif untuk mengelola rak buku digital dengan operasi CRUD lengkap.">Interactive front-end application for managing digital bookshelf with full CRUD operations.</p>
+                                <div class="tech-stack">
+                                    <span class="tech-badge">JavaScript</span>
+                                    <span class="tech-badge">HTML5</span>
+                                    <span class="tech-badge">CSS3</span>
+                                    <span class="tech-badge">Local Storage</span>
+                                    <span class="tech-badge">DOM</span>
+                                </div>
+                                <div class="project-links">
+                                    <a href="https://bookshelf-rifqi.netlify.app/" target="_blank">
+                                        <i class="fas fa-external-link-alt me-2"></i>Live Demo
+                                    </a>
+                                    <a href="https://github.com/Rifqi-HaikalCh/bookshelf-app" target="_blank">
+                                        <i class="fab fa-github me-2"></i>Code
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="500">
+                        <div class="project-card">
+                            <img src="assets/game.jpg" alt="Mini Games" class="project-img">
+                            <div class="project-content-card">
+                                <h4 class="project-title">Mini Games Web Portal</h4>
+                                <p class="project-description" data-en="Collection of interactive web-based games developed with JavaScript, featuring engaging user experience." data-id="Kumpulan game interaktif berbasis web yang dikembangkan dengan JavaScript, menampilkan pengalaman pengguna yang menarik.">Collection of interactive web-based games developed with JavaScript, featuring engaging user experience.</p>
+                                <div class="tech-stack">
+                                    <span class="tech-badge">JavaScript</span>
+                                    <span class="tech-badge">HTML5 Canvas</span>
+                                    <span class="tech-badge">CSS3</span>
+                                    <span class="tech-badge">DOM Manipulation</span>
+                                    <span class="tech-badge">Event Handling</span>
+                                </div>
+                                <div class="project-links">
+                                    <a href="https://games-rifqi.netlify.app/" target="_blank">
+                                        <i class="fas fa-external-link-alt me-2"></i>Live Demo
+                                    </a>
+                                    <a href="https://github.com/Rifqi-HaikalCh" target="_blank">
+                                        <i class="fab fa-github me-2"></i>Code
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                
-                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
-                    <div class="project-card">
-                        <img src="https://images.unsplash.com/photo-1557804506-669a67965ba0?w=400&h=200&fit=crop" alt="Employee Management" class="project-img">
-                        <div class="project-content">
-                            <h4 class="project-title">Employee Management System</h4>
-                            <p class="project-description" data-en="Comprehensive employee management application with CRUD functionality and role-based access control." data-id="Aplikasi manajemen karyawan yang komprehensif dengan fungsi CRUD dan kontrol akses berbasis peran.">Comprehensive employee management application with CRUD functionality and role-based access control.</p>
-                            <div class="tech-stack">
-                                <span class="tech-badge">Angular</span>
-                                <span class="tech-badge">Spring Boot</span>
-                                <span class="tech-badge">JWT</span>
-                                <span class="tech-badge">MySQL</span>
-                                <span class="tech-badge">Bootstrap</span>
-                            </div>
-                            <div class="project-links">
-                                <a href="https://employee-web.netlify.app/" target="_blank">
-                                    <i class="fas fa-external-link-alt me-2"></i>Live Demo
-                                </a>
-                                <a href="https://github.com/Rifqi-HaikalCh/employee-frontend" target="_blank">
-                                    <i class="fab fa-github me-2"></i>Code
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
-                    <div class="project-card">
-                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=200&fit=crop" alt="Notes App" class="project-img">
-                        <div class="project-content">
-                            <h4 class="project-title">Notes Web Application</h4>
-                            <p class="project-description" data-en="Responsive single-page note-taking application built with vanilla JavaScript and Web Components API." data-id="Aplikasi pencatat responsif satu halaman yang dibangun dengan vanilla JavaScript dan Web Components API.">Responsive single-page note-taking application built with vanilla JavaScript and Web Components API.</p>
-                            <div class="tech-stack">
-                                <span class="tech-badge">JavaScript</span>
-                                <span class="tech-badge">Web Components</span>
-                                <span class="tech-badge">CSS Grid</span>
-                                <span class="tech-badge">Flexbox</span>
-                                <span class="tech-badge">HTML5</span>
-                            </div>
-                            <div class="project-links">
-                                <a href="https://notes-rifqi.netlify.app/" target="_blank">
-                                    <i class="fas fa-external-link-alt me-2"></i>Live Demo
-                                </a>
-                                <a href="https://github.com/Rifqi-HaikalCh/notes-app" target="_blank">
-                                    <i class="fab fa-github me-2"></i>Code
-                                </a>
+            </div>
+
+            <!-- Group Projects -->
+            <div id="group-projects" class="project-content">
+                <div class="row g-4">
+                    <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                        <div class="project-card">
+                            <img src="assets/spmb.png" alt="SEMAT DEL" class="project-img">
+                            <div class="project-content-card">
+                                <h4 class="project-title">SEMAT DEL</h4>
+                                <p class="project-description" data-en="Web-based information platform for IT Del student candidates built with Laravel 9 and MySQL." data-id="Platform informasi berbasis web untuk calon mahasiswa IT Del yang dibangun dengan Laravel 9 dan MySQL.">Web-based information platform for IT Del student candidates built with Laravel 9 and MySQL.</p>
+                                <div class="tech-stack">
+                                    <span class="tech-badge">Laravel</span>
+                                    <span class="tech-badge">PHP</span>
+                                    <span class="tech-badge">MySQL</span>
+                                    <span class="tech-badge">Blade</span>
+                                    <span class="tech-badge">Bootstrap</span>
+                                </div>
+                                <div class="project-links">
+                                     <a href="https://semat.del.ac.id/program" target="_blank">
+                                        <i class="fas fa-external-link-alt me-2"></i>Live Demo
+                                    </a>
+                                    <a href="https://github.com/gabrielhtg/project-spmb-pabwe" target="_blank">
+                                        <i class="fab fa-github me-2"></i>Code
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                
-                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="400">
-                    <div class="project-card">
-                        <img src="https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=400&h=200&fit=crop" alt="Bookshelf App" class="project-img">
-                        <div class="project-content">
-                            <h4 class="project-title">Bookshelf Web Application</h4>
-                            <p class="project-description" data-en="Interactive front-end application for managing digital bookshelf with full CRUD operations." data-id="Aplikasi front-end interaktif untuk mengelola rak buku digital dengan operasi CRUD lengkap.">Interactive front-end application for managing digital bookshelf with full CRUD operations.</p>
-                            <div class="tech-stack">
-                                <span class="tech-badge">JavaScript</span>
-                                <span class="tech-badge">HTML5</span>
-                                <span class="tech-badge">CSS3</span>
-                                <span class="tech-badge">Local Storage</span>
-                                <span class="tech-badge">DOM</span>
-                            </div>
-                            <div class="project-links">
-                                <a href="https://bookshelf-rifqi.netlify.app/" target="_blank">
-                                    <i class="fas fa-external-link-alt me-2"></i>Live Demo
-                                </a>
-                                <a href="https://github.com/Rifqi-HaikalCh/bookshelf-app" target="_blank">
-                                    <i class="fab fa-github me-2"></i>Code
-                                </a>
+
+                    <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                        <div class="project-card">
+                            <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=400&h=200&fit=crop" alt="Toba Trip" class="project-img">
+                            <div class="project-content-card">
+                                <h4 class="project-title">Toba Trip Mobile App</h4>
+                                <p class="project-description" data-en="Android application for tourism information in Toba Samosir Regency that won 3rd place in PKM competition." data-id="Aplikasi Android untuk informasi pariwisata di Kabupaten Toba Samosir yang meraih juara 3 dalam kompetisi PKM.">Android application for tourism information in Toba Samosir Regency that won 3rd place in PKM competition.</p>
+                                <div class="tech-stack">
+                                    <span class="tech-badge">Android</span>
+                                    <span class="tech-badge">Kotlin</span>
+                                    <span class="tech-badge">Java</span>
+                                    <span class="tech-badge">XML</span>
+                                    <span class="tech-badge">SQLite</span>
+                                </div>
+                                <div class="project-links">
+                                    <a href="https://github.com/Rifqi-HaikalCh" target="_blank">
+                                        <i class="fab fa-github me-2"></i>Code
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                
-                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="500">
-                    <div class="project-card">
-                        <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400&h=200&fit=crop" alt="Mini Games" class="project-img">
-                        <div class="project-content">
-                            <h4 class="project-title">Mini Games Web Portal</h4>
-                            <p class="project-description" data-en="Collection of interactive web-based games developed with JavaScript, featuring engaging user experience." data-id="Kumpulan game interaktif berbasis web yang dikembangkan dengan JavaScript, menampilkan pengalaman pengguna yang menarik.">Collection of interactive web-based games developed with JavaScript, featuring engaging user experience.</p>
-                            <div class="tech-stack">
-                                <span class="tech-badge">JavaScript</span>
-                                <span class="tech-badge">HTML5 Canvas</span>
-                                <span class="tech-badge">CSS3</span>
-                                <span class="tech-badge">DOM Manipulation</span>
-                                <span class="tech-badge">Event Handling</span>
-                            </div>
-                            <div class="project-links">
-                                <a href="https://games-rifqi.netlify.app/" target="_blank">
-                                    <i class="fas fa-external-link-alt me-2"></i>Live Demo
-                                </a>
-                                <a href="https://github.com/Rifqi-HaikalCh" target="_blank">
-                                    <i class="fab fa-github me-2"></i>Code
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="600">
-                    <div class="project-card">
-                        <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=400&h=200&fit=crop" alt="SEMAT DEL" class="project-img">
-                        <div class="project-content">
-                            <h4 class="project-title">SEMAT DEL</h4>
-                            <p class="project-description" data-en="Web-based information platform for IT Del student candidates built with Laravel 9 and MySQL." data-id="Platform informasi berbasis web untuk calon mahasiswa IT Del yang dibangun dengan Laravel 9 dan MySQL.">Web-based information platform for IT Del student candidates built with Laravel 9 and MySQL.</p>
-                            <div class="tech-stack">
-                                <span class="tech-badge">Laravel</span>
-                                <span class="tech-badge">PHP</span>
-                                <span class="tech-badge">MySQL</span>
-                                <span class="tech-badge">Blade</span>
-                                <span class="tech-badge">Bootstrap</span>
-                            </div>
-                            <div class="project-links">
-                                <a href="https://github.com/gabrielhtg/project-spmb-pabwe" target="_blank">
-                                    <i class="fab fa-github me-2"></i>Code
-                                </a>
+
+                    <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
+                        <div class="project-card">
+                            <img src="https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=400&h=200&fit=crop" alt="FRK & FED" class="project-img">
+                            <div class="project-content-card">
+                                <h4 class="project-title">FRK & FED System</h4>
+                                <p class="project-description" data-en="Employee performance management system with work planning and evaluation features built for project management course." data-id="Sistem manajemen kinerja karyawan dengan fitur perencanaan kerja dan evaluasi yang dibangun untuk mata kuliah manajemen proyek.">Employee performance management system with work planning and evaluation features built for project management course.</p>
+                                <div class="tech-stack">
+                                    <span class="tech-badge">PHP</span>
+                                    <span class="tech-badge">Laravel</span>
+                                    <span class="tech-badge">MySQL</span>
+                                    <span class="tech-badge">Bootstrap</span>
+                                    <span class="tech-badge">Blade</span>
+                                </div>
+                                <div class="project-links">
+                                    <a href="https://github.com/Rifqi-HaikalCh" target="_blank">
+                                        <i class="fab fa-github me-2"></i>Code
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -1144,9 +1372,20 @@
                         <div class="certificate-content">
                             <h4 class="certificate-title" data-en="Front-End Web Development" data-id="Pengembangan Web Front-End">Front-End Web Development</h4>
                             <p class="certificate-description" data-en="Comprehensive front-end development course covering HTML forms, CSS Grid, Web Components, and modern JavaScript." data-id="Kursus pengembangan front-end komprehensif yang mencakup formulir HTML, CSS Grid, Komponen Web, dan JavaScript modern.">Comprehensive front-end development course covering HTML forms, CSS Grid, Web Components, and modern JavaScript.</p>
-                            <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
                                 <span class="text-success fw-bold">Dicoding</span>
                                 <span class="text-muted">May 2025</span>
+                            </div>
+                            <div class="certificate-links">
+                                <a href="https://drive.google.com/file/d/1E1CQ4q_is9Hi459mvd55A3wSnj_egeC6/view?usp=drive_link" target="_blank">
+                                    <i class="fas fa-certificate me-2"></i>Basic Web
+                                </a>
+                                <a href="https://drive.google.com/file/d/1OjpIDsFmiQjvc_1Q45RljiMvXRhEKiFC/view?usp=drive_link" target="_blank">
+                                    <i class="fas fa-certificate me-2"></i>Fundamental
+                                </a>
+                                <a href="https://drive.google.com/file/d/10OdGjQpLWbu9nV8dE9jtPCz9Wskwrwrr/view?usp=drive_link" target="_blank">
+                                    <i class="fas fa-certificate me-2"></i>Front-End
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -1158,9 +1397,14 @@
                         <div class="certificate-content">
                             <h4 class="certificate-title" data-en="JavaScript Programming" data-id="Pemrograman JavaScript">JavaScript Programming</h4>
                             <p class="certificate-description" data-en="Mastering JavaScript fundamentals including ES6+, async programming, OOP, and functional programming paradigms." data-id="Menguasai dasar-dasar JavaScript termasuk ES6+, pemrograman async, OOP, dan paradigma pemrograman fungsional.">Mastering JavaScript fundamentals including ES6+, async programming, OOP, and functional programming paradigms.</p>
-                            <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
                                 <span class="text-success fw-bold">Dicoding</span>
                                 <span class="text-muted">May 2025</span>
+                            </div>
+                            <div class="certificate-links">
+                                <a href="https://drive.google.com/file/d/1NPoH8AX1vf9UOTixjfPeTFrOmuRg-8ni/view?usp=drive_link" target="_blank">
+                                    <i class="fas fa-certificate me-2"></i>View Certificate
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -1172,9 +1416,14 @@
                         <div class="certificate-content">
                             <h4 class="certificate-title" data-en="Java Programming" data-id="Pemrograman Java">Java Programming</h4>
                             <p class="certificate-description" data-en="Comprehensive Java programming course covering OOP principles, data structures, and software development best practices." data-id="Kursus pemrograman Java komprehensif yang mencakup prinsip OOP, struktur data, dan praktik terbaik pengembangan perangkat lunak.">Comprehensive Java programming course covering OOP principles, data structures, and software development best practices.</p>
-                            <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
                                 <span class="text-success fw-bold">Dicoding</span>
                                 <span class="text-muted">Jun 2024</span>
+                            </div>
+                            <div class="certificate-links">
+                                <a href="https://drive.google.com/file/d/17G8-ZnCrqeGmxIzt83JdebGGyw7Dk3so/view?usp=drive_link" target="_blank">
+                                    <i class="fas fa-certificate me-2"></i>View Certificate
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -1186,9 +1435,17 @@
                         <div class="certificate-content">
                             <h4 class="certificate-title" data-en="MSIB Batch 7 Certification" data-id="Sertifikat MSIB Angkatan 7">MSIB Batch 7 Certification</h4>
                             <p class="certificate-description" data-en="Completed MSIB program as Angular Programmer, learning modern web development technologies and industry practices." data-id="Menyelesaikan program MSIB sebagai Programmer Angular, mempelajari teknologi pengembangan web modern dan praktik industri.">Completed MSIB program as Angular Programmer, learning modern web development technologies and industry practices.</p>
-                            <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
                                 <span class="text-success fw-bold">PT. Javan Cipta Solusi</span>
                                 <span class="text-muted">Dec 2024</span>
+                            </div>
+                            <div class="certificate-links">
+                                <a href="https://drive.google.com/file/d/12aRB0azPi3jvWovB2g3mZuoM7jM0pirL/view?usp=drive_link" target="_blank">
+                                    <i class="fas fa-certificate me-2"></i>Javan Certificate
+                                </a>
+                                <a href="https://drive.google.com/file/d/1ZxdBM1WU0qq_7DRWadC5to952gRQ3n_q/view?usp=drive_link" target="_blank">
+                                    <i class="fas fa-certificate me-2"></i>MSIB Certificate
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -1200,9 +1457,32 @@
                         <div class="certificate-content">
                             <h4 class="certificate-title" data-en="IELTS Training Certificates" data-id="Sertifikat Pelatihan IELTS">IELTS Training Certificates</h4>
                             <p class="certificate-description" data-en="Multiple IELTS training certificates covering listening skills, comprehension, and English proficiency development." data-id="Beberapa sertifikat pelatihan IELTS yang mencakup keterampilan mendengarkan, pemahaman, dan pengembangan kemahiran bahasa Inggris.">Multiple IELTS training certificates covering listening skills, comprehension, and English proficiency development.</p>
-                            <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
                                 <span class="text-success fw-bold">MySkill</span>
                                 <span class="text-muted">2023</span>
+                            </div>
+                            <div class="certificate-links">
+                                <a href="https://drive.google.com/file/d/1YEVZj5JQ95R2_8NJKK6SBIuLpT4Po4Gh/view?usp=drive_link" target="_blank">
+                                    <i class="fas fa-certificate me-2"></i>Actions & Processes
+                                </a>
+                                <a href="https://drive.google.com/file/d/1iBHwaXkCKOb_qJO0wDx-O3fLrYUfkngY/view?usp=drive_link" target="_blank">
+                                    <i class="fas fa-certificate me-2"></i>Attitude & Opinions
+                                </a>
+                                <a href="https://drive.google.com/file/d/1tcU8uj1_ygTAIYyd_GKfUadVXNLeHwhG/view?usp=drive_link" target="_blank">
+                                    <i class="fas fa-certificate me-2"></i>Lecture & Talk
+                                </a>
+                                <a href="https://drive.google.com/file/d/1-XO_4R_wmOAjCulVnWoOqLJHIE2sMqHF/view?usp=drive_link" target="_blank">
+                                    <i class="fas fa-certificate me-2"></i>Introduction
+                                </a>
+                                <a href="https://drive.google.com/file/d/11Nvka4tUow2JCxhWPm3I70BxaiIYAWeR/view?usp=drive_link" target="_blank">
+                                    <i class="fas fa-certificate me-2"></i>Getting Ready
+                                </a>
+                                <a href="https://drive.google.com/file/d/1vNevFEM5gDz9If0AVHCjPlt4v9P9_lZX/view?usp=drive_link" target="_blank">
+                                    <i class="fas fa-certificate me-2"></i>Places & Directions
+                                </a>
+                                <a href="https://drive.google.com/file/d/1PbNJ3j23AMV_PdQaqCn8Wc6PDXE-lTLD/view?usp=drive_link" target="_blank">
+                                    <i class="fas fa-certificate me-2"></i>Distractors
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -1212,11 +1492,25 @@
                     <div class="certificate-card">
                         <img src="https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=400&h=200&fit=crop" alt="PKM Achievement" class="certificate-img">
                         <div class="certificate-content">
-                            <h4 class="certificate-title" data-en="PKM 3rd Place Winner" data-id="Pemenang Tempat Ke-3 PKM">PKM 3rd Place Winner</h4>
-                            <p class="certificate-description" data-en="Led team to develop 'Toba Trip' Android application, securing 3rd place in FITE Festival's Student Creativity Program." data-id="Memimpin tim untuk mengembangkan aplikasi Android 'Toba Trip', meraih tempat ke-3 dalam Program Kreativitas Mahasiswa Festival FITE.">Led team to develop "Toba Trip" Android application, securing 3rd place in FITE Festival's Student Creativity Program.</p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <span class="text-success fw-bold">FITE Festival</span>
-                                <span class="text-muted">Nov 2023</span>
+                            <h4 class="certificate-title" data-en="Organization & Leadership" data-id="Organisasi & Kepemimpinan">Organization & Leadership</h4>
+                            <p class="certificate-description" data-en="Various certificates from organizational activities and leadership roles in student organizations and competitions." data-id="Berbagai sertifikat dari kegiatan organisasi dan peran kepemimpinan dalam organisasi mahasiswa dan kompetisi.">Various certificates from organizational activities and leadership roles in student organizations and competitions.</p>
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <span class="text-success fw-bold">Various Organizations</span>
+                                <span class="text-muted">2023-2024</span>
+                            </div>
+                            <div class="certificate-links">
+                                <a href="https://drive.google.com/file/d/1jnhJgQn7xF1VV_-m9aCd9zA_qs2292Mo/view?usp=drive_link" target="_blank">
+                                    <i class="fas fa-certificate me-2"></i>Social Division Head
+                                </a>
+                                <a href="https://drive.google.com/file/d/1RRlraRx8fmXToWzUYf6KyxE24VcHZYRC/view?usp=drive_link" target="_blank">
+                                    <i class="fas fa-certificate me-2"></i>BEM Member
+                                </a>
+                                <a href="https://drive.google.com/file/d/12aWZXS03prrymupPBHoi4LPJaXnNXYMO/view?usp=drive_link" target="_blank">
+                                    <i class="fas fa-certificate me-2"></i>IT Del Festival
+                                </a>
+                                <a href="https://drive.google.com/file/d/1rcoi7EcNavuZ16IxpFDD_N_tFQbQ0Ljz/view?usp=drive_link" target="_blank">
+                                    <i class="fas fa-certificate me-2"></i>PKM Competition
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -1290,18 +1584,140 @@
     </section>
 
     <!-- Footer -->
-    <footer class="py-4 text-center">
+    <footer class="footer">
         <div class="container">
-            <p class="mb-0" data-en="© 2025 Rifqi Haikal Chairiansyah. All rights reserved." data-id="© 2025 Rifqi Haikal Chairiansyah. Semua hak cipta dilindungi.">© 2025 Rifqi Haikal Chairiansyah. All rights reserved.</p>
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Rifqi Haikal Chairiansyah</h4>
+                    <p>Passionate Full-Stack Developer and Mobile App Developer dedicated to creating innovative solutions through code. Always learning, always growing.</p>
+                    <div class="footer-social">
+                        <a href="mailto:r.haikal1610@gmail.com" title="Email">
+                            <i class="fas fa-envelope"></i>
+                        </a>
+                        <a href="https://www.linkedin.com/in/rifqhaikall" title="LinkedIn" target="_blank">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="https://github.com/Rifqi-HaikalCh" title="GitHub" target="_blank">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        <a href="https://wa.me/085362784585" title="WhatsApp" target="_blank">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4 data-en="Quick Links" data-id="Tautan Cepat">Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="#home" data-en="Home" data-id="Beranda">Home</a></li>
+                        <li><a href="#about" data-en="About" data-id="Tentang">About</a></li>
+                        <li><a href="#skills" data-en="Skills" data-id="Keahlian">Skills</a></li>
+                        <li><a href="#experience" data-en="Experience" data-id="Pengalaman">Experience</a></li>
+                        <li><a href="#projects" data-en="Projects" data-id="Projek">Projects</a></li>
+                        <li><a href="#contact" data-en="Contact" data-id="Kontak">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4 data-en="Services" data-id="Layanan">Services</h4>
+                    <ul class="footer-links">
+                        <li><span data-en="Web Development" data-id="Pengembangan Web">Web Development</span></li>
+                        <li><span data-en="Mobile Development" data-id="Pengembangan Mobile">Mobile Development</span></li>
+                        <li><span data-en="UI/UX Design" data-id="Desain UI/UX">UI/UX Design</span></li>
+                        <li><span data-en="API Development" data-id="Pengembangan API">API Development</span></li>
+                        <li><span data-en="Database Design" data-id="Desain Database">Database Design</span></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p data-en="© 2025 Rifqi Haikal Chairiansyah. All rights reserved." data-id="© 2025 Rifqi Haikal Chairiansyah. Semua hak cipta dilindungi.">© 2025 Rifqi Haikal Chairiansyah. All rights reserved.</p>
+            </div>
         </div>
     </footer>
+
+    <!-- Experience Modals -->
+    <!-- Javan Modal -->
+    <div class="modal fade" id="javanModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">PT. Javan Cipta Solusi - Internship Photos</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <img src="assets/javan.jpg" alt="Javan Office" class="img-fluid mb-3">
+                    <p>During my internship at PT. Javan Cipta Solusi, I had the opportunity to work with cutting-edge technologies and collaborate with experienced developers. This experience significantly enhanced my skills in Angular development and full-stack programming.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FIF Modal -->
+    <div class="modal fade" id="fifModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">PT. Federal International Finance - Internship Photos</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <img src="assets/fif.jpeg" alt="FIF Office" class="img-fluid mb-3">
+                    <p>My internship at PT. Federal International Finance (FIFGROUP) was an incredible learning experience in the financial technology sector. I gained valuable insights into enterprise-level application development and API management.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- GDSC Modal -->
+    <div class="modal fade" id="gdscModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Google Developer Student Club - Activity Photos</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <img src="assets/gdsc.jpg" alt="GDSC Event" class="img-fluid mb-3">
+                    <p>As a core team member of Google Developer Student Club IT Del, I organized various tech events and workshops. This role enhanced my leadership skills and public speaking abilities while contributing to the tech community.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- BEM Modal -->
+    <div class="modal fade" id="bemModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Student Executive Board - Leadership Photos</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <img src="assets/dhpm.jpeg" alt="BEM Activity" class="img-fluid mb-3">
+                    <p>Leading the Social Division in the Student Executive Board taught me valuable management and organizational skills. I successfully coordinated multiple off-campus events and managed social media strategies.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PKM Modal -->
+    <div class="modal fade" id="pkmModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">PKM Competition - Project Photos</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <img src="assets/PKM.png" alt="PKM Team" class="img-fluid mb-3">
+                    <p>Leading the team that developed 'Toba Trip' mobile application was an incredible experience. We secured 3rd place in the FITE Festival's Student Creativity Program, showcasing our innovation in solving tourism information challenges in the Toba Samosir region.</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- AOS Animation -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <!-- EmailJS -->
-    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 
     <script>
         // Initialize AOS
@@ -1317,8 +1733,8 @@
 
         // Typing animation
         const typingTexts = {
-            en: ['Full-Stack Developer', 'Mobile App Developer', 'UI/UX Enthusiast', 'Problem Solver'],
-            id: ['Pengembang Full-Stack', 'Pengembang Aplikasi Mobile', 'Penggemar UI/UX', 'Pemecah Masalah']
+            en: ['Full-Stack Developer', 'Mobile App Developer', 'UI/UX Enthusiast'],
+            id: ['Pengembang Full-Stack', 'Pengembang Aplikasi Mobile', 'Penggemar UI/UX']
         };
 
         let currentLang = 'en';
@@ -1397,6 +1813,43 @@
             isDeleting = false;
         }
 
+        // Skills category toggle function
+        function toggleSkillCategory(card) {
+            // Remove active class from all cards
+            document.querySelectorAll('.skill-category-card').forEach(c => {
+                if (c !== card) {
+                    c.classList.remove('active');
+                }
+            });
+            
+            // Toggle active class on clicked card
+            card.classList.toggle('active');
+        }
+
+        // Project tabs functionality
+        function showProjectTab(tabName) {
+            // Hide all project contents
+            document.querySelectorAll('.project-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.project-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected content and activate tab
+            document.getElementById(tabName + '-projects').classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // Experience modal functions
+        function showExperienceModal(type) {
+            const modalId = type + 'Modal';
+            const modal = new bootstrap.Modal(document.getElementById(modalId));
+            modal.show();
+        }
+
         // Contact form submission
         document.getElementById('contactForm').addEventListener('submit', function(e) {
             e.preventDefault();
@@ -1448,7 +1901,7 @@
         });
 
         // Add hover effects to cards
-        document.querySelectorAll('.project-card, .certificate-card, .skill-card').forEach(card => {
+        document.querySelectorAll('.project-card, .certificate-card, .experience-card').forEach(card => {
             card.addEventListener('mouseenter', function() {
                 this.style.transform = 'translateY(-10px) scale(1.02)';
             });
@@ -1541,6 +1994,137 @@
 
         // Create particles periodically
         setInterval(createParticle, 300);
+
+        // Dynamic year update in footer
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentYear = new Date().getFullYear();
+            const footerText = document.querySelector('.footer-bottom p');
+            if (footerText) {
+                const text = footerText.textContent;
+                footerText.textContent = text.replace('2025', currentYear);
+            }
+        });
+
+        // Add click effect to buttons
+        document.querySelectorAll('.btn, .social-icon, .skill-item').forEach(element => {
+            element.addEventListener('click', function(e) {
+                // Create ripple effect
+                const ripple = document.createElement('span');
+                const rect = this.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                const x = e.clientX - rect.left - size / 2;
+                const y = e.clientY - rect.top - size / 2;
+                
+                ripple.style.width = ripple.style.height = size + 'px';
+                ripple.style.left = x + 'px';
+                ripple.style.top = y + 'px';
+                ripple.classList.add('ripple');
+                
+                this.appendChild(ripple);
+                
+                setTimeout(() => {
+                    ripple.remove();
+                }, 600);
+            });
+        });
     </script>
+
+    <style>
+        /* Ripple effect */
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.6);
+            transform: scale(0);
+            animation: ripple-animation 0.6s linear;
+            pointer-events: none;
+        }
+
+        @keyframes ripple-animation {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        /* Additional responsive styles */
+        @media (max-width: 576px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .project-tabs {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .project-tab {
+                padding: 0.8rem 1.5rem;
+            }
+            
+            .footer-content {
+                gap: 2rem;
+            }
+            
+            .certificate-links {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .certificate-links a {
+                margin-right: 0;
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* Loading improvements */
+        .loading {
+            transition: opacity 0.5s ease;
+        }
+
+        /* Smooth transitions for all interactive elements */
+        * {
+            transition: all 0.3s ease;
+        }
+
+        /* Enhanced focus states for accessibility */
+        .btn:focus,
+        .form-control:focus,
+        .nav-link:focus,
+        .social-icon:focus {
+            outline: 2px solid var(--primary-green);
+            outline-offset: 2px;
+        }
+
+        /* Print styles */
+        @media print {
+            .navbar,
+            .loading,
+            .animated-bg,
+            .footer {
+                display: none !important;
+            }
+            
+            body {
+                font-size: 12pt;
+                line-height: 1.4;
+            }
+            
+            .section-title {
+                color: black !important;
+                font-size: 18pt;
+            }
+            
+            .hero-title {
+                color: black !important;
+                font-size: 24pt;
+            }
+        }
+    </style>
 </body>
 </html>
