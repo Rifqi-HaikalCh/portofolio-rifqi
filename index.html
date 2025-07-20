@@ -29,6 +29,15 @@
             --gradient-primary: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
         }
 
+        [data-theme="dark"] {
+            --text-dark: #F9FAFB;
+            --text-light: #D1D5DB;
+            --bg-white: #1F2937;
+            --bg-light: #111827;
+            --shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            --shadow-hover: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -40,33 +49,8 @@
             line-height: 1.6;
             color: var(--text-dark);
             overflow-x: hidden;
-        }
-
-        /* Animated Background */
-        .animated-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 50%, #f0fdf4 100%);
-        }
-
-        .animated-bg::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="%2310B981" opacity="0.1"><animate attributeName="cy" values="20;80;20" dur="3s" repeatCount="indefinite"/></circle><circle cx="80" cy="80" r="2" fill="%23059669" opacity="0.1"><animate attributeName="cy" values="80;20;80" dur="4s" repeatCount="indefinite"/></circle><circle cx="40" cy="60" r="1.5" fill="%2310B981" opacity="0.15"><animate attributeName="cx" values="40;60;40" dur="2s" repeatCount="indefinite"/></circle></svg>') repeat;
-            animation: float 20s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
+            background-color: var(--bg-light);
+            transition: all 0.3s ease;
         }
 
         /* Custom Scrollbar */
@@ -85,10 +69,11 @@
 
         /* Navigation */
         .navbar {
-            background: rgba(255, 255, 255, 0.95) !important;
+            background: var(--bg-white) !important;
             backdrop-filter: blur(10px);
             box-shadow: var(--shadow);
             transition: all 0.3s ease;
+            padding: 1rem 0;
         }
 
         .navbar-brand {
@@ -124,6 +109,27 @@
             left: 0;
         }
 
+        .theme-toggle {
+            background: var(--primary-green);
+            color: white;
+            border: none;
+            padding: 0.5rem;
+            border-radius: 50%;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin-right: 1rem;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .theme-toggle:hover {
+            background: var(--secondary-green);
+            transform: translateY(-2px);
+        }
+
         .language-switch {
             background: var(--primary-green);
             color: white;
@@ -146,6 +152,8 @@
             align-items: center;
             position: relative;
             overflow: hidden;
+            padding-top: 100px;
+            background-color: var(--bg-light);
         }
 
         .hero-content {
@@ -271,7 +279,7 @@
             justify-content: center;
             width: 50px;
             height: 50px;
-            background: white;
+            background: var(--bg-white);
             color: var(--primary-green);
             border-radius: 50%;
             margin: 0 10px;
@@ -290,7 +298,7 @@
         /* Enhanced About Section */
         .about-section {
             padding: 100px 0;
-            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            background: var(--bg-light);
         }
 
         .about-container {
@@ -325,7 +333,7 @@
             position: absolute;
             bottom: 20px;
             right: 20px;
-            background: white;
+            background: var(--bg-white);
             padding: 1.5rem;
             border-radius: 20px;
             box-shadow: var(--shadow);
@@ -374,7 +382,7 @@
             align-items: center;
             gap: 1rem;
             padding: 1rem;
-            background: white;
+            background: var(--bg-white);
             border-radius: 15px;
             box-shadow: var(--shadow);
             transition: all 0.3s ease;
@@ -433,6 +441,7 @@
         /* Skills Section - Square Grid Layout */
         .skills-section {
             padding: 100px 0;
+            background: var(--bg-white);
         }
 
         .skills-container {
@@ -482,7 +491,7 @@
         }
 
         .skill-item {
-            background: white;
+            background: var(--bg-white);
             border-radius: 20px;
             padding: 2rem 1rem;
             text-align: center;
@@ -539,7 +548,7 @@
         }
 
         .experience-card {
-            background: white;
+            background: var(--bg-white);
             border-radius: 15px;
             padding: 2rem;
             margin-bottom: 2rem;
@@ -571,6 +580,7 @@
             border-radius: 20px;
             border: none;
             overflow: hidden;
+            background: var(--bg-white);
         }
 
         .modal-header {
@@ -625,7 +635,7 @@
 
         /* Project Cards */
         .project-card, .certificate-card {
-            background: white;
+            background: var(--bg-white);
             border-radius: 20px;
             overflow: hidden;
             box-shadow: var(--shadow);
@@ -710,7 +720,7 @@
         }
 
         .certificate-card {
-            background: white;
+            background: var(--bg-white);
             border-radius: 20px;
             overflow: hidden;
             box-shadow: var(--shadow);
@@ -785,7 +795,7 @@
 
         /* Contact Form */
         .contact-form {
-            background: white;
+            background: var(--bg-white);
             border-radius: 20px;
             padding: 3rem;
             box-shadow: var(--shadow);
@@ -796,11 +806,15 @@
             border-radius: 10px;
             padding: 1rem;
             transition: all 0.3s ease;
+            background: var(--bg-white);
+            color: var(--text-dark);
         }
 
         .form-control:focus {
             border-color: var(--primary-green);
             box-shadow: 0 0 0 0.2rem rgba(16, 185, 129, 0.25);
+            background: var(--bg-white);
+            color: var(--text-dark);
         }
 
         /* Section Headings */
@@ -909,6 +923,38 @@
             color: #9CA3AF;
         }
 
+        /* Section Backgrounds */
+        section:nth-child(odd) {
+            background-color: var(--bg-light);
+        }
+
+        section:nth-child(even) {
+            background-color: var(--bg-white);
+        }
+
+        .py-5.bg-light {
+            background-color: var(--bg-light) !important;
+        }
+
+        /* Contact info styling */
+        .contact-info {
+            background: var(--bg-white);
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        .contact-info:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        /* Text color for labels */
+        .form-label {
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+
         /* Responsive Design */
         @media (max-width: 968px) {
             .about-content {
@@ -922,6 +968,10 @@
         }
 
         @media (max-width: 768px) {
+            .hero {
+                padding-top: 120px;
+            }
+
             .hero-title {
                 font-size: 2.5rem;
             }
@@ -966,11 +1016,12 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: white;
+            background: var(--bg-white);
             display: flex;
             align-items: center;
             justify-content: center;
             z-index: 9999;
+            transition: opacity 0.5s ease;
         }
 
         .spinner {
@@ -1012,16 +1063,137 @@
             0%, 100% { transform: translateY(0px); }
             50% { transform: translateY(-20px); }
         }
+
+        /* Dark mode transition */
+        * {
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+
+        /* Ripple effect */
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.6);
+            transform: scale(0);
+            animation: ripple-animation 0.6s linear;
+            pointer-events: none;
+        }
+
+        @keyframes ripple-animation {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        /* Additional responsive styles */
+        @media (max-width: 576px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .project-tabs {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .project-tab {
+                padding: 0.8rem 1.5rem;
+            }
+            
+            .footer-content {
+                gap: 2rem;
+            }
+            
+            .certificate-actions {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .certificate-btn {
+                margin-right: 0;
+                width: 100%;
+                justify-content: center;
+            }
+
+            .profile-image {
+                max-width: 250px !important;
+            }
+
+            .about-stats {
+                position: static;
+                margin-top: 1rem;
+                width: 100%;
+            }
+
+            .highlight-item {
+                padding: 0.8rem;
+            }
+
+            .skill-item {
+                padding: 1rem 0.5rem;
+            }
+
+            .skill-icon {
+                font-size: 2rem;
+            }
+        }
+
+        /* Enhanced focus states for accessibility */
+        .btn:focus,
+        .form-control:focus,
+        .nav-link:focus,
+        .social-icon:focus {
+            outline: 2px solid var(--primary-green);
+            outline-offset: 2px;
+        }
+
+        /* Print styles */
+        @media print {
+            .navbar,
+            .loading,
+            .footer {
+                display: none !important;
+            }
+            
+            body {
+                font-size: 12pt;
+                line-height: 1.4;
+            }
+            
+            .section-title {
+                color: black !important;
+                font-size: 18pt;
+            }
+            
+            .hero-title {
+                color: black !important;
+                font-size: 24pt;
+            }
+        }
+
+        /* Enhanced mobile responsiveness for profile section */
+        @media (max-width: 768px) {
+            .profile-image-container {
+                order: -1;
+                margin-bottom: 2rem;
+            }
+
+            .hero .row {
+                flex-direction: column-reverse;
+            }
+        }
     </style>
 </head>
-<body>
+<body data-theme="light">
     <!-- Loading Screen -->
     <div class="loading" id="loading">
         <div class="spinner"></div>
     </div>
-
-    <!-- Animated Background -->
-    <div class="animated-bg"></div>
 
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg fixed-top">
@@ -1035,7 +1207,7 @@
             </button>
             
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
+                <ul class="navbar-nav ms-auto align-items-center">
                     <li class="nav-item">
                         <a class="nav-link" href="#home" data-en="Home" data-id="Beranda">Home</a>
                     </li>
@@ -1058,6 +1230,11 @@
                         <a class="nav-link" href="#contact" data-en="Contact" data-id="Kontak">Contact</a>
                     </li>
                     <li class="nav-item">
+                        <button class="theme-toggle ms-2" onclick="toggleTheme()" id="themeBtn" title="Toggle Theme">
+                            <i class="fas fa-moon"></i>
+                        </button>
+                        </li>
+                        <li class="nav-item">
                         <button class="language-switch ms-2" onclick="toggleLanguage()" id="langBtn">ID</button>
                     </li>
                 </ul>
@@ -1099,11 +1276,9 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-6">
-                    <div class="profile-image-container" data-aos="fade-left">
-                        <div class="profile-decoration"></div>
-                        <div class="profile-decoration"></div>
-                        <img src="assets/Profile.png" alt="Rifqi Haikal Profile" class="profile-image" loading="lazy">
+                <div class="col-lg-6 d-flex justify-content-center align-items-center">
+                    <div class="profile-image-container w-100" data-aos="fade-left" style="display: flex; justify-content: center; align-items: center;">
+                        <img src="assets/Profile.png" alt="Rifqi Haikal Profile" class="profile-image" loading="lazy" style="border:none; box-shadow:none;border-radius: 15%; width:auto; height:550px;">
                     </div>
                 </div>
             </div>
@@ -1185,7 +1360,7 @@
     </section>
 
     <!-- Enhanced Skills Section -->
-    <section id="skills" class="skills-section bg-light">
+    <section id="skills" class="skills-section">
         <div class="container">
             <div class="section-heading" data-aos="fade-up">
                 <h2 class="section-title" data-en="Skills & Technologies" data-id="Keahlian & Teknologi">Skills & Technologies</h2>
@@ -1296,6 +1471,20 @@
             </div>
         </div>
     </section>
+    <script>
+        // Auto open Hard Skills when visiting #skills section
+        document.addEventListener('DOMContentLoaded', function() {
+            // Show Hard Skills by default
+            showSkillCategory('hard-skills');
+        });
+
+        // Also trigger when navigating to #skills via anchor
+        window.addEventListener('hashchange', function() {
+            if (location.hash === '#skills') {
+                showSkillCategory('hard-skills');
+            }
+        });
+    </script>
 
     <!-- Experience Section -->
     <section id="experience" class="py-5">
@@ -1368,7 +1557,7 @@
     </section>
 
     <!-- Projects Section -->
-    <section id="projects" class="py-5 bg-light">
+    <section id="projects" class="py-5">
         <div class="container">
             <div class="section-heading" data-aos="fade-up">
                 <h2 class="section-title" data-en="Featured Projects" data-id="Projek Unggulan">Featured Projects</h2>
@@ -1514,7 +1703,28 @@
             <!-- Group Projects -->
             <div id="group-projects" class="project-content">
                 <div class="row g-4">
-                    <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                                        <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                        <div class="project-card">
+                            <img src="assets/del-pick.png" alt="Toba Trip" class="project-img">
+                            <div class="project-content-card">
+                                <h4 class="project-title">Del-Pick Delivery App</h4>
+                                <p class="project-description" data-en="Mobile delivery system designed to overcome logistics and transportation problems." data-id="Sistem Layanan Antar yang dirancang untuk mengatasi masalah logistik dan transportasi.">Mobile delivery system designed to overcome logistics and transportation problems.</p>
+                                <div class="tech-stack">
+                                    <span class="tech-badge">Dart</span>
+                                    <span class="tech-badge">JavaScript</span>
+                                    <span class="tech-badge">C++</span>
+                                    <span class="tech-badge">MySQL</span>
+                                </div>
+                                <div class="project-links">
+                                    <a href="https://github.com/yeftaamir/Front-end-Del-Pick" target="_blank">
+                                        <i class="fab fa-github me-2"></i>Code
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
                         <div class="project-card">
                             <img src="assets/spmb.png" alt="SEMAT DEL" class="project-img">
                             <div class="project-content-card">
@@ -1533,28 +1743,6 @@
                                     </a>
                                     <a href="https://github.com/gabrielhtg/project-spmb-pabwe" target="_blank">
                                         <i class="fab fa-github me-2"></i>Code
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
-                        <div class="project-card">
-                            <img src="assets/PKM.png" alt="Toba Trip" class="project-img">
-                            <div class="project-content-card">
-                                <h4 class="project-title">Toba Trip Mobile App</h4>
-                                <p class="project-description" data-en="Android application for tourism information in Toba Samosir Regency that won 3rd place in PKM competition." data-id="Aplikasi Android untuk informasi pariwisata di Kabupaten Toba Samosir yang meraih juara 3 dalam kompetisi PKM.">Android application for tourism information in Toba Samosir Regency that won 3rd place in PKM competition.</p>
-                                <div class="tech-stack">
-                                    <span class="tech-badge">Android</span>
-                                    <span class="tech-badge">Kotlin</span>
-                                    <span class="tech-badge">Java</span>
-                                    <span class="tech-badge">XML</span>
-                                    <span class="tech-badge">SQLite</span>
-                                </div>
-                                <div class="project-links">
-                                    <a href="https://drive.google.com/file/d/1rcoi7EcNavuZ16IxpFDD_N_tFQbQ0Ljz/view?usp=drive_link" target="_blank">
-                                        <i class="fas fa-external-link-alt me-2"></i>Certificate
                                     </a>
                                 </div>
                             </div>
@@ -1630,7 +1818,7 @@
                         <div class="project-card">
                             <img src="assets/clicknic.jpg" alt="FRK & FED" class="project-img">
                             <div class="project-content-card">
-                                <h4 class="project-title">CLICKNIC APPLICATION</h4>
+                                <h4 class="project-title">Clicknik Application</h4>
                                 <p class="project-description" data-en="A hospital database that stores a huge data of patient, medication, doctor and diagnoses." data-id="Database rumah sakit yang menyimpan data pasien, obat, dokter, dan diagnosis dalam jumlah besar.">A hospital database that stores a huge data of patient, medication, doctor and diagnoses.</p>
                                 <div class="tech-stack">
                                     <span class="tech-badge">Java</span>
@@ -1864,7 +2052,7 @@
     </section>
 
     <!-- Footer -->
-    <footer class="footer">
+    <footer class="footer" style="background: linear-gradient(135deg, #1F2937, #374151); color: white;">
         <div class="container">
             <div class="footer-content">
                 <div class="footer-section">
@@ -1902,8 +2090,6 @@
                         <li><span data-en="Web Development" data-id="Pengembangan Web">Web Development</span></li>
                         <li><span data-en="Mobile Development" data-id="Pengembangan Mobile">Mobile Development</span></li>
                         <li><span data-en="UI/UX Design" data-id="Desain UI/UX">UI/UX Design</span></li>
-                        <li><span data-en="API Development" data-id="Pengembangan API">API Development</span></li>
-                        <li><span data-en="Database Design" data-id="Desain Database">Database Design</span></li>
                     </ul>
                 </div>
             </div>
@@ -2069,9 +2255,60 @@
         window.addEventListener('scroll', function() {
             const navbar = document.querySelector('.navbar');
             if (window.scrollY > 50) {
-                navbar.style.background = 'rgba(255, 255, 255, 0.98)';
+                navbar.style.background = document.body.getAttribute('data-theme') === 'dark' 
+                    ? 'rgba(31, 41, 55, 0.98)' 
+                    : 'rgba(255, 255, 255, 0.98)';
+            } else {
+                navbar.style.background = document.body.getAttribute('data-theme') === 'dark' 
+                    ? 'rgba(31, 41, 55, 0.95)' 
+                    : 'rgba(255, 255, 255, 0.95)';
+            }
+        });
+
+        // Theme toggling
+        function toggleTheme() {
+            const body = document.body;
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            const themeBtn = document.getElementById('themeBtn');
+            
+            body.setAttribute('data-theme', newTheme);
+            
+            // Update theme button icon
+            if (newTheme === 'dark') {
+                themeBtn.innerHTML = '<i class="fas fa-sun"></i>';
+                themeBtn.title = 'Switch to Light Mode';
+            } else {
+                themeBtn.innerHTML = '<i class="fas fa-moon"></i>';
+                themeBtn.title = 'Switch to Dark Mode';
+            }
+
+            // Save theme preference
+            localStorage.setItem('theme', newTheme);
+
+            // Update navbar background immediately
+            const navbar = document.querySelector('.navbar');
+            if (newTheme === 'dark') {
+                navbar.style.background = 'rgba(31, 41, 55, 0.95)';
             } else {
                 navbar.style.background = 'rgba(255, 255, 255, 0.95)';
+            }
+        }
+
+        // Load saved theme
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            const body = document.body;
+            const themeBtn = document.getElementById('themeBtn');
+            
+            body.setAttribute('data-theme', savedTheme);
+            
+            if (savedTheme === 'dark') {
+                themeBtn.innerHTML = '<i class="fas fa-sun"></i>';
+                themeBtn.title = 'Switch to Light Mode';
+            } else {
+                themeBtn.innerHTML = '<i class="fas fa-moon"></i>';
+                themeBtn.title = 'Switch to Dark Mode';
             }
         });
 
@@ -2191,16 +2428,6 @@
             observer.observe(section);
         });
 
-        // Parallax effect for hero section
-        window.addEventListener('scroll', function() {
-            const scrolled = window.pageYOffset;
-            const parallax = document.querySelector('.hero');
-            const speed = scrolled * 0.2;
-            if (parallax) {
-                parallax.style.transform = `translateY(${speed}px)`;
-            }
-        });
-
         // Add hover effects to cards
         document.querySelectorAll('.project-card, .certificate-card, .experience-card').forEach(card => {
             card.addEventListener('mouseenter', function() {
@@ -2257,46 +2484,6 @@
             }, 500);
         });
 
-        // Add particles effect (simplified)
-        function createParticle() {
-            const particle = document.createElement('div');
-            particle.style.position = 'fixed';
-            particle.style.width = '4px';
-            particle.style.height = '4px';
-            particle.style.background = 'var(--primary-green)';
-            particle.style.borderRadius = '50%';
-            particle.style.opacity = '0.3';
-            particle.style.pointerEvents = 'none';
-            particle.style.zIndex = '-1';
-            particle.style.left = Math.random() * window.innerWidth + 'px';
-            particle.style.top = window.innerHeight + 'px';
-            
-            document.body.appendChild(particle);
-            
-            const animation = particle.animate([
-                { transform: 'translateY(0px) translateX(0px)', opacity: 0.3 },
-                { transform: `translateY(-${window.innerHeight + 100}px) translateX(${Math.random() * 200 - 100}px)`, opacity: 0 }
-            ], {
-                duration: Math.random() * 3000 + 2000,
-                easing: 'linear'
-            });
-            
-            animation.onfinish = () => particle.remove();
-        }
-
-        // Create particles periodically
-        setInterval(createParticle, 300);
-
-        // Dynamic year update in footer
-        document.addEventListener('DOMContentLoaded', function() {
-            const currentYear = new Date().getFullYear();
-            const footerText = document.querySelector('.footer-bottom p');
-            if (footerText) {
-                const text = footerText.textContent;
-                footerText.textContent = text.replace('2025', currentYear);
-            }
-        });
-
         // Add click effect to buttons
         document.querySelectorAll('.btn, .social-icon, .skill-item').forEach(element => {
             element.addEventListener('click', function(e) {
@@ -2337,142 +2524,16 @@
         // Call on load and resize
         window.addEventListener('load', adjustProfileImage);
         window.addEventListener('resize', adjustProfileImage);
+
+        // Dynamic year update in footer
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentYear = new Date().getFullYear();
+            const footerText = document.querySelector('.footer-bottom p');
+            if (footerText) {
+                const text = footerText.textContent;
+                footerText.textContent = text.replace('2025', currentYear);
+            }
+        });
     </script>
-
-    <style>
-        /* Ripple effect */
-        .ripple {
-            position: absolute;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.6);
-            transform: scale(0);
-            animation: ripple-animation 0.6s linear;
-            pointer-events: none;
-        }
-
-        @keyframes ripple-animation {
-            to {
-                transform: scale(4);
-                opacity: 0;
-            }
-        }
-
-        /* Additional responsive styles */
-        @media (max-width: 576px) {
-            .hero-title {
-                font-size: 2rem;
-            }
-            
-            .section-title {
-                font-size: 2rem;
-            }
-            
-            .project-tabs {
-                flex-direction: column;
-                gap: 0.5rem;
-            }
-            
-            .project-tab {
-                padding: 0.8rem 1.5rem;
-            }
-            
-            .footer-content {
-                gap: 2rem;
-            }
-            
-            .certificate-actions {
-                flex-direction: column;
-                gap: 0.5rem;
-            }
-            
-            .certificate-btn {
-                margin-right: 0;
-                width: 100%;
-                justify-content: center;
-            }
-
-            .profile-image {
-                max-width: 250px !important;
-            }
-
-            .about-stats {
-                position: static;
-                margin-top: 1rem;
-                width: 100%;
-            }
-
-            .highlight-item {
-                padding: 0.8rem;
-            }
-
-            .skill-item {
-                padding: 1rem 0.5rem;
-            }
-
-            .skill-icon {
-                font-size: 2rem;
-            }
-        }
-
-        /* Loading improvements */
-        .loading {
-            transition: opacity 0.5s ease;
-        }
-
-        /* Smooth transitions for all interactive elements */
-        * {
-            transition: all 0.3s ease;
-        }
-
-        /* Enhanced focus states for accessibility */
-        .btn:focus,
-        .form-control:focus,
-        .nav-link:focus,
-        .social-icon:focus {
-            outline: 2px solid var(--primary-green);
-            outline-offset: 2px;
-        }
-
-        /* Print styles */
-        @media print {
-            .navbar,
-            .loading,
-            .animated-bg,
-            .footer {
-                display: none !important;
-            }
-            
-            body {
-                font-size: 12pt;
-                line-height: 1.4;
-            }
-            
-            .section-title {
-                color: black !important;
-                font-size: 18pt;
-            }
-            
-            .hero-title {
-                color: black !important;
-                font-size: 24pt;
-            }
-        }
-
-        /* Enhanced mobile responsiveness for profile section */
-        @media (max-width: 768px) {
-            .hero {
-                padding: 2rem 0;
-            }
-
-            .profile-image-container {
-                order: -1;
-                margin-bottom: 2rem;
-            }
-
-            .hero .row {
-                flex-direction: column-reverse;
-            }
-        }
-    </style>
 </body>
 </html>
