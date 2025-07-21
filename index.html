@@ -145,7 +145,7 @@
             transform: translateY(-2px);
         }
 
-        /* Hero Section */
+        /* Hero Section - Improved Mobile Layout */
         .hero {
             min-height: 100vh;
             display: flex;
@@ -161,16 +161,17 @@
         }
 
         .hero-title {
-            font-size: 4rem;
+            font-size: clamp(2rem, 8vw, 4rem);
             font-weight: 800;
             background: var(--gradient-primary);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             margin-bottom: 1rem;
+            line-height: 1.2;
         }
 
         .hero-subtitle {
-            font-size: 1.5rem;
+            font-size: clamp(1.1rem, 4vw, 1.5rem);
             color: var(--text-light);
             margin-bottom: 2rem;
         }
@@ -180,12 +181,13 @@
             font-weight: 600;
         }
 
-        /* Profile Image - Responsive */
+        /* Profile Image - Enhanced Mobile Responsiveness */
         .profile-image-container {
             position: relative;
             display: flex;
             justify-content: center;
             align-items: center;
+            padding: 1rem;
         }
 
         .profile-image {
@@ -357,7 +359,7 @@
         }
 
         .about-text-section h2 {
-            font-size: 2.5rem;
+            font-size: clamp(1.8rem, 5vw, 2.5rem);
             font-weight: 700;
             margin-bottom: 1rem;
             color: var(--text-dark);
@@ -403,6 +405,7 @@
             justify-content: center;
             color: white;
             font-size: 1.2rem;
+            flex-shrink: 0;
         }
 
         .highlight-content h4 {
@@ -479,7 +482,7 @@
 
         .skills-grid {
             display: none;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
             gap: 1.5rem;
             max-width: 800px;
             margin: 0 auto;
@@ -601,6 +604,7 @@
             justify-content: center;
             gap: 1rem;
             margin-bottom: 3rem;
+            flex-wrap: wrap;
         }
 
         .project-tab {
@@ -712,85 +716,138 @@
             transform: translateY(-2px);
         }
 
-        /* Enhanced Certificate Section */
-        .certificate-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
+        /* Enhanced Certificate Section - New Expandable Design */
+        .certificates-section {
+            padding: 100px 0;
+            background: var(--bg-light);
         }
 
-        .certificate-card {
+        .certificate-categories {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .certificate-category {
             background: var(--bg-white);
             border-radius: 20px;
-            overflow: hidden;
+            margin-bottom: 2rem;
             box-shadow: var(--shadow);
+            overflow: hidden;
             transition: all 0.3s ease;
         }
 
-        .certificate-header {
+        .certificate-category:hover {
+            box-shadow: var(--shadow-hover);
+        }
+
+        .category-header {
             background: var(--gradient-primary);
             color: white;
-            padding: 1.5rem;
-            text-align: center;
-        }
-
-        .certificate-header h4 {
-            margin: 0;
-            font-size: 1.2rem;
-            font-weight: 600;
-        }
-
-        .certificate-body {
-            padding: 1.5rem;
-        }
-
-        .certificate-meta {
+            padding: 1.5rem 2rem;
+            cursor: pointer;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .category-header:hover {
+            background: linear-gradient(135deg, var(--secondary-green), var(--dark-green));
+        }
+
+        .category-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .category-icon {
+            font-size: 1.6rem;
+        }
+
+        .expand-icon {
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .category-header.expanded .expand-icon {
+            transform: rotate(180deg);
+        }
+
+        .category-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .category-content.expanded {
+            max-height: 2000px;
+        }
+
+        .certificates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            padding: 2rem;
+        }
+
+        .certificate-item {
+            background: var(--bg-light);
+            border-radius: 15px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .certificate-item:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-green);
+            box-shadow: var(--shadow);
+        }
+
+        .certificate-item h5 {
+            color: var(--primary-green);
+            font-weight: 600;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .certificate-item p {
+            color: var(--text-light);
+            font-size: 0.9rem;
             margin-bottom: 1rem;
         }
 
-        .certificate-issuer {
-            font-weight: 600;
-            color: var(--primary-green);
-        }
-
-        .certificate-date {
-            color: var(--text-light);
-            font-size: 0.9rem;
-        }
-
-        .certificate-description {
-            color: var(--text-light);
-            margin-bottom: 1.5rem;
-            line-height: 1.6;
-        }
-
-        .certificate-actions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-        }
-
-        .certificate-btn {
-            background: var(--primary-green);
-            color: white;
-            padding: 0.4rem 0.8rem;
-            border-radius: 15px;
-            text-decoration: none;
-            font-size: 0.8rem;
-            font-weight: 500;
-            transition: all 0.3s ease;
+        .certificate-link {
             display: inline-flex;
             align-items: center;
-            gap: 0.3rem;
+            gap: 0.5rem;
+            background: var(--primary-green);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
         }
 
-        .certificate-btn:hover {
+        .certificate-link:hover {
             background: var(--secondary-green);
             transform: translateY(-2px);
             color: white;
+        }
+
+        .category-count {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
         }
 
         /* Contact Form */
@@ -824,7 +881,7 @@
         }
 
         .section-title {
-            font-size: 3rem;
+            font-size: clamp(2rem, 6vw, 3rem);
             font-weight: 700;
             color: var(--text-dark);
             margin-bottom: 1rem;
@@ -955,7 +1012,17 @@
             font-weight: 500;
         }
 
-        /* Responsive Design */
+        /* Enhanced Mobile Responsiveness */
+        @media (max-width: 1200px) {
+            .about-content {
+                gap: 2rem;
+            }
+            
+            .skills-grid {
+                grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            }
+        }
+
         @media (max-width: 968px) {
             .about-content {
                 grid-template-columns: 1fr;
@@ -965,25 +1032,6 @@
             .about-highlights {
                 grid-template-columns: 1fr;
             }
-        }
-
-        @media (max-width: 768px) {
-            .hero {
-                padding-top: 120px;
-            }
-
-            .hero-title {
-                font-size: 2.5rem;
-            }
-
-            .skills-grid {
-                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-                gap: 1rem;
-            }
-
-            .skill-item {
-                padding: 1.5rem 0.5rem;
-            }
 
             .experience-section {
                 grid-template-columns: 1fr;
@@ -992,6 +1040,48 @@
             .footer-content {
                 grid-template-columns: 1fr;
                 text-align: center;
+            }
+
+            .certificates-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                padding-top: 120px;
+                text-align: center;
+            }
+
+            .hero .row {
+                flex-direction: column-reverse;
+            }
+
+            .profile-image-container {
+                order: -1;
+                margin-bottom: 2rem;
+            }
+
+            .profile-image {
+                max-width: 280px !important;
+                height: auto;
+            }
+
+            .hero-content {
+                text-align: left;
+            }
+
+            .skills-grid {
+                grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+                gap: 1rem;
+            }
+
+            .skill-item {
+                padding: 1.5rem 0.5rem;
+            }
+
+            .skill-icon {
+                font-size: 2rem;
             }
 
             .project-tabs {
@@ -1004,8 +1094,123 @@
                 align-items: center;
             }
 
-            .certificate-grid {
-                grid-template-columns: 1fr;
+            .about-stats {
+                position: static;
+                margin-top: 1rem;
+                width: 100%;
+            }
+
+            .highlight-item {
+                padding: 1rem;
+            }
+
+            .highlight-content h4 {
+                font-size: 0.9rem;
+            }
+
+            .highlight-content p {
+                font-size: 0.8rem;
+            }
+
+            .category-header {
+                padding: 1.2rem 1.5rem;
+            }
+
+            .category-title {
+                font-size: 1.2rem;
+            }
+
+            .certificates-grid {
+                padding: 1.5rem;
+                gap: 1rem;
+            }
+
+            .certificate-item {
+                padding: 1.2rem;
+            }
+
+            .hero-content .d-flex {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .btn-primary-custom,
+            .btn-outline-custom {
+                width: 100%;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .hero {
+                padding-top: 100px;
+            }
+
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .project-tabs {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .project-tab {
+                padding: 0.8rem 1.5rem;
+            }
+            
+            .footer-content {
+                gap: 2rem;
+            }
+
+            .profile-image {
+                max-width: 240px !important;
+            }
+
+            .social-icon {
+                width: 45px;
+                height: 45px;
+                margin: 0 5px;
+            }
+
+            .skill-item {
+                padding: 1rem 0.5rem;
+            }
+
+            .skill-icon {
+                font-size: 1.8rem;
+            }
+
+            .category-header {
+                padding: 1rem;
+            }
+
+            .category-title {
+                font-size: 1.1rem;
+            }
+
+            .certificate-item h5 {
+                font-size: 1rem;
+            }
+
+            .certificate-item p {
+                font-size: 0.85rem;
+            }
+
+            .highlight-item {
+                flex-direction: column;
+                text-align: center;
+                gap: 0.5rem;
+            }
+
+            .highlight-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
             }
         }
 
@@ -1086,63 +1291,6 @@
             }
         }
 
-        /* Additional responsive styles */
-        @media (max-width: 576px) {
-            .hero-title {
-                font-size: 2rem;
-            }
-            
-            .section-title {
-                font-size: 2rem;
-            }
-            
-            .project-tabs {
-                flex-direction: column;
-                gap: 0.5rem;
-            }
-            
-            .project-tab {
-                padding: 0.8rem 1.5rem;
-            }
-            
-            .footer-content {
-                gap: 2rem;
-            }
-            
-            .certificate-actions {
-                flex-direction: column;
-                gap: 0.5rem;
-            }
-            
-            .certificate-btn {
-                margin-right: 0;
-                width: 100%;
-                justify-content: center;
-            }
-
-            .profile-image {
-                max-width: 250px !important;
-            }
-
-            .about-stats {
-                position: static;
-                margin-top: 1rem;
-                width: 100%;
-            }
-
-            .highlight-item {
-                padding: 0.8rem;
-            }
-
-            .skill-item {
-                padding: 1rem 0.5rem;
-            }
-
-            .skill-icon {
-                font-size: 2rem;
-            }
-        }
-
         /* Enhanced focus states for accessibility */
         .btn:focus,
         .form-control:focus,
@@ -1173,18 +1321,6 @@
             .hero-title {
                 color: black !important;
                 font-size: 24pt;
-            }
-        }
-
-        /* Enhanced mobile responsiveness for profile section */
-        @media (max-width: 768px) {
-            .profile-image-container {
-                order: -1;
-                margin-bottom: 2rem;
-            }
-
-            .hero .row {
-                flex-direction: column-reverse;
             }
         }
     </style>
@@ -1276,9 +1412,9 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-6 d-flex justify-content-center align-items-center">
-                    <div class="profile-image-container w-100" data-aos="fade-left" style="display: flex; justify-content: center; align-items: center;">
-                        <img src="assets/Profile.png" alt="Rifqi Haikal Profile" class="profile-image" loading="lazy" style="border:none; box-shadow:none;border-radius: 15%; width:auto; height:550px;">
+                <div class="col-lg-6">
+                    <div class="profile-image-container" data-aos="fade-left">
+                        <img src="assets/Profile.png" alt="Rifqi Haikal Profile" class="profile-image" loading="lazy" style="border:none; box-shadow:none;border-radius: 15%;">
                     </div>
                 </div>
             </div>
@@ -1374,96 +1510,96 @@
                 </div>
                 
                 <!-- Hard Skills Grid -->
-                <div id="hard-skills" class="skills-grid active">
-                    <div class="skill-item">
+                <div id="hard-skills" class="skills-grid active" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));">
+                    <div class="skill-item" style="min-width:180px;">
                         <i class="fab fa-html5 skill-icon" style="color: #E34F26;"></i>
                         <p class="skill-name">HTML5</p>
                     </div>
-                    <div class="skill-item">
+                    <div class="skill-item" style="min-width:180px;">
                         <i class="fab fa-css3-alt skill-icon" style="color: #1572B6;"></i>
                         <p class="skill-name">CSS3</p>
                     </div>
-                    <div class="skill-item">
+                    <div class="skill-item" style="min-width:180px;">
                         <i class="fab fa-js-square skill-icon" style="color: #F7DF1E;"></i>
                         <p class="skill-name">JavaScript</p>
                     </div>
-                    <div class="skill-item">
+                    <div class="skill-item" style="min-width:180px;">
                         <i class="fab fa-js-square skill-icon" style="color: #3178C6;"></i>
                         <p class="skill-name">TypeScript</p>
                     </div>
-                    <div class="skill-item">
+                    <div class="skill-item" style="min-width:180px;">
                         <i class="fab fa-java skill-icon" style="color: #007396;"></i>
                         <p class="skill-name">Java</p>
                     </div>
-                    <div class="skill-item">
+                    <div class="skill-item" style="min-width:180px;">
                         <i class="fab fa-python skill-icon" style="color: #3776AB;"></i>
                         <p class="skill-name">Python</p>
                     </div>
-                    <div class="skill-item">
+                    <div class="skill-item" style="min-width:180px;">
                         <i class="fab fa-php skill-icon" style="color: #777BB4;"></i>
                         <p class="skill-name">PHP</p>
                     </div>
-                    <div class="skill-item">
+                    <div class="skill-item" style="min-width:180px;">
                         <i class="fab fa-angular skill-icon" style="color: #DD0031;"></i>
                         <p class="skill-name">Angular</p>
                     </div>
-                    <div class="skill-item">
+                    <div class="skill-item" style="min-width:180px;">
                         <i class="fab fa-react skill-icon" style="color: #61DAFB;"></i>
                         <p class="skill-name">React.js</p>
                     </div>
-                    <div class="skill-item">
+                    <div class="skill-item" style="min-width:180px;">
                         <i class="fab fa-vuejs skill-icon" style="color: #4FC08D;"></i>
                         <p class="skill-name">Vue.js</p>
                     </div>
-                    <div class="skill-item">
+                    <div class="skill-item" style="min-width:180px;">
                         <i class="fas fa-leaf skill-icon" style="color: #6DB33F;"></i>
                         <p class="skill-name">Spring Boot</p>
                     </div>
-                    <div class="skill-item">
+                    <div class="skill-item" style="min-width:180px;">
                         <i class="fab fa-laravel skill-icon" style="color: #FF2D20;"></i>
                         <p class="skill-name">Laravel</p>
                     </div>
-                    <div class="skill-item">
+                    <div class="skill-item" style="min-width:180px;">
                         <i class="fas fa-database skill-icon" style="color: #4479A1;"></i>
                         <p class="skill-name">MySQL</p>
                     </div>
-                    <div class="skill-item">
+                    <div class="skill-item" style="min-width:180px;">
                         <i class="fab fa-git-alt skill-icon" style="color: #F05032;"></i>
                         <p class="skill-name">Git</p>
                     </div>
                 </div>
 
                 <!-- Soft Skills Grid -->
-                <div id="soft-skills" class="skills-grid">
-                    <div class="skill-item">
+                <div id="soft-skills" class="skills-grid" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));">
+                    <div class="skill-item" style="min-width:180px;">
                         <i class="fas fa-puzzle-piece skill-icon" style="color: #10B981;"></i>
                         <p class="skill-name" data-en="Problem Solving" data-id="Pemecahan Masalah">Problem Solving</p>
                     </div>
-                    <div class="skill-item">
+                    <div class="skill-item" style="min-width:180px;">
                         <i class="fas fa-lightbulb skill-icon" style="color: #F59E0B;"></i>
                         <p class="skill-name" data-en="Critical Thinking" data-id="Berpikir Kritis">Critical Thinking</p>
                     </div>
-                    <div class="skill-item">
+                    <div class="skill-item" style="min-width:180px;">
                         <i class="fas fa-users skill-icon" style="color: #3B82F6;"></i>
                         <p class="skill-name" data-en="Team Work" data-id="Kerja Tim">Team Work</p>
                     </div>
-                    <div class="skill-item">
+                    <div class="skill-item" style="min-width:180px;">
                         <i class="fas fa-comments skill-icon" style="color: #8B5CF6;"></i>
                         <p class="skill-name" data-en="Communication" data-id="Komunikasi">Communication</p>
                     </div>
-                    <div class="skill-item">
+                    <div class="skill-item" style="min-width:180px;">
                         <i class="fas fa-user-tie skill-icon" style="color: #EF4444;"></i>
                         <p class="skill-name" data-en="Leadership" data-id="Kepemimpinan">Leadership</p>
                     </div>
-                    <div class="skill-item">
+                    <div class="skill-item" style="min-width:180px;">
                         <i class="fas fa-clock skill-icon" style="color: #06B6D4;"></i>
                         <p class="skill-name" data-en="Time Management" data-id="Manajemen Waktu">Time Management</p>
                     </div>
-                    <div class="skill-item">
+                    <div class="skill-item" style="min-width:180px;">
                         <i class="fas fa-palette skill-icon" style="color: #EC4899;"></i>
                         <p class="skill-name" data-en="Creativity" data-id="Kreativitas">Creativity</p>
                     </div>
-                    <div class="skill-item">
+                    <div class="skill-item" style="min-width:180px;">
                         <i class="fas fa-sync-alt skill-icon" style="color: #84CC16;"></i>
                         <p class="skill-name" data-en="Adaptability" data-id="Kemampuan Adaptasi">Adaptability</p>
                     </div>
@@ -1471,20 +1607,6 @@
             </div>
         </div>
     </section>
-    <script>
-        // Auto open Hard Skills when visiting #skills section
-        document.addEventListener('DOMContentLoaded', function() {
-            // Show Hard Skills by default
-            showSkillCategory('hard-skills');
-        });
-
-        // Also trigger when navigating to #skills via anchor
-        window.addEventListener('hashchange', function() {
-            if (location.hash === '#skills') {
-                showSkillCategory('hard-skills');
-            }
-        });
-    </script>
 
     <!-- Experience Section -->
     <section id="experience" class="py-5">
@@ -1703,7 +1825,7 @@
             <!-- Group Projects -->
             <div id="group-projects" class="project-content">
                 <div class="row g-4">
-                                        <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                    <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
                         <div class="project-card">
                             <img src="assets/del-pick.png" alt="Toba Trip" class="project-img">
                             <div class="project-content-card">
@@ -1836,153 +1958,211 @@
         </div>
     </section>
 
-    <!-- Enhanced Certificates Section -->
-    <section id="certificates" class="py-5">
+    <!-- Enhanced Certificate Section - New Expandable Design -->
+    <section id="certificates" class="certificates-section">
         <div class="container">
             <div class="section-heading" data-aos="fade-up">
                 <h2 class="section-title" data-en="Certificates & Achievements" data-id="Sertifikat & Prestasi">Certificates & Achievements</h2>
-                <p class="section-subtitle" data-en="My professional certifications and notable achievements in technology and programming." data-id="Sertifikasi profesional saya dan pencapaian terkemuka dalam teknologi dan pemrograman.">My professional certifications and notable achievements in technology and programming.</p>
+                <p class="section-subtitle" data-en="Click on each category to explore my professional certifications and achievements organized by type." data-id="Klik pada setiap kategori untuk menjelajahi sertifikasi profesional dan pencapaian saya yang diorganisir berdasarkan jenis.">Click on each category to explore my professional certifications and achievements organized by type.</p>
             </div>
             
-            <div class="certificate-grid" data-aos="fade-up">
-                <!-- Dicoding Certificates -->
-                <div class="certificate-card">
-                    <div class="certificate-header">
-                        <h4 data-en="Front-End Web Development" data-id="Pengembangan Web Front-End">Front-End Web Development</h4>
-                    </div>
-                    <div class="certificate-body">
-                        <div class="certificate-meta">
-                            <span class="certificate-issuer">Dicoding</span>
-                            <span class="certificate-date">May 2025</span>
+            <div class="certificate-categories" data-aos="fade-up">
+                
+                <!-- DICODING Category -->
+                <div class="certificate-category">
+                    <div class="category-header" onclick="toggleCategory('dicoding')">
+                        <div class="category-title">
+                            <i class="fas fa-code category-icon"></i>
+                            <span data-en="DICODING Certifications" data-id="Sertifikasi DICODING">DICODING Certifications</span>
+                            <span class="category-count">4</span>
                         </div>
-                        <p class="certificate-description" data-en="Comprehensive front-end development course covering HTML forms, CSS Grid, Web Components, and modern JavaScript." data-id="Kursus pengembangan front-end komprehensif yang mencakup formulir HTML, CSS Grid, Komponen Web, dan JavaScript modern.">Comprehensive front-end development course covering HTML forms, CSS Grid, Web Components, and modern JavaScript.</p>
-                        <div class="certificate-actions">
-                            <a href="https://drive.google.com/file/d/1E1CQ4q_is9Hi459mvd55A3wSnj_egeC6/view?usp=drive_link" target="_blank" class="certificate-btn">
-                                <i class="fas fa-certificate"></i> Basic Web
-                            </a>
-                            <a href="https://drive.google.com/file/d/1OjpIDsFmiQjvc_1Q45RljiMvXRhEKiFC/view?usp=drive_link" target="_blank" class="certificate-btn">
-                                <i class="fas fa-certificate"></i> Fundamental
-                            </a>
-                            <a href="https://drive.google.com/file/d/10OdGjQpLWbu9nV8dE9jtPCz9Wskwrwrr/view?usp=drive_link" target="_blank" class="certificate-btn">
-                                <i class="fas fa-certificate"></i> Front-End
-                            </a>
+                        <i class="fas fa-chevron-down expand-icon"></i>
+                    </div>
+                    <div class="category-content" id="dicoding-content">
+                        <div class="certificates-grid">
+                            <div class="certificate-item">
+                                <h5 data-en="Basic JavaScript Programming" data-id="Pemrograman Dasar JavaScript">Basic JavaScript Programming</h5>
+                                <p data-en="Fundamental JavaScript programming concepts including ES6+, async programming, and best practices." data-id="Konsep dasar pemrograman JavaScript termasuk ES6+, pemrograman async, dan praktik terbaik.">Fundamental JavaScript programming concepts including ES6+, async programming, and best practices.</p>
+                                <a href="assets/Belajar Dasar Pemrograman JavaScript.pdf" target="_blank" class="certificate-link">
+                                    <i class="fas fa-certificate"></i>
+                                    <span data-en="View Certificate" data-id="Lihat Sertifikat">View Certificate</span>
+                                </a>
+                            </div>
+                            
+                            <div class="certificate-item">
+                                <h5 data-en="Basic Web Programming" data-id="Pemrograman Web Dasar">Basic Web Programming</h5>
+                                <p data-en="Foundation of web development covering HTML, CSS, and basic web technologies." data-id="Dasar-dasar pengembangan web yang mencakup HTML, CSS, dan teknologi web dasar.">Foundation of web development covering HTML, CSS, and basic web technologies.</p>
+                                <a href="assets/Belajar Dasar Pemrograman Web.pdf" target="_blank" class="certificate-link">
+                                    <i class="fas fa-certificate"></i>
+                                    <span data-en="View Certificate" data-id="Lihat Sertifikat">View Certificate</span>
+                                </a>
+                            </div>
+                            
+                            <div class="certificate-item">
+                                <h5 data-en="Fundamental Front-End Web Development" data-id="Fundamental Pengembangan Web Front-End">Fundamental Front-End Web Development</h5>
+                                <p data-en="Advanced front-end concepts including responsive design, accessibility, and modern CSS techniques." data-id="Konsep front-end lanjutan termasuk desain responsif, aksesibilitas, dan teknik CSS modern.">Advanced front-end concepts including responsive design, accessibility, and modern CSS techniques.</p>
+                                <a href="assets/Belajar Fundamental Front-End Web Development.pdf" target="_blank" class="certificate-link">
+                                    <i class="fas fa-certificate"></i>
+                                    <span data-en="View Certificate" data-id="Lihat Sertifikat">View Certificate</span>
+                                </a>
+                            </div>
+                            
+                            <div class="certificate-item">
+                                <h5 data-en="Front-End Web for Beginners" data-id="Web Front-End untuk Pemula">Front-End Web for Beginners</h5>
+                                <p data-en="Beginner-friendly introduction to front-end web development with hands-on projects." data-id="Pengenalan ramah pemula untuk pengembangan web front-end dengan proyek praktis.">Beginner-friendly introduction to front-end web development with hands-on projects.</p>
+                                <a href="assets/Belajar Membuat Front-End Web untuk Pemula.pdf" target="_blank" class="certificate-link">
+                                    <i class="fas fa-certificate"></i>
+                                    <span data-en="View Certificate" data-id="Lihat Sertifikat">View Certificate</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- KEGIATAN Category -->
+                <div class="certificate-category">
+                    <div class="category-header" onclick="toggleCategory('kegiatan')">
+                        <div class="category-title">
+                            <i class="fas fa-trophy category-icon"></i>
+                            <span data-en="ACTIVITIES & Competitions" data-id="KEGIATAN & Kompetisi">ACTIVITIES & Competitions</span>
+                            <span class="category-count">5</span>
+                        </div>
+                        <i class="fas fa-chevron-down expand-icon"></i>
+                    </div>
+                    <div class="category-content" id="kegiatan-content">
+                        <div class="certificates-grid">
+                            <div class="certificate-item">
+                                <h5 data-en="IT Del Festival 2023" data-id="IT Del Festival 2023">IT Del Festival 2023</h5>
+                                <p data-en="Active participation in the IT Del Festival 2023 as a member of the Public Relations and Documentation division." data-id="Partisipasi aktif dalam IT Del Festival 2023 sebagai anggota divisi Hubungan Masyarakat dan Dokumentasi.">Active participation in the IT Del Festival 2023 as a member of the Public Relations and Documentation division.</p>
+                                <a href="assets/IT Del Fest 2023-Rifqi.pdf" target="_blank" class="certificate-link">
+                                    <i class="fas fa-certificate"></i>
+                                    <span data-en="View Certificate" data-id="Lihat Sertifikat">View Certificate</span>
+                                </a>
+                            </div>
+                            
+                            <div class="certificate-item">
+                                <h5 data-en="AI Certificate" data-id="Sertifikat AI">AI Certificate</h5>
+                                <p data-en="Certification in artificial intelligence fundamentals and applications in modern technology." data-id="Sertifikasi dalam dasar-dasar kecerdasan buatan dan aplikasinya dalam teknologi modern.">Certification in artificial intelligence fundamentals and applications in modern technology.</p>
+                                <a href="assets/sertifikat AI.pdf" target="_blank" class="certificate-link">
+                                    <i class="fas fa-certificate"></i>
+                                    <span data-en="View Certificate" data-id="Lihat Sertifikat">View Certificate</span>
+                                </a>
+                            </div>
+                            
+                            <div class="certificate-item">
+                                <h5 data-en="Cyber Security Training" data-id="Pelatihan Keamanan Siber">Cyber Security Training</h5>
+                                <p data-en="Comprehensive training in cybersecurity principles, threats, and protection strategies." data-id="Pelatihan komprehensif dalam prinsip keamanan siber, ancaman, dan strategi perlindungan.">Comprehensive training in cybersecurity principles, threats, and protection strategies.</p>
+                                <a href="assets/Sertifikat Cyber Kulum.png" target="_blank" class="certificate-link">
+                                    <i class="fas fa-certificate"></i>
+                                    <span data-en="View Certificate" data-id="Lihat Sertifikat">View Certificate</span>
+                                </a>
+                            </div>
+                            
+                            <div class="certificate-item">
+                                <h5 data-en="PCA Certificate" data-id="Sertifikat PCA">PCA Certificate</h5>
+                                <p data-en="Professional certification in Principal Component Analysis and data dimensionality reduction techniques." data-id="Sertifikasi profesional dalam Principal Component Analysis dan teknik reduksi dimensionalitas data.">Professional certification in Principal Component Analysis and data dimensionality reduction techniques.</p>
+                                <a href="assets/SERTIFIKAT PCA RIFQI.pdf" target="_blank" class="certificate-link">
+                                    <i class="fas fa-certificate"></i>
+                                    <span data-en="View Certificate" data-id="Lihat Sertifikat">View Certificate</span>
+                                </a>
+                            </div>
+                            
+                            <div class="certificate-item">
+                                <h5 data-en="PKM Competition Certificate" data-id="Sertifikat Kompetisi PKM">PKM Competition Certificate</h5>
+                                <p data-en="Achievement certificate for participation and accomplishment in the Student Creativity Program (PKM) competition." data-id="Sertifikat prestasi untuk partisipasi dan pencapaian dalam kompetisi Program Kreativitas Mahasiswa (PKM).">Achievement certificate for participation and accomplishment in the Student Creativity Program (PKM) competition.</p>
+                                <a href="assets/Sertifikat PKM.pdf" target="_blank" class="certificate-link">
+                                    <i class="fas fa-certificate"></i>
+                                    <span data-en="View Certificate" data-id="Lihat Sertifikat">View Certificate</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ORGANISASI Category -->
+                <div class="certificate-category">
+                    <div class="category-header" onclick="toggleCategory('organisasi')">
+                        <div class="category-title">
+                            <i class="fas fa-users category-icon"></i>
+                            <span data-en="ORGANIZATION Leadership" data-id="Kepemimpinan ORGANISASI">ORGANIZATION Leadership</span>
+                            <span class="category-count">3</span>
+                        </div>
+                        <i class="fas fa-chevron-down expand-icon"></i>
+                    </div>
+                    <div class="category-content" id="organisasi-content">
+                        <div class="certificates-grid">
+                            <div class="certificate-item">
+                                <h5 data-en="BEM Member Certificate" data-id="Sertifikat Anggota BEM">BEM Member Certificate</h5>
+                                <p data-en="Official membership certificate for participation in the Student Executive Board (BEM) activities." data-id="Sertifikat keanggotaan resmi untuk partisipasi dalam kegiatan Badan Eksekutif Mahasiswa (BEM).">Official membership certificate for participation in the Student Executive Board (BEM) activities.</p>
+                                <a href="assets/Sertifikat BEM - Anggota.jpeg" target="_blank" class="certificate-link">
+                                    <i class="fas fa-certificate"></i>
+                                    <span data-en="View Certificate" data-id="Lihat Sertifikat">View Certificate</span>
+                                </a>
+                            </div>
+                            
+                            <div class="certificate-item">
+                                <h5 data-en="BEM Leadership Certificate" data-id="Sertifikat Kepemimpinan BEM">BEM Leadership Certificate</h5>
+                                <p data-en="Leadership certificate for serving as Head of Social Division in the Student Executive Board." data-id="Sertifikat kepemimpinan untuk menjabat sebagai Kepala Divisi Sosial di Badan Eksekutif Mahasiswa.">Leadership certificate for serving as Head of Social Division in the Student Executive Board.</p>
+                                <a href="assets/Sertifikat BEM - Rifqi Haikal Chairiansyah.pdf" target="_blank" class="certificate-link">
+                                    <i class="fas fa-certificate"></i>
+                                    <span data-en="View Certificate" data-id="Lihat Sertifikat">View Certificate</span>
+                                </a>
+                            </div>
+                            
+                            <div class="certificate-item">
+                                <h5 data-en="GDSC Core Team Certificate" data-id="Sertifikat Tim Inti GDSC">GDSC Core Team Certificate</h5>
+                                <p data-en="Core team member certificate for Google Developer Student Club IT Del, Public Relations division." data-id="Sertifikat anggota tim inti untuk Google Developer Student Club IT Del, divisi Hubungan Masyarakat.">Core team member certificate for Google Developer Student Club IT Del, Public Relations division.</p>
+                                <a href="assets/GDSC - Rifqi Haikal Chairiansyah.pdf" target="_blank" class="certificate-link">
+                                    <i class="fas fa-certificate"></i>
+                                    <span data-en="View Certificate" data-id="Lihat Sertifikat">View Certificate</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MAGANG Category -->
+                <div class="certificate-category">
+                    <div class="category-header" onclick="toggleCategory('magang')">
+                        <div class="category-title">
+                            <i class="fas fa-briefcase category-icon"></i>
+                            <span data-en="INTERNSHIP Certificates" data-id="Sertifikat MAGANG">INTERNSHIP Certificates</span>
+                            <span class="category-count">3</span>
+                        </div>
+                        <i class="fas fa-chevron-down expand-icon"></i>
+                    </div>
+                    <div class="category-content" id="magang-content">
+                        <div class="certificates-grid">
+                            <div class="certificate-item">
+                                <h5 data-en="MSIB Batch 7 Certificate" data-id="Sertifikat MSIB Angkatan 7">MSIB Batch 7 Certificate</h5>
+                                <p data-en="Official certificate for completing the MSIB (Magang dan Studi Independen Bersertifikat) Batch 7 program." data-id="Sertifikat resmi untuk menyelesaikan program MSIB (Magang dan Studi Independen Bersertifikat) Angkatan 7.">Official certificate for completing the MSIB (Magang dan Studi Independen Bersertifikat) Batch 7 program.</p>
+                                <a href="assets/Sertifikat-MSIB 7 Rifqi Haikal Chairiansyah.pdf" target="_blank" class="certificate-link">
+                                    <i class="fas fa-certificate"></i>
+                                    <span data-en="View Certificate" data-id="Lihat Sertifikat">View Certificate</span>
+                                </a>
+                            </div>
+                            
+                            <div class="certificate-item">
+                                <h5 data-en="Internship Completion Letter" data-id="Surat Keterangan Magang">Internship Completion Letter</h5>
+                                <p data-en="Official internship completion letter documenting successful completion of programming internship program." data-id="Surat keterangan magang resmi yang mendokumentasikan penyelesaian program magang programming dengan sukses.">Official internship completion letter documenting successful completion of programming internship program.</p>
+                                <a href="assets/Surat Keterangan Magang Rifqi Haikal.pdf" target="_blank" class="certificate-link">
+                                    <i class="fas fa-certificate"></i>
+                                    <span data-en="View Certificate" data-id="Lihat Sertifikat">View Certificate</span>
+                                </a>
+                            </div>
+                            
+                            <div class="certificate-item">
+                                <h5 data-en="Javan Internship Certificate" data-id="Sertifikat Magang Javan">Javan Internship Certificate</h5>
+                                <p data-en="Certificate of completion for Angular Programmer internship at PT. Javan Cipta Solusi." data-id="Sertifikat penyelesaian untuk magang Angular Programmer di PT. Javan Cipta Solusi.">Certificate of completion for Angular Programmer internship at PT. Javan Cipta Solusi.</p>
+                                <a href="assets/Sertifikat - Rifqi Haikal Chairiansyah.pdf" target="_blank" class="certificate-link">
+                                    <i class="fas fa-certificate"></i>
+                                    <span data-en="View Certificate" data-id="Lihat Sertifikat">View Certificate</span>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
                 
-                <div class="certificate-card">
-                    <div class="certificate-header">
-                        <h4 data-en="JavaScript Programming" data-id="Pemrograman JavaScript">JavaScript Programming</h4>
-                    </div>
-                    <div class="certificate-body">
-                        <div class="certificate-meta">
-                            <span class="certificate-issuer">Dicoding</span>
-                            <span class="certificate-date">May 2025</span>
-                        </div>
-                        <p class="certificate-description" data-en="Mastering JavaScript fundamentals including ES6+, async programming, OOP, and functional programming paradigms." data-id="Menguasai dasar-dasar JavaScript termasuk ES6+, pemrograman async, OOP, dan paradigma pemrograman fungsional.">Mastering JavaScript fundamentals including ES6+, async programming, OOP, and functional programming paradigms.</p>
-                        <div class="certificate-actions">
-                            <a href="https://drive.google.com/file/d/1NPoH8AX1vf9UOTixjfPeTFrOmuRg-8ni/view?usp=drive_link" target="_blank" class="certificate-btn">
-                                <i class="fas fa-certificate"></i> View Certificate
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="certificate-card">
-                    <div class="certificate-header">
-                        <h4 data-en="Java Programming" data-id="Pemrograman Java">Java Programming</h4>
-                    </div>
-                    <div class="certificate-body">
-                        <div class="certificate-meta">
-                            <span class="certificate-issuer">Dicoding</span>
-                            <span class="certificate-date">Jun 2024</span>
-                        </div>
-                        <p class="certificate-description" data-en="Comprehensive Java programming course covering OOP principles, data structures, and software development best practices." data-id="Kursus pemrograman Java komprehensif yang mencakup prinsip OOP, struktur data, dan praktik terbaik pengembangan perangkat lunak.">Comprehensive Java programming course covering OOP principles, data structures, and software development best practices.</p>
-                        <div class="certificate-actions">
-                            <a href="https://drive.google.com/file/d/17G8-ZnCrqeGmxIzt83JdebGGyw7Dk3so/view?usp=drive_link" target="_blank" class="certificate-btn">
-                                <i class="fas fa-certificate"></i> View Certificate
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Internship Certificates -->
-                <div class="certificate-card">
-                    <div class="certificate-header">
-                        <h4 data-en="MSIB Batch 7 Certification" data-id="Sertifikat MSIB Angkatan 7">MSIB Batch 7 Certification</h4>
-                    </div>
-                    <div class="certificate-body">
-                        <div class="certificate-meta">
-                            <span class="certificate-issuer">PT. Javan Cipta Solusi</span>
-                            <span class="certificate-date">Dec 2024</span>
-                        </div>
-                        <p class="certificate-description" data-en="Completed MSIB program as Angular Programmer, learning modern web development technologies and industry practices." data-id="Menyelesaikan program MSIB sebagai Programmer Angular, mempelajari teknologi pengembangan web modern dan praktik industri.">Completed MSIB program as Angular Programmer, learning modern web development technologies and industry practices.</p>
-                        <div class="certificate-actions">
-                            <a href="https://drive.google.com/file/d/12aRB0azPi3jvWovB2g3mZuoM7jM0pirL/view?usp=drive_link" target="_blank" class="certificate-btn">
-                                <i class="fas fa-certificate"></i> Javan Certificate
-                            </a>
-                            <a href="https://drive.google.com/file/d/1ZxdBM1WU0qq_7DRWadC5to952gRQ3n_q/view?usp=drive_link" target="_blank" class="certificate-btn">
-                                <i class="fas fa-certificate"></i> MSIB Certificate
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- IELTS Certificates -->
-                <div class="certificate-card">
-                    <div class="certificate-header">
-                        <h4 data-en="IELTS Training Certificates" data-id="Sertifikat Pelatihan IELTS">IELTS Training Certificates</h4>
-                    </div>
-                    <div class="certificate-body">
-                        <div class="certificate-meta">
-                            <span class="certificate-issuer">MySkill</span>
-                            <span class="certificate-date">2023</span>
-                        </div>
-                        <p class="certificate-description" data-en="Multiple IELTS training certificates covering listening skills, comprehension, and English proficiency development." data-id="Beberapa sertifikat pelatihan IELTS yang mencakup keterampilan mendengarkan, pemahaman, dan pengembangan kemahiran bahasa Inggris.">Multiple IELTS training certificates covering listening skills, comprehension, and English proficiency development.</p>
-                        <div class="certificate-actions">
-                            <a href="https://drive.google.com/file/d/1YEVZj5JQ95R2_8NJKK6SBIuLpT4Po4Gh/view?usp=drive_link" target="_blank" class="certificate-btn">
-                                <i class="fas fa-certificate"></i> Actions & Processes
-                            </a>
-                            <a href="https://drive.google.com/file/d/1iBHwaXkCKOb_qJO0wDx-O3fLrYUfkngY/view?usp=drive_link" target="_blank" class="certificate-btn">
-                                <i class="fas fa-certificate"></i> Attitude & Opinions
-                            </a>
-                            <a href="https://drive.google.com/file/d/1tcU8uj1_ygTAIYyd_GKfUadVXNLeHwhG/view?usp=drive_link" target="_blank" class="certificate-btn">
-                                <i class="fas fa-certificate"></i> Lecture & Talk
-                            </a>
-                            <a href="https://drive.google.com/file/d/1-XO_4R_wmOAjCulVnWoOqLJHIE2sMqHF/view?usp=drive_link" target="_blank" class="certificate-btn">
-                                <i class="fas fa-certificate"></i> Introduction
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Organization Certificates -->
-                <div class="certificate-card">
-                    <div class="certificate-header">
-                        <h4 data-en="Organization & Leadership" data-id="Organisasi & Kepemimpinan">Organization & Leadership</h4>
-                    </div>
-                    <div class="certificate-body">
-                        <div class="certificate-meta">
-                            <span class="certificate-issuer">Various Organizations</span>
-                            <span class="certificate-date">2023-2024</span>
-                        </div>
-                        <p class="certificate-description" data-en="Various certificates from organizational activities and leadership roles in student organizations and competitions." data-id="Berbagai sertifikat dari kegiatan organisasi dan peran kepemimpinan dalam organisasi mahasiswa dan kompetisi.">Various certificates from organizational activities and leadership roles in student organizations and competitions.</p>
-                        <div class="certificate-actions">
-                            <a href="https://drive.google.com/file/d/1jnhJgQn7xF1VV_-m9aCd9zA_qs2292Mo/view?usp=drive_link" target="_blank" class="certificate-btn">
-                                <i class="fas fa-certificate"></i> Social Division Head
-                            </a>
-                            <a href="https://drive.google.com/file/d/1RRlraRx8fmXToWzUYf6KyxE24VcHZYRC/view?usp=drive_link" target="_blank" class="certificate-btn">
-                                <i class="fas fa-certificate"></i> BEM Member
-                            </a>
-                            <a href="https://drive.google.com/file/d/12aWZXS03prrymupPBHoi4LPJaXnNXYMO/view?usp=drive_link" target="_blank" class="certificate-btn">
-                                <i class="fas fa-certificate"></i> IT Del Festival
-                            </a>
-                            <a href="https://drive.google.com/file/d/1rcoi7EcNavuZ16IxpFDD_N_tFQbQ0Ljz/view?usp=drive_link" target="_blank" class="certificate-btn">
-                                <i class="fas fa-certificate"></i> PKM Competition
-                            </a>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </section>
@@ -2024,23 +2204,41 @@
                     </div>
                 </div>
             </div>
+            <script>
+                // Open Gmail compose with prefilled fields on form submit
+                document.getElementById('contactForm').addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const name = document.getElementById('name').value;
+                    const email = document.getElementById('email').value;
+                    const subject = document.getElementById('subject').value;
+                    const message = document.getElementById('message').value;
+
+                    // Gmail compose URL
+                    const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=r.haikal1610@gmail.com&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`)}`;
+
+                    window.open(gmailUrl, '_blank');
+
+                    alert(currentLang === 'en' ? 'Gmail will open in a new tab. Thank you for your message!' : 'Gmail akan terbuka di tab baru. Terima kasih atas pesan Anda!');
+                    this.reset();
+                });
+            </script>
             
             <div class="row mt-5">
-                <div class="col-md-4 text-center" data-aos="fade-up" data-aos-delay="100">
+                <div class="col-md-4 text-center" data-aos="fade-up" data-aos-delay="100" style="margin-top: 24px;">
                     <div class="contact-info p-4">
                         <i class="fas fa-envelope fa-2x text-success mb-3"></i>
                         <h5 data-en="Email Me" data-id="Email Saya">Email Me</h5>
                         <p>r.haikal1610@gmail.com</p>
                     </div>
                 </div>
-                <div class="col-md-4 text-center" data-aos="fade-up" data-aos-delay="200">
+                <div class="col-md-4 text-center" data-aos="fade-up" data-aos-delay="200" style="margin-top: 24px;">
                     <div class="contact-info p-4">
                         <i class="fas fa-phone fa-2x text-success mb-3"></i>
                         <h5 data-en="Call Me" data-id="Telepon Saya">Call Me</h5>
                         <p>+62 853-6278-4585</p>
                     </div>
                 </div>
-                <div class="col-md-4 text-center" data-aos="fade-up" data-aos-delay="300">
+                <div class="col-md-4 text-center" data-aos="fade-up" data-aos-delay="300" style="margin-top: 24px;">
                     <div class="contact-info p-4">
                         <i class="fas fa-map-marker-alt fa-2x text-success mb-3"></i>
                         <h5 data-en="Location" data-id="Lokasi">Location</h5>
@@ -2381,6 +2579,31 @@
             event.target.classList.add('active');
         }
 
+        // Certificate category toggle functionality
+        function toggleCategory(categoryId) {
+            const header = event.currentTarget;
+            const content = document.getElementById(categoryId + '-content');
+            const isExpanded = header.classList.contains('expanded');
+
+            // Close all other categories
+            document.querySelectorAll('.category-header').forEach(h => {
+                if (h !== header) {
+                    h.classList.remove('expanded');
+                    const otherContent = h.nextElementSibling;
+                    otherContent.classList.remove('expanded');
+                }
+            });
+
+            // Toggle current category
+            if (isExpanded) {
+                header.classList.remove('expanded');
+                content.classList.remove('expanded');
+            } else {
+                header.classList.add('expanded');
+                content.classList.add('expanded');
+            }
+        }
+
         // Experience modal functions
         function showExperienceModal(type) {
             const modalId = type + 'Modal';
@@ -2429,7 +2652,7 @@
         });
 
         // Add hover effects to cards
-        document.querySelectorAll('.project-card, .certificate-card, .experience-card').forEach(card => {
+        document.querySelectorAll('.project-card, .certificate-card, .experience-card, .certificate-item').forEach(card => {
             card.addEventListener('mouseenter', function() {
                 this.style.transform = 'translateY(-10px) scale(1.02)';
             });
@@ -2485,7 +2708,7 @@
         });
 
         // Add click effect to buttons
-        document.querySelectorAll('.btn, .social-icon, .skill-item').forEach(element => {
+        document.querySelectorAll('.btn, .social-icon, .skill-item, .certificate-link').forEach(element => {
             element.addEventListener('click', function(e) {
                 // Create ripple effect
                 const ripple = document.createElement('span');
@@ -2513,8 +2736,11 @@
             const container = document.querySelector('.profile-image-container');
             
             if (window.innerWidth <= 768) {
-                profileImg.style.maxWidth = '300px';
+                profileImg.style.maxWidth = '280px';
                 container.style.marginTop = '2rem';
+            } else if (window.innerWidth <= 576) {
+                profileImg.style.maxWidth = '240px';
+                container.style.marginTop = '1rem';
             } else {
                 profileImg.style.maxWidth = '400px';
                 container.style.marginTop = '0';
@@ -2534,6 +2760,59 @@
                 footerText.textContent = text.replace('2025', currentYear);
             }
         });
+
+        // Enhanced certificate section animations
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add staggered animation to certificate items when category is expanded
+            const categoryHeaders = document.querySelectorAll('.category-header');
+            categoryHeaders.forEach(header => {
+                header.addEventListener('click', function() {
+                    const content = this.nextElementSibling;
+                    if (content.classList.contains('expanded')) {
+                        const items = content.querySelectorAll('.certificate-item');
+                        items.forEach((item, index) => {
+                            setTimeout(() => {
+                                item.style.opacity = '1';
+                                item.style.transform = 'translateY(0)';
+                            }, index * 100);
+                        });
+                    }
+                });
+            });
+        });
+
+        // Add enhanced mobile navigation
+        document.addEventListener('DOMContentLoaded', function() {
+            const navbarToggler = document.querySelector('.navbar-toggler');
+            const navbarCollapse = document.querySelector('.navbar-collapse');
+            
+            // Close mobile menu when clicking on a nav link
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', () => {
+                    if (navbarCollapse.classList.contains('show')) {
+                        navbarToggler.click();
+                    }
+                });
+            });
+        });
+
+        // Performance optimization - lazy load images
+        if ('IntersectionObserver' in window) {
+            const imageObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        img.src = img.dataset.src || img.src;
+                        img.classList.remove('lazy');
+                        imageObserver.unobserve(img);
+                    }
+                });
+            });
+
+            document.querySelectorAll('img[data-src]').forEach(img => {
+                imageObserver.observe(img);
+            });
+        }
     </script>
 </body>
 </html>
