@@ -38,7 +38,11 @@
   }
 
   body {
-    @apply font-poppins leading-relaxed text-text-dark bg-bg-light transition-all duration-300;
+    @apply font-poppins leading-relaxed text-gray-900 bg-gray-50 transition-all duration-300;
+  }
+  
+  .dark body {
+    @apply text-gray-100 bg-gray-900;
   }
 }
 
@@ -49,15 +53,15 @@
   }
 
   ::-webkit-scrollbar-track {
-    @apply bg-bg-light;
+    @apply bg-gray-50 dark:bg-gray-800;
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-primary-green rounded;
+    @apply bg-emerald-500 rounded;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-secondary-green;
+    @apply bg-emerald-600;
   }
 }
 
@@ -85,7 +89,7 @@
 
   /* Gradient text */
   .gradient-text {
-    @apply bg-gradient-primary bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-emerald-500 to-emerald-600 bg-clip-text text-transparent;
   }
 
   /* Custom shadow utilities */
@@ -137,7 +141,7 @@
 
 /* Section backgrounds */
 section:nth-child(odd) {
-  @apply bg-bg-light;
+  @apply bg-gray-50 dark:bg-gray-900;
 }
 
 section:nth-child(even) {
@@ -147,7 +151,7 @@ section:nth-child(even) {
 /* Focus states for accessibility */
 @layer components {
   .focus-outline {
-    @apply focus:outline-2 focus:outline-primary-green focus:outline-offset-2;
+    @apply focus:outline-2 focus:outline-emerald-500 focus:outline-offset-2;
   }
 }
 
@@ -164,11 +168,11 @@ section:nth-child(even) {
 /* Typography */
 @layer components {
   .section-title {
-    @apply text-4xl md:text-5xl font-bold text-text-dark dark:text-white;
+    @apply text-4xl md:text-5xl font-bold text-gray-900 dark:text-white;
   }
 
   .section-subtitle {
-    @apply text-text-light dark:text-gray-400;
+    @apply text-gray-600 dark:text-gray-400;
   }
 }
 

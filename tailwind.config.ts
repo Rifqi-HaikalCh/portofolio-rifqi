@@ -10,25 +10,20 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        'primary-green': '#10B981',
-        'secondary-green': '#059669',
-        'dark-green': '#047857',
-        'light-green': '#D1FAE5',
-        'text-dark': '#1F2937',
-        'text-light': '#6B7280',
-        'bg-white': '#FFFFFF',
-        'bg-light': '#F9FAFB',
+        primary: {
+          50: '#ecfdf5',
+          500: '#10b981',
+          600: '#059669',
+          700: '#047857',
+        },
       },
       fontFamily: {
-        'poppins': ['Poppins', 'sans-serif'],
-        'jetbrains': ['JetBrains Mono', 'monospace'],
+        'poppins': ['var(--font-poppins)', 'sans-serif'],
+        'jetbrains': ['var(--font-jetbrains-mono)', 'monospace'],
       },
       boxShadow: {
         'custom': '0 10px 25px rgba(0, 0, 0, 0.1)',
         'custom-hover': '0 20px 40px rgba(0, 0, 0, 0.15)',
-      },
-      backgroundImage: {
-        'gradient-primary': 'linear-gradient(135deg, #10B981, #059669)',
       },
       animation: {
         'floating': 'floating 3s ease-in-out infinite',
