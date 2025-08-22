@@ -5,25 +5,15 @@
 /* Root Variables */
 @layer base {
   :root {
-    --primary-green: #10B981;
-    --secondary-green: #059669;
-    --dark-green: #047857;
-    --light-green: #D1FAE5;
-    --text-dark: #1F2937;
-    --text-light: #6B7280;
-    --bg-white: #FFFFFF;
-    --bg-light: #F9FAFB;
-    --shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-    --shadow-hover: 0 20px 40px rgba(0, 0, 0, 0.15);
+    --foreground: 31 41 55;
+    --background: 255 255 255;
+    --primary: 16 185 129;
+    --primary-foreground: 255 255 255;
   }
 
   .dark {
-    --text-dark: #F9FAFB;
-    --text-light: #D1D5DB;
-    --bg-white: #1F2937;
-    --bg-light: #111827;
-    --shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-    --shadow-hover: 0 20px 40px rgba(0, 0, 0, 0.4);
+    --foreground: 249 250 251;
+    --background: 17 24 39;
   }
 }
 
@@ -94,11 +84,11 @@
 
   /* Custom shadow utilities */
   .shadow-custom {
-    box-shadow: var(--shadow);
+    @apply shadow-lg;
   }
 
   .shadow-custom-hover {
-    box-shadow: var(--shadow-hover);
+    @apply shadow-xl;
   }
 }
 
