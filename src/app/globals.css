@@ -158,11 +158,11 @@ section:nth-child(even) {
 /* Typography */
 @layer components {
   .section-title {
-    @apply text-4xl md:text-5xl font-bold text-gray-900 dark:text-white;
+    @apply text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 dark:text-white;
   }
 
   .section-subtitle {
-    @apply text-gray-600 dark:text-gray-400;
+    @apply text-sm sm:text-base text-gray-600 dark:text-gray-400;
   }
 }
 
@@ -178,6 +178,15 @@ section:nth-child(even) {
 
   .hover-scale {
     @apply hover:scale-105 transition-transform duration-300;
+  }
+
+  /* Mobile-first responsive spacing */
+  .section-padding {
+    @apply py-12 sm:py-16 lg:py-20;
+  }
+  
+  .container-padding {
+    @apply px-4 sm:px-6 lg:px-8;
   }
 }
 

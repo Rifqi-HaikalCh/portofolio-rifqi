@@ -34,18 +34,18 @@ const Hero: React.FC = () => {
   if (!mounted) return null;
 
   return (
-    <section id="home" className="min-h-screen flex items-center bg-bg-light dark:bg-gray-900 pt-20">
-      <div className="container mx-auto px-4">
-        <div className="grid lg:grid-cols-2 gap-8 items-center">
+    <section id="home" className="min-h-screen flex items-center bg-gray-50 dark:bg-gray-900 pt-16 sm:pt-20">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           {/* Content */}
           <div data-aos="fade-right" className="order-2 lg:order-1">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-4 animate-floating">
-              <span className="bg-gradient-primary bg-clip-text text-transparent">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold mb-4 leading-tight animate-floating">
+              <span className="bg-gradient-to-r from-emerald-500 to-emerald-600 bg-clip-text text-transparent">
                 {t("Hi, I'm Rifqi Haikal", "Halo, Saya Rifqi Haikal")}
               </span>
             </h1>
             
-            <div className="text-xl md:text-2xl text-text-light dark:text-gray-400 mb-6 min-h-[60px]">
+            <div className="text-lg sm:text-xl md:text-2xl text-gray-600 dark:text-gray-400 mb-6 min-h-[60px] sm:min-h-[70px]">
               <span>{t("I'm a", "Saya seorang")} </span>
               <TypeAnimation
                 sequence={language === 'en' 
@@ -54,12 +54,12 @@ const Hero: React.FC = () => {
                 }
                 wrapper="span"
                 speed={50}
-                className="text-primary-green font-semibold"
+                className="text-emerald-500 font-semibold"
                 repeat={Infinity}
               />
             </div>
 
-            <p className="text-text-light dark:text-gray-300 mb-8 text-lg max-w-xl">
+            <p className="text-gray-600 dark:text-gray-300 mb-8 text-base sm:text-lg max-w-xl leading-relaxed">
               {t(
                 "Passionate Full-Stack Developer and Mobile App Developer from Indonesia, currently studying Informatics at Del Institute of Technology. I love creating innovative solutions through code.",
                 "Pengembang Full-Stack dan Aplikasi Mobile yang passionate dari Indonesia, saat ini sedang menempuh studi Informatika di Institut Teknologi Del. Saya suka menciptakan solusi inovatif melalui kode."
@@ -67,30 +67,30 @@ const Hero: React.FC = () => {
             </p>
 
             {/* Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 mb-8">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-8">
               <button
                 onClick={() => handleScrollTo('#contact')}
-                className="px-8 py-4 bg-gradient-primary text-white rounded-full font-semibold uppercase tracking-wider transition-all duration-300 hover:-translate-y-1 hover:shadow-custom-hover"
+                className="px-6 py-3 sm:px-8 sm:py-4 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-full font-semibold text-sm sm:text-base uppercase tracking-wider transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
               >
                 {t("Get In Touch", "Hubungi Saya")}
               </button>
               <button
                 onClick={() => handleScrollTo('#projects')}
-                className="px-8 py-4 border-2 border-primary-green text-primary-green rounded-full font-semibold uppercase tracking-wider transition-all duration-300 hover:bg-primary-green hover:text-white hover:-translate-y-1"
+                className="px-6 py-3 sm:px-8 sm:py-4 border-2 border-emerald-500 text-emerald-500 rounded-full font-semibold text-sm sm:text-base uppercase tracking-wider transition-all duration-300 hover:bg-emerald-500 hover:text-white hover:-translate-y-1"
               >
                 {t("View Projects", "Lihat Projek")}
               </button>
             </div>
 
             {/* Social Links */}
-            <div className="flex gap-4">
+            <div className="flex gap-3 sm:gap-4 justify-center sm:justify-start">
               {socialLinks.map((social, index) => (
                 <Link
                   key={index}
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-12 h-12 bg-white dark:bg-gray-800 text-primary-green rounded-full flex items-center justify-center shadow-custom transition-all duration-300 hover:bg-primary-green hover:text-white hover:-translate-y-1 hover:rotate-360"
+                  className="w-10 h-10 sm:w-12 sm:h-12 bg-white dark:bg-gray-800 text-emerald-500 rounded-full flex items-center justify-center shadow-lg transition-all duration-300 hover:bg-emerald-500 hover:text-white hover:-translate-y-1 hover:scale-110"
                   title={social.title}
                 >
                   {social.icon}
@@ -102,15 +102,15 @@ const Hero: React.FC = () => {
           {/* Profile Image */}
           <div data-aos="fade-left" className="order-1 lg:order-2 flex justify-center relative">
             <div className="relative">
-              <div className="absolute -top-5 -right-5 w-24 h-24 border-2 border-primary-green rounded-full opacity-30 animate-spin-slow"></div>
-              <div className="absolute -bottom-5 -left-5 w-32 h-32 border-2 border-primary-green rounded-full opacity-30 animate-spin-slow animation-delay-2000"></div>
+              <div className="absolute -top-3 -right-3 sm:-top-5 sm:-right-5 w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 border-2 border-emerald-500 rounded-full opacity-30 animate-spin-slow"></div>
+              <div className="absolute -bottom-3 -left-3 sm:-bottom-5 sm:-left-5 w-20 h-20 sm:w-24 sm:h-24 md:w-32 md:h-32 border-2 border-emerald-500 rounded-full opacity-30 animate-spin-slow animation-delay-2000"></div>
               
-              <div className="relative w-80 h-80 md:w-96 md:h-96">
+              <div className="relative w-64 h-64 sm:w-72 sm:h-72 md:w-80 md:h-80 lg:w-96 lg:h-96">
                 <Image
                   src="/assets/Profile.png"
                   alt="Rifqi Haikal Profile"
                   fill
-                  className="object-contain rounded-[15%] border-4 border-primary-green transition-all duration-300 hover:scale-105 hover:rotate-2"
+                  className="object-contain rounded-[15%] border-3 sm:border-4 border-emerald-500 transition-all duration-300 hover:scale-105 hover:rotate-2"
                   priority
                 />
               </div>
