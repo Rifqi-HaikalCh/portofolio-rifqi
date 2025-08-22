@@ -23,10 +23,11 @@ export const metadata: Metadata = {
   keywords: "Rifqi Haikal, Full-Stack Developer, Mobile Developer, Angular, React, Vue, Spring Boot, Laravel, Indonesia",
   authors: [{ name: "Rifqi Haikal Chairiansyah" }],
   creator: "Rifqi Haikal Chairiansyah",
+  metadataBase: new URL("https://rifqihaikalch.netlify.app"),
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://rifqi-portfolio.vercel.app",
+    url: "https://rifqihaikalch.netlify.app",
     title: "Rifqi Haikal Chairiansyah - Portfolio",
     description: "Portfolio of a passionate Full-Stack Developer and Mobile App Developer from Indonesia",
     siteName: "Rifqi Haikal Portfolio",
