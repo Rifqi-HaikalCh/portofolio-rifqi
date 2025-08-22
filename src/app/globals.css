@@ -1,0 +1,204 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Root Variables */
+@layer base {
+  :root {
+    --primary-green: #10B981;
+    --secondary-green: #059669;
+    --dark-green: #047857;
+    --light-green: #D1FAE5;
+    --text-dark: #1F2937;
+    --text-light: #6B7280;
+    --bg-white: #FFFFFF;
+    --bg-light: #F9FAFB;
+    --shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    --shadow-hover: 0 20px 40px rgba(0, 0, 0, 0.15);
+  }
+
+  .dark {
+    --text-dark: #F9FAFB;
+    --text-light: #D1D5DB;
+    --bg-white: #1F2937;
+    --bg-light: #111827;
+    --shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    --shadow-hover: 0 20px 40px rgba(0, 0, 0, 0.4);
+  }
+}
+
+/* Base Styles */
+@layer base {
+  * {
+    @apply m-0 p-0 box-border;
+  }
+
+  html {
+    @apply scroll-smooth;
+  }
+
+  body {
+    @apply font-poppins leading-relaxed text-text-dark bg-bg-light transition-all duration-300;
+  }
+}
+
+/* Custom Scrollbar */
+@layer components {
+  ::-webkit-scrollbar {
+    @apply w-2;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-bg-light;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-primary-green rounded;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-secondary-green;
+  }
+}
+
+/* Custom Animations */
+@layer utilities {
+  .animate-floating {
+    animation: floating 3s ease-in-out infinite;
+  }
+
+  .animate-spin-slow {
+    animation: spin 10s linear infinite;
+  }
+
+  .animation-delay-2000 {
+    animation-delay: 2s;
+  }
+
+  .animation-delay-4000 {
+    animation-delay: 4s;
+  }
+
+  .hover\:rotate-360:hover {
+    transform: rotate(360deg);
+  }
+
+  /* Gradient text */
+  .gradient-text {
+    @apply bg-gradient-primary bg-clip-text text-transparent;
+  }
+
+  /* Custom shadow utilities */
+  .shadow-custom {
+    box-shadow: var(--shadow);
+  }
+
+  .shadow-custom-hover {
+    box-shadow: var(--shadow-hover);
+  }
+}
+
+/* Keyframes */
+@keyframes floating {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes ripple {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+/* Section backgrounds */
+section:nth-child(odd) {
+  @apply bg-bg-light;
+}
+
+section:nth-child(even) {
+  @apply bg-white dark:bg-gray-800;
+}
+
+/* Focus states for accessibility */
+@layer components {
+  .focus-outline {
+    @apply focus:outline-2 focus:outline-primary-green focus:outline-offset-2;
+  }
+}
+
+/* Ripple effect */
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.6);
+  transform: scale(0);
+  animation: ripple 0.6s linear;
+  pointer-events: none;
+}
+
+/* Typography */
+@layer components {
+  .section-title {
+    @apply text-4xl md:text-5xl font-bold text-text-dark dark:text-white;
+  }
+
+  .section-subtitle {
+    @apply text-text-light dark:text-gray-400;
+  }
+}
+
+/* Transitions */
+@layer utilities {
+  .transition-basic {
+    @apply transition-all duration-300 ease-in-out;
+  }
+
+  .hover-lift {
+    @apply hover:-translate-y-1 transition-transform duration-300;
+  }
+
+  .hover-scale {
+    @apply hover:scale-105 transition-transform duration-300;
+  }
+}
+
+/* Dark mode specific styles */
+.dark {
+  color-scheme: dark;
+}
+
+/* Print styles */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  
+  body {
+    @apply text-black bg-white;
+  }
+}
