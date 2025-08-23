@@ -30,13 +30,13 @@ export const About: React.FC = () => {
       
       <div className="container mx-auto px-4 relative z-10">
         <AnimatedSectionTitle
-          badge={t("Get to Know Me", "Mengenal Saya")}
+          badge={t("Get to Know Me", "Mengenal Saya") as string}
           badgeIcon={<Sparkles className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />}
-          title={t("About Me", "Tentang Saya")}
+          title={t("About Me", "Tentang Saya") as string}
           subtitle={t(
             "Passionate developer crafting digital experiences with precision and creativity",
             "Developer passionate yang menciptakan pengalaman digital dengan presisi dan kreativitas"
-          )}
+          ) as string}
         />
 
         <motion.div 
