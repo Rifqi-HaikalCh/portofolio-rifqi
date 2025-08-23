@@ -8,6 +8,8 @@ import { useLanguage } from '../../context/LanguageContext';
 import { aboutHighlights } from '../../data/portfolio';
 import { staggerContainer, fadeInUp } from '../../lib/animations';
 import { Download, GraduationCap, Briefcase, Trophy, Users, Code, Sparkles } from 'lucide-react';
+import { AnimatedSectionTitle } from '../shared/AnimatedSectionTitle';
+import { AboutText } from '../shared/HighlightedText';
 
 const iconMap: { [key: string]: React.ReactNode } = {
   'graduation-cap': <GraduationCap size={24} />,
@@ -17,64 +19,25 @@ const iconMap: { [key: string]: React.ReactNode } = {
 };
 
 export const About: React.FC = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const highlightedText = AboutText();
 
   return (
     <section id="about" className="py-20 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 relative overflow-hidden">
-      {/* Enhanced Background Effects */}
-      <div className="absolute top-20 left-10 w-32 h-32 bg-emerald-500/20 rounded-full blur-2xl animate-floating"></div>
-      <div className="absolute top-40 right-20 w-24 h-24 bg-blue-500/20 rounded-full blur-2xl animate-pulse"></div>
-      <div className="absolute bottom-20 left-1/4 w-20 h-20 bg-purple-500/15 rounded-full blur-xl animate-bounce"></div>
-      <div className="absolute bottom-40 right-10 w-28 h-28 bg-green-500/15 rounded-full blur-2xl animate-pulse"></div>
-      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-r from-emerald-500/5 via-blue-500/5 to-purple-500/5 rounded-full blur-3xl"></div>
+      {/* Clean Background */}
+      <div className="absolute top-0 left-0 w-72 h-72 bg-emerald-500/5 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-0 right-0 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl"></div>
       
       <div className="container mx-auto px-4 relative z-10">
-        <motion.div 
-          className="text-center mb-20"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, type: "spring", stiffness: 100 }}
-          viewport={{ once: true }}
-        >
-          <motion.div 
-            className="inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-emerald-100 to-blue-100 dark:from-emerald-900/30 dark:to-blue-900/30 rounded-full mb-8 shadow-lg backdrop-blur-sm border border-emerald-200/50 dark:border-emerald-700/50"
-            whileHover={{ scale: 1.05, y: -2 }}
-            transition={{ type: "spring", stiffness: 400 }}
-          >
-            <motion.div
-              animate={{ rotate: [0, 360] }}
-              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-            >
-              <Sparkles className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
-            </motion.div>
-            <span className="text-emerald-600 dark:text-emerald-400 font-bold text-sm tracking-wider">
-              {t("Get to Know Me", "Mengenal Saya")}
-            </span>
-          </motion.div>
-          <motion.h2 
-            className="text-5xl md:text-6xl lg:text-7xl font-extrabold text-gray-900 dark:text-white mb-6 leading-tight"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            viewport={{ once: true }}
-          >
-            <span className="bg-gradient-to-r from-emerald-600 via-blue-600 to-purple-600 bg-clip-text text-transparent animate-shimmer">
-              {t("About Me", "Tentang Saya")}
-            </span>
-          </motion.h2>
-          <motion.p 
-            className="text-gray-600 dark:text-gray-300 max-w-3xl mx-auto text-xl leading-relaxed"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            viewport={{ once: true }}
-          >
-            {t(
-              "Passionate developer crafting digital experiences with precision and creativity",
-              "Developer passionate yang menciptakan pengalaman digital dengan presisi dan kreativitas"
-            )}
-          </motion.p>
-        </motion.div>
+        <AnimatedSectionTitle
+          badge={t("Get to Know Me", "Mengenal Saya")}
+          badgeIcon={<Sparkles className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />}
+          title={t("About Me", "Tentang Saya")}
+          subtitle={t(
+            "Passionate developer crafting digital experiences with precision and creativity",
+            "Developer passionate yang menciptakan pengalaman digital dengan presisi dan kreativitas"
+          )}
+        />
 
         <motion.div 
           className="grid lg:grid-cols-2 gap-20 items-center"
@@ -217,10 +180,7 @@ export const About: React.FC = () => {
                 transition={{ duration: 0.8, delay: 0.4 }}
                 viewport={{ once: true }}
               >
-                {t(
-                  "I am a dedicated Informatics student at Del Institute of Technology with a GPA of 3.37/4.00, expected to graduate in 2025. My journey in technology has been an exciting exploration, from experimenting with code as a curious teenager to becoming a seasoned Web and Mobile Programmer with hands-on industry experience.",
-                  "Saya adalah mahasiswa Informatika yang berdedikasi di Institut Teknologi Del dengan IPK 3.37/4.00, diharapkan lulus pada tahun 2025. Perjalanan saya di bidang teknologi telah menjadi eksplorasi yang menarik, dari bereksperimen dengan kode sebagai remaja yang penasaran hingga menjadi Programmer Web dan Mobile yang berpengalaman dengan pengalaman industri langsung."
-                )}
+                {language === 'en' ? highlightedText.en : highlightedText.id}
               </motion.p>
             </div>
 
@@ -310,7 +270,7 @@ export const About: React.FC = () => {
                   whileTap={{ scale: 0.97 }}
                 >
                   {/* Animated background gradient */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 via-blue-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 via-blue-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                   
                   {/* Enhanced icon with multiple effects */}
                   <motion.div 

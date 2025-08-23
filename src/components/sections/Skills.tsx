@@ -15,6 +15,7 @@ import {
   ArrowPathIcon,
   SparklesIcon
 } from '@heroicons/react/24/outline';
+import { AnimatedSectionTitle } from '../shared/AnimatedSectionTitle';
 
 export const Skills: React.FC = () => {
   const { t, language } = useLanguage();
@@ -24,35 +25,21 @@ export const Skills: React.FC = () => {
 
   return (
     <section id="skills" className="py-20 bg-gradient-to-br from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 relative overflow-hidden">
-      {/* Background Effects */}
+      {/* Clean Background */}
       <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500/5 rounded-full blur-3xl"></div>
       <div className="absolute bottom-0 left-0 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl"></div>
       
       <div className="container mx-auto px-4 relative z-10">
-        {/* Header */}
-        <motion.div 
-          className="text-center mb-16"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
-        >
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-100 dark:bg-emerald-900/30 rounded-full mb-6">
-            <SparklesIcon className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
-            <span className="text-emerald-600 dark:text-emerald-400 font-semibold text-sm">
-              {t("My Expertise", "Keahlian Saya")}
-            </span>
-          </div>
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
-            {t("Skills & Technologies", "Keahlian & Teknologi")}
-          </h2>
-          <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto text-lg">
-            {t(
-              "Comprehensive technical and soft skills that drive exceptional results",
-              "Keahlian teknis dan lunak yang komprehensif untuk hasil yang luar biasa"
-            )}
-          </p>
-        </motion.div>
+        {/* Enhanced Header */}
+        <AnimatedSectionTitle
+          badge="My Expertise"
+          badgeIcon={<SparklesIcon className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />}
+          title={t("Skills & Technologies", "Keahlian & Teknologi")}
+          subtitle={t(
+            "Comprehensive technical and soft skills that drive exceptional results",
+            "Keahlian teknis dan lunak yang komprehensif untuk hasil yang luar biasa"
+          )}
+        />
 
         {/* Enhanced Category Buttons */}
         <motion.div 

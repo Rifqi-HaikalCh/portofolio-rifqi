@@ -7,8 +7,10 @@ import { useLanguage } from '../../context/LanguageContext';
 import { workExperience, organizationExperience } from '../../data/portfolio';
 import { Briefcase, Users, Calendar, MapPin, X, Star, ArrowRight } from 'lucide-react';
 import { staggerContainer, fadeInUp } from '../../lib/animations';
+import { AnimatedSectionTitle } from '../shared/AnimatedSectionTitle';
 
-const TimelineCard = ({ exp, side, icon, onClick }: { 
+// Desktop Timeline Card Component
+const DesktopTimelineCard = ({ exp, side, icon, onClick }: { 
   exp: any, 
   side: 'left' | 'right', 
   icon: React.ReactNode,
@@ -112,6 +114,118 @@ const TimelineCard = ({ exp, side, icon, onClick }: {
   );
 };
 
+// Mobile Timeline Card Component
+const MobileTimelineCard = ({ exp, icon, onClick, index }: { 
+  exp: any, 
+  icon: React.ReactNode,
+  onClick: () => void,
+  index: number
+}) => {
+  const { t } = useLanguage();
+  
+  return (
+    <motion.div 
+      variants={fadeInUp}
+      className="relative mb-8 group cursor-pointer"
+      onClick={onClick}
+    >
+      {/* Mobile Timeline Connection */}
+      <div className="absolute left-8 top-16 bottom-0 w-0.5 bg-gradient-to-b from-emerald-500 to-blue-500 opacity-30"></div>
+      
+      <div className="flex items-start gap-6">
+        {/* Mobile Timeline Icon */}
+        <motion.div 
+          className="relative z-10 flex items-center justify-center bg-gradient-to-br from-emerald-500 to-blue-500 shadow-xl w-16 h-16 rounded-2xl text-white border-4 border-white dark:border-gray-800 flex-shrink-0 group-hover:scale-110 transition-all duration-300"
+          whileHover={{ 
+            scale: 1.15, 
+            rotate: [0, -5, 5, 0],
+            transition: { duration: 0.3 }
+          }}
+        >
+          <div className="relative">
+            {icon}
+            <div className="absolute -top-1 -right-1 w-3 h-3 bg-yellow-400 rounded-full animate-pulse"></div>
+          </div>
+        </motion.div>
+        
+        {/* Mobile Experience Card */}
+        <motion.div 
+          className="flex-1 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-3xl shadow-xl p-6 border border-gray-200/50 dark:border-gray-700/50 group-hover:shadow-glow transition-all duration-500 relative overflow-hidden"
+          whileHover={{ 
+            scale: 1.02,
+            y: -5,
+            transition: { type: "spring", stiffness: 300, damping: 20 }
+          }}
+        >
+          {/* Enhanced gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 via-blue-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          
+          {/* Content */}
+          <div className="relative z-10">
+            <div className="flex items-start justify-between mb-3">
+              <div className="flex items-center gap-2 mb-1">
+                <Star className="w-4 h-4 text-yellow-500" />
+                <span className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-900/30 px-2 py-1 rounded-full">
+                  #{index + 1}
+                </span>
+              </div>
+            </div>
+            
+            <h4 className="font-bold text-gray-900 dark:text-white text-lg mb-2 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors duration-300">
+              {t(exp.title, exp.titleId || exp.title)}
+            </h4>
+            
+            <h5 className="text-emerald-600 dark:text-emerald-400 font-semibold mb-3 text-base">
+              {exp.company}
+            </h5>
+            
+            <div className="flex flex-col gap-2 text-sm text-gray-600 dark:text-gray-400 mb-4">
+              <div className="flex items-center gap-2">
+                <Calendar className="w-4 h-4" />
+                <span>{exp.period}</span>
+              </div>
+              {exp.location && (
+                <div className="flex items-center gap-2">
+                  <MapPin className="w-4 h-4" />
+                  <span>{exp.location}</span>
+                </div>
+              )}
+            </div>
+            
+            <p className="text-sm leading-relaxed text-gray-700 dark:text-gray-300 mb-4">
+              {t(exp.description, exp.descriptionId || exp.description)}
+            </p>
+
+            {exp.techStack && (
+              <div className="flex flex-wrap gap-2 mb-4">
+                {exp.techStack.slice(0, 4).map((tech: string) => (
+                  <span 
+                    key={tech} 
+                    className="px-3 py-1 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 rounded-full text-xs font-medium"
+                  >
+                    {tech}
+                  </span>
+                ))}
+                {exp.techStack.length > 4 && (
+                  <span className="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 rounded-full text-xs font-medium">
+                    +{exp.techStack.length - 4}
+                  </span>
+                )}
+              </div>
+            )}
+            
+            {/* Click indicator */}
+            <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 text-sm font-medium group-hover:gap-3 transition-all duration-300">
+              <span>{t("Tap for Details", "Ketuk untuk Detail")}</span>
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
+            </div>
+          </div>
+        </motion.div>
+      </div>
+    </motion.div>
+  );
+};
+
 export const Experience: React.FC = () => {
   const { t } = useLanguage();
   const [selectedExp, setSelectedExp] = useState<any>(null);
@@ -123,44 +237,31 @@ export const Experience: React.FC = () => {
 
   return (
     <section id="experience" className="py-20 bg-gradient-to-br from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 relative overflow-hidden">
-      {/* Background decorations */}
+      {/* Clean Background */}
       <div className="absolute top-0 left-0 w-72 h-72 bg-emerald-500/5 rounded-full blur-3xl"></div>
       <div className="absolute bottom-0 right-0 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl"></div>
       
       <div className="container mx-auto px-4 relative z-10">
         {/* Enhanced Header */}
-        <motion.div 
-          className="text-center mb-16"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
-        >
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-100 dark:bg-emerald-900/30 rounded-full mb-6">
-            <Star className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
-            <span className="text-emerald-600 dark:text-emerald-400 font-semibold text-sm">
-              {t("Professional Journey", "Perjalanan Profesional")}
-            </span>
-          </div>
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
-            {t("My Journey", "Perjalanan Saya")}
-          </h2>
-          <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto text-lg">
-            {t(
-              "A timeline of experiences that shaped my professional growth and expertise",
-              "Garis waktu pengalaman yang membentuk pertumbuhan profesional dan keahlian saya"
-            )}
-          </p>
-        </motion.div>
+        <AnimatedSectionTitle
+          badge={t("Professional Journey", "Perjalanan Profesional")}
+          badgeIcon={<Star className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />}
+          title={t("My Journey", "Perjalanan Saya")}
+          subtitle={t(
+            "A timeline of experiences that shaped my professional growth and expertise",
+            "Garis waktu pengalaman yang membentuk pertumbuhan profesional dan keahlian saya"
+          )}
+        />
 
-        {/* Enhanced Timeline */}
+        {/* Responsive Timeline */}
         <motion.div 
           variants={staggerContainer} 
           initial="hidden" 
           whileInView="show" 
           viewport={{ once: true, amount: 0.2 }}
         >
-          <div className="relative wrap overflow-hidden p-10 h-full">
+          {/* Desktop Timeline */}
+          <div className="hidden lg:block relative wrap overflow-hidden p-10 h-full">
             {/* Enhanced Timeline Line */}
             <div 
               className="absolute border-4 border-gradient-to-b from-emerald-500 via-blue-500 to-emerald-500 h-full opacity-20 rounded-full"
@@ -171,7 +272,7 @@ export const Experience: React.FC = () => {
 
             {/* Work Experience */}
             {workExperience.map((exp, i) => (
-              <TimelineCard 
+              <DesktopTimelineCard 
                 key={exp.id} 
                 exp={exp} 
                 side={i % 2 === 0 ? 'left' : 'right'} 
@@ -182,7 +283,7 @@ export const Experience: React.FC = () => {
 
             {/* Organization Experience */}
             {organizationExperience.map((exp, i) => (
-              <TimelineCard 
+              <DesktopTimelineCard 
                 key={exp.id} 
                 exp={exp} 
                 side={i % 2 !== 0 ? 'left' : 'right'} 
@@ -190,6 +291,59 @@ export const Experience: React.FC = () => {
                 onClick={() => setSelectedExp(exp)}
               />
             ))}
+          </div>
+          
+          {/* Mobile Timeline */}
+          <div className="lg:hidden px-4">
+            {/* Mobile Section Header */}
+            <div className="mb-8">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-8 h-8 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-lg flex items-center justify-center">
+                  <Briefcase size={16} className="text-white" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white">
+                  {t("Work Experience", "Pengalaman Kerja")}
+                </h3>
+              </div>
+              
+              {/* Work Experience Cards */}
+              <div className="space-y-6">
+                {workExperience.map((exp, i) => (
+                  <MobileTimelineCard 
+                    key={exp.id} 
+                    exp={exp} 
+                    icon={<Briefcase size={18} />}
+                    onClick={() => setSelectedExp(exp)}
+                    index={i}
+                  />
+                ))}
+              </div>
+            </div>
+            
+            {/* Organization Experience Section */}
+            <div className="mb-8">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">
+                  <Users size={16} className="text-white" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white">
+                  {t("Organization Experience", "Pengalaman Organisasi")}
+                </h3>
+              </div>
+              
+              {/* Organization Experience Cards */}
+              <div className="space-y-6">
+                {organizationExperience.map((exp, i) => (
+                  <MobileTimelineCard 
+                    key={exp.id} 
+                    exp={exp} 
+                    icon={<Users size={18} />}
+                    onClick={() => setSelectedExp(exp)}
+                    index={i}
+                  />
+                ))}
+              </div>
+            </div>
           </div>
         </motion.div>
 
