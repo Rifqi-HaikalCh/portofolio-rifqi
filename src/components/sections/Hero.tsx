@@ -12,15 +12,15 @@ const Hero: React.FC = () => {
   const { language, t } = useLanguage();
 
   return (
-    <section id="home" className="min-h-screen flex items-center pt-24 lg:pt-0 bg-bg-light">
+    <section id="home" className="min-h-screen flex items-center pt-24 lg:pt-0 bg-gray-50 dark:bg-gray-900">
       <div className="container mx-auto px-4">
         <div className="grid lg:grid-cols-2 gap-8 items-center">
           {/* Text Content - Order 2 on mobile, 1 on desktop */}
           <div className="lg:order-1 order-2 text-center lg:text-left" data-aos="fade-right">
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold mb-4 leading-tight animate-floating bg-gradient-to-r from-primary-green to-secondary-green bg-clip-text text-transparent">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold mb-4 leading-tight animate-floating bg-gradient-to-r from-emerald-500 to-emerald-600 bg-clip-text text-transparent">
               {t("Hi, I'm Rifqi Haikal", "Halo, Saya Rifqi Haikal")}
             </h1>
-            <p className="text-xl md:text-2xl text-text-light mb-6">
+            <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-6">
               {t("I'm a", "Saya seorang")}{" "}
               <TypeAnimation
                 sequence={language === 'en' 
@@ -29,11 +29,11 @@ const Hero: React.FC = () => {
                 }
                 wrapper="span"
                 speed={50}
-                className="text-primary-green font-semibold"
+                className="text-emerald-500 font-semibold"
                 repeat={Infinity}
               />
             </p>
-            <p className="text-text-light mb-8 max-w-xl mx-auto lg:mx-0">
+            <p className="text-gray-600 dark:text-gray-300 mb-8 max-w-xl mx-auto lg:mx-0">
               {t(
                 "Passionate Full-Stack Developer and Mobile App Developer from Indonesia, currently studying Informatics at Del Institute of Technology. I love creating innovative solutions through code.",
                 "Pengembang Full-Stack dan Aplikasi Mobile yang passionate dari Indonesia, saat ini sedang menempuh studi Informatika di Institut Teknologi Del. Saya suka menciptakan solusi inovatif melalui kode."

@@ -11,13 +11,13 @@ export const Experience: React.FC = () => {
   const [selectedExp, setSelectedExp] = useState<any>(null);
 
   return (
-    <section id="experience" className="py-20 bg-bg-light dark:bg-gray-900">
+    <section id="experience" className="py-20 bg-gray-50 dark:bg-gray-900">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12" data-aos="fade-up">
-          <h2 className="text-4xl md:text-5xl font-bold text-text-dark dark:text-white mb-4">
+          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
             {t("Experience", "Pengalaman")}
           </h2>
-          <p className="text-text-light dark:text-gray-400 max-w-2xl mx-auto">
+          <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
             {t(
               "Click on any experience card to see photos from that period.",
               "Klik pada kartu pengalaman untuk melihat foto dari periode tersebut."
@@ -28,20 +28,20 @@ export const Experience: React.FC = () => {
         <div className="grid lg:grid-cols-2 gap-8">
           {/* Work Experience */}
           <div data-aos="fade-up">
-            <h3 className="text-2xl font-bold text-primary-green text-center mb-6">
+            <h3 className="text-2xl font-bold text-emerald-500 text-center mb-6">
               {t("Work Experience", "Pengalaman Kerja")}
             </h3>
             {workExperience.map((exp) => (
               <div
                 key={exp.id}
                 onClick={() => setSelectedExp(exp)}
-                className="bg-white dark:bg-gray-800 rounded-2xl p-6 mb-4 shadow-custom hover:shadow-custom-hover hover:-translate-y-1 transition-all duration-300 cursor-pointer relative hover:border-l-4 hover:border-primary-green"
+                className="bg-white dark:bg-gray-800 rounded-2xl p-6 mb-4 shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer relative hover:border-l-4 hover:border-emerald-500"
               >
-                <h4 className="text-xl font-semibold text-text-dark dark:text-white mb-1">
+                <h4 className="text-xl font-semibold text-gray-900 dark:text-white mb-1">
                   {t(exp.title, exp.titleId || exp.title)}
                 </h4>
-                <h5 className="text-primary-green font-medium mb-2">{exp.company}</h5>
-                <div className="flex items-center gap-4 text-sm text-text-light dark:text-gray-400 mb-3">
+                <h5 className="text-emerald-500 font-medium mb-2">{exp.company}</h5>
+                <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400 mb-3">
                   <span className="flex items-center gap-1">
                     <Calendar size={14} /> {exp.period}
                   </span>
@@ -51,7 +51,7 @@ export const Experience: React.FC = () => {
                     </span>
                   )}
                 </div>
-                <p className="text-text-light dark:text-gray-400 mb-3">
+                <p className="text-gray-600 dark:text-gray-400 mb-3">
                   {t(exp.description, exp.descriptionId || exp.description)}
                 </p>
                 {exp.techStack && (
@@ -69,25 +69,25 @@ export const Experience: React.FC = () => {
 
           {/* Organization Experience */}
           <div data-aos="fade-up" data-aos-delay="100">
-            <h3 className="text-2xl font-bold text-primary-green text-center mb-6">
+            <h3 className="text-2xl font-bold text-emerald-500 text-center mb-6">
               {t("Organization Experience", "Pengalaman Organisasi")}
             </h3>
             {organizationExperience.map((exp) => (
               <div
                 key={exp.id}
                 onClick={() => setSelectedExp(exp)}
-                className="bg-white dark:bg-gray-800 rounded-2xl p-6 mb-4 shadow-custom hover:shadow-custom-hover hover:-translate-y-1 transition-all duration-300 cursor-pointer relative hover:border-l-4 hover:border-primary-green"
+                className="bg-white dark:bg-gray-800 rounded-2xl p-6 mb-4 shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer relative hover:border-l-4 hover:border-emerald-500"
               >
-                <h4 className="text-xl font-semibold text-text-dark dark:text-white mb-1">
+                <h4 className="text-xl font-semibold text-gray-900 dark:text-white mb-1">
                   {t(exp.title, exp.titleId || exp.title)}
                 </h4>
-                <h5 className="text-primary-green font-medium mb-2">{exp.company}</h5>
-                <div className="flex items-center gap-4 text-sm text-text-light dark:text-gray-400 mb-3">
+                <h5 className="text-emerald-500 font-medium mb-2">{exp.company}</h5>
+                <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400 mb-3">
                   <span className="flex items-center gap-1">
                     <Calendar size={14} /> {exp.period}
                   </span>
                 </div>
-                <p className="text-text-light dark:text-gray-400">
+                <p className="text-gray-600 dark:text-gray-400">
                   {t(exp.description, exp.descriptionId || exp.description)}
                 </p>
               </div>
@@ -109,7 +109,7 @@ export const Experience: React.FC = () => {
                 {selectedExp.image && (
                   <Image src={selectedExp.image} alt={selectedExp.company} width={600} height={400} className="w-full rounded-lg mb-4" />
                 )}
-                <p className="text-text-light dark:text-gray-400">
+                <p className="text-gray-600 dark:text-gray-400">
                   {t(selectedExp.description, selectedExp.descriptionId || selectedExp.description)}
                 </p>
               </div>

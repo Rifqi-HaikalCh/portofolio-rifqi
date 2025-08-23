@@ -31,7 +31,11 @@
 
   body {
     font-family: 'Poppins', sans-serif;
-    @apply leading-relaxed text-text-dark bg-bg-light transition-all duration-300;
+    @apply leading-relaxed text-gray-900 bg-gray-50 transition-all duration-300;
+  }
+
+  .dark body {
+    @apply text-gray-100 bg-gray-900;
   }
 }
 
@@ -42,42 +46,42 @@
   }
 
   ::-webkit-scrollbar-track {
-    @apply bg-bg-light;
+    @apply bg-gray-100 dark:bg-gray-800;
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-primary-green rounded;
+    @apply bg-emerald-500 rounded;
   }
   
   /* Section Backgrounds */
   section:nth-child(odd) {
-    @apply bg-bg-light;
+    @apply bg-gray-50 dark:bg-gray-900;
   }
   section:nth-child(even) {
-    @apply bg-bg-white;
+    @apply bg-white dark:bg-gray-800;
   }
 
   /* Buttons */
   .btn-primary-custom {
-    @apply bg-gradient-to-r from-primary-green to-secondary-green text-white border-none py-4 px-8 rounded-full font-semibold uppercase tracking-wider transition-all duration-300 relative overflow-hidden;
+    @apply bg-gradient-to-r from-emerald-500 to-emerald-600 text-white border-none py-4 px-8 rounded-full font-semibold uppercase tracking-wider transition-all duration-300 relative overflow-hidden;
   }
   .btn-primary-custom:hover {
     @apply -translate-y-1 shadow-xl;
   }
 
   .btn-outline-custom {
-    @apply border-2 border-primary-green text-primary-green py-4 px-8 rounded-full font-semibold uppercase tracking-wider bg-transparent transition-all duration-300;
+    @apply border-2 border-emerald-500 text-emerald-500 py-4 px-8 rounded-full font-semibold uppercase tracking-wider bg-transparent transition-all duration-300;
   }
   .btn-outline-custom:hover {
-    @apply bg-primary-green text-white -translate-y-1;
+    @apply bg-emerald-500 text-white -translate-y-1;
   }
 
   /* Social Icons */
   .social-icon {
-    @apply inline-flex items-center justify-center w-12 h-12 bg-bg-white text-primary-green rounded-full mx-2 text-xl shadow-lg transition-all duration-300 no-underline;
+    @apply inline-flex items-center justify-center w-12 h-12 bg-white dark:bg-gray-800 text-emerald-500 rounded-full mx-2 text-xl shadow-lg transition-all duration-300 no-underline;
   }
   .social-icon:hover {
-    @apply bg-primary-green text-white -translate-y-1;
+    @apply bg-emerald-500 text-white -translate-y-1;
     transform: translateY(-4px) rotate(360deg);
   }
 
@@ -88,7 +92,7 @@
 
   /* Profile decoration circles */
   .profile-decoration {
-    @apply absolute w-24 h-24 border-2 border-primary-green rounded-full opacity-30 animate-rotate;
+    @apply absolute w-24 h-24 border-2 border-emerald-500 rounded-full opacity-30 animate-rotate;
   }
   .profile-decoration:nth-child(2) {
     @apply -top-5 -right-5;

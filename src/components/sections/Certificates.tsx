@@ -24,13 +24,13 @@ export const Certificates: React.FC = () => {
   };
 
   return (
-    <section id="certificates" className="py-20 bg-bg-light dark:bg-gray-900">
+    <section id="certificates" className="py-20 bg-gray-50 dark:bg-gray-900">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12" data-aos="fade-up">
-          <h2 className="text-4xl md:text-5xl font-bold text-text-dark dark:text-white mb-4">
+          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
             {t("Certificates & Achievements", "Sertifikat & Prestasi")}
           </h2>
-          <p className="text-text-light dark:text-gray-400 max-w-2xl mx-auto">
+          <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
             {t(
               "Click on each category to explore my professional certifications and achievements organized by type.",
               "Klik pada setiap kategori untuk menjelajahi sertifikasi profesional dan pencapaian saya yang diorganisir berdasarkan jenis."
@@ -44,11 +44,11 @@ export const Certificates: React.FC = () => {
               key={category.id}
               data-aos="fade-up"
               data-aos-delay={index * 100}
-              className="bg-white dark:bg-gray-800 rounded-2xl shadow-custom hover:shadow-custom-hover transition-all duration-300 mb-4 overflow-hidden"
+              className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 mb-4 overflow-hidden"
             >
               <div
                 onClick={() => toggleCategory(category.id)}
-                className="bg-gradient-primary text-white p-6 cursor-pointer flex justify-between items-center hover:bg-gradient-to-r hover:from-secondary-green hover:to-dark-green transition-all duration-300"
+                className="bg-gradient-to-r from-emerald-500 to-emerald-600 text-white p-6 cursor-pointer flex justify-between items-center hover:from-emerald-600 hover:to-emerald-700 transition-all duration-300"
               >
                 <div className="flex items-center gap-4">
                   {categoryIcons[category.icon]}
@@ -78,19 +78,19 @@ export const Certificates: React.FC = () => {
                   {category.certificates.map((cert) => (
                     <div
                       key={cert.id}
-                      className="bg-bg-light dark:bg-gray-700 rounded-xl p-4 border-2 border-transparent hover:border-primary-green transition-all duration-300 hover:-translate-y-1"
+                      className="bg-gray-100 dark:bg-gray-700 rounded-xl p-4 border-2 border-transparent hover:border-emerald-500 transition-all duration-300 hover:-translate-y-1"
                     >
-                      <h4 className="text-primary-green font-semibold mb-2">
+                      <h4 className="text-emerald-500 font-semibold mb-2">
                         {t(cert.title, cert.titleId || cert.title)}
                       </h4>
-                      <p className="text-text-light dark:text-gray-400 text-sm mb-3">
+                      <p className="text-gray-600 dark:text-gray-400 text-sm mb-3">
                         {t(cert.description, cert.descriptionId || cert.description)}
                       </p>
                       <a
                         href={cert.link}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 px-4 py-2 bg-primary-green text-white rounded-full text-sm font-medium hover:bg-secondary-green transition-all hover:-translate-y-0.5"
+                        className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-500 text-white rounded-full text-sm font-medium hover:bg-emerald-600 transition-all hover:-translate-y-0.5"
                       >
                         <FileText size={14} />
                         {t("View Certificate", "Lihat Sertifikat")}
