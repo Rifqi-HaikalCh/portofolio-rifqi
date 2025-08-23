@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import { AnimatePresence } from 'framer-motion';
+import { TimedNotification } from '../components/shared/TimedNotification';
 
 // Import HOC dan sections
 import { AnimatedSection } from '../components/hocs/AnimatedSection';
@@ -20,6 +21,7 @@ import LoadingScreen from '../components/shared/LoadingScreen';
 
 export default function Home() {
   const [loading, setLoading] = useState(true);
+  const [showNotification, setShowNotification] = useState(false);
 
   useEffect(() => {
     AOS.init({
@@ -33,6 +35,20 @@ export default function Home() {
       setLoading(false);
     }, 2000); // Sesuaikan durasi dengan animasi loading
 
+  }, []);
+
+  useEffect(() => {
+    const firstNotificationTimer = setTimeout(() => {
+      setShowNotification(true);
+
+      const intervalTimer = setInterval(() => {
+        setShowNotification(true);
+      }, 900000); // Every 15 minutes
+
+      return () => clearInterval(intervalTimer);
+    }, 60000); // 1 minute
+
+    return () => clearTimeout(firstNotificationTimer);
   }, []);
 
   return (
@@ -56,6 +72,10 @@ export default function Home() {
           <Footer />
         </>
       )}
+      
+      <AnimatePresence>
+        {showNotification && <TimedNotification onClose={() => setShowNotification(false)} />}
+      </AnimatePresence>
     </>
   );
 }

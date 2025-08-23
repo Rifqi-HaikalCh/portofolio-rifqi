@@ -74,8 +74,8 @@ export const About: React.FC = () => {
                   <Image
                     src="/assets/removebg.png"
                     alt="About Rifqi"
-                    width={450}
-                    height={500}
+                    width={320}
+                    height={360}
                     className="rounded-2xl w-full object-cover shadow-lg"
                   />
                 </motion.div>

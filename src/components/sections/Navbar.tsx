@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useTheme } from 'next-themes';
+import { useThemeAnimation } from '../shared/Providers';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '../../context/LanguageContext';
 import { navLinks } from '../../data/portfolio';
@@ -10,7 +11,8 @@ import { Menu, X, Sun, Moon } from 'lucide-react';
 const Navbar: React.FC = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { theme, setTheme } = useTheme();
+  const { theme } = useTheme();
+  const { toggleTheme } = useThemeAnimation();
   const { language, toggleLanguage, t } = useLanguage();
   const [mounted, setMounted] = useState(false);
 
@@ -52,7 +54,7 @@ const Navbar: React.FC = () => {
           <motion.button 
             whileHover={{ scale: 1.1 }} 
             whileTap={{ scale: 0.9 }}
-            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} 
+            onClick={toggleTheme} 
             className="w-10 h-10 rounded-full flex items-center justify-center bg-primary-green hover:bg-secondary-green transition-all duration-300 shadow-lg"
           >
             <motion.div
@@ -222,7 +224,7 @@ const Navbar: React.FC = () => {
                 <div className="flex gap-4">
                   {/* Theme Toggle */}
                   <motion.button 
-                    onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} 
+                    onClick={toggleTheme} 
                     className="flex-1 h-14 rounded-2xl bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-white font-semibold transition-all duration-300 shadow-lg hover:shadow-glow flex items-center justify-center gap-3"
                     whileHover={{ scale: 1.02, y: -2 }}
                     whileTap={{ scale: 0.98 }}

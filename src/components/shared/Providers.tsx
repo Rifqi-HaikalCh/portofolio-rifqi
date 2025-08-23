@@ -1,69 +1,85 @@
 "use client";
 
-import { ThemeProvider } from 'next-themes';
+import { ThemeProvider, useTheme } from 'next-themes';
 import { LanguageProvider } from '../../context/LanguageContext';
-import { useEffect } from 'react';
+import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
 
-interface ProvidersProps {
-  children: React.ReactNode;
+interface ThemeAnimationContextType {
+  toggleTheme: (event: React.MouseEvent) => void;
 }
 
-function ThemeTransition() {
+const ThemeAnimationContext = createContext<ThemeAnimationContextType | undefined>(undefined);
+
+export const useThemeAnimation = () => {
+  const context = useContext(ThemeAnimationContext);
+  if (!context) {
+    throw new Error('useThemeAnimation must be used within a ThemeAnimationProvider');
+  }
+  return context;
+};
+
+const ThemeAnimationProvider = ({ children }: { children: React.ReactNode }) => {
+  const { setTheme, theme } = useTheme();
+
   useEffect(() => {
-    const handleThemeChange = () => {
-      // Add transition overlay div if it doesn't exist
-      if (!document.getElementById('theme-transition-overlay')) {
-        const overlay = document.createElement('div');
-        overlay.id = 'theme-transition-overlay';
-        overlay.className = 'theme-transition-overlay';
-        document.body.appendChild(overlay);
-      }
-
-      const overlay = document.getElementById('theme-transition-overlay');
-      if (overlay) {
-        overlay.classList.add('active');
-        setTimeout(() => {
-          overlay.classList.remove('active');
-        }, 600);
-      }
-    };
-
-    // Listen for theme changes
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
-          const target = mutation.target as HTMLElement;
-          if (target.classList.contains('dark') || (!target.classList.contains('dark') && mutation.oldValue?.includes('dark'))) {
-            handleThemeChange();
-          }
-        }
-      });
-    });
-
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeOldValue: true,
-      attributeFilter: ['class']
-    });
-
-    return () => observer.disconnect();
+    // Add overlay div if it doesn't exist
+    if (!document.getElementById('theme-transition-overlay')) {
+      const overlay = document.createElement('div');
+      overlay.id = 'theme-transition-overlay';
+      document.body.appendChild(overlay);
+    }
   }, []);
 
-  return null;
-}
+  const toggleTheme = useCallback((event: React.MouseEvent) => {
+    const overlay = document.getElementById('theme-transition-overlay');
+    if (!overlay) return;
+
+    const { clientX, clientY } = event;
+    const targetTheme = theme === 'dark' ? 'light' : 'dark';
+
+    overlay.classList.remove('light', 'dark');
+    overlay.classList.add(targetTheme);
+
+    const maxRadius = Math.hypot(
+      Math.max(clientX, window.innerWidth - clientX),
+      Math.max(clientY, window.innerHeight - clientY)
+    );
+
+    overlay.style.clipPath = `circle(0% at ${clientX}px ${clientY}px)`;
+    
+    requestAnimationFrame(() => {
+      overlay.style.clipPath = `circle(${maxRadius}px at ${clientX}px ${clientY}px)`;
+    });
+
+    setTimeout(() => {
+      setTheme(targetTheme);
+    }, 400); // Change theme in the middle of animation
+
+    setTimeout(() => {
+        overlay.style.clipPath = `circle(0% at ${clientX}px ${clientY}px)`;
+    }, 1000); // Hide overlay after completion
+
+  }, [setTheme, theme]);
+
+  return (
+    <ThemeAnimationContext.Provider value={{ toggleTheme }}>
+      {children}
+    </ThemeAnimationContext.Provider>
+  );
+};
 
 export function Providers({ children }: ProvidersProps) {
   return (
-    <ThemeProvider
-      attribute="class"
-      defaultTheme="dark"
-      enableSystem
-      disableTransitionOnChange={false}
-    >
-      <LanguageProvider>
-        <ThemeTransition />
-        {children}
-      </LanguageProvider>
+    <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
+      <ThemeAnimationProvider>
+        <LanguageProvider>
+          {children}
+        </LanguageProvider>
+      </ThemeAnimationProvider>
     </ThemeProvider>
   );
+}
+
+interface ProvidersProps {
+  children: React.ReactNode;
 }

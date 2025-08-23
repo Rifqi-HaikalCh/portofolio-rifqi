@@ -1,57 +1,56 @@
 "use client";
-import { motion } from 'framer-motion';
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { TypeAnimation } from 'react-type-animation';
 
 const LoadingScreen: React.FC = () => {
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-        delayChildren: 0.3,
-      },
-    },
-    exit: {
-      opacity: 0,
-      transition: {
-        duration: 0.5,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        type: 'spring',
-        stiffness: 100,
-      },
-    },
-  };
-
-  const name = "R H C"; // Inisial dari Rifqi Haikal Chairiansyah
+  const [typingCompleted, setTypingCompleted] = useState(false);
+  const name = "R H C";
 
   return (
     <motion.div
-      className="fixed inset-0 flex items-center justify-center bg-gray-50 dark:bg-gray-900 z-[9999]"
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-      exit="exit"
+      className="fixed inset-0 flex flex-col items-center justify-center bg-gray-50 dark:bg-gray-900 z-[99999]"
+      initial={{ opacity: 1 }}
+      exit={{ opacity: 0, transition: { duration: 0.5, delay: 0.5 } }}
     >
-      <motion.div className="flex text-4xl md:text-6xl font-bold font-jetbrains-mono">
-        {name.split('').map((char, index) => (
-          <motion.span
-            key={index}
-            variants={itemVariants}
-            className="bg-gradient-to-r from-emerald-500 to-emerald-600 bg-clip-text text-transparent"
+      <div className="text-2xl md:text-4xl font-semibold text-gray-600 dark:text-gray-400 mb-8">
+        <TypeAnimation
+          sequence={[
+            'Hello there...',
+            1500,
+            'Welcome to my space.',
+            1500,
+            'Just a moment...',
+            2000,
+            () => setTypingCompleted(true)
+          ]}
+          wrapper="span"
+          speed={50}
+          cursor={true}
+        />
+      </div>
+      <AnimatePresence>
+        {typingCompleted && (
+          <motion.div
+            className="flex text-4xl md:text-6xl font-bold font-jetbrains-mono"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
           >
-            {char === ' ' ? <span>&nbsp;</span> : char}
-          </motion.span>
-        ))}
-      </motion.div>
+            {name.split('').map((char, index) => (
+              <motion.span
+                key={index}
+                className="bg-gradient-to-r from-emerald-500 to-blue-600 bg-clip-text text-transparent"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.5 + index * 0.1 }}
+              >
+                {char === ' ' ? <span>&nbsp;</span> : char}
+              </motion.span>
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 };

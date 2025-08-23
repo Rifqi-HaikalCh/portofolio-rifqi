@@ -130,6 +130,27 @@
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     transition-duration: 300ms;
   }
+
+  /* Immersive Theme Transition */
+  #theme-transition-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 99998;
+    pointer-events: none;
+    clip-path: circle(0% at 0px 0px);
+    transition: clip-path 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  #theme-transition-overlay.dark {
+    background-color: #111827; /* dark:bg-gray-900 */
+  }
+
+  #theme-transition-overlay.light {
+    background-color: #F9FAFB; /* bg-gray-50 */
+  }
 }
 
 @layer components {
