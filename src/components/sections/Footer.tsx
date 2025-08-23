@@ -1,4 +1,5 @@
-import { Github, Link, Linkedin, Mail, MessageCircle } from 'lucide-react';
+import Link from 'next/link';
+import { Github, Linkedin, Mail, MessageCircle } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
 import { contactInfo } from '../../data/portfolio';
 import { navLinks } from '../../data/portfolio';
@@ -8,7 +9,7 @@ export const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-gradient-to-br from-gray-900 to-gray-800 text-white pt-12 sm:pt-16 pb-6 sm:pb-8 relative overflow-hidden">
+    <footer className="bg-gradient-to-br from-gray-900 to-gray-800 dark:from-gray-950 dark:to-gray-900 text-white pt-12 sm:pt-16 pb-6 sm:pb-8 relative overflow-hidden">
       <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-500 to-emerald-600"></div>
       
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -73,7 +74,7 @@ export const Footer: React.FC = () => {
         </div>
 
         {/* Bottom Bar */}
-        <div className="border-t border-gray-700 pt-4 sm:pt-6 text-center text-gray-400">
+        <div className="border-t border-gray-700 dark:border-gray-600 pt-4 sm:pt-6 text-center text-gray-400 dark:text-gray-300">
           <p className="text-xs sm:text-sm">
             {t(
               `© ${currentYear} Rifqi Haikal Chairiansyah. All rights reserved.`,

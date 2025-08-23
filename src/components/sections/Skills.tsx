@@ -1,6 +1,16 @@
 import { useState } from 'react';
 import { hardSkills, softSkills } from '../../data/portfolio';
 import { useLanguage } from '../../context/LanguageContext';
+import { 
+  PuzzlePieceIcon, 
+  LightBulbIcon, 
+  UsersIcon, 
+  ChatBubbleLeftEllipsisIcon, 
+  UserIcon, 
+  ClockIcon, 
+  PaintBrushIcon, 
+  ArrowPathIcon 
+} from '@heroicons/react/24/outline';
 
 export const Skills: React.FC = () => {
   const { t, language } = useLanguage();
@@ -56,10 +66,23 @@ export const Skills: React.FC = () => {
               data-aos-delay={index * 50}
               className="group p-6 bg-white dark:bg-gray-700 rounded-2xl text-center shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all duration-300 cursor-pointer hover:bg-emerald-500"
             >
-              <i 
-                className={`fab fa-${skill.icon} text-4xl mb-3 transition-all duration-300 group-hover:text-white group-hover:scale-110`}
-                style={{ color: skill.color }}
-              ></i>
+              {activeCategory === 'hard' ? (
+                <i 
+                  className={`fab fa-${skill.icon} text-4xl mb-3 transition-all duration-300 group-hover:text-white group-hover:scale-110`}
+                  style={{ color: skill.color }}
+                ></i>
+              ) : (
+                <div className="text-4xl mb-3 transition-all duration-300 group-hover:text-white group-hover:scale-110" style={{ color: skill.color }}>
+                  {skill.icon === 'puzzle-piece' && <PuzzlePieceIcon className="w-10 h-10" />}
+                  {skill.icon === 'lightbulb' && <LightBulbIcon className="w-10 h-10" />}
+                  {skill.icon === 'users' && <UsersIcon className="w-10 h-10" />}
+                  {skill.icon === 'comments' && <ChatBubbleLeftEllipsisIcon className="w-10 h-10" />}
+                  {skill.icon === 'user-tie' && <UserIcon className="w-10 h-10" />}
+                  {skill.icon === 'clock' && <ClockIcon className="w-10 h-10" />}
+                  {skill.icon === 'palette' && <PaintBrushIcon className="w-10 h-10" />}
+                  {skill.icon === 'sync-alt' && <ArrowPathIcon className="w-10 h-10" />}
+                </div>
+              )}
               <p className="font-semibold text-gray-900 dark:text-white group-hover:text-white">
                 {activeCategory === 'soft' && language === 'id' 
                   ? skill.name === 'Problem Solving' ? 'Pemecahan Masalah'
