@@ -34,11 +34,11 @@ export const Skills: React.FC = () => {
         <AnimatedSectionTitle
           badge="My Expertise"
           badgeIcon={<SparklesIcon className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />}
-          title={t("Skills & Technologies", "Keahlian & Teknologi")}
+          title={t("Skills & Technologies", "Keahlian & Teknologi") as string}
           subtitle={t(
             "Comprehensive technical and soft skills that drive exceptional results",
             "Keahlian teknis dan lunak yang komprehensif untuk hasil yang luar biasa"
-          )}
+          ) as string}
         />
 
         {/* Enhanced Category Buttons */}

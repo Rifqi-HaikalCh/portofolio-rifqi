@@ -26,9 +26,9 @@ export const InteractiveButton: React.FC<InteractiveButtonProps> = ({
 }) => {
   const [ripples, setRipples] = useState<Array<{ id: number; x: number; y: number }>>([]);
 
-  const createRipple = (e: React.MouseEvent<HTMLButtonElement>) => {
-    const button = e.currentTarget;
-    const rect = button.getBoundingClientRect();
+  const createRipple = (e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => {
+    const element = e.currentTarget;
+    const rect = element.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
     const newRipple = { id: Date.now(), x, y };

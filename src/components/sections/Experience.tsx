@@ -244,13 +244,13 @@ export const Experience: React.FC = () => {
       <div className="container mx-auto px-4 relative z-10">
         {/* Enhanced Header */}
         <AnimatedSectionTitle
-          badge={t("Professional Journey", "Perjalanan Profesional")}
+          badge={t("Professional Journey", "Perjalanan Profesional") as string}
           badgeIcon={<Star className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />}
-          title={t("My Journey", "Perjalanan Saya")}
+          title={t("My Journey", "Perjalanan Saya") as string}
           subtitle={t(
             "A timeline of experiences that shaped my professional growth and expertise",
             "Garis waktu pengalaman yang membentuk pertumbuhan profesional dan keahlian saya"
-          )}
+          ) as string}
         />
 
         {/* Responsive Timeline */}

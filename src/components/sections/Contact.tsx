@@ -83,11 +83,11 @@ export const Contact: React.FC = () => {
         <AnimatedSectionTitle
           badge="Let's Connect"
           badgeIcon={<MessageSquare className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />}
-          title={t("Get In Touch", "Hubungi Saya")}
+          title={t("Get In Touch", "Hubungi Saya") as string}
           subtitle={t(
             "Have a project in mind? Let's discuss how we can work together to bring your ideas to life",
             "Punya projek dalam pikiran? Mari diskusikan bagaimana kita bisa bekerja sama untuk mewujudkan ide Anda"
-          )}
+          ) as string}
         />
 
         <div className="max-w-4xl mx-auto">
@@ -131,7 +131,7 @@ export const Contact: React.FC = () => {
                       ? 'border-emerald-500 bg-white/90 dark:bg-white/20 shadow-glow'
                       : 'border-gray-300 dark:border-white/20 hover:border-gray-400 dark:hover:border-white/30'
                   }`}
-                  placeholder={t("Enter your full name", "Masukkan nama lengkap")}
+                  placeholder={t("Enter your full name", "Masukkan nama lengkap") as string}
                   onFocus={() => setFocusedField('name')}
                   onBlur={() => setFocusedField(null)}
                   whileFocus={{ scale: 1.02 }}
@@ -165,7 +165,7 @@ export const Contact: React.FC = () => {
                       ? 'border-emerald-500 bg-white/90 dark:bg-white/20 shadow-glow'
                       : 'border-gray-300 dark:border-white/20 hover:border-gray-400 dark:hover:border-white/30'
                   }`}
-                  placeholder={t("Enter your email address", "Masukkan alamat email")}
+                  placeholder={t("Enter your email address", "Masukkan alamat email") as string}
                   onFocus={() => setFocusedField('email')}
                   onBlur={() => setFocusedField(null)}
                   whileFocus={{ scale: 1.02 }}
@@ -201,7 +201,7 @@ export const Contact: React.FC = () => {
                     ? 'border-emerald-500 bg-white/90 dark:bg-white/20 shadow-glow'
                     : 'border-gray-300 dark:border-white/20 hover:border-gray-400 dark:hover:border-white/30'
                 }`}
-                placeholder={t("What's this about?", "Tentang apa ini?")}
+                placeholder={t("What's this about?", "Tentang apa ini?") as string}
                 onFocus={() => setFocusedField('subject')}
                 onBlur={() => setFocusedField(null)}
                 whileFocus={{ scale: 1.02 }}
@@ -236,7 +236,7 @@ export const Contact: React.FC = () => {
                     ? 'border-emerald-500 bg-white/90 dark:bg-white/20 shadow-glow'
                     : 'border-gray-300 dark:border-white/20 hover:border-gray-400 dark:hover:border-white/30'
                 }`}
-                placeholder={t("Tell me about your project or idea...", "Ceritakan tentang proyek atau ide Anda...")}
+                placeholder={t("Tell me about your project or idea...", "Ceritakan tentang proyek atau ide Anda...") as string}
                 onFocus={() => setFocusedField('message')}
                 onBlur={() => setFocusedField(null)}
                 whileFocus={{ scale: 1.02 }}

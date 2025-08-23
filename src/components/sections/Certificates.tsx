@@ -36,11 +36,11 @@ export const Certificates: React.FC = () => {
         <AnimatedSectionTitle
           badge="Professional Growth"
           badgeIcon={<Award className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />}
-          title={t("Certificates & Achievements", "Sertifikat & Prestasi")}
+          title={t("Certificates & Achievements", "Sertifikat & Prestasi") as string}
           subtitle={t(
             "Click on each category to explore my professional certifications and achievements organized by type",
             "Klik pada setiap kategori untuk menjelajahi sertifikasi profesional dan pencapaian saya yang diorganisir berdasarkan jenis"
-          )}
+          ) as string}
         />
 
         <motion.div 

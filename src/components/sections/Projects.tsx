@@ -26,11 +26,11 @@ export const Projects: React.FC = () => {
         <AnimatedSectionTitle
           badge="Portfolio Showcase"
           badgeIcon={<FolderOpen className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />}
-          title={t("Featured Projects", "Projek Unggulan")}
+          title={t("Featured Projects", "Projek Unggulan") as string}
           subtitle={t(
             "Discover the projects that showcase my technical expertise and creative problem-solving abilities",
             "Temukan proyek-proyek yang menunjukkan keahlian teknis dan kemampuan pemecahan masalah kreatif saya"
-          )}
+          ) as string}
         />
         
         {/* Enhanced Tab Buttons */}
