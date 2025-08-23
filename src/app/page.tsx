@@ -29,13 +29,11 @@ export default function Home() {
       once: true,
       easing: 'ease-out',
     });
-    
-    // Non-aktifkan loading setelah animasi selesai
-    setTimeout(() => {
-      setLoading(false);
-    }, 2000); // Sesuaikan durasi dengan animasi loading
-
   }, []);
+
+  const handleLoadingComplete = () => {
+    setLoading(false);
+  };
 
   useEffect(() => {
     const firstNotificationTimer = setTimeout(() => {
@@ -54,7 +52,7 @@ export default function Home() {
   return (
     <>
       <AnimatePresence>
-        {loading && <LoadingScreen />}
+        {loading && <LoadingScreen onComplete={handleLoadingComplete} />}
       </AnimatePresence>
       
       {!loading && (
