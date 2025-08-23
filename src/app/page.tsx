@@ -20,7 +20,7 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Initialize AOS
+    // Initialize AOS with the same settings as in index.html
     AOS.init({
       duration: 1000,
       once: true,
