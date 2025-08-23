@@ -3,8 +3,10 @@
 import { useEffect, useState } from 'react';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
+import { AnimatePresence } from 'framer-motion';
 
-// Import sections
+// Import HOC dan sections
+import { AnimatedSection } from '../components/hocs/AnimatedSection';
 import Navbar from '../components/sections/Navbar';
 import Hero from '../components/sections/Hero';
 import { About } from '../components/sections/About';
@@ -20,38 +22,40 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Initialize AOS with the same settings as in index.html
     AOS.init({
       duration: 1000,
       once: true,
       easing: 'ease-out',
     });
-
-    // Simulate loading time
-    const timer = setTimeout(() => {
+    
+    // Non-aktifkan loading setelah animasi selesai
+    setTimeout(() => {
       setLoading(false);
-    }, 1500);
+    }, 2000); // Sesuaikan durasi dengan animasi loading
 
-    return () => clearTimeout(timer);
   }, []);
-
-  if (loading) {
-    return <LoadingScreen />;
-  }
 
   return (
     <>
-      <Navbar />
-      <main>
-        <Hero />
-        <About />
-        <Skills />
-        <Experience />
-        <Projects />
-        <Certificates />
-        <Contact />
-      </main>
-      <Footer />
+      <AnimatePresence>
+        {loading && <LoadingScreen />}
+      </AnimatePresence>
+      
+      {!loading && (
+        <>
+          <Navbar />
+          <main>
+            <Hero />
+            <AnimatedSection id="about"><About /></AnimatedSection>
+            <AnimatedSection id="skills"><Skills /></AnimatedSection>
+            <AnimatedSection id="experience"><Experience /></AnimatedSection>
+            <AnimatedSection id="projects"><Projects /></AnimatedSection>
+            <AnimatedSection id="certificates"><Certificates /></AnimatedSection>
+            <AnimatedSection id="contact"><Contact /></AnimatedSection>
+          </main>
+          <Footer />
+        </>
+      )}
     </>
   );
 }

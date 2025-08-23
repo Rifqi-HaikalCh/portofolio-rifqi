@@ -1,89 +1,104 @@
-"use client";
+'use client';
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
+import { motion } from 'framer-motion';
 import { TypeAnimation } from 'react-type-animation';
 import { useLanguage } from '../../context/LanguageContext';
 import { typingTexts, contactInfo } from '../../data/portfolio';
-import { Mail, Linkedin, Github, MessageCircle } from 'lucide-react';
+import { staggerContainer, fadeInUp } from '../../lib/animations';
+import ParticlesBackground from '../shared/ParticlesBackground';
 
 const Hero: React.FC = () => {
   const { language, t } = useLanguage();
 
+  const socialIcons = [
+    { href: `mailto:${contactInfo.email}`, icon: 'fas fa-envelope' },
+    { href: contactInfo.linkedin, icon: 'fab fa-linkedin-in' },
+    { href: contactInfo.github, icon: 'fab fa-github' },
+    { href: contactInfo.whatsapp, icon: 'fab fa-whatsapp' },
+  ];
+
   return (
-    <section id="home" className="min-h-screen flex items-center pt-24 lg:pt-0 bg-gray-50 dark:bg-gray-900">
-      <div className="container mx-auto px-4">
-        <div className="grid lg:grid-cols-2 gap-8 items-center">
-          {/* Text Content - Order 2 on mobile, 1 on desktop */}
-          <div className="lg:order-1 order-2 text-center lg:text-left" data-aos="fade-right">
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold mb-4 leading-tight animate-floating bg-gradient-to-r from-emerald-500 to-emerald-600 bg-clip-text text-transparent">
-              {t("Hi, I'm Rifqi Haikal", "Halo, Saya Rifqi Haikal")}
-            </h1>
-            <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-6">
-              {t("I'm a", "Saya seorang")}{" "}
-              <TypeAnimation
-                sequence={language === 'en' 
-                  ? typingTexts.en.flatMap(text => [text, 2000])
-                  : typingTexts.id.flatMap(text => [text, 2000])
-                }
-                wrapper="span"
-                speed={50}
-                className="text-emerald-500 font-semibold"
-                repeat={Infinity}
-              />
-            </p>
-            <p className="text-gray-600 dark:text-gray-300 mb-8 max-w-xl mx-auto lg:mx-0">
-              {t(
-                "Passionate Full-Stack Developer and Mobile App Developer from Indonesia, currently studying Informatics at Del Institute of Technology. I love creating innovative solutions through code.",
-                "Pengembang Full-Stack dan Aplikasi Mobile yang passionate dari Indonesia, saat ini sedang menempuh studi Informatika di Institut Teknologi Del. Saya suka menciptakan solusi inovatif melalui kode."
-              )}
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 mb-8 justify-center lg:justify-start">
-              <a href="#contact" className="btn-primary-custom text-center">
-                {t("Get In Touch", "Hubungi Saya")}
-              </a>
-              <a href="#projects" className="btn-outline-custom text-center">
-                {t("View Projects", "Lihat Projek")}
-              </a>
-            </div>
-            <div className="flex gap-4 justify-center lg:justify-start">
-              <a href={`mailto:${contactInfo.email}`} className="social-icon" title="Email">
-                <Mail size={20} />
-              </a>
-              <a href={contactInfo.linkedin} target="_blank" rel="noopener noreferrer" className="social-icon" title="LinkedIn">
-                <Linkedin size={20} />
-              </a>
-              <a href={contactInfo.github} target="_blank" rel="noopener noreferrer" className="social-icon" title="GitHub">
-                <Github size={20} />
-              </a>
-              <a href={contactInfo.whatsapp} target="_blank" rel="noopener noreferrer" className="social-icon" title="WhatsApp">
-                <MessageCircle size={20} />
-              </a>
-            </div>
+    <motion.section
+      id="home"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900"
+      variants={staggerContainer}
+      initial="hidden"
+      animate="show"
+    >
+      <ParticlesBackground />
+      <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 via-transparent to-blue-500/10 dark:from-emerald-500/5 dark:via-transparent dark:to-blue-500/5"></div>
+      <div className="container mx-auto px-4 text-center relative z-10">
+        <motion.div variants={fadeInUp} className="relative inline-block mb-8">
+          <div className="relative">
+            <Image
+              src="/assets/removebg.png"
+              alt="Rifqi Haikal Profile"
+              width={200}
+              height={200}
+              className="rounded-full border-4 border-primary-green shadow-glow animate-floating"
+              priority
+            />
+            <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-emerald-400/20 to-blue-400/20 animate-pulse"></div>
           </div>
-          
-          {/* Profile Image - Order 1 on mobile, 2 on desktop */}
-          <div className="lg:order-2 order-1" data-aos="fade-left">
-            <div className="relative w-full max-w-sm mx-auto lg:max-w-md">
-              {/* Decorative circles */}
-              <div className="profile-decoration"></div>
-              <div className="profile-decoration"></div>
-              
-              <Image
-                src="/assets/Profile.png"
-                alt="Rifqi Haikal Profile"
-                width={400}
-                height={400}
-                className="rounded-[15%] w-full h-auto transition-transform duration-300 hover:scale-105 hover:rotate-2"
-                style={{border:'none', boxShadow:'none'}}
-                priority
-              />
-            </div>
-          </div>
-        </div>
+        </motion.div>
+        <motion.h1 variants={fadeInUp} className="text-4xl sm:text-6xl md:text-7xl font-extrabold mb-4 leading-tight text-gray-900 dark:text-white">
+          {t("Hi, I'm ", "Halo, Saya ")}
+          <span className="bg-gradient-to-r from-emerald-500 to-blue-600 bg-clip-text text-transparent">
+            Rifqi Haikal
+          </span>
+        </motion.h1>
+        <motion.div variants={fadeInUp} className="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-8">
+          <span>{t("I'm a", "Saya seorang")} </span>
+          <TypeAnimation
+            sequence={language === 'en' 
+              ? typingTexts.en.flatMap(text => [text, 2000])
+              : typingTexts.id.flatMap(text => [text, 2000])
+            }
+            wrapper="span"
+            speed={50}
+            className="text-primary-green font-semibold"
+            repeat={Infinity}
+          />
+        </motion.div>
+        <motion.div variants={fadeInUp} className="flex justify-center gap-4 mb-8">
+          {socialIcons.map((social, i) => (
+            <motion.a
+              key={i}
+              href={social.href}
+              target="_blank"
+              className="w-14 h-14 rounded-full flex items-center justify-center bg-white dark:bg-gray-800 border-2 border-emerald-500/20 text-gray-700 dark:text-gray-300 shadow-lg transition-all duration-300 hover:bg-primary-green hover:border-primary-green hover:text-white hover:scale-110"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1 + i * 0.1 }}
+              whileHover={{ y: -5 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <i className={social.icon}></i>
+            </motion.a>
+          ))}
+        </motion.div>
+        <motion.div variants={fadeInUp} className="flex flex-col sm:flex-row gap-4 justify-center">
+          <motion.a 
+            href="#contact" 
+            className="btn-primary-custom"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            {t("Get In Touch", "Hubungi Saya")}
+          </motion.a>
+          <motion.a 
+            href="#projects" 
+            className="btn-outline-custom"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            {t("View Projects", "Lihat Projek")}
+          </motion.a>
+        </motion.div>
       </div>
-    </section>
+    </motion.section>
   );
 };
 
