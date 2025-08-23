@@ -14,7 +14,7 @@ export const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white pt-16 pb-8 relative overflow-hidden">
+    <footer className="bg-gradient-to-br from-white to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 text-gray-900 dark:text-white pt-16 pb-8 relative overflow-hidden">
       {/* Enhanced background effects */}
       <div className="absolute inset-0">
         <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-500 via-blue-500 to-emerald-600"></div>
@@ -49,7 +49,7 @@ export const Footer: React.FC = () => {
             >
               Rifqi Haikal Chairiansyah
             </motion.h4>
-            <p className="text-gray-300 leading-relaxed text-base mb-8">
+            <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-base mb-8">
               {t(
                 "Passionate Full-Stack Developer and Mobile App Developer dedicated to creating innovative solutions through code. Always learning, always growing.",
                 "Pengembang Full-Stack dan Aplikasi Mobile yang passionate, berdedikasi untuk menciptakan solusi inovatif melalui kode. Selalu belajar, selalu berkembang."
@@ -81,7 +81,7 @@ export const Footer: React.FC = () => {
 
           {/* Enhanced Quick Links */}
           <motion.div variants={fadeInUp} className="md:col-span-1">
-            <h4 className="text-xl font-bold mb-6 text-emerald-400">
+            <h4 className="text-xl font-bold mb-6 text-emerald-600 dark:text-emerald-400">
               {t("Quick Links", "Tautan Cepat")}
             </h4>
             <ul className="space-y-3">
@@ -93,7 +93,7 @@ export const Footer: React.FC = () => {
                 >
                   <Link 
                     href={link.href}
-                    className="group inline-flex items-center gap-2 text-gray-300 hover:text-emerald-400 transition-all duration-300 font-medium"
+                    className="group inline-flex items-center gap-2 text-gray-600 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-all duration-300 font-medium"
                   >
                     <span className="w-1 h-1 bg-emerald-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
                     {language === 'en' ? link.labelEn : link.labelId}
@@ -106,7 +106,7 @@ export const Footer: React.FC = () => {
 
           {/* Enhanced Services */}
           <motion.div variants={fadeInUp} className="md:col-span-1">
-            <h4 className="text-xl font-bold mb-6 text-emerald-400">
+            <h4 className="text-xl font-bold mb-6 text-emerald-600 dark:text-emerald-400">
               {t("Services", "Layanan")}
             </h4>
             <ul className="space-y-3">
@@ -122,7 +122,7 @@ export const Footer: React.FC = () => {
                   transition={{ type: "spring", stiffness: 400 }}
                 >
                   <div className="w-2 h-2 bg-gradient-to-r from-emerald-400 to-blue-400 rounded-full group-hover:scale-125 transition-transform" />
-                  <span className="text-gray-300 group-hover:text-white transition-colors font-medium">
+                  <span className="text-gray-600 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white transition-colors font-medium">
                     {t(service.en, service.id)}
                   </span>
                 </motion.li>
@@ -166,7 +166,7 @@ export const Footer: React.FC = () => {
           
           <div className="text-center">
             <motion.p 
-              className="text-gray-400 text-sm font-medium"
+              className="text-gray-500 dark:text-gray-400 text-sm font-medium"
               whileHover={{ scale: 1.05 }}
             >
               {t(

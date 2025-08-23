@@ -40,213 +40,146 @@ export const About: React.FC = () => {
         />
 
         <motion.div 
-          className="grid lg:grid-cols-2 gap-20 items-center"
+          className="space-y-20"
           variants={staggerContainer}
           initial="hidden"
           whileInView="show"
           viewport={{ once: true }}
         >
-          {/* Expert Image Section */}
-          <motion.div variants={fadeInUp} className="relative lg:order-1">
-            <div className="relative group perspective-1000">
-              {/* Multiple animated borders with different effects */}
-              <div className="absolute -inset-6 bg-gradient-to-r from-emerald-500 via-blue-500 via-purple-500 to-emerald-500 rounded-[2rem] blur-lg opacity-30 group-hover:opacity-50 transition duration-1000 animate-gradient-bg"></div>
-              <div className="absolute -inset-4 bg-gradient-to-r from-blue-500 via-emerald-500 to-blue-500 rounded-3xl blur opacity-20 group-hover:opacity-40 transition duration-1000 animate-pulse"></div>
-              
-              {/* Enhanced Image container with 3D effect */}
-              <motion.div 
-                className="relative bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-700 rounded-3xl p-3 shadow-2xl backdrop-blur-sm border border-white/20 dark:border-gray-600/20"
-                whileHover={{ 
-                  rotateY: 5,
-                  rotateX: 5,
-                  scale: 1.02,
-                  transition: { type: "spring", stiffness: 300, damping: 20 }
-                }}
-                style={{
-                  transformStyle: "preserve-3d"
-                }}
-              >
-                {/* Glassmorphism overlay */}
-                <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 via-transparent to-blue-500/5 rounded-3xl"></div>
+          {/* First Row: Image and Journey Text */}
+          <div className="grid lg:grid-cols-2 gap-20 items-center">
+            {/* Expert Image Section */}
+            <motion.div variants={fadeInUp} className="relative lg:order-1">
+              <div className="relative group perspective-1000">
+                {/* Multiple animated borders with different effects */}
+                <div className="absolute -inset-6 bg-gradient-to-r from-emerald-500 via-blue-500 via-purple-500 to-emerald-500 rounded-[2rem] blur-lg opacity-30 group-hover:opacity-50 transition duration-1000 animate-gradient-bg"></div>
+                <div className="absolute -inset-4 bg-gradient-to-r from-blue-500 via-emerald-500 to-blue-500 rounded-3xl blur opacity-20 group-hover:opacity-40 transition duration-1000 animate-pulse"></div>
                 
-                <Image
-                  src="/assets/removebg.png"
-                  alt="About Rifqi"
-                  width={450}
-                  height={500}
-                  className="rounded-2xl w-full object-cover shadow-lg"
-                />
-                
-                {/* Enhanced floating elements with micro-interactions */}
+                {/* Enhanced Image container with 3D effect */}
                 <motion.div 
-                  className="absolute top-6 right-6 w-16 h-16 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-2xl flex items-center justify-center text-white shadow-xl"
-                  animate={{
-                    y: [0, -8, 0],
-                    rotate: [0, 5, -5, 0]
+                  className="relative bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-700 rounded-3xl p-3 shadow-2xl backdrop-blur-sm border border-white/20 dark:border-gray-600/20"
+                  whileHover={{ 
+                    rotateY: 5,
+                    rotateX: 5,
+                    scale: 1.02,
+                    transition: { type: "spring", stiffness: 300, damping: 20 }
                   }}
-                  transition={{
-                    duration: 4,
-                    repeat: Infinity,
-                    ease: "easeInOut"
+                  style={{
+                    transformStyle: "preserve-3d"
                   }}
-                  whileHover={{ scale: 1.1, rotate: 15 }}
                 >
-                  <Code size={24} />
+                  {/* Glassmorphism overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 via-transparent to-blue-500/5 rounded-3xl"></div>
+                  
+                  <Image
+                    src="/assets/removebg.png"
+                    alt="About Rifqi"
+                    width={450}
+                    height={500}
+                    className="rounded-2xl w-full object-cover shadow-lg"
+                  />
                 </motion.div>
-                
+              </div>
+            </motion.div>
+
+            {/* Expert Content Section */}
+            <motion.div variants={fadeInUp} className="space-y-8 lg:order-2">
+              <div className="relative">
+                {/* Animated accent line */}
                 <motion.div 
-                  className="absolute bottom-6 left-6 px-5 py-3 bg-gradient-to-r from-white to-gray-50 dark:from-gray-800 dark:to-gray-700 rounded-2xl shadow-xl backdrop-blur-sm border border-emerald-200/50 dark:border-emerald-700/50"
-                  whileHover={{ scale: 1.05, y: -2 }}
-                  animate={{
-                    y: [0, -3, 0]
-                  }}
-                  transition={{
-                    duration: 3,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                    delay: 1
-                  }}
+                  className="absolute -left-6 top-0 bottom-0 w-1 bg-gradient-to-b from-emerald-500 via-blue-500 to-purple-500 rounded-full"
+                  initial={{ height: 0 }}
+                  whileInView={{ height: "100%" }}
+                  transition={{ duration: 1.5, ease: "easeOut" }}
+                  viewport={{ once: true }}
+                ></motion.div>
+                
+                <motion.h3 
+                  className="text-4xl lg:text-5xl font-extrabold text-gray-900 dark:text-white mb-6 leading-tight"
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.8, delay: 0.2 }}
+                  viewport={{ once: true }}
                 >
-                  <span className="text-emerald-600 dark:text-emerald-400 font-bold text-lg flex items-center gap-2">
-                    <Trophy size={18} />
-                    3.37 GPA
+                  <span className="bg-gradient-to-r from-emerald-600 via-blue-600 to-purple-600 bg-clip-text text-transparent">
+                    {t("My Journey in Technology", "Perjalanan Saya di Teknologi")}
                   </span>
-                </motion.div>
+                </motion.h3>
                 
-                {/* Additional floating achievement badges */}
-                <motion.div 
-                  className="absolute top-1/2 -right-4 px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl shadow-lg text-sm font-semibold"
-                  animate={{
-                    x: [0, 5, 0],
-                    rotate: [0, -3, 3, 0]
-                  }}
-                  transition={{
-                    duration: 5,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                    delay: 2
-                  }}
+                <motion.p 
+                  className="text-gray-600 dark:text-gray-300 text-xl leading-relaxed mb-8"
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.8, delay: 0.4 }}
+                  viewport={{ once: true }}
                 >
-                  2+ Years
-                </motion.div>
-                
-                <motion.div 
-                  className="absolute top-1/4 -left-4 px-4 py-2 bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-xl shadow-lg text-sm font-semibold"
-                  animate={{
-                    x: [0, -5, 0],
-                    rotate: [0, 3, -3, 0]
-                  }}
-                  transition={{
-                    duration: 6,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                    delay: 3
-                  }}
-                >
-                  15+ Projects
-                </motion.div>
-              </motion.div>
-            </div>
-          </motion.div>
+                  {language === 'en' ? highlightedText.en : highlightedText.id}
+                </motion.p>
+              </div>
+            </motion.div>
+          </div>
 
-          {/* Expert Content Section */}
-          <motion.div variants={fadeInUp} className="space-y-8 lg:order-2">
-            <div className="relative">
-              {/* Animated accent line */}
-              <motion.div 
-                className="absolute -left-6 top-0 bottom-0 w-1 bg-gradient-to-b from-emerald-500 via-blue-500 to-purple-500 rounded-full"
-                initial={{ height: 0 }}
-                whileInView={{ height: "100%" }}
-                transition={{ duration: 1.5, ease: "easeOut" }}
-                viewport={{ once: true }}
-              ></motion.div>
-              
-              <motion.h3 
-                className="text-4xl lg:text-5xl font-extrabold text-gray-900 dark:text-white mb-6 leading-tight"
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-                viewport={{ once: true }}
-              >
-                <span className="bg-gradient-to-r from-emerald-600 via-blue-600 to-purple-600 bg-clip-text text-transparent">
-                  {t("My Journey in Technology", "Perjalanan Saya di Teknologi")}
-                </span>
-              </motion.h3>
-              
-              <motion.p 
-                className="text-gray-600 dark:text-gray-300 text-xl leading-relaxed mb-8"
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8, delay: 0.4 }}
-                viewport={{ once: true }}
-              >
-                {language === 'en' ? highlightedText.en : highlightedText.id}
-              </motion.p>
-            </div>
-
+          {/* Second Row: Stats and Highlights */}
+          <div className="grid lg:grid-cols-2 gap-20 items-start">
             {/* Enhanced Stats Grid with animations */}
-            <motion.div 
-              className="grid grid-cols-2 gap-8 py-8"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.6 }}
-              viewport={{ once: true }}
-            >
-              <motion.div 
-                className="group text-center p-6 bg-gradient-to-br from-emerald-50 to-emerald-100 dark:from-emerald-900/30 dark:to-emerald-800/30 rounded-3xl backdrop-blur-sm border border-emerald-200/50 dark:border-emerald-700/50 shadow-lg hover:shadow-glow transition-all duration-500"
-                whileHover={{ scale: 1.05, y: -5 }}
-                whileTap={{ scale: 0.95 }}
-              >
+            <motion.div variants={fadeInUp} className="space-y-8">
+              <div className="grid grid-cols-2 gap-8 py-8">
                 <motion.div 
-                  className="text-4xl lg:text-5xl font-extrabold text-emerald-600 mb-2"
-                  initial={{ scale: 0 }}
-                  whileInView={{ scale: 1 }}
-                  transition={{ type: "spring", stiffness: 300, delay: 0.8 }}
-                  viewport={{ once: true }}
+                  className="group text-center p-6 bg-gradient-to-br from-emerald-50 to-emerald-100 dark:from-emerald-900/30 dark:to-emerald-800/30 rounded-3xl backdrop-blur-sm border border-emerald-200/50 dark:border-emerald-700/50 shadow-lg hover:shadow-glow transition-all duration-500"
+                  whileHover={{ scale: 1.05, y: -5 }}
+                  whileTap={{ scale: 0.95 }}
                 >
-                  2+
-                </motion.div>
-                <div className="text-gray-600 dark:text-gray-300 font-semibold">
-                  {t("Years Experience", "Tahun Pengalaman")}
-                </div>
-                <div className="mt-2 w-full h-1 bg-emerald-200 dark:bg-emerald-800 rounded-full overflow-hidden">
-                  <motion.div
-                    className="h-full bg-gradient-to-r from-emerald-500 to-emerald-600"
-                    initial={{ width: 0 }}
-                    whileInView={{ width: "100%" }}
-                    transition={{ duration: 1.5, delay: 1 }}
+                  <motion.div 
+                    className="text-4xl lg:text-5xl font-extrabold text-emerald-600 mb-2"
+                    initial={{ scale: 0 }}
+                    whileInView={{ scale: 1 }}
+                    transition={{ type: "spring", stiffness: 300, delay: 0.8 }}
                     viewport={{ once: true }}
-                  />
-                </div>
-              </motion.div>
-              
-              <motion.div 
-                className="group text-center p-6 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/30 rounded-3xl backdrop-blur-sm border border-blue-200/50 dark:border-blue-700/50 shadow-lg hover:shadow-glow transition-all duration-500"
-                whileHover={{ scale: 1.05, y: -5 }}
-                whileTap={{ scale: 0.95 }}
-              >
+                  >
+                    2+
+                  </motion.div>
+                  <div className="text-gray-600 dark:text-gray-300 font-semibold">
+                    {t("Years Experience", "Tahun Pengalaman")}
+                  </div>
+                  <div className="mt-2 w-full h-1 bg-emerald-200 dark:bg-emerald-800 rounded-full overflow-hidden">
+                    <motion.div
+                      className="h-full bg-gradient-to-r from-emerald-500 to-emerald-600"
+                      initial={{ width: 0 }}
+                      whileInView={{ width: "100%" }}
+                      transition={{ duration: 1.5, delay: 1 }}
+                      viewport={{ once: true }}
+                    />
+                  </div>
+                </motion.div>
+                
                 <motion.div 
-                  className="text-4xl lg:text-5xl font-extrabold text-blue-600 mb-2"
-                  initial={{ scale: 0 }}
-                  whileInView={{ scale: 1 }}
-                  transition={{ type: "spring", stiffness: 300, delay: 1 }}
-                  viewport={{ once: true }}
+                  className="group text-center p-6 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/30 rounded-3xl backdrop-blur-sm border border-blue-200/50 dark:border-blue-700/50 shadow-lg hover:shadow-glow transition-all duration-500"
+                  whileHover={{ scale: 1.05, y: -5 }}
+                  whileTap={{ scale: 0.95 }}
                 >
-                  15+
-                </motion.div>
-                <div className="text-gray-600 dark:text-gray-300 font-semibold">
-                  {t("Projects Completed", "Projek Diselesaikan")}
-                </div>
-                <div className="mt-2 w-full h-1 bg-blue-200 dark:bg-blue-800 rounded-full overflow-hidden">
-                  <motion.div
-                    className="h-full bg-gradient-to-r from-blue-500 to-blue-600"
-                    initial={{ width: 0 }}
-                    whileInView={{ width: "100%" }}
-                    transition={{ duration: 1.5, delay: 1.2 }}
+                  <motion.div 
+                    className="text-4xl lg:text-5xl font-extrabold text-blue-600 mb-2"
+                    initial={{ scale: 0 }}
+                    whileInView={{ scale: 1 }}
+                    transition={{ type: "spring", stiffness: 300, delay: 1 }}
                     viewport={{ once: true }}
-                  />
-                </div>
-              </motion.div>
+                  >
+                    15+
+                  </motion.div>
+                  <div className="text-gray-600 dark:text-gray-300 font-semibold">
+                    {t("Projects Completed", "Projek Diselesaikan")}
+                  </div>
+                  <div className="mt-2 w-full h-1 bg-blue-200 dark:bg-blue-800 rounded-full overflow-hidden">
+                    <motion.div
+                      className="h-full bg-gradient-to-r from-blue-500 to-blue-600"
+                      initial={{ width: 0 }}
+                      whileInView={{ width: "100%" }}
+                      transition={{ duration: 1.5, delay: 1.2 }}
+                      viewport={{ once: true }}
+                    />
+                  </div>
+                </motion.div>
+              </div>
             </motion.div>
 
             {/* Expert Highlights Grid */}
@@ -322,8 +255,10 @@ export const About: React.FC = () => {
                 </motion.div>
               ))}
             </motion.div>
+          </div>
 
-            {/* Expert Download CV Button */}
+          {/* Third Row: Download CV Button */}
+          <div className="flex justify-center">
             <motion.div 
               className="pt-8"
               initial={{ opacity: 0, y: 20 }}
@@ -368,7 +303,7 @@ export const About: React.FC = () => {
                 </Link>
               </motion.div>
             </motion.div>
-          </motion.div>
+          </div>
         </motion.div>
       </div>
     </section>

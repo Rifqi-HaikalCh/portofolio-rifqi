@@ -40,7 +40,7 @@ export const Contact: React.FC = () => {
   };
 
   return (
-    <section id="contact" className="py-20 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 relative overflow-hidden">
+    <section id="contact" className="py-20 bg-gradient-to-br from-gray-50 to-white dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 relative overflow-hidden">
       {/* Enhanced dark background with shimmer */}
       <div className="absolute inset-0">
         <motion.div
@@ -112,8 +112,8 @@ export const Contact: React.FC = () => {
                 <motion.label 
                   className={`block font-semibold mb-3 transition-all duration-300 ${
                     focusedField === 'name' 
-                      ? 'text-emerald-400 text-lg' 
-                      : 'text-white/80 text-base'
+                      ? 'text-emerald-400 dark:text-emerald-400 text-lg' 
+                      : 'text-gray-700 dark:text-white/80 text-base'
                   }`}
                   animate={{ 
                     y: focusedField === 'name' ? -5 : 0,
@@ -126,10 +126,10 @@ export const Contact: React.FC = () => {
                   type="text"
                   name="name"
                   required
-                  className={`w-full px-6 py-4 rounded-2xl bg-white/10 backdrop-blur-sm border-2 text-white placeholder-white/50 focus:outline-none transition-all duration-300 ${
+                  className={`w-full px-6 py-4 rounded-2xl bg-white/80 dark:bg-white/10 backdrop-blur-sm border-2 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-white/50 focus:outline-none transition-all duration-300 ${
                     focusedField === 'name'
-                      ? 'border-emerald-500 bg-white/20 shadow-glow'
-                      : 'border-white/20 hover:border-white/30'
+                      ? 'border-emerald-500 bg-white/90 dark:bg-white/20 shadow-glow'
+                      : 'border-gray-300 dark:border-white/20 hover:border-gray-400 dark:hover:border-white/30'
                   }`}
                   placeholder={t("Enter your full name", "Masukkan nama lengkap")}
                   onFocus={() => setFocusedField('name')}
@@ -146,8 +146,8 @@ export const Contact: React.FC = () => {
                 <motion.label 
                   className={`block font-semibold mb-3 transition-all duration-300 ${
                     focusedField === 'email' 
-                      ? 'text-emerald-400 text-lg' 
-                      : 'text-white/80 text-base'
+                      ? 'text-emerald-400 dark:text-emerald-400 text-lg' 
+                      : 'text-gray-700 dark:text-white/80 text-base'
                   }`}
                   animate={{ 
                     y: focusedField === 'email' ? -5 : 0,
@@ -160,10 +160,10 @@ export const Contact: React.FC = () => {
                   type="email"
                   name="email"
                   required
-                  className={`w-full px-6 py-4 rounded-2xl bg-white/10 backdrop-blur-sm border-2 text-white placeholder-white/50 focus:outline-none transition-all duration-300 ${
+                  className={`w-full px-6 py-4 rounded-2xl bg-white/80 dark:bg-white/10 backdrop-blur-sm border-2 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-white/50 focus:outline-none transition-all duration-300 ${
                     focusedField === 'email'
-                      ? 'border-emerald-500 bg-white/20 shadow-glow'
-                      : 'border-white/20 hover:border-white/30'
+                      ? 'border-emerald-500 bg-white/90 dark:bg-white/20 shadow-glow'
+                      : 'border-gray-300 dark:border-white/20 hover:border-gray-400 dark:hover:border-white/30'
                   }`}
                   placeholder={t("Enter your email address", "Masukkan alamat email")}
                   onFocus={() => setFocusedField('email')}
@@ -182,8 +182,8 @@ export const Contact: React.FC = () => {
               <motion.label 
                 className={`block font-semibold mb-3 transition-all duration-300 ${
                   focusedField === 'subject' 
-                    ? 'text-emerald-400 text-lg' 
-                    : 'text-white/80 text-base'
+                    ? 'text-emerald-400 dark:text-emerald-400 text-lg' 
+                    : 'text-gray-700 dark:text-white/80 text-base'
                 }`}
                 animate={{ 
                   y: focusedField === 'subject' ? -5 : 0,
@@ -196,10 +196,10 @@ export const Contact: React.FC = () => {
                 type="text"
                 name="subject"
                 required
-                className={`w-full px-6 py-4 rounded-2xl bg-white/10 backdrop-blur-sm border-2 text-white placeholder-white/50 focus:outline-none transition-all duration-300 ${
+                className={`w-full px-6 py-4 rounded-2xl bg-white/80 dark:bg-white/10 backdrop-blur-sm border-2 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-white/50 focus:outline-none transition-all duration-300 ${
                   focusedField === 'subject'
-                    ? 'border-emerald-500 bg-white/20 shadow-glow'
-                    : 'border-white/20 hover:border-white/30'
+                    ? 'border-emerald-500 bg-white/90 dark:bg-white/20 shadow-glow'
+                    : 'border-gray-300 dark:border-white/20 hover:border-gray-400 dark:hover:border-white/30'
                 }`}
                 placeholder={t("What's this about?", "Tentang apa ini?")}
                 onFocus={() => setFocusedField('subject')}
@@ -217,8 +217,8 @@ export const Contact: React.FC = () => {
               <motion.label 
                 className={`block font-semibold mb-3 transition-all duration-300 ${
                   focusedField === 'message' 
-                    ? 'text-emerald-400 text-lg' 
-                    : 'text-white/80 text-base'
+                    ? 'text-emerald-400 dark:text-emerald-400 text-lg' 
+                    : 'text-gray-700 dark:text-white/80 text-base'
                 }`}
                 animate={{ 
                   y: focusedField === 'message' ? -5 : 0,
@@ -231,10 +231,10 @@ export const Contact: React.FC = () => {
                 name="message"
                 rows={5}
                 required
-                className={`w-full px-6 py-4 rounded-2xl bg-white/10 backdrop-blur-sm border-2 text-white placeholder-white/50 focus:outline-none transition-all duration-300 resize-none ${
+                className={`w-full px-6 py-4 rounded-2xl bg-white/80 dark:bg-white/10 backdrop-blur-sm border-2 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-white/50 focus:outline-none transition-all duration-300 resize-none ${
                   focusedField === 'message'
-                    ? 'border-emerald-500 bg-white/20 shadow-glow'
-                    : 'border-white/20 hover:border-white/30'
+                    ? 'border-emerald-500 bg-white/90 dark:bg-white/20 shadow-glow'
+                    : 'border-gray-300 dark:border-white/20 hover:border-gray-400 dark:hover:border-white/30'
                 }`}
                 placeholder={t("Tell me about your project or idea...", "Ceritakan tentang proyek atau ide Anda...")}
                 onFocus={() => setFocusedField('message')}

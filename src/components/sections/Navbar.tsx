@@ -108,7 +108,7 @@ const Navbar: React.FC = () => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
-              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[9998] lg:hidden"
+              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[99998] lg:hidden"
               onClick={() => setMobileMenuOpen(false)}
             />
             
@@ -118,7 +118,7 @@ const Navbar: React.FC = () => {
               animate={{ x: 0, opacity: 1 }}
               exit={{ x: '100%', opacity: 0 }}
               transition={{ type: 'spring', stiffness: 300, damping: 30, duration: 0.4 }}
-              className="fixed top-0 right-0 h-full w-80 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 shadow-2xl z-[9999] lg:hidden overflow-hidden"
+              className="fixed top-0 right-0 h-full w-80 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 shadow-2xl z-[99999] lg:hidden overflow-hidden"
             >
               {/* Animated Background Elements */}
               <div className="absolute inset-0 overflow-hidden">
