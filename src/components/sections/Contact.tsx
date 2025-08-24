@@ -334,10 +334,10 @@ export const Contact: React.FC = () => {
                 </motion.div>
                 
                 <div className="relative z-10">
-                  <h5 className="font-bold text-white text-xl mb-3 group-hover:text-emerald-300 transition-colors">
+                  <h5 className="font-bold text-gray-900 dark:text-white text-xl mb-3 group-hover:text-emerald-600 dark:group-hover:text-emerald-300 transition-colors">
                     {item.title}
                   </h5>
-                  <p className="text-white/70 group-hover:text-white/90 transition-colors text-lg">
+                  <p className="text-gray-700 dark:text-white/70 group-hover:text-gray-800 dark:group-hover:text-white/90 transition-colors text-lg">
                     {item.info}
                   </p>
                 </div>

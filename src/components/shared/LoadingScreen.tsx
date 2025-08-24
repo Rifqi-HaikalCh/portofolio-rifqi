@@ -19,31 +19,37 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
   const steps = [
     {
       id: 0,
-      text: "Hi, aku Qbot yang akan memandu pengalaman mu disini.",
+      text: "Hello, welcome to this portfolio page.",
       animation: "assistant",
       duration: 4000
     },
     {
       id: 1,
-      text: "Kamu sedang mencari seorang Web Developer?",
+      text: "I am EQbot, your guide on this page.",
       animation: "assistant",
-      duration: 3500
+      duration: 4000
     },
     {
       id: 2,
-      text: "atau Mobile Developer?",
+      text: "Are you looking for someone to create a website?",
       animation: "assistant",
-      duration: 3000
+      duration: 5000
     },
     {
       id: 3,
-      text: "atau kamu butuh seorang UI/UX designer?",
+      text: "Or looking for someone to create a mobile app?",
       animation: "assistant",
-      duration: 3500
+      duration: 5000
     },
     {
       id: 4,
-      text: "sebentar, aku ada orang yang tepat untuk semua posisi itu.",
+      text: "Or need someone to design interface and user experience of your app?",
+      animation: "assistant",
+      duration: 6000
+    },
+    {
+      id: 5,
+      text: "Here he is, the right person for the job!",
       animation: "multitasking",
       duration: 4000
     }

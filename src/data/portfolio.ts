@@ -19,8 +19,8 @@ export const navLinks: NavLink[] = [
 ];
 
 export const typingTexts = {
-  en: ['Full-Stack Developer', 'Mobile App Developer', 'UI/UX Enthusiast'],
-  id: ['Pengembang Full-Stack', 'Pengembang Aplikasi Mobile', 'Penggemar UI/UX']
+  en: ['Web Developer', 'Mobile App Developer', 'UI/UX Designer'],
+  id: ['Pengembang Web', 'Pengembang Aplikasi Mobile', 'Perancang UI/UX']
 };
 
 export const aboutHighlights: AboutHighlight[] = [
@@ -42,13 +42,13 @@ export const aboutHighlights: AboutHighlight[] = [
     icon: 'trophy',
     title: 'Achievements',
     titleId: 'Prestasi',
-    description: '3rd Place PKM Competition Winner',
-    descriptionId: 'Juara 3 Kompetisi PKM'
+    description: 'Certified Industry Ready Talent (MSIB 2024)',
+    descriptionId: 'Talenta yang Siap Bekerja di Industri (MSIB 2024)'
   },
   {
     icon: 'users',
-    title: 'Leadership',
-    titleId: 'Kepemimpinan',
+    title: 'Social Relationships',
+    titleId: 'Relasi Sosial',
     description: 'GDSC Core Team & BEM Social Division Head',
     descriptionId: 'Tim Inti GDSC & Kepala Divisi Sosial BEM'
   }
@@ -60,14 +60,12 @@ export const hardSkills: Skill[] = [
   { name: 'JavaScript', icon: 'js-square', color: '#F7DF1E', category: 'hard' },
   { name: 'TypeScript', icon: 'js-square', color: '#3178C6', category: 'hard' },
   { name: 'Java', icon: 'java', color: '#007396', category: 'hard' },
-  { name: 'Python', icon: 'python', color: '#3776AB', category: 'hard' },
   { name: 'PHP', icon: 'php', color: '#777BB4', category: 'hard' },
   { name: 'Angular', icon: 'angular', color: '#DD0031', category: 'hard' },
   { name: 'React.js', icon: 'react', color: '#61DAFB', category: 'hard' },
   { name: 'Vue.js', icon: 'vuejs', color: '#4FC08D', category: 'hard' },
   { name: 'Spring Boot', icon: 'leaf', color: '#6DB33F', category: 'hard' },
   { name: 'Laravel', icon: 'laravel', color: '#FF2D20', category: 'hard' },
-  { name: 'MySQL', icon: 'database', color: '#4479A1', category: 'hard' },
   { name: 'Git', icon: 'git-alt', color: '#F05032', category: 'hard' },
 ];
 

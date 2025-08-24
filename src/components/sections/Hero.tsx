@@ -30,26 +30,13 @@ const Hero: React.FC = () => {
       <ParticlesBackground />
       <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 via-transparent to-blue-500/10 dark:from-emerald-500/5 dark:via-transparent dark:to-blue-500/5"></div>
       <div className="container mx-auto px-4 text-center relative z-10">
-        <motion.div variants={fadeInUp} className="relative inline-block mb-8">
-          <div className="relative">
-            <Image
-              src="/assets/removebg.png"
-              alt="Rifqi Haikal Profile"
-              width={200}
-              height={200}
-              className="rounded-full border-4 border-primary-green shadow-glow animate-floating"
-              priority
-            />
-            <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-emerald-400/20 to-blue-400/20 animate-pulse"></div>
-          </div>
-        </motion.div>
-        <motion.h1 variants={fadeInUp} className="text-4xl sm:text-6xl md:text-7xl font-extrabold mb-4 leading-tight text-gray-900 dark:text-white">
+        <motion.h1 variants={fadeInUp} className="text-4xl sm:text-6xl md:text-7xl font-extrabold mb-8 leading-tight text-gray-900 dark:text-white">
           {t("Hi, I'm ", "Halo, Saya ")}
           <span className="bg-gradient-to-r from-emerald-500 to-blue-600 bg-clip-text text-transparent">
             Rifqi Haikal
           </span>
         </motion.h1>
-        <motion.div variants={fadeInUp} className="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-8">
+        <motion.div variants={fadeInUp} className="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-12">
           <span>{t("I'm a", "Saya seorang")} </span>
           <TypeAnimation
             sequence={language === 'en' 
@@ -62,7 +49,7 @@ const Hero: React.FC = () => {
             repeat={Infinity}
           />
         </motion.div>
-        <motion.div variants={fadeInUp} className="flex justify-center gap-4 mb-8">
+        <motion.div variants={fadeInUp} className="flex justify-center gap-4 mb-12">
           {socialIcons.map((social, i) => (
             <motion.a
               key={i}
