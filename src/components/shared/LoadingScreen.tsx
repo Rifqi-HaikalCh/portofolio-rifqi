@@ -17,30 +17,70 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
   const multitaskingRef = useRef(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isAudioLoaded, setIsAudioLoaded] = useState(false);
+  const [audioAvailable, setAudioAvailable] = useState(false);
 
-  // Initialize audio
+  // Initialize immersive audio system
   useEffect(() => {
-    audioRef.current = new Audio('/assets/text.wav');
-    audioRef.current.preload = 'auto';
-    audioRef.current.volume = 0.6;
-    
-    const handleCanPlay = () => setIsAudioLoaded(true);
-    audioRef.current.addEventListener('canplaythrough', handleCanPlay);
-    
+    const initializeAudio = async () => {
+      try {
+        audioRef.current = new Audio('/assets/text.wav');
+        audioRef.current.preload = 'auto';
+        audioRef.current.volume = 0.4; // Lower volume for better UX
+        
+        const handleCanPlay = () => {
+          setIsAudioLoaded(true);
+          setAudioAvailable(true);
+        };
+        
+        const handleError = () => {
+          console.info('Text audio not available - using silent mode');
+          setAudioAvailable(false);
+          setIsAudioLoaded(true); // Still allow progression
+        };
+        
+        audioRef.current.addEventListener('canplaythrough', handleCanPlay, { once: true });
+        audioRef.current.addEventListener('error', handleError, { once: true });
+        
+      } catch (error) {
+        console.info('Audio system not available');
+        setAudioAvailable(false);
+        setIsAudioLoaded(true);
+      }
+    };
+
+    initializeAudio();
+
     return () => {
       if (audioRef.current) {
-        audioRef.current.removeEventListener('canplaythrough', handleCanPlay);
         audioRef.current.pause();
         audioRef.current = null;
       }
     };
   }, []);
 
-  // Play audio effect when text starts typing
+  // Enhanced audio feedback with visual synchronization
   const playTextSound = () => {
-    if (audioRef.current && isAudioLoaded) {
+    if (audioRef.current && isAudioLoaded && audioAvailable) {
       audioRef.current.currentTime = 0;
-      audioRef.current.play().catch(console.error);
+      audioRef.current.play().catch(() => {
+        // Gracefully handle play failures (autoplay policies)
+        console.info('Audio play prevented by browser policy');
+      });
+    }
+  };
+
+  // Create typing sound effect even without audio file
+  const createTypingFeedback = () => {
+    if (!audioAvailable) {
+      // Visual feedback when audio is not available
+      const assistantElement = assistantRef.current;
+      if (assistantElement) {
+        // Subtle vibration effect
+        (assistantElement as any).style.transform = 'scale(1.02)';
+        setTimeout(() => {
+          (assistantElement as any).style.transform = 'scale(1)';
+        }, 100);
+      }
     }
   };
 
@@ -84,25 +124,32 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
   ];
 
   useEffect(() => {
-    // Play audio when step changes (text starts typing)
-    if (currentStep < steps.length) {
-      playTextSound();
+    // Enhanced audio-visual feedback when step changes
+    if (currentStep < steps.length && isAudioLoaded) {
+      // Add small delay for better synchronization
+      const feedbackTimer = setTimeout(() => {
+        playTextSound();
+        createTypingFeedback();
+      }, 200);
+
+      const timer = setTimeout(() => {
+        if (currentStep < steps.length - 1) {
+          setCurrentStep(prev => prev + 1);
+        } else {
+          // Start exit animation
+          setIsExiting(true);
+          setTimeout(() => {
+            onComplete?.();
+          }, 1500);
+        }
+      }, steps[currentStep].duration);
+
+      return () => {
+        clearTimeout(feedbackTimer);
+        clearTimeout(timer);
+      };
     }
-
-    const timer = setTimeout(() => {
-      if (currentStep < steps.length - 1) {
-        setCurrentStep(prev => prev + 1);
-      } else {
-        // Start exit animation
-        setIsExiting(true);
-        setTimeout(() => {
-          onComplete?.();
-        }, 1500);
-      }
-    }, steps[currentStep].duration);
-
-    return () => clearTimeout(timer);
-  }, [currentStep, onComplete]);
+  }, [currentStep, onComplete, isAudioLoaded]);
 
   const currentStepData = steps[currentStep];
 

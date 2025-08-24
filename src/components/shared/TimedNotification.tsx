@@ -32,38 +32,77 @@ export const TimedNotification: React.FC<TimedNotificationProps> = ({
   const { t } = useLanguage();
   const notificationAudioRef = useRef<HTMLAudioElement | null>(null);
   const [isNotificationAudioLoaded, setIsNotificationAudioLoaded] = useState(false);
+  const [notificationAudioAvailable, setNotificationAudioAvailable] = useState(false);
+  const [hasPlayedSound, setHasPlayedSound] = useState(false);
 
-  // Initialize notification audio
+  // Initialize sophisticated notification audio system
   useEffect(() => {
-    notificationAudioRef.current = new Audio('/assets/notifikasi.mp3');
-    notificationAudioRef.current.preload = 'auto';
-    notificationAudioRef.current.volume = 0.7;
-    
-    const handleCanPlay = () => setIsNotificationAudioLoaded(true);
-    notificationAudioRef.current.addEventListener('canplaythrough', handleCanPlay);
-    
+    const initializeNotificationAudio = async () => {
+      try {
+        notificationAudioRef.current = new Audio('/assets/notifikasi.mp3');
+        notificationAudioRef.current.preload = 'auto';
+        notificationAudioRef.current.volume = 0.6;
+        
+        const handleCanPlay = () => {
+          setIsNotificationAudioLoaded(true);
+          setNotificationAudioAvailable(true);
+        };
+        
+        const handleError = () => {
+          console.info('Notification audio not available - using silent mode');
+          setNotificationAudioAvailable(false);
+          setIsNotificationAudioLoaded(true);
+        };
+        
+        notificationAudioRef.current.addEventListener('canplaythrough', handleCanPlay, { once: true });
+        notificationAudioRef.current.addEventListener('error', handleError, { once: true });
+        
+      } catch (error) {
+        console.info('Notification audio system not available');
+        setNotificationAudioAvailable(false);
+        setIsNotificationAudioLoaded(true);
+      }
+    };
+
+    initializeNotificationAudio();
+
     return () => {
       if (notificationAudioRef.current) {
-        notificationAudioRef.current.removeEventListener('canplaythrough', handleCanPlay);
         notificationAudioRef.current.pause();
         notificationAudioRef.current = null;
       }
     };
   }, []);
 
-  // Play notification sound on mount
+  // Enhanced notification sound with haptic feedback simulation
   useEffect(() => {
-    const playNotificationSound = () => {
-      if (notificationAudioRef.current && isNotificationAudioLoaded) {
-        notificationAudioRef.current.currentTime = 0;
-        notificationAudioRef.current.play().catch(console.error);
-      }
-    };
+    if (!hasPlayedSound && isNotificationAudioLoaded) {
+      const playNotificationFeedback = () => {
+        // Audio feedback
+        if (notificationAudioRef.current && notificationAudioAvailable) {
+          notificationAudioRef.current.currentTime = 0;
+          notificationAudioRef.current.play().catch(() => {
+            console.info('Notification audio play prevented by browser policy');
+          });
+        }
+        
+        // Visual feedback when audio is not available
+        if (!notificationAudioAvailable) {
+          // Create subtle screen flash effect
+          document.body.style.filter = 'brightness(1.1)';
+          setTimeout(() => {
+            document.body.style.filter = 'brightness(1)';
+          }, 100);
+        }
 
-    // Delay sound to sync with animation
-    const soundTimer = setTimeout(playNotificationSound, 200);
-    return () => clearTimeout(soundTimer);
-  }, [isNotificationAudioLoaded]);
+        setHasPlayedSound(true);
+      };
+
+      // Perfect timing sync with animation entrance
+      const soundTimer = setTimeout(playNotificationFeedback, 300);
+      return () => clearTimeout(soundTimer);
+    }
+  }, [isNotificationAudioLoaded, hasPlayedSound, notificationAudioAvailable]);
   const handleActionClick = () => {
     if (message.actionType === 'contact') {
       document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });

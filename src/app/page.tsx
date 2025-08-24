@@ -19,7 +19,8 @@ import { Certificates } from '../components/sections/Certificates';
 import { Contact } from '../components/sections/Contact';
 import { Footer } from '../components/sections/Footer';
 import LoadingScreen from '../components/shared/LoadingScreen';
-import FloatingAudioControl from '../components/shared/FloatingAudioControl';
+import AudioPlayer from '../components/shared/AudioPlayer';
+import InnovativeMobileNav from '../components/shared/InnovativeMobileNav';
 
 // EQbot notification messages
 const getEQbotMessages = (): NotificationMessage[] => [
@@ -201,8 +202,11 @@ export default function Home() {
         </>
       )}
       
-      {/* Background Music Control */}
-      {!loading && <FloatingAudioControl autoPlayAfterNotification={true} />}
+      {/* Immersive Audio Experience */}
+      {!loading && <AudioPlayer autoPlay={true} startDelay={3000} />}
+      
+      {/* Innovative Mobile Navigation */}
+      <InnovativeMobileNav />
       
       <AnimatePresence>
         {showNotification && currentNotification && (
