@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { X } from 'lucide-react';
 import Lottie from 'lottie-react';
 import { useLanguage } from '../../context/LanguageContext';
-import assistantAnimation from '/public/assets/assistant.json';
+import assistantAnimation from '../../../public/assets/assistant.json';
 
 export interface NotificationMessage {
   id: string;
