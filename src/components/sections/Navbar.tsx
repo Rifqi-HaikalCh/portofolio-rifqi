@@ -7,9 +7,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '../../context/LanguageContext';
 import { navLinks } from '../../data/portfolio';
 import { Menu, X, Sun, Moon } from 'lucide-react';
+import { premiumEasing, navTransition } from '../../lib/optimized-animations';
 
 const Navbar: React.FC = () => {
   const [scrolled, setScrolled] = useState(false);
+  const [scrollDirection, setScrollDirection] = useState('up');
+  const [lastScrollY, setLastScrollY] = useState(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showFloatingButton, setShowFloatingButton] = useState(false);
   const { theme } = useTheme();
@@ -21,7 +24,12 @@ const Navbar: React.FC = () => {
     setMounted(true);
     const handleScroll = () => {
       const scrollY = window.scrollY;
-      setScrolled(scrollY > 20);
+      const direction = scrollY > lastScrollY ? 'down' : 'up';
+      
+      setScrolled(scrollY > 50);
+      setScrollDirection(direction);
+      setLastScrollY(scrollY);
+      
       // Show floating button on mobile when scrolled significantly
       setShowFloatingButton(scrollY > 300 && window.innerWidth < 1024);
     };
@@ -56,9 +64,21 @@ const Navbar: React.FC = () => {
   return (
     <motion.nav 
       initial={{ y: -100, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.5, delay: 0.2 }}
-      className={`fixed top-0 left-0 w-full z-[9997] transition-all duration-300 ${scrolled ? 'py-3 bg-white/95 dark:bg-gray-900/95 backdrop-blur-lg shadow-lg' : 'py-5 bg-transparent'}`}
+      animate={{ 
+        y: scrollDirection === 'down' && scrolled && lastScrollY > 100 ? -100 : 0, 
+        opacity: scrollDirection === 'down' && scrolled && lastScrollY > 100 ? 0 : 1 
+      }}
+      transition={navTransition}
+      className={`fixed top-0 left-0 w-full z-[9997] transition-all duration-500 ${
+        scrolled 
+          ? 'py-3 bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl shadow-2xl border-b border-gray-200/50 dark:border-gray-700/50' 
+          : 'py-6 bg-transparent'
+      }`}
+      style={{
+        willChange: 'transform, opacity',
+        backfaceVisibility: 'hidden',
+        transform: 'translateZ(0)'
+      }}
     >
       <div className="container mx-auto px-4 flex justify-between items-center">
         <Link href="#home" className="text-xl font-bold text-gray-900 dark:text-white hover:text-primary-green transition-colors">

@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import { premiumHover, subtleHover, premiumEasing } from '../../lib/optimized-animations';
 
 interface AnimatedCardProps {
   children: React.ReactNode;
@@ -38,18 +39,15 @@ export const AnimatedCard: React.FC<AnimatedCardProps> = ({
         damping: 15
       }}
       viewport={{ once: true, amount: 0.2 }}
-      whileHover={{ 
-        scale: hoverScale, 
-        y: hoverY,
-        transition: { type: "spring", stiffness: 400, damping: 25 }
-      }}
+      whileHover={hoverScale > 1.02 ? premiumHover : subtleHover}
       whileTap={{ scale: 0.96 }}
       onClick={onClick}
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
       style={{
         willChange: 'transform, opacity',
-        transform: 'translate3d(0, 0, 0)' // GPU acceleration
+        transform: 'translate3d(0, 0, 0)',
+        backfaceVisibility: 'hidden'
       }}
     >
       {/* Hover gradient overlay */}

@@ -2,7 +2,9 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { TypeAnimation } from 'react-type-animation';
+import { SkipForward } from 'lucide-react';
 import Lottie from 'lottie-react';
+import { premiumEasing } from '../../lib/optimized-animations';
 import assistantAnimation from '../../../public/assets/assistant2.json';
 import multitaskingAnimation from '../../../public/assets/Multitasking.json';
 
@@ -13,7 +15,9 @@ interface LoadingScreenProps {
 const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [isExiting, setIsExiting] = useState(false);
+  const [isSkipping, setIsSkipping] = useState(false);
   const [canProceed, setCanProceed] = useState(true);
+  const [showSkipButton, setShowSkipButton] = useState(false);
   const assistantRef = useRef(null);
   const multitaskingRef = useRef(null);
 
@@ -35,6 +39,23 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
       }
     }
   };
+
+  // Skip button handler
+  const handleSkip = () => {
+    setIsSkipping(true);
+    setIsExiting(true);
+    setTimeout(() => {
+      onComplete?.();
+    }, 800);
+  };
+
+  // Show skip button after 2 seconds
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowSkipButton(true);
+    }, 2000);
+    return () => clearTimeout(timer);
+  }, []);
 
   const steps = [
     {
@@ -105,12 +126,43 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
   const currentStepData = steps[currentStep];
 
   return (
-    <motion.div
-      className="fixed inset-0 flex items-center justify-center bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 z-[99999] overflow-hidden"
-      initial={{ opacity: 1 }}
-      animate={{ 
-        y: isExiting ? "-100%" : 0,
-        opacity: isExiting ? 0 : 1 
+    <>
+      {/* Curtain Opening Animation */}
+      <AnimatePresence>
+        {isSkipping && (
+          <>
+            {/* Top Curtain */}
+            <motion.div
+              className="fixed top-0 left-0 w-full h-1/2 bg-gradient-to-b from-gray-900 via-gray-800 to-gray-700 z-[99999]"
+              initial={{ y: 0 }}
+              animate={{ y: '-100%' }}
+              transition={{
+                duration: 0.8,
+                ease: premiumEasing.expo
+              }}
+            />
+            {/* Bottom Curtain */}
+            <motion.div
+              className="fixed bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-gray-900 via-gray-800 to-gray-700 z-[99999]"
+              initial={{ y: 0 }}
+              animate={{ y: '100%' }}
+              transition={{
+                duration: 0.8,
+                ease: premiumEasing.expo
+              }}
+            />
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* Main Loading Screen */}
+      <motion.div
+        className="fixed inset-0 flex items-center justify-center bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 z-[99998] overflow-hidden"
+        initial={{ opacity: 1 }}
+        animate={{ 
+          y: isExiting && !isSkipping ? "-100%" : 0,
+          opacity: isExiting && !isSkipping ? 0 : 1,
+          scale: isSkipping ? 1.1 : 1 
       }}
       transition={{ 
         duration: 1.5, 
@@ -146,21 +198,53 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
         />
       </div>
 
-      <div className="relative z-10 flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-16 max-w-4xl mx-auto px-6">
-        {/* Animation Container */}
-        <motion.div 
-          className="flex-shrink-0 w-64 h-64 lg:w-80 lg:h-80 flex items-center justify-center"
-          initial={{ scale: 0, rotate: -180 }}
-          animate={{ 
-            scale: isExiting ? 0 : 1, 
-            rotate: isExiting ? 180 : 0 
+        {/* Skip Button */}
+        <AnimatePresence>
+          {showSkipButton && !isExiting && (
+            <motion.button
+              onClick={handleSkip}
+              className="absolute top-8 right-8 z-10 px-6 py-3 bg-emerald-500 hover:bg-emerald-600 text-white rounded-2xl font-semibold shadow-2xl flex items-center gap-2 backdrop-blur-sm border border-emerald-400/30 group"
+              initial={{ opacity: 0, scale: 0.8, x: 100 }}
+              animate={{ opacity: 1, scale: 1, x: 0 }}
+              exit={{ opacity: 0, scale: 0.8, x: 100 }}
+              whileHover={{ 
+                scale: 1.05,
+                boxShadow: "0 20px 40px rgba(16, 185, 129, 0.4)"
+              }}
+              whileTap={{ scale: 0.95 }}
+              transition={{
+                type: "spring",
+                stiffness: 300,
+                damping: 20
+              }}
+            >
+              <span>Skip</span>
+              <motion.div
+                animate={{ x: [0, 5, 0] }}
+                transition={{ duration: 1.5, repeat: Infinity }}
+              >
+                <SkipForward size={18} />
+              </motion.div>
+            </motion.button>
+          )}
+        </AnimatePresence>
+
+        <div className="relative z-10 flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-16 max-w-4xl mx-auto px-6">
+          {/* Animation Container */}
+          <motion.div 
+            className="flex-shrink-0 w-64 h-64 lg:w-80 lg:h-80 flex items-center justify-center"
+            initial={{ scale: 0, rotate: -180 }}
+            animate={{ 
+              scale: isExiting ? 0 : 1, 
+              rotate: isExiting ? 180 : 0,
+              filter: isSkipping ? 'blur(10px)' : 'blur(0px)' 
           }}
-          transition={{ 
-            duration: 0.8, 
-            ease: "backOut",
-            delay: isExiting ? 0 : 0.5 
-          }}
-        >
+            transition={{ 
+              duration: isSkipping ? 0.3 : 0.8, 
+              ease: "backOut",
+              delay: isExiting && !isSkipping ? 0 : 0.5 
+            }}
+          >
           <AnimatePresence mode="wait">
             {currentStepData.animation === "assistant" && (
               <motion.div
@@ -283,12 +367,13 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
               />
             ))}
           </div>
-        </motion.div>
-      </div>
-      
-      {/* Premium Gradient Overlay for Depth */}
-      <div className="absolute inset-0 bg-gradient-to-t from-transparent via-transparent to-white/10 dark:to-black/10 pointer-events-none" />
-    </motion.div>
+          </motion.div>
+        </div>
+        
+        {/* Premium Gradient Overlay for Depth */}
+        <div className="absolute inset-0 bg-gradient-to-t from-transparent via-transparent to-white/10 dark:to-black/10 pointer-events-none" />
+      </motion.div>
+    </>
   );
 };
 
