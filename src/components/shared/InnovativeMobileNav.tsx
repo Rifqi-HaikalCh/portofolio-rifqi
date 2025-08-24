@@ -32,7 +32,7 @@ export const InnovativeMobileNav: React.FC = () => {
     
     const handleScroll = () => {
       const scrollY = window.scrollY;
-      const shouldShow = window.innerWidth < 1024 && scrollY > 100;
+      const shouldShow = window.innerWidth < 1024 && scrollY > 50; // Show earlier for better UX
       setIsVisible(shouldShow);
     };
 
@@ -161,7 +161,7 @@ export const InnovativeMobileNav: React.FC = () => {
             animate="visible"
             exit="exit"
             onClick={() => setIsOpen(true)}
-            className="fixed top-6 right-6 z-[99990] w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500 via-blue-500 to-purple-600 shadow-2xl hover:shadow-glow border-2 border-white/30 backdrop-blur-sm group overflow-hidden"
+            className="fixed top-6 right-6 z-[50] w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500 via-blue-500 to-purple-600 shadow-2xl hover:shadow-glow border-2 border-white/30 backdrop-blur-sm group overflow-hidden"
             whileHover={{ 
               scale: 1.1,
               rotate: [0, -3, 3, 0],
@@ -263,7 +263,7 @@ export const InnovativeMobileNav: React.FC = () => {
           <>
             {/* Backdrop with advanced blur */}
             <motion.div
-              className="fixed inset-0 z-[99991] bg-black/60 backdrop-blur-md"
+              className="fixed inset-0 z-[51] bg-black/60 backdrop-blur-md"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -277,7 +277,7 @@ export const InnovativeMobileNav: React.FC = () => {
               initial="closed"
               animate="open"
               exit="exit"
-              className="fixed top-0 right-0 bottom-0 w-80 bg-gradient-to-br from-white/95 via-white/90 to-gray-50/95 dark:from-gray-900/95 dark:via-gray-800/90 dark:to-gray-900/95 backdrop-blur-xl shadow-2xl z-[99992] overflow-hidden"
+              className="fixed top-0 right-0 bottom-0 w-80 bg-gradient-to-br from-white/95 via-white/90 to-gray-50/95 dark:from-gray-900/95 dark:via-gray-800/90 dark:to-gray-900/95 backdrop-blur-xl shadow-2xl z-[52] overflow-hidden"
             >
               {/* Animated background elements */}
               <div className="absolute inset-0 overflow-hidden">
@@ -370,7 +370,7 @@ export const InnovativeMobileNav: React.FC = () => {
                         <Link
                           href={link.href}
                           onClick={(e) => handleNavClick(e, link.href)}
-                          className="group flex items-center gap-4 p-4 rounded-2xl bg-white/30 dark:bg-gray-800/30 backdrop-blur-sm border border-white/20 dark:border-gray-700/20 hover:bg-gradient-to-r hover:from-emerald-500 hover:to-blue-500 hover:text-white hover:border-white/40 transition-all duration-500 shadow-lg hover:shadow-xl"
+                          className="group relative flex items-center gap-4 p-4 rounded-2xl bg-white/30 dark:bg-gray-800/30 backdrop-blur-sm border border-white/20 dark:border-gray-700/20 hover:bg-gradient-to-r hover:from-emerald-500 hover:to-blue-500 hover:text-white hover:border-white/40 transition-all duration-500 shadow-lg hover:shadow-xl overflow-hidden"
                         >
                           <motion.div
                             className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500/20 to-blue-500/20 flex items-center justify-center group-hover:from-white/20 group-hover:to-white/20 transition-all duration-300"
@@ -400,8 +400,13 @@ export const InnovativeMobileNav: React.FC = () => {
                             </svg>
                           </motion.div>
 
-                          {/* Shimmer effect */}
-                          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 rounded-2xl" />
+                          {/* Enhanced shimmer effect */}
+                          <motion.div 
+                            className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out rounded-2xl"
+                            initial={{ x: '-100%' }}
+                            whileHover={{ x: '100%' }}
+                            transition={{ duration: 0.8, ease: "easeOut" }}
+                          />
                         </Link>
                       </motion.div>
                     );

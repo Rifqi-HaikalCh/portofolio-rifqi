@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from 'react';
+import { useAudio } from '../../hooks/useAudio';
 import { motion } from 'framer-motion';
 import { X } from 'lucide-react';
 import Lottie from 'lottie-react';
@@ -30,79 +31,58 @@ export const TimedNotification: React.FC<TimedNotificationProps> = ({
   onAction 
 }) => {
   const { t } = useLanguage();
-  const notificationAudioRef = useRef<HTMLAudioElement | null>(null);
-  const [isNotificationAudioLoaded, setIsNotificationAudioLoaded] = useState(false);
-  const [notificationAudioAvailable, setNotificationAudioAvailable] = useState(false);
   const [hasPlayedSound, setHasPlayedSound] = useState(false);
+  
+  // Use custom audio hook for notification sound
+  const {
+    play: playNotificationSound,
+    isLoaded: isNotificationAudioLoaded,
+    error: notificationAudioError
+  } = useAudio('/assets/notifikasi.mp3', {
+    volume: 0.6,
+    preload: true,
+    onError: () => {
+      console.info('Notification audio not available - using silent mode');
+    }
+  });
+  
+  const notificationAudioAvailable = isNotificationAudioLoaded && !notificationAudioError;
 
-  // Initialize sophisticated notification audio system
-  useEffect(() => {
-    const initializeNotificationAudio = async () => {
-      try {
-        notificationAudioRef.current = new Audio('/assets/notifikasi.mp3');
-        notificationAudioRef.current.preload = 'auto';
-        notificationAudioRef.current.volume = 0.6;
-        
-        const handleCanPlay = () => {
-          setIsNotificationAudioLoaded(true);
-          setNotificationAudioAvailable(true);
-        };
-        
-        const handleError = () => {
-          console.info('Notification audio not available - using silent mode');
-          setNotificationAudioAvailable(false);
-          setIsNotificationAudioLoaded(true);
-        };
-        
-        notificationAudioRef.current.addEventListener('canplaythrough', handleCanPlay, { once: true });
-        notificationAudioRef.current.addEventListener('error', handleError, { once: true });
-        
-      } catch (error) {
-        console.info('Notification audio system not available');
-        setNotificationAudioAvailable(false);
-        setIsNotificationAudioLoaded(true);
-      }
-    };
-
-    initializeNotificationAudio();
-
-    return () => {
-      if (notificationAudioRef.current) {
-        notificationAudioRef.current.pause();
-        notificationAudioRef.current = null;
-      }
-    };
-  }, []);
 
   // Enhanced notification sound with haptic feedback simulation
   useEffect(() => {
     if (!hasPlayedSound && isNotificationAudioLoaded) {
-      const playNotificationFeedback = () => {
+      const playNotificationFeedback = async () => {
         // Audio feedback
-        if (notificationAudioRef.current && notificationAudioAvailable) {
-          notificationAudioRef.current.currentTime = 0;
-          notificationAudioRef.current.play().catch(() => {
+        if (notificationAudioAvailable) {
+          try {
+            await playNotificationSound();
+          } catch (error) {
             console.info('Notification audio play prevented by browser policy');
-          });
-        }
-        
-        // Visual feedback when audio is not available
-        if (!notificationAudioAvailable) {
-          // Create subtle screen flash effect
-          document.body.style.filter = 'brightness(1.1)';
-          setTimeout(() => {
-            document.body.style.filter = 'brightness(1)';
-          }, 100);
+            // Fallback to visual feedback
+            createVisualFeedback();
+          }
+        } else {
+          // Visual feedback when audio is not available
+          createVisualFeedback();
         }
 
         setHasPlayedSound(true);
+      };
+      
+      const createVisualFeedback = () => {
+        // Create subtle screen flash effect
+        document.body.style.filter = 'brightness(1.1)';
+        setTimeout(() => {
+          document.body.style.filter = 'brightness(1)';
+        }, 100);
       };
 
       // Perfect timing sync with animation entrance
       const soundTimer = setTimeout(playNotificationFeedback, 300);
       return () => clearTimeout(soundTimer);
     }
-  }, [isNotificationAudioLoaded, hasPlayedSound, notificationAudioAvailable]);
+  }, [isNotificationAudioLoaded, hasPlayedSound, notificationAudioAvailable, playNotificationSound]);
   const handleActionClick = () => {
     if (message.actionType === 'contact') {
       document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });

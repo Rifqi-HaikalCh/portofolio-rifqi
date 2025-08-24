@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect, useRef } from 'react';
+import { useAudio } from '../../hooks/useAudio';
 import { motion, AnimatePresence } from 'framer-motion';
 import { TypeAnimation } from 'react-type-animation';
 import Lottie from 'lottie-react';
@@ -15,57 +16,34 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
   const [isExiting, setIsExiting] = useState(false);
   const assistantRef = useRef(null);
   const multitaskingRef = useRef(null);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  const [isAudioLoaded, setIsAudioLoaded] = useState(false);
-  const [audioAvailable, setAudioAvailable] = useState(false);
+  
+  // Use custom audio hook for text sound effects
+  const {
+    play: playTextSound,
+    isLoaded: isAudioLoaded,
+    error: audioError
+  } = useAudio('/assets/text.wav', {
+    volume: 0.4,
+    preload: true,
+    onError: () => {
+      console.info('Text audio not available - using silent mode');
+    }
+  });
+  
+  const audioAvailable = isAudioLoaded && !audioError;
 
-  // Initialize immersive audio system
-  useEffect(() => {
-    const initializeAudio = async () => {
-      try {
-        audioRef.current = new Audio('/assets/text.wav');
-        audioRef.current.preload = 'auto';
-        audioRef.current.volume = 0.4; // Lower volume for better UX
-        
-        const handleCanPlay = () => {
-          setIsAudioLoaded(true);
-          setAudioAvailable(true);
-        };
-        
-        const handleError = () => {
-          console.info('Text audio not available - using silent mode');
-          setAudioAvailable(false);
-          setIsAudioLoaded(true); // Still allow progression
-        };
-        
-        audioRef.current.addEventListener('canplaythrough', handleCanPlay, { once: true });
-        audioRef.current.addEventListener('error', handleError, { once: true });
-        
-      } catch (error) {
-        console.info('Audio system not available');
-        setAudioAvailable(false);
-        setIsAudioLoaded(true);
-      }
-    };
-
-    initializeAudio();
-
-    return () => {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current = null;
-      }
-    };
-  }, []);
 
   // Enhanced audio feedback with visual synchronization
-  const playTextSound = () => {
-    if (audioRef.current && isAudioLoaded && audioAvailable) {
-      audioRef.current.currentTime = 0;
-      audioRef.current.play().catch(() => {
-        // Gracefully handle play failures (autoplay policies)
+  const playTextSoundWithFallback = async () => {
+    if (audioAvailable) {
+      try {
+        await playTextSound();
+      } catch (error) {
         console.info('Audio play prevented by browser policy');
-      });
+        createTypingFeedback(); // Fallback to visual feedback
+      }
+    } else {
+      createTypingFeedback(); // Visual feedback when audio unavailable
     }
   };
 
@@ -128,8 +106,7 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
     if (currentStep < steps.length && isAudioLoaded) {
       // Add small delay for better synchronization
       const feedbackTimer = setTimeout(() => {
-        playTextSound();
-        createTypingFeedback();
+        playTextSoundWithFallback();
       }, 200);
 
       const timer = setTimeout(() => {

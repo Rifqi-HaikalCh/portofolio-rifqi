@@ -27,24 +27,30 @@ export const AnimatedCard: React.FC<AnimatedCardProps> = ({
   return (
     <motion.div
       className={`relative overflow-hidden cursor-pointer transition-all duration-500 ${glowEffect ? 'hover:shadow-glow' : 'hover:shadow-xl'} ${className}`}
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0, y: 40, scale: 0.95 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ 
-        duration: 0.6, 
+        duration: 0.7, 
         delay,
+        ease: [0.25, 0.46, 0.45, 0.94],
         type: "spring",
-        stiffness: 100
+        stiffness: 120,
+        damping: 15
       }}
-      viewport={{ once: true }}
+      viewport={{ once: true, amount: 0.2 }}
       whileHover={{ 
         scale: hoverScale, 
         y: hoverY,
-        transition: { type: "spring", stiffness: 300, damping: 20 }
+        transition: { type: "spring", stiffness: 400, damping: 25 }
       }}
-      whileTap={{ scale: 0.97 }}
+      whileTap={{ scale: 0.96 }}
       onClick={onClick}
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
+      style={{
+        willChange: 'transform, opacity',
+        transform: 'translate3d(0, 0, 0)' // GPU acceleration
+      }}
     >
       {/* Hover gradient overlay */}
       <motion.div

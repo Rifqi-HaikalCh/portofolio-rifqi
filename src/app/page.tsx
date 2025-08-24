@@ -203,7 +203,7 @@ export default function Home() {
       )}
       
       {/* Immersive Audio Experience */}
-      {!loading && <AudioPlayer autoPlay={true} startDelay={3000} />}
+      {!loading && <AudioPlayer autoPlay={true} startDelay={3000} notificationVisible={showNotification} />}
       
       {/* Innovative Mobile Navigation */}
       <InnovativeMobileNav />

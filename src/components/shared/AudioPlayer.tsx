@@ -3,6 +3,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Play, Pause, SkipForward, SkipBack, Volume2, VolumeX, Shuffle, Repeat, Music } from 'lucide-react';
+import { useAudio } from '../../hooks/useAudio';
 
 interface Track {
   id: string;
@@ -14,11 +15,13 @@ interface Track {
 interface AudioPlayerProps {
   autoPlay?: boolean;
   startDelay?: number;
+  notificationVisible?: boolean;
 }
 
 export const AudioPlayer: React.FC<AudioPlayerProps> = ({ 
   autoPlay = true, 
-  startDelay = 2000 
+  startDelay = 2000,
+  notificationVisible = false 
 }) => {
   // Playlist configuration
   const playlist: Track[] = [
@@ -55,151 +58,75 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
   ];
 
   // Player state
-  const [isPlaying, setIsPlaying] = useState(false);
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [volume, setVolume] = useState(0.3);
-  const [isMuted, setIsMuted] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [shuffle, setShuffle] = useState(false);
   const [repeat, setRepeat] = useState(false);
-  const [currentTime, setCurrentTime] = useState(0);
-  const [duration, setDuration] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
-  const [loadingTrack, setLoadingTrack] = useState(false);
-
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  const progressInterval = useRef<NodeJS.Timeout>();
+  const [positionShifted, setPositionShifted] = useState(false);
 
   const currentTrack = playlist[currentTrackIndex];
-
-  // Initialize audio and handle loading
-  const loadTrack = useCallback(async (track: Track) => {
-    if (!audioRef.current) return;
-    
-    setLoadingTrack(true);
-    setIsLoaded(false);
-    
-    try {
-      audioRef.current.src = track.src;
-      audioRef.current.volume = isMuted ? 0 : volume;
-      audioRef.current.load();
-      
-      const handleLoadedData = () => {
-        setIsLoaded(true);
-        setLoadingTrack(false);
-        setDuration(audioRef.current?.duration || 0);
-      };
-      
-      const handleError = () => {
-        console.warn(`Failed to load track: ${track.title}`);
-        setLoadingTrack(false);
-        setIsLoaded(false);
-      };
-      
-      audioRef.current.addEventListener('loadeddata', handleLoadedData, { once: true });
-      audioRef.current.addEventListener('error', handleError, { once: true });
-      
-    } catch (error) {
-      console.error('Error loading track:', error);
-      setLoadingTrack(false);
-      setIsLoaded(false);
-    }
-  }, [volume, isMuted]);
-
-  // Initialize player
-  useEffect(() => {
-    audioRef.current = new Audio();
-    audioRef.current.preload = 'auto';
-    
-    const handleEnded = () => {
+  
+  // Use our custom useAudio hook
+  const {
+    play,
+    pause,
+    stop,
+    setVolume,
+    setMuted,
+    isLoaded,
+    isPlaying,
+    isMuted,
+    volume,
+    duration,
+    currentTime,
+    error
+  } = useAudio(currentTrack.src, {
+    volume: 0.3,
+    loop: false,
+    preload: true,
+    onEnded: () => {
       if (repeat) {
-        audioRef.current!.currentTime = 0;
-        audioRef.current!.play();
+        play();
       } else {
         handleNext();
       }
-    };
+    },
+    onError: () => {
+      console.warn(`Failed to load track: ${currentTrack.title}`);
+    }
+  });
 
-    audioRef.current.addEventListener('ended', handleEnded);
+  // Handle notification visibility for smart positioning
+  useEffect(() => {
+    setPositionShifted(notificationVisible);
+  }, [notificationVisible]);
 
-    // Show player with delay
+  // Initialize player visibility
+  useEffect(() => {
     const showTimer = setTimeout(() => {
       setIsVisible(true);
-      loadTrack(currentTrack);
     }, startDelay);
 
     return () => {
       clearTimeout(showTimer);
-      if (progressInterval.current) {
-        clearInterval(progressInterval.current);
-      }
-      if (audioRef.current) {
-        audioRef.current.removeEventListener('ended', handleEnded);
-        audioRef.current.pause();
-        audioRef.current = null;
-      }
     };
-  }, []);
+  }, [startDelay]);
 
   // Auto-play after loading
   useEffect(() => {
     if (autoPlay && isLoaded && isVisible) {
       const autoPlayTimer = setTimeout(() => {
-        handlePlay();
+        play();
       }, 1000);
       return () => clearTimeout(autoPlayTimer);
     }
-  }, [autoPlay, isLoaded, isVisible]);
+  }, [autoPlay, isLoaded, isVisible, play]);
 
-  // Load track when index changes
-  useEffect(() => {
-    if (currentTrack) {
-      loadTrack(currentTrack);
-    }
-  }, [currentTrackIndex, loadTrack]);
 
-  // Progress tracking
-  useEffect(() => {
-    if (isPlaying) {
-      progressInterval.current = setInterval(() => {
-        if (audioRef.current) {
-          setCurrentTime(audioRef.current.currentTime);
-        }
-      }, 1000);
-    } else {
-      if (progressInterval.current) {
-        clearInterval(progressInterval.current);
-      }
-    }
 
-    return () => {
-      if (progressInterval.current) {
-        clearInterval(progressInterval.current);
-      }
-    };
-  }, [isPlaying]);
 
-  // Audio control functions
-  const handlePlay = async () => {
-    if (!audioRef.current || !isLoaded) return;
-    
-    try {
-      await audioRef.current.play();
-      setIsPlaying(true);
-    } catch (error) {
-      console.error('Error playing audio:', error);
-    }
-  };
-
-  const handlePause = () => {
-    if (audioRef.current) {
-      audioRef.current.pause();
-      setIsPlaying(false);
-    }
-  };
-
-  const handleNext = () => {
+  const handleNext = useCallback(() => {
     if (shuffle) {
       let nextIndex;
       do {
@@ -209,38 +136,28 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
     } else {
       setCurrentTrackIndex((prev) => (prev + 1) % playlist.length);
     }
-    setCurrentTime(0);
-  };
+  }, [shuffle, currentTrackIndex, playlist.length]);
 
   const handlePrevious = () => {
     if (currentTime > 3) {
       // If more than 3 seconds played, restart current track
-      if (audioRef.current) {
-        audioRef.current.currentTime = 0;
-        setCurrentTime(0);
-      }
+      stop();
+      play();
     } else {
       // Go to previous track
       setCurrentTrackIndex((prev) => (prev - 1 + playlist.length) % playlist.length);
-      setCurrentTime(0);
     }
   };
 
   const handleVolumeChange = (newVolume: number) => {
     setVolume(newVolume);
-    if (audioRef.current) {
-      audioRef.current.volume = isMuted ? 0 : newVolume;
-    }
     if (newVolume > 0 && isMuted) {
-      setIsMuted(false);
+      setMuted(false);
     }
   };
 
   const toggleMute = () => {
-    setIsMuted(!isMuted);
-    if (audioRef.current) {
-      audioRef.current.volume = !isMuted ? 0 : volume;
-    }
+    setMuted(!isMuted);
   };
 
   const formatTime = (time: number) => {
@@ -253,9 +170,18 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
 
   return (
     <motion.div
-      className="fixed bottom-6 right-6 z-[99997]"
+      className={`fixed z-[40] transition-all duration-500 ease-out ${
+        positionShifted 
+          ? 'bottom-6 right-6 md:bottom-28 md:right-6' 
+          : 'bottom-6 right-6'
+      }`}
       initial={{ opacity: 0, scale: 0.5, y: 100 }}
-      animate={{ opacity: 1, scale: 1, y: 0 }}
+      animate={{ 
+        opacity: 1, 
+        scale: 1, 
+        y: 0,
+        x: positionShifted && window.innerWidth >= 768 ? -20 : 0
+      }}
       transition={{ 
         type: "spring", 
         stiffness: 300, 
@@ -366,13 +292,23 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
                     <Music size={32} className="text-white" />
                   </motion.div>
                   
-                  {loadingTrack && (
+                  {!isLoaded && (
                     <motion.div
                       className="absolute inset-0 rounded-2xl bg-black/20 flex items-center justify-center"
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                     >
                       <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    </motion.div>
+                  )}
+                  
+                  {error && (
+                    <motion.div
+                      className="absolute inset-0 rounded-2xl bg-red-500/20 flex items-center justify-center"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                    >
+                      <div className="text-red-400 text-xs">!</div>
                     </motion.div>
                   )}
                 </div>
@@ -424,14 +360,14 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
                 </motion.button>
 
                 <motion.button
-                  onClick={isPlaying ? handlePause : handlePlay}
+                  onClick={isPlaying ? pause : play}
                   className="w-14 h-14 rounded-full bg-gradient-to-r from-emerald-500 to-blue-500 flex items-center justify-center text-white shadow-lg hover:shadow-xl transition-shadow disabled:opacity-50"
-                  disabled={!isLoaded || loadingTrack}
+                  disabled={!isLoaded}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
                   <AnimatePresence mode="wait">
-                    {loadingTrack ? (
+                    {!isLoaded ? (
                       <motion.div
                         key="loading"
                         initial={{ scale: 0 }}
@@ -439,6 +375,16 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
                         exit={{ scale: 0 }}
                         className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"
                       />
+                    ) : error ? (
+                      <motion.div
+                        key="error"
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        exit={{ scale: 0 }}
+                        className="text-red-200 font-bold"
+                      >
+                        !
+                      </motion.div>
                     ) : isPlaying ? (
                       <motion.div
                         key="pause"
