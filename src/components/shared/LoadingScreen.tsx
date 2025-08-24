@@ -1,6 +1,5 @@
 "use client";
 import { useState, useEffect, useRef } from 'react';
-import { useAudio } from '../../hooks/useAudio';
 import { motion, AnimatePresence } from 'framer-motion';
 import { TypeAnimation } from 'react-type-animation';
 import Lottie from 'lottie-react';
@@ -14,66 +13,25 @@ interface LoadingScreenProps {
 const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [isExiting, setIsExiting] = useState(false);
-  const [canProceed, setCanProceed] = useState(false);
+  const [canProceed, setCanProceed] = useState(true);
   const assistantRef = useRef(null);
   const multitaskingRef = useRef(null);
-  
-  // Use custom audio hook for text sound effects
-  const {
-    play: playTextSound,
-    isLoaded: isAudioLoaded,
-    error: audioError
-  } = useAudio('/assets/text.wav', {
-    volume: 0.4,
-    preload: true,
-    onError: () => {
-      console.info('Text audio not available - using silent mode');
-    }
-  });
-  
-  const audioAvailable = isAudioLoaded && !audioError;
-
-  // Audio loading timeout to prevent infinite wait
-  useEffect(() => {
-    const audioTimeout = setTimeout(() => {
-      console.info('Audio loading timeout - proceeding without audio');
-      setCanProceed(true);
-    }, 3000); // 3 second timeout
-
-    if (isAudioLoaded || audioError) {
-      setCanProceed(true);
-      clearTimeout(audioTimeout);
-    }
-
-    return () => clearTimeout(audioTimeout);
-  }, [isAudioLoaded, audioError]);
 
 
-  // Enhanced audio feedback with visual synchronization
-  const playTextSoundWithFallback = async () => {
-    if (audioAvailable) {
-      try {
-        await playTextSound();
-      } catch (error) {
-        console.info('Audio play prevented by browser policy');
-        createTypingFeedback(); // Fallback to visual feedback
-      }
-    } else {
-      createTypingFeedback(); // Visual feedback when audio unavailable
-    }
-  };
-
-  // Create typing sound effect even without audio file
+  // Create visual feedback for typing effect
   const createTypingFeedback = () => {
-    if (!audioAvailable) {
-      // Visual feedback when audio is not available
-      const assistantElement = assistantRef.current;
-      if (assistantElement) {
-        // Subtle vibration effect
-        (assistantElement as any).style.transform = 'scale(1.02)';
+    const assistantElement = assistantRef.current;
+    if (assistantElement && assistantElement.style) {
+      // Subtle vibration effect
+      try {
+        assistantElement.style.transform = 'scale(1.02)';
         setTimeout(() => {
-          (assistantElement as any).style.transform = 'scale(1)';
+          if (assistantElement && assistantElement.style) {
+            assistantElement.style.transform = 'scale(1)';
+          }
         }, 100);
+      } catch (error) {
+        console.info('Visual feedback not available for this element');
       }
     }
   };
@@ -118,15 +76,11 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
   ];
 
   useEffect(() => {
-    // Enhanced audio-visual feedback when step changes - now uses canProceed instead of isAudioLoaded
+    // Enhanced visual feedback when step changes
     if (currentStep < steps.length && canProceed) {
       // Add small delay for better synchronization
       const feedbackTimer = setTimeout(() => {
-        if (audioAvailable) {
-          playTextSoundWithFallback();
-        } else {
-          createTypingFeedback(); // Visual feedback only
-        }
+        createTypingFeedback(); // Visual feedback only
       }, 200);
 
       const timer = setTimeout(() => {
@@ -146,7 +100,7 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
         clearTimeout(timer);
       };
     }
-  }, [currentStep, onComplete, canProceed, audioAvailable, playTextSoundWithFallback]);
+  }, [currentStep, onComplete, canProceed]);
 
   const currentStepData = steps[currentStep];
 
@@ -211,6 +165,7 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
             {currentStepData.animation === "assistant" && (
               <motion.div
                 key="assistant"
+                ref={assistantRef}
                 initial={{ scale: 0, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.8, opacity: 0, rotate: -10 }}
@@ -218,7 +173,6 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
                 className="w-full h-full"
               >
                 <Lottie
-                  lottieRef={assistantRef}
                   animationData={require('../../../public/assets/assistant2.json')}
                   loop={true}
                   className="w-full h-full"

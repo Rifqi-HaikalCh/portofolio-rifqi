@@ -62,13 +62,19 @@ export const AnimatedCard: React.FC<AnimatedCardProps> = ({
       {glowEffect && (
         <motion.div
           className="absolute inset-0 rounded-inherit"
+          initial={{ 
+            backgroundColor: 'rgba(0, 0, 0, 0)' 
+          }}
           animate={{
             background: isHovered 
               ? 'linear-gradient(45deg, rgba(16, 185, 129, 0.3), rgba(59, 130, 246, 0.3), rgba(168, 85, 247, 0.3))'
-              : 'transparent'
+              : 'rgba(0, 0, 0, 0)'
           }}
           transition={{ duration: 0.3 }}
-          style={{ padding: '1px' }}
+          style={{ 
+            padding: '1px',
+            backgroundColor: 'rgba(0, 0, 0, 0)'
+          }}
         >
           <div className="w-full h-full bg-white dark:bg-gray-800 rounded-inherit" />
         </motion.div>

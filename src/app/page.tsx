@@ -19,7 +19,6 @@ import { Certificates } from '../components/sections/Certificates';
 import { Contact } from '../components/sections/Contact';
 import { Footer } from '../components/sections/Footer';
 import LoadingScreen from '../components/shared/LoadingScreen';
-import AudioPlayer from '../components/shared/AudioPlayer';
 import InnovativeMobileNav from '../components/shared/InnovativeMobileNav';
 
 // EQbot notification messages
@@ -201,9 +200,6 @@ export default function Home() {
           <Footer />
         </>
       )}
-      
-      {/* Immersive Audio Experience */}
-      {!loading && <AudioPlayer autoPlay={true} startDelay={3000} notificationVisible={showNotification} />}
       
       {/* Innovative Mobile Navigation */}
       <InnovativeMobileNav />

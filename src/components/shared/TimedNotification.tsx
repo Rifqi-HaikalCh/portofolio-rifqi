@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from 'react';
-import { useAudio } from '../../hooks/useAudio';
 import { motion } from 'framer-motion';
 import { X } from 'lucide-react';
 import Lottie from 'lottie-react';
@@ -31,58 +30,20 @@ export const TimedNotification: React.FC<TimedNotificationProps> = ({
   onAction 
 }) => {
   const { t } = useLanguage();
-  const [hasPlayedSound, setHasPlayedSound] = useState(false);
-  
-  // Use custom audio hook for notification sound
-  const {
-    play: playNotificationSound,
-    isLoaded: isNotificationAudioLoaded,
-    error: notificationAudioError
-  } = useAudio('/assets/notifikasi.mp3', {
-    volume: 0.6,
-    preload: true,
-    onError: () => {
-      console.info('Notification audio not available - using silent mode');
-    }
-  });
-  
-  const notificationAudioAvailable = isNotificationAudioLoaded && !notificationAudioError;
-
-
-  // Enhanced notification sound with haptic feedback simulation
+  // Enhanced notification with visual feedback
   useEffect(() => {
-    if (!hasPlayedSound && isNotificationAudioLoaded) {
-      const playNotificationFeedback = async () => {
-        // Audio feedback
-        if (notificationAudioAvailable) {
-          try {
-            await playNotificationSound();
-          } catch (error) {
-            console.info('Notification audio play prevented by browser policy');
-            // Fallback to visual feedback
-            createVisualFeedback();
-          }
-        } else {
-          // Visual feedback when audio is not available
-          createVisualFeedback();
-        }
+    const playNotificationFeedback = () => {
+      // Visual feedback
+      document.body.style.filter = 'brightness(1.1)';
+      setTimeout(() => {
+        document.body.style.filter = 'brightness(1)';
+      }, 100);
+    };
 
-        setHasPlayedSound(true);
-      };
-      
-      const createVisualFeedback = () => {
-        // Create subtle screen flash effect
-        document.body.style.filter = 'brightness(1.1)';
-        setTimeout(() => {
-          document.body.style.filter = 'brightness(1)';
-        }, 100);
-      };
-
-      // Perfect timing sync with animation entrance
-      const soundTimer = setTimeout(playNotificationFeedback, 300);
-      return () => clearTimeout(soundTimer);
-    }
-  }, [isNotificationAudioLoaded, hasPlayedSound, notificationAudioAvailable, playNotificationSound]);
+    // Perfect timing sync with animation entrance
+    const feedbackTimer = setTimeout(playNotificationFeedback, 300);
+    return () => clearTimeout(feedbackTimer);
+  }, []);
   const handleActionClick = () => {
     if (message.actionType === 'contact') {
       document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
