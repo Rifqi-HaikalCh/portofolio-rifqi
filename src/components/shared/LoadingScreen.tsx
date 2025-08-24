@@ -15,6 +15,34 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
   const [isExiting, setIsExiting] = useState(false);
   const assistantRef = useRef(null);
   const multitaskingRef = useRef(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [isAudioLoaded, setIsAudioLoaded] = useState(false);
+
+  // Initialize audio
+  useEffect(() => {
+    audioRef.current = new Audio('/assets/text.wav');
+    audioRef.current.preload = 'auto';
+    audioRef.current.volume = 0.6;
+    
+    const handleCanPlay = () => setIsAudioLoaded(true);
+    audioRef.current.addEventListener('canplaythrough', handleCanPlay);
+    
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.removeEventListener('canplaythrough', handleCanPlay);
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+    };
+  }, []);
+
+  // Play audio effect when text starts typing
+  const playTextSound = () => {
+    if (audioRef.current && isAudioLoaded) {
+      audioRef.current.currentTime = 0;
+      audioRef.current.play().catch(console.error);
+    }
+  };
 
   const steps = [
     {
@@ -56,6 +84,11 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
   ];
 
   useEffect(() => {
+    // Play audio when step changes (text starts typing)
+    if (currentStep < steps.length) {
+      playTextSound();
+    }
+
     const timer = setTimeout(() => {
       if (currentStep < steps.length - 1) {
         setCurrentStep(prev => prev + 1);

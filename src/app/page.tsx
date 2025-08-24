@@ -19,6 +19,7 @@ import { Certificates } from '../components/sections/Certificates';
 import { Contact } from '../components/sections/Contact';
 import { Footer } from '../components/sections/Footer';
 import LoadingScreen from '../components/shared/LoadingScreen';
+import FloatingAudioControl from '../components/shared/FloatingAudioControl';
 
 // EQbot notification messages
 const getEQbotMessages = (): NotificationMessage[] => [
@@ -199,6 +200,9 @@ export default function Home() {
           <Footer />
         </>
       )}
+      
+      {/* Background Music Control */}
+      {!loading && <FloatingAudioControl autoPlayAfterNotification={true} />}
       
       <AnimatePresence>
         {showNotification && currentNotification && (

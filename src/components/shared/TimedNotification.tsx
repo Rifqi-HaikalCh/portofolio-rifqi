@@ -1,5 +1,6 @@
 "use client";
 
+import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { X } from 'lucide-react';
 import Lottie from 'lottie-react';
@@ -29,6 +30,40 @@ export const TimedNotification: React.FC<TimedNotificationProps> = ({
   onAction 
 }) => {
   const { t } = useLanguage();
+  const notificationAudioRef = useRef<HTMLAudioElement | null>(null);
+  const [isNotificationAudioLoaded, setIsNotificationAudioLoaded] = useState(false);
+
+  // Initialize notification audio
+  useEffect(() => {
+    notificationAudioRef.current = new Audio('/assets/notifikasi.mp3');
+    notificationAudioRef.current.preload = 'auto';
+    notificationAudioRef.current.volume = 0.7;
+    
+    const handleCanPlay = () => setIsNotificationAudioLoaded(true);
+    notificationAudioRef.current.addEventListener('canplaythrough', handleCanPlay);
+    
+    return () => {
+      if (notificationAudioRef.current) {
+        notificationAudioRef.current.removeEventListener('canplaythrough', handleCanPlay);
+        notificationAudioRef.current.pause();
+        notificationAudioRef.current = null;
+      }
+    };
+  }, []);
+
+  // Play notification sound on mount
+  useEffect(() => {
+    const playNotificationSound = () => {
+      if (notificationAudioRef.current && isNotificationAudioLoaded) {
+        notificationAudioRef.current.currentTime = 0;
+        notificationAudioRef.current.play().catch(console.error);
+      }
+    };
+
+    // Delay sound to sync with animation
+    const soundTimer = setTimeout(playNotificationSound, 200);
+    return () => clearTimeout(soundTimer);
+  }, [isNotificationAudioLoaded]);
   const handleActionClick = () => {
     if (message.actionType === 'contact') {
       document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });

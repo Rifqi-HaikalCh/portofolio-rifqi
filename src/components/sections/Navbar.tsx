@@ -11,6 +11,7 @@ import { Menu, X, Sun, Moon } from 'lucide-react';
 const Navbar: React.FC = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [showFloatingButton, setShowFloatingButton] = useState(false);
   const { theme } = useTheme();
   const { toggleTheme } = useThemeAnimation();
   const { language, toggleLanguage, t } = useLanguage();
@@ -18,9 +19,27 @@ const Navbar: React.FC = () => {
 
   useEffect(() => {
     setMounted(true);
-    const handleScroll = () => setScrolled(window.scrollY > 20);
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      setScrolled(scrollY > 20);
+      // Show floating button on mobile when scrolled significantly
+      setShowFloatingButton(scrollY > 300 && window.innerWidth < 1024);
+    };
+    
+    const handleResize = () => {
+      if (window.innerWidth >= 1024) {
+        setShowFloatingButton(false);
+        setMobileMenuOpen(false);
+      }
+    };
+    
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener('resize', handleResize);
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleResize);
+    };
   }, []);
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
@@ -259,6 +278,82 @@ const Navbar: React.FC = () => {
               </div>
             </motion.div>
           </>
+        )}
+      </AnimatePresence>
+      
+      {/* Floating Hamburger Button for Mobile */}
+      <AnimatePresence>
+        {showFloatingButton && (
+          <motion.button
+            onClick={() => setMobileMenuOpen(true)}
+            className="fixed top-6 right-6 z-[9996] lg:hidden w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-500 via-blue-500 to-purple-600 shadow-2xl hover:shadow-glow flex items-center justify-center text-white border-2 border-white/20 backdrop-blur-sm"
+            initial={{ scale: 0, opacity: 0, rotate: -180 }}
+            animate={{ 
+              scale: 1, 
+              opacity: 1, 
+              rotate: 0,
+              y: [0, -5, 0]
+            }}
+            exit={{ scale: 0, opacity: 0, rotate: 180 }}
+            transition={{
+              scale: { type: "spring", stiffness: 300, damping: 20 },
+              y: { duration: 2, repeat: Infinity, ease: "easeInOut" }
+            }}
+            whileHover={{ 
+              scale: 1.1, 
+              rotate: [0, -5, 5, 0],
+              boxShadow: "0 20px 40px rgba(16, 185, 129, 0.4)"
+            }}
+            whileTap={{ scale: 0.9 }}
+          >
+            {/* Rotating background */}
+            <motion.div
+              className="absolute inset-0 bg-gradient-to-r from-emerald-400/30 via-blue-400/30 to-purple-400/30 rounded-2xl"
+              animate={{ rotate: [0, 360] }}
+              transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+            />
+            
+            {/* Menu icon */}
+            <motion.div
+              animate={{ rotate: mobileMenuOpen ? 180 : 0 }}
+              transition={{ duration: 0.3 }}
+              className="relative z-10"
+            >
+              <Menu size={26} />
+            </motion.div>
+            
+            {/* Pulse indicator */}
+            <motion.div
+              className="absolute inset-0 rounded-2xl bg-white/20"
+              animate={{
+                scale: [1, 1.2, 1],
+                opacity: [0.3, 0, 0.3]
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                ease: "easeOut"
+              }}
+            />
+            
+            {/* Status dot */}
+            <motion.div 
+              className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full border-2 border-white shadow-lg"
+              animate={{
+                scale: [1, 1.3, 1],
+                boxShadow: [
+                  "0 0 5px rgba(34, 197, 94, 0.5)",
+                  "0 0 15px rgba(34, 197, 94, 0.8)",
+                  "0 0 5px rgba(34, 197, 94, 0.5)"
+                ]
+              }}
+              transition={{
+                duration: 1.5,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+            />
+          </motion.button>
         )}
       </AnimatePresence>
     </motion.nav>
