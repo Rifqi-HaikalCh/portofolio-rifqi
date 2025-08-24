@@ -1,0 +1,59 @@
+/* Z-Index Hierarchy untuk Portfolio */
+
+/* Level 1: Background elements */
+.z-background {
+  z-index: 1;
+}
+
+/* Level 2: Content sections */
+.z-content {
+  z-index: 10;
+}
+
+/* Level 3: Floating elements */
+.z-floating {
+  z-index: 100;
+}
+
+/* Level 4: Navigation */
+.z-navigation {
+  z-index: 1000;
+}
+
+/* Level 5: Modals and overlays */
+.z-modal {
+  z-index: 5000;
+}
+
+/* Level 6: Notifications */
+.z-notification {
+  z-index: 9999;
+}
+
+/* Level 7: Loading screen and critical overlays */
+.z-loading {
+  z-index: 99999;
+}
+
+/* Ensure no stacking context conflicts */
+section {
+  position: relative;
+  z-index: 10;
+}
+
+/* Navbar specific */
+nav {
+  position: fixed;
+  z-index: 1000 !important;
+}
+
+/* Hero section specific */
+#home {
+  z-index: 1;
+}
+
+/* Other sections */
+#about, #skills, #experience, #projects, #certificates, #contact {
+  z-index: 10;
+  isolation: isolate;
+}

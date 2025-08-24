@@ -20,15 +20,18 @@ const Hero: React.FC = () => {
   ];
 
   return (
-    <motion.section
+    <section
       id="home"
-      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900"
-      variants={staggerContainer}
-      initial="hidden"
-      animate="show"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 z-content"
+      style={{ isolation: 'isolate' }}
     >
+      <motion.div
+        className="relative z-content w-full"
+        variants={staggerContainer}
+        initial="hidden"
+        animate="show"
+      >
       <ParticlesBackground />
-      <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 via-transparent to-blue-500/10 dark:from-emerald-500/5 dark:via-transparent dark:to-blue-500/5"></div>
       <div className="container mx-auto px-4 text-center relative z-10">
         <motion.h1 variants={fadeInUp} className="text-4xl sm:text-6xl md:text-7xl font-extrabold mb-8 leading-tight text-gray-900 dark:text-white">
           {t("Hi, I'm ", "Halo, Saya ")}
@@ -84,8 +87,9 @@ const Hero: React.FC = () => {
             {t("View Projects", "Lihat Projek")}
           </motion.a>
         </motion.div>
-      </div>
-    </motion.section>
+        </div>
+      </motion.div>
+    </section>
   );
 };
 

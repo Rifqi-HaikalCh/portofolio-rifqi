@@ -62,13 +62,13 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
       id: 0,
       text: "Hello, welcome to this portfolio page.",
       animation: "assistant",
-      duration: 4000
+      duration: 3500
     },
     {
       id: 1,
       text: "I am EQbot, your guide on this page.",
       animation: "assistant",
-      duration: 4000
+      duration: 3500
     },
     {
       id: 2,
@@ -84,7 +84,7 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
     },
     {
       id: 4,
-      text: "Or need someone to design interface and user experience of your app?",
+      text: "Or need someone to design interface and user experience?",
       animation: "assistant",
       duration: 6000
     },

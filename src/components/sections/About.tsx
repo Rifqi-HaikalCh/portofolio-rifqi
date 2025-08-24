@@ -38,10 +38,21 @@ export const About: React.FC = () => {
   const { t, language } = useLanguage();
   const highlightedTextData = AboutText();
   const [activeCard, setActiveCard] = useState<number | null>(null);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const totalImages = 11;
+
+  // Auto-slide carousel every 10 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prev) => (prev + 1) % totalImages);
+    }, 10000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   const stats = [
     { 
-      number: "50+", 
+      number: "15+", 
       label: t("Projects Completed", "Proyek Diselesaikan"),
       description: t("From web apps to mobile solutions", "Dari aplikasi web hingga solusi mobile")
     },
@@ -51,7 +62,7 @@ export const About: React.FC = () => {
       description: t("Building digital experiences", "Membangun pengalaman digital")
     },
     { 
-      number: "15+", 
+      number: "10+", 
       label: t("Technologies Mastered", "Teknologi Dikuasai"),
       description: t("Modern tech stack expertise", "Keahlian teknologi modern")
     }
@@ -100,8 +111,8 @@ export const About: React.FC = () => {
           badgeIcon={<Sparkles className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />}
           title={t("About Me", "Tentang Saya") as string}
           subtitle={t(
-            "Passionate developer crafting digital experiences with precision and creativity",
-            "Developer passionate yang menciptakan pengalaman digital dengan presisi dan kreativitas"
+            "A creative developer who translates complex logic into beautiful and intuitive digital experiences",
+            "Seorang developer kreatif yang mengubah logika kompleks menjadi pengalaman digital yang indah dan intuitif."
           ) as string}
         />
 
@@ -256,6 +267,130 @@ export const About: React.FC = () => {
                 ))}
               </motion.div>
             </div>
+          </motion.div>
+
+          {/* Portfolio Carousel */}
+          <motion.div 
+            className="space-y-8"
+            variants={sectionEntrance}
+          >
+            <motion.h3 
+              className="text-3xl font-bold text-center text-gray-900 dark:text-white mb-12"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+              viewport={{ once: true }}
+            >
+              {t("My Portfolio", "Portofolio Saya")}
+            </motion.h3>
+
+            {/* Enhanced Interactive Carousel */}
+            <motion.div 
+              className="relative max-w-6xl mx-auto mb-16"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              viewport={{ once: true }}
+            >
+              <div className="relative overflow-hidden rounded-3xl shadow-2xl bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 p-2">
+                <motion.div 
+                  className="relative h-96 md:h-[500px] rounded-2xl overflow-hidden"
+                  whileHover={{ scale: 1.01 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  {/* Image slides */}
+                  {Array.from({ length: totalImages }, (_, i) => i + 1).map((num, index) => (
+                    <motion.div
+                      key={num}
+                      className="absolute inset-0"
+                      initial={{ opacity: 0 }}
+                      animate={{ 
+                        opacity: index === currentImageIndex ? 1 : 0,
+                        scale: index === currentImageIndex ? [1, 1.05, 1] : 1
+                      }}
+                      transition={{
+                        opacity: { duration: 1.5, ease: "easeInOut" },
+                        scale: { 
+                          duration: 10,
+                          repeat: Infinity,
+                          repeatType: "reverse",
+                          ease: "easeInOut"
+                        }
+                      }}
+                      style={{
+                        backgroundImage: `url(/assets/${num}.png)`,
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                        backgroundRepeat: 'no-repeat'
+                      }}
+                    >
+                      {/* Gradient overlay */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+                    </motion.div>
+                  ))}
+
+                  {/* Carousel Navigation Dots */}
+                  <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex gap-2">
+                    {Array.from({ length: totalImages }).map((_, index) => (
+                      <motion.button
+                        key={index}
+                        onClick={() => setCurrentImageIndex(index)}
+                        className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                          index === currentImageIndex 
+                            ? 'bg-emerald-500 scale-125' 
+                            : 'bg-white/60 hover:bg-white/80'
+                        }`}
+                        whileHover={{ scale: 1.2 }}
+                        whileTap={{ scale: 0.9 }}
+                      />
+                    ))}
+                  </div>
+
+                  {/* Navigation Arrows */}
+                  <motion.button
+                    onClick={() => setCurrentImageIndex((prev) => (prev - 1 + totalImages) % totalImages)}
+                    className="absolute left-4 top-1/2 transform -translate-y-1/2 w-12 h-12 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full flex items-center justify-center text-white transition-all duration-300"
+                    whileHover={{ scale: 1.1, x: -2 }}
+                    whileTap={{ scale: 0.9 }}
+                  >
+                    <ChevronRight size={20} className="rotate-180" />
+                  </motion.button>
+                  
+                  <motion.button
+                    onClick={() => setCurrentImageIndex((prev) => (prev + 1) % totalImages)}
+                    className="absolute right-4 top-1/2 transform -translate-y-1/2 w-12 h-12 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full flex items-center justify-center text-white transition-all duration-300"
+                    whileHover={{ scale: 1.1, x: 2 }}
+                    whileTap={{ scale: 0.9 }}
+                  >
+                    <ChevronRight size={20} />
+                  </motion.button>
+                </motion.div>
+              </div>
+
+              {/* Download Portfolio Button */}
+              <motion.div
+                className="text-center mt-8"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.5 }}
+                viewport={{ once: true }}
+              >
+                <motion.a
+                  href="/assets/Portfolio Design.pdf"
+                  download="Rifqi_Haikal_Portfolio.pdf"
+                  className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-2xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 group"
+                  whileHover={{
+                    scale: 1.05,
+                    boxShadow: "0 20px 40px rgba(147, 51, 234, 0.4)"
+                  }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <Download size={20} className="group-hover:animate-bounce" />
+                  {t("Download Portfolio Design", "Unduh Desain Portofolio")}
+                  <ExternalLink size={16} className="opacity-70" />
+                </motion.a>
+              </motion.div>
+            </motion.div>
           </motion.div>
 
           {/* Expertise Cards */}

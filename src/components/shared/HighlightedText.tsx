@@ -16,22 +16,26 @@ export const AboutText = () => {
   return {
     en: (
       <>
-        I am a dedicated <HighlightedWord variant="primary">Informatics</HighlightedWord> student at{' '}
-        <HighlightedWord variant="secondary">Del Institute of Technology</HighlightedWord> with a GPA of 3.37/4.00, expected to graduate in 2025. 
-        My journey in <HighlightedWord variant="accent">technology</HighlightedWord> has been an exciting exploration, 
-        from experimenting with <HighlightedWord variant="primary">code</HighlightedWord> as a curious teenager 
-        to becoming a seasoned <HighlightedWord variant="secondary">Web</HighlightedWord> and{' '}
-        <HighlightedWord variant="accent">Mobile Programmer</HighlightedWord> with hands-on industry experience.
+        I am a recent <HighlightedWord variant="secondary">Bachelors of Informatics</HighlightedWord> from the{' '}
+        <HighlightedWord variant="primary">Del Institute of Technology</HighlightedWord>, passionate about bridging the gap between robust engineering and intuitive design.
+        My skills were honed during internships at <HighlightedWord variant="accent">PT. JAVAN</HighlightedWord> and{' '}
+        <HighlightedWord variant="accent">PT. FIF</HighlightedWord>, where I engineered full-stack applications using{' '}
+        <HighlightedWord variant="primary">Java Spring Boot</HighlightedWord> and modern front-end frameworks like{' '}
+        <HighlightedWord variant="secondary">Vue.js</HighlightedWord>.
+        My services range from <HighlightedWord variant="primary">end-to-end Web and Mobile Development</HighlightedWord> to user-centric{' '}
+        <HighlightedWord variant="accent">UI/UX Design</HighlightedWord>, ensuring every product I build is a seamless digital experience.
       </>
     ),
     id: (
       <>
-        Saya adalah mahasiswa <HighlightedWord variant="primary">Informatika</HighlightedWord> yang berdedikasi di{' '}
-        <HighlightedWord variant="secondary">Institut Teknologi Del</HighlightedWord> dengan IPK 3.37/4.00, diharapkan lulus pada tahun 2025. 
-        Perjalanan saya di bidang <HighlightedWord variant="accent">teknologi</HighlightedWord> telah menjadi eksplorasi yang menarik, 
-        dari bereksperimen dengan <HighlightedWord variant="primary">kode</HighlightedWord> sebagai remaja yang penasaran 
-        hingga menjadi <HighlightedWord variant="secondary">Programmer Web</HighlightedWord> dan{' '}
-        <HighlightedWord variant="accent">Mobile</HighlightedWord> yang berpengalaman dengan pengalaman industri langsung.
+        Saya adalah <HighlightedWord variant="secondary">Sarjana Informatika</HighlightedWord> dari{' '}
+        <HighlightedWord variant="primary">Institut Teknologi Del</HighlightedWord> yang bersemangat menjembatani antara rekayasa teknis yang kokoh dan desain yang intuitif.
+        Keahlian saya terasah melalui magang di <HighlightedWord variant="accent">PT. JAVAN</HighlightedWord> dan{' '}
+        <HighlightedWord variant="accent">PT. FIF</HighlightedWord>, tempat saya membangun aplikasi full-stack menggunakan{' '}
+        <HighlightedWord variant="primary">Java Spring Boot</HighlightedWord> dan framework front-end modern seperti{' '}
+        <HighlightedWord variant="secondary">Vue.js</HighlightedWord>.
+        Layanan yang saya tawarkan mencakup <HighlightedWord variant="primary">Pengembangan Web dan Mobile</HighlightedWord> secara menyeluruh hingga{' '}
+        <HighlightedWord variant="accent">Desain UI/UX</HighlightedWord> yang berpusat pada pengguna, memastikan setiap produk yang saya buat adalah pengalaman digital yang mulus.
       </>
     )
   };
