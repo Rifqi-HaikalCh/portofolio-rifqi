@@ -14,6 +14,7 @@ interface LoadingScreenProps {
 const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [isExiting, setIsExiting] = useState(false);
+  const [canProceed, setCanProceed] = useState(false);
   const assistantRef = useRef(null);
   const multitaskingRef = useRef(null);
   
@@ -31,6 +32,21 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
   });
   
   const audioAvailable = isAudioLoaded && !audioError;
+
+  // Audio loading timeout to prevent infinite wait
+  useEffect(() => {
+    const audioTimeout = setTimeout(() => {
+      console.info('Audio loading timeout - proceeding without audio');
+      setCanProceed(true);
+    }, 3000); // 3 second timeout
+
+    if (isAudioLoaded || audioError) {
+      setCanProceed(true);
+      clearTimeout(audioTimeout);
+    }
+
+    return () => clearTimeout(audioTimeout);
+  }, [isAudioLoaded, audioError]);
 
 
   // Enhanced audio feedback with visual synchronization
@@ -102,11 +118,15 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
   ];
 
   useEffect(() => {
-    // Enhanced audio-visual feedback when step changes
-    if (currentStep < steps.length && isAudioLoaded) {
+    // Enhanced audio-visual feedback when step changes - now uses canProceed instead of isAudioLoaded
+    if (currentStep < steps.length && canProceed) {
       // Add small delay for better synchronization
       const feedbackTimer = setTimeout(() => {
-        playTextSoundWithFallback();
+        if (audioAvailable) {
+          playTextSoundWithFallback();
+        } else {
+          createTypingFeedback(); // Visual feedback only
+        }
       }, 200);
 
       const timer = setTimeout(() => {
@@ -126,7 +146,7 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
         clearTimeout(timer);
       };
     }
-  }, [currentStep, onComplete, isAudioLoaded]);
+  }, [currentStep, onComplete, canProceed, audioAvailable, playTextSoundWithFallback]);
 
   const currentStepData = steps[currentStep];
 
