@@ -58,7 +58,7 @@ export const TimedNotification: React.FC<TimedNotificationProps> = ({
 
   return (
     <motion.div
-      className="fixed bottom-6 right-6 z-[9999] max-w-sm w-full"
+      className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-[9999] max-w-sm w-[calc(100vw-2rem)] sm:w-full"
       initial={{ opacity: 0, scale: 0.8, y: 100 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.8, y: 100 }}
@@ -69,15 +69,15 @@ export const TimedNotification: React.FC<TimedNotificationProps> = ({
         duration: 0.5
       }}
     >
-      <div className="bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl shadow-2xl rounded-3xl p-6 border border-emerald-500/20">
+      <div className="bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl shadow-2xl rounded-2xl sm:rounded-3xl p-4 sm:p-6 border border-emerald-500/20">
         {/* Header with EQbot */}
         <div className="flex items-start gap-4 mb-4">
           {/* Lottie Animation */}
-          <div className="w-16 h-16 flex-shrink-0 bg-gradient-to-br from-emerald-100 to-blue-100 dark:from-emerald-900/50 dark:to-blue-900/50 rounded-2xl flex items-center justify-center overflow-hidden shadow-lg">
+          <div className="w-12 h-12 sm:w-16 sm:h-16 flex-shrink-0 bg-gradient-to-br from-emerald-100 to-blue-100 dark:from-emerald-900/50 dark:to-blue-900/50 rounded-2xl flex items-center justify-center overflow-hidden shadow-lg">
             <Lottie 
               animationData={assistantAnimation} 
               loop={true}
-              className="w-12 h-12"
+              className="w-8 h-8 sm:w-12 sm:h-12"
             />
             {/* Status indicator */}
             <div className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-r from-emerald-400 to-blue-400 rounded-full animate-pulse shadow-lg"></div>

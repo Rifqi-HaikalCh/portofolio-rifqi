@@ -5,6 +5,9 @@
 /* Import Z-Index Hierarchy */
 @import '../styles/z-index.css';
 
+/* Import Mobile-Specific Styles */
+@import '../styles/mobile.css';
+
 @layer base {
   :root {
     --primary-green: #10B981;
@@ -251,4 +254,72 @@
     @apply -bottom-5 -left-5;
     animation-delay: -4s;
   }
+}
+
+/* ===================================================================== */
+/* DESKTOP STYLES (DO NOT MODIFY - PERFECT AS IS)                       */
+/* ===================================================================== */
+/* 
+   All styles above this section are for DESKTOP (≥1024px)
+   These styles are PERFECT and should NEVER be modified
+   They handle: Layout, Typography, Colors, Animations, Components
+*/
+
+/* ===================================================================== */
+/* MOBILE-SPECIFIC STYLES (SAFE TO MODIFY)                              */
+/* ===================================================================== */
+/* 
+   All styles below this section are MOBILE-ONLY (≤1023px)
+   Safe to modify these without affecting desktop experience
+*/
+
+@media (max-width: 1023px) {
+  /* ================================================= */
+  /* MOBILE LAYOUT OVERRIDES                          */
+  /* ================================================= */
+  
+  /* Container spacing for mobile */
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    max-width: 100%;
+  }
+  
+  /* ================================================= */
+  /* MOBILE TYPOGRAPHY OVERRIDES                      */
+  /* ================================================= */
+  
+  /* Mobile text sizing will be added here */
+  /* Currently inheriting desktop sizes */
+  
+  /* ================================================= */
+  /* MOBILE COMPONENT OVERRIDES                       */
+  /* ================================================= */
+  
+  /* Mobile button sizing will be added here */
+  /* Currently inheriting desktop sizes */
+  
+  /* Mobile card sizing will be added here */
+  /* Currently inheriting desktop sizes */
+  
+  /* ================================================= */
+  /* MOBILE SPACING OVERRIDES                         */
+  /* ================================================= */
+  
+  /* Mobile padding/margin adjustments will be added here */
+  /* Currently inheriting desktop spacing */
+  
+}
+
+/* ================================================= */
+/* EXTRA SMALL MOBILE DEVICES (≤640px)              */
+/* ================================================= */
+@media (max-width: 640px) {
+  
+  /* Extra small mobile specific adjustments */
+  .container {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+  
 }

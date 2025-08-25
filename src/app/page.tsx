@@ -19,7 +19,7 @@ import { Certificates } from '../components/sections/Certificates';
 import { Contact } from '../components/sections/Contact';
 import { Footer } from '../components/sections/Footer';
 import LoadingScreen from '../components/shared/LoadingScreen';
-import InnovativeMobileNav from '../components/shared/InnovativeMobileNav';
+import { FloatingNavigation } from '../components/shared/FloatingNavigation';
 
 // EQbot notification messages
 const getEQbotMessages = (): NotificationMessage[] => [
@@ -201,8 +201,8 @@ export default function Home() {
         </>
       )}
       
-      {/* Innovative Mobile Navigation */}
-      <InnovativeMobileNav />
+      {/* Floating Navigation */}
+      <FloatingNavigation />
       
       <AnimatePresence>
         {showNotification && currentNotification && (

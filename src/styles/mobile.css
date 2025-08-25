@@ -1,0 +1,234 @@
+/* ===================================================================== */
+/* MOBILE-SPECIFIC STYLES                                               */
+/* ===================================================================== */
+/*
+  This file contains ALL mobile-specific styling (≤1023px)
+  Desktop styles remain untouched in globals.css
+  
+  BREAKPOINTS:
+  - Mobile: ≤1023px 
+  - Small Mobile: ≤640px
+  - Extra Small: ≤480px
+*/
+
+/* ================================================= */
+/* MOBILE LAYOUT SYSTEM (≤1023px)                   */
+/* ================================================= */
+@media (max-width: 1023px) {
+  
+  /* Base mobile container */
+  .mobile-container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    max-width: 100vw;
+  }
+  
+  /* Mobile section spacing */
+  .mobile-section {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+  }
+  
+  /* Mobile grid adjustments */
+  .mobile-grid-1 {
+    grid-template-columns: 1fr;
+  }
+  
+  .mobile-grid-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+}
+
+/* ================================================= */
+/* MOBILE TYPOGRAPHY (≤1023px)                      */
+/* ================================================= */
+@media (max-width: 1023px) {
+  
+  /* Global 14px font size for ALL mobile text (excluding protected areas) */
+  body *:not(#home *):not(footer *):not(.loading-screen *) {
+    font-size: 14px !important;
+  }
+  
+  /* Section Titles - 18px (Override the 14px rule with high specificity) */
+  .section-title,
+  .animated-section-title h2,
+  section .animated-section-title h2,
+  #about h2,
+  #about h3,
+  #skills h2,
+  #skills h3,
+  #experience h2,
+  #experience h3,
+  #projects h2,
+  #projects h3,
+  #certificates h2,
+  #certificates h3,
+  #contact h2,
+  #contact h3 {
+    font-size: 18px !important;
+  }
+  
+  /* Badge Labels - 12px (Override the 14px rule) */
+  .badge-label,
+  .animated-section-title .badge-label,
+  .animated-section-title span.badge-label,
+  section .badge-label {
+    font-size: 12px !important;
+  }
+  
+  /* PROTECTED AREAS - Override mobile rules to keep original sizing */
+  
+  /* Loading Screen Protection */
+  .loading-screen,
+  .loading-screen *,
+  .loading-screen h1,
+  .loading-screen h2,
+  .loading-screen h3,
+  .loading-screen p,
+  .loading-screen span,
+  .loading-screen div {
+    font-size: inherit !important;
+  }
+  
+  /* Home Section Protection */
+  #home,
+  #home *,
+  #home h1,
+  #home h2,
+  #home h3,
+  #home p,
+  #home span,
+  #home div,
+  #home button,
+  #home a {
+    font-size: inherit !important;
+  }
+  
+  /* Footer Protection */
+  footer,
+  footer *,
+  footer h1,
+  footer h2,
+  footer h3,
+  footer p,
+  footer span,
+  footer div,
+  footer a,
+  footer button {
+    font-size: inherit !important;
+  }
+  
+}
+
+/* ================================================= */
+/* MOBILE COMPONENTS (≤1023px)                      */
+/* ================================================= */
+@media (max-width: 1023px) {
+  
+  /* Mobile buttons (ready to be customized) */
+  .mobile-btn-primary {
+    /* Will be customized per your requirements */
+  }
+  
+  .mobile-btn-secondary {
+    /* Will be customized per your requirements */
+  }
+  
+  /* Mobile cards (ready to be customized) */
+  .mobile-card {
+    /* Will be customized per your requirements */
+  }
+  
+  .mobile-card-small {
+    /* Will be customized per your requirements */
+  }
+  
+  /* Mobile navigation (already implemented) */
+  .mobile-nav {
+    /* FloatingNavigation component handles this */
+  }
+  
+}
+
+/* ================================================= */
+/* MOBILE SPACING (≤1023px)                         */
+/* ================================================= */
+@media (max-width: 1023px) {
+  
+  /* Mobile padding scales */
+  .mobile-p-sm {
+    padding: 0.75rem;
+  }
+  
+  .mobile-p-md {
+    padding: 1rem;
+  }
+  
+  .mobile-p-lg {
+    padding: 1.5rem;
+  }
+  
+  /* Mobile margin scales */
+  .mobile-m-sm {
+    margin: 0.75rem;
+  }
+  
+  .mobile-m-md {
+    margin: 1rem;
+  }
+  
+  .mobile-m-lg {
+    margin: 1.5rem;
+  }
+  
+  /* Mobile gap scales */
+  .mobile-gap-sm {
+    gap: 0.75rem;
+  }
+  
+  .mobile-gap-md {
+    gap: 1rem;
+  }
+  
+  .mobile-gap-lg {
+    gap: 1.5rem;
+  }
+  
+}
+
+/* ================================================= */
+/* SMALL MOBILE DEVICES (≤640px)                    */
+/* ================================================= */
+@media (max-width: 640px) {
+  
+  .small-mobile-container {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+  
+  .small-mobile-text {
+    /* Extra small text adjustments */
+  }
+  
+  .small-mobile-spacing {
+    /* Tighter spacing for small screens */
+  }
+  
+}
+
+/* ================================================= */
+/* EXTRA SMALL MOBILE (≤480px)                      */
+/* ================================================= */
+@media (max-width: 480px) {
+  
+  .xs-mobile-container {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+  
+  .xs-mobile-minimal {
+    /* Minimal spacing for very small screens */
+  }
+  
+}

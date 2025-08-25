@@ -60,7 +60,7 @@ const Navbar: React.FC = () => {
       initial={{ y: -100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
-      className={`fixed top-0 left-0 w-full z-navigation transition-all duration-300 ${
+      className={`hidden lg:block fixed top-0 left-0 w-full z-navigation transition-all duration-300 ${
         scrolled 
           ? 'py-4 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl shadow-lg border-b border-gray-200/20 dark:border-gray-700/20' 
           : 'py-6 bg-transparent'

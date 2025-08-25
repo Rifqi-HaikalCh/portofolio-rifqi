@@ -44,14 +44,14 @@ export const AnimatedSectionTitle: React.FC<AnimatedSectionTitleProps> = ({
               {badgeIcon}
             </motion.div>
           )}
-          <span className="text-emerald-600 dark:text-emerald-400 font-bold text-sm tracking-wider uppercase">
+          <span className="text-emerald-600 dark:text-emerald-400 font-bold text-sm tracking-wider uppercase badge-label">
             {badge}
           </span>
         </motion.div>
       )}
       
       <motion.h2 
-        className="text-5xl md:text-6xl lg:text-7xl font-extrabold mb-6 leading-tight relative"
+        className="text-5xl md:text-6xl lg:text-7xl font-extrabold mb-6 leading-tight relative section-title"
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: delay + 0.2 }}
