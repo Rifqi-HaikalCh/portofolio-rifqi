@@ -122,8 +122,14 @@
     font-size: var(--font-sm) !important;
   }
   
-  /* SPECIFIC SECTIONS - 13px font size with reduced card sizes */
-  /* About Me Section */
+  /* MOBILE-OPTIMIZED SECTIONS - 13px font with fluid layout */
+  /* About Me Section - Mobile First Design */
+  #about {
+    /* Remove rigid constraints that cause overflow */
+    overflow: visible !important;
+    min-height: auto !important;
+  }
+  
   #about p,
   #about span:not(.badge-label),
   #about div:not(.animated-section-title):not(.badge-label) p,
@@ -133,24 +139,59 @@
   #about .text-gray-300,
   #about .description {
     font-size: 13px !important;
+    line-height: 1.4 !important;
   }
   
-  /* About Me Cards */
+  /* About Me - Mobile Layout Optimization */
+  #about .lg\\:grid-cols-12 {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: clamp(1rem, 4vw, 2rem) !important;
+  }
+  
+  #about .lg\\:col-span-5,
+  #about .lg\\:col-span-7 {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+  
+  /* Profile Image - Mobile Optimization */
+  #about .w-80.h-96 {
+    width: clamp(240px, 60vw, 280px) !important;
+    height: clamp(300px, 75vw, 350px) !important;
+  }
+  
+  /* Stats Grid - Stack on mobile */
+  #about .grid-cols-3 {
+    grid-template-columns: 1fr !important;
+    gap: clamp(0.75rem, 2vw, 1rem) !important;
+  }
+  
+  /* Portfolio Carousel - Mobile Responsive */
+  #about .h-96.md\\:h-\\[500px\\] {
+    height: clamp(200px, 50vw, 300px) !important;
+  }
+  
+  /* Cards - Fluid Sizing */
   #about .bg-white,
   #about .bg-gray-50,
   #about .dark\\:bg-gray-800,
   #about .dark\\:bg-gray-700,
-  #about .card,
-  #about .rounded-lg,
-  #about .rounded-xl,
-  #about .p-6,
-  #about .p-8 {
-    padding: clamp(0.75rem, 2.5vw, 1rem) !important;
+  #about .rounded-3xl {
+    padding: clamp(0.75rem, 3vw, 1.25rem) !important;
     margin-bottom: clamp(0.75rem, 2vw, 1rem) !important;
-    border-radius: clamp(0.5rem, 1.5vw, 0.75rem) !important;
+    border-radius: clamp(0.75rem, 2vw, 1rem) !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
   }
   
-  /* Experience Section */
+  /* Experience Section - Mobile First Design */
+  #experience {
+    overflow: visible !important;
+    min-height: auto !important;
+  }
+  
   #experience p,
   #experience span:not(.badge-label),
   #experience div:not(.animated-section-title):not(.badge-label) p,
@@ -163,25 +204,29 @@
   #experience .company-name,
   #experience .duration {
     font-size: 13px !important;
+    line-height: 1.4 !important;
   }
   
-  /* Experience Cards */
+  /* Experience Cards - Vertical Stack */
+  #experience .timeline-item,
   #experience .bg-white,
   #experience .bg-gray-50,
   #experience .dark\\:bg-gray-800,
-  #experience .dark\\:bg-gray-700,
-  #experience .card,
-  #experience .rounded-lg,
-  #experience .rounded-xl,
-  #experience .timeline-item,
-  #experience .p-6,
-  #experience .p-8 {
-    padding: clamp(0.75rem, 2.5vw, 1rem) !important;
+  #experience .dark\\:bg-gray-700 {
+    padding: clamp(0.75rem, 3vw, 1.25rem) !important;
     margin-bottom: clamp(0.75rem, 2vw, 1rem) !important;
-    border-radius: clamp(0.5rem, 1.5vw, 0.75rem) !important;
+    border-radius: clamp(0.75rem, 2vw, 1rem) !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
   }
   
-  /* Projects Section */
+  /* Projects Section - Mobile First Design */
+  #projects {
+    overflow: visible !important;
+    min-height: auto !important;
+  }
+  
   #projects p,
   #projects span:not(.badge-label),
   #projects div:not(.animated-section-title):not(.badge-label) p,
@@ -194,42 +239,75 @@
   #projects .tech-stack,
   #projects .card-text {
     font-size: 13px !important;
+    line-height: 1.4 !important;
   }
   
-  /* Projects Cards */
+  /* Projects Grid - Single Column on Mobile */
+  #projects .grid,
+  #projects .md\\:grid-cols-2,
+  #projects .lg\\:grid-cols-3 {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: clamp(0.75rem, 3vw, 1rem) !important;
+  }
+  
+  /* Project Cards - Full Width */
+  #projects .project-card,
   #projects .bg-white,
   #projects .bg-gray-50,
   #projects .dark\\:bg-gray-800,
-  #projects .dark\\:bg-gray-700,
-  #projects .card,
-  #projects .rounded-lg,
-  #projects .rounded-xl,
-  #projects .project-card,
-  #projects .p-6,
-  #projects .p-8 {
-    padding: clamp(0.75rem, 2.5vw, 1rem) !important;
+  #projects .dark\\:bg-gray-700 {
+    padding: clamp(0.75rem, 3vw, 1.25rem) !important;
     margin-bottom: clamp(0.75rem, 2vw, 1rem) !important;
-    border-radius: clamp(0.5rem, 1.5vw, 0.75rem) !important;
+    border-radius: clamp(0.75rem, 2vw, 1rem) !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
   }
   
-  /* Reduce spacing within these sections */
-  #about .space-y-6 > * + *,
-  #experience .space-y-6 > * + *,
-  #projects .space-y-6 > * + * {
-    margin-top: clamp(0.75rem, 2vw, 1rem) !important;
+  /* Global Mobile Optimizations for 3 Sections */
+  #about .space-y-32 > *,
+  #experience .space-y-32 > *,
+  #projects .space-y-32 > * {
+    margin-top: clamp(2rem, 6vw, 4rem) !important;
   }
   
-  #about .space-y-4 > * + *,
-  #experience .space-y-4 > * + *,
-  #projects .space-y-4 > * + * {
-    margin-top: clamp(0.5rem, 1.5vw, 0.75rem) !important;
+  #about .space-y-8 > *,
+  #experience .space-y-8 > *,
+  #projects .space-y-8 > * {
+    margin-top: clamp(0.75rem, 2.5vw, 1.25rem) !important;
   }
   
-  /* Reduce grid gaps */
-  #about .grid,
-  #experience .grid,
-  #projects .grid {
-    gap: clamp(0.75rem, 2vw, 1rem) !important;
+  #about .space-y-6 > *,
+  #experience .space-y-6 > *,
+  #projects .space-y-6 > * {
+    margin-top: clamp(0.5rem, 2vw, 1rem) !important;
+  }
+  
+  #about .space-y-4 > *,
+  #experience .space-y-4 > *,
+  #projects .space-y-4 > * {
+    margin-top: clamp(0.375rem, 1.5vw, 0.75rem) !important;
+  }
+  
+  /* Remove fixed widths and heights that cause issues */
+  #about *,
+  #experience *,
+  #projects * {
+    max-width: 100vw !important;
+    overflow-wrap: break-word !important;
+    word-wrap: break-word !important;
+  }
+  
+  /* Ensure buttons and interactive elements are touchable */
+  #about button,
+  #about a,
+  #experience button,
+  #experience a,
+  #projects button,
+  #projects a {
+    min-height: clamp(44px, 8vw, 48px) !important;
+    padding: clamp(0.5rem, 2vw, 0.75rem) clamp(0.75rem, 3vw, 1rem) !important;
   }
   
   /* PROTECTED AREAS - Override mobile rules to keep original sizing */
@@ -468,21 +546,50 @@
     padding-right: var(--space-sm);
   }
   
-  /* Tighter grid for small screens */
-  .mobile-grid-responsive {
-    grid-template-columns: 1fr;
-    gap: var(--space-md);
+  /* Force single column layout for 3 sections */
+  #about .lg\\:grid-cols-12,
+  #about .grid,
+  #experience .grid,
+  #projects .grid,
+  #projects .md\\:grid-cols-2,
+  #projects .lg\\:grid-cols-3 {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: var(--space-sm) !important;
   }
   
-  .mobile-grid-2col {
-    grid-template-columns: 1fr;
-    gap: var(--space-sm);
+  /* Optimize image sizes for small screens */
+  #about .w-80.h-96 {
+    width: clamp(200px, 50vw, 240px) !important;
+    height: clamp(250px, 62.5vw, 300px) !important;
+  }
+  
+  #about .h-96.md\\:h-\\[500px\\] {
+    height: clamp(180px, 45vw, 250px) !important;
+  }
+  
+  /* Ultra-compact spacing for 3 sections */
+  #about .space-y-32 > *,
+  #experience .space-y-32 > *,
+  #projects .space-y-32 > * {
+    margin-top: clamp(1rem, 4vw, 2rem) !important;
+  }
+  
+  #about .py-20,
+  #experience .py-20,
+  #projects .py-20 {
+    padding-top: clamp(2rem, 6vw, 3rem) !important;
+    padding-bottom: clamp(2rem, 6vw, 3rem) !important;
   }
   
   /* Smaller buttons on small screens */
-  .mobile-btn-primary {
-    min-height: clamp(2.25rem, 8vw, 2.75rem);
-    padding: var(--space-xs) var(--space-md);
+  .mobile-btn-primary,
+  #about button,
+  #experience button,
+  #projects button {
+    min-height: clamp(40px, 10vw, 44px) !important;
+    padding: var(--space-xs) var(--space-sm) !important;
+    font-size: 12px !important;
   }
   
 }
@@ -511,27 +618,97 @@
     padding-right: var(--space-xs);
   }
   
-  /* Ultra-compact spacing */
-  .mobile-section {
-    padding-top: var(--space-2xl);
-    padding-bottom: var(--space-2xl);
+  /* Critical: Force visible sections with proper sizing */
+  #about,
+  #experience,
+  #projects {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    min-height: auto !important;
+    height: auto !important;
+    overflow: visible !important;
+    position: relative !important;
+    transform: none !important;
+  }
+  
+  /* Maximum viewport utilization */
+  #about .container,
+  #experience .container,
+  #projects .container {
+    padding-left: clamp(0.5rem, 2vw, 1rem) !important;
+    padding-right: clamp(0.5rem, 2vw, 1rem) !important;
+    max-width: 100vw !important;
+    width: 100% !important;
+  }
+  
+  /* Ultra-small profile image */
+  #about .w-80.h-96 {
+    width: clamp(160px, 40vw, 200px) !important;
+    height: clamp(200px, 50vw, 250px) !important;
+  }
+  
+  /* Minimize carousel height */
+  #about .h-96.md\\:h-\\[500px\\] {
+    height: clamp(150px, 37.5vw, 200px) !important;
+  }
+  
+  /* Extreme spacing compression */
+  #about .space-y-32 > *,
+  #experience .space-y-32 > *,
+  #projects .space-y-32 > * {
+    margin-top: clamp(0.75rem, 3vw, 1.5rem) !important;
+  }
+  
+  #about .py-20,
+  #experience .py-20,
+  #projects .py-20 {
+    padding-top: clamp(1rem, 4vw, 2rem) !important;
+    padding-bottom: clamp(1rem, 4vw, 2rem) !important;
+  }
+  
+  /* Minimal font sizes for extreme small screens */
+  #about p,
+  #about span:not(.badge-label),
+  #experience p,
+  #experience span:not(.badge-label),
+  #projects p,
+  #projects span:not(.badge-label) {
+    font-size: clamp(11px, 3vw, 13px) !important;
+    line-height: 1.3 !important;
+  }
+  
+  /* Ultra-compact buttons */
+  #about button,
+  #about a,
+  #experience button,
+  #experience a,
+  #projects button,
+  #projects a {
+    min-height: clamp(36px, 9vw, 40px) !important;
+    padding: clamp(0.25rem, 1.5vw, 0.5rem) clamp(0.5rem, 2.5vw, 0.75rem) !important;
+    font-size: clamp(10px, 2.5vw, 12px) !important;
   }
   
   /* Single column layout for everything */
   .mobile-grid-responsive,
   .mobile-grid-2col,
-  .mobile-grid-3col {
-    grid-template-columns: 1fr;
-    gap: var(--space-sm);
+  .mobile-grid-3col,
+  #about .grid,
+  #experience .grid,
+  #projects .grid {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: var(--space-xs) !important;
   }
   
   /* Minimal card padding */
-  .mobile-card {
-    padding: var(--space-md);
-  }
-  
-  .mobile-card-small {
-    padding: var(--space-sm);
+  .mobile-card,
+  #about .rounded-3xl,
+  #experience .timeline-item,
+  #projects .project-card {
+    padding: var(--space-xs) !important;
+    margin-bottom: var(--space-xs) !important;
   }
   
 }

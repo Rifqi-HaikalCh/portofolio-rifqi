@@ -109,34 +109,34 @@ export const Skills: React.FC = () => {
                 <div className="relative z-10 mb-4 flex justify-center">
                   {activeCategory === 'hard' ? (
                     <div 
-                      className="w-16 h-16 flex items-center justify-center rounded-2xl transition-all duration-300 group-hover:scale-110 group-hover:rotate-3"
+                      className="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center rounded-2xl transition-all duration-300 group-hover:scale-110 group-hover:rotate-3"
                       style={{ 
                         backgroundColor: `${skill.color}15`,
                         border: `2px solid ${skill.color}30`
                       }}
                     >
                       <i 
-                        className={`fab fa-${skill.icon} text-3xl transition-all duration-300`}
+                        className={`fab fa-${skill.icon} text-3xl sm:text-4xl transition-all duration-300`}
                         style={{ color: skill.color }}
                       />
                     </div>
                   ) : (
                     <div 
-                      className="w-16 h-16 flex items-center justify-center rounded-2xl transition-all duration-300 group-hover:scale-110 group-hover:rotate-3"
+                      className="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center rounded-2xl transition-all duration-300 group-hover:scale-110 group-hover:rotate-3"
                       style={{ 
                         backgroundColor: `${skill.color}15`,
                         border: `2px solid ${skill.color}30`
                       }}
                     >
                       <div style={{ color: skill.color }}>
-                        {skill.icon === 'puzzle-piece' && <PuzzlePieceIcon className="w-8 h-8" />}
-                        {skill.icon === 'lightbulb' && <LightBulbIcon className="w-8 h-8" />}
-                        {skill.icon === 'users' && <UsersIcon className="w-8 h-8" />}
-                        {skill.icon === 'comments' && <ChatBubbleLeftEllipsisIcon className="w-8 h-8" />}
-                        {skill.icon === 'user-tie' && <UserIcon className="w-8 h-8" />}
-                        {skill.icon === 'clock' && <ClockIcon className="w-8 h-8" />}
-                        {skill.icon === 'palette' && <PaintBrushIcon className="w-8 h-8" />}
-                        {skill.icon === 'sync-alt' && <ArrowPathIcon className="w-8 h-8" />}
+                        {skill.icon === 'puzzle-piece' && <PuzzlePieceIcon className="w-8 h-8 sm:w-10 sm:h-10" />}
+                        {skill.icon === 'lightbulb' && <LightBulbIcon className="w-8 h-8 sm:w-10 sm:h-10" />}
+                        {skill.icon === 'users' && <UsersIcon className="w-8 h-8 sm:w-10 sm:h-10" />}
+                        {skill.icon === 'comments' && <ChatBubbleLeftEllipsisIcon className="w-8 h-8 sm:w-10 sm:h-10" />}
+                        {skill.icon === 'user-tie' && <UserIcon className="w-8 h-8 sm:w-10 sm:h-10" />}
+                        {skill.icon === 'clock' && <ClockIcon className="w-8 h-8 sm:w-10 sm:h-10" />}
+                        {skill.icon === 'palette' && <PaintBrushIcon className="w-8 h-8 sm:w-10 sm:h-10" />}
+                        {skill.icon === 'sync-alt' && <ArrowPathIcon className="w-8 h-8 sm:w-10 sm:h-10" />}
                       </div>
                     </div>
                   )}
