@@ -122,7 +122,7 @@
     font-size: var(--font-sm) !important;
   }
   
-  /* SPECIFIC SECTIONS - 12px font size */
+  /* SPECIFIC SECTIONS - 13px font size with reduced card sizes */
   /* About Me Section */
   #about p,
   #about span:not(.badge-label),
@@ -132,7 +132,22 @@
   #about .text-gray-600,
   #about .text-gray-300,
   #about .description {
-    font-size: 12px !important;
+    font-size: 13px !important;
+  }
+  
+  /* About Me Cards */
+  #about .bg-white,
+  #about .bg-gray-50,
+  #about .dark\\:bg-gray-800,
+  #about .dark\\:bg-gray-700,
+  #about .card,
+  #about .rounded-lg,
+  #about .rounded-xl,
+  #about .p-6,
+  #about .p-8 {
+    padding: clamp(0.75rem, 2.5vw, 1rem) !important;
+    margin-bottom: clamp(0.75rem, 2vw, 1rem) !important;
+    border-radius: clamp(0.5rem, 1.5vw, 0.75rem) !important;
   }
   
   /* Experience Section */
@@ -147,7 +162,23 @@
   #experience .job-title,
   #experience .company-name,
   #experience .duration {
-    font-size: 12px !important;
+    font-size: 13px !important;
+  }
+  
+  /* Experience Cards */
+  #experience .bg-white,
+  #experience .bg-gray-50,
+  #experience .dark\\:bg-gray-800,
+  #experience .dark\\:bg-gray-700,
+  #experience .card,
+  #experience .rounded-lg,
+  #experience .rounded-xl,
+  #experience .timeline-item,
+  #experience .p-6,
+  #experience .p-8 {
+    padding: clamp(0.75rem, 2.5vw, 1rem) !important;
+    margin-bottom: clamp(0.75rem, 2vw, 1rem) !important;
+    border-radius: clamp(0.5rem, 1.5vw, 0.75rem) !important;
   }
   
   /* Projects Section */
@@ -162,7 +193,43 @@
   #projects .project-title,
   #projects .tech-stack,
   #projects .card-text {
-    font-size: 12px !important;
+    font-size: 13px !important;
+  }
+  
+  /* Projects Cards */
+  #projects .bg-white,
+  #projects .bg-gray-50,
+  #projects .dark\\:bg-gray-800,
+  #projects .dark\\:bg-gray-700,
+  #projects .card,
+  #projects .rounded-lg,
+  #projects .rounded-xl,
+  #projects .project-card,
+  #projects .p-6,
+  #projects .p-8 {
+    padding: clamp(0.75rem, 2.5vw, 1rem) !important;
+    margin-bottom: clamp(0.75rem, 2vw, 1rem) !important;
+    border-radius: clamp(0.5rem, 1.5vw, 0.75rem) !important;
+  }
+  
+  /* Reduce spacing within these sections */
+  #about .space-y-6 > * + *,
+  #experience .space-y-6 > * + *,
+  #projects .space-y-6 > * + * {
+    margin-top: clamp(0.75rem, 2vw, 1rem) !important;
+  }
+  
+  #about .space-y-4 > * + *,
+  #experience .space-y-4 > * + *,
+  #projects .space-y-4 > * + * {
+    margin-top: clamp(0.5rem, 1.5vw, 0.75rem) !important;
+  }
+  
+  /* Reduce grid gaps */
+  #about .grid,
+  #experience .grid,
+  #projects .grid {
+    gap: clamp(0.75rem, 2vw, 1rem) !important;
   }
   
   /* PROTECTED AREAS - Override mobile rules to keep original sizing */
