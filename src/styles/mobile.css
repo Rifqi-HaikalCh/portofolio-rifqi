@@ -122,6 +122,49 @@
     font-size: var(--font-sm) !important;
   }
   
+  /* SPECIFIC SECTIONS - 12px font size */
+  /* About Me Section */
+  #about p,
+  #about span:not(.badge-label),
+  #about div:not(.animated-section-title):not(.badge-label) p,
+  #about div:not(.animated-section-title):not(.badge-label) span:not(.badge-label),
+  #about li,
+  #about .text-gray-600,
+  #about .text-gray-300,
+  #about .description {
+    font-size: 12px !important;
+  }
+  
+  /* Experience Section */
+  #experience p,
+  #experience span:not(.badge-label),
+  #experience div:not(.animated-section-title):not(.badge-label) p,
+  #experience div:not(.animated-section-title):not(.badge-label) span:not(.badge-label),
+  #experience li,
+  #experience .text-gray-600,
+  #experience .text-gray-300,
+  #experience .description,
+  #experience .job-title,
+  #experience .company-name,
+  #experience .duration {
+    font-size: 12px !important;
+  }
+  
+  /* Projects Section */
+  #projects p,
+  #projects span:not(.badge-label),
+  #projects div:not(.animated-section-title):not(.badge-label) p,
+  #projects div:not(.animated-section-title):not(.badge-label) span:not(.badge-label),
+  #projects li,
+  #projects .text-gray-600,
+  #projects .text-gray-300,
+  #projects .description,
+  #projects .project-title,
+  #projects .tech-stack,
+  #projects .card-text {
+    font-size: 12px !important;
+  }
+  
   /* PROTECTED AREAS - Override mobile rules to keep original sizing */
   
   /* Loading Screen Protection */
