@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import { useLanguage } from '../../context/LanguageContext';
 import { InteractiveButton } from '../shared/InteractiveButton';
-import { X, Palette, Code, Layers } from 'lucide-react';
+import { Palette, Code, Layers } from 'lucide-react';
+import { StandardModal } from '../shared/StandardModal';
 
 export type SelectedRole = 'uiux' | 'developer' | null;
 
@@ -52,50 +53,6 @@ export function RoleSelectionModal({ isOpen, onClose, onSelectRole, selectedRole
   const { language } = useLanguage();
   const [hoveredRole, setHoveredRole] = useState<SelectedRole>(null);
 
-  // Handle escape key
-  useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isOpen) {
-        onClose();
-      }
-    };
-
-    if (isOpen) {
-      document.addEventListener('keydown', handleEscape);
-      document.body.style.overflow = 'hidden';
-    }
-
-    return () => {
-      document.removeEventListener('keydown', handleEscape);
-      document.body.style.overflow = 'unset';
-    };
-  }, [isOpen, onClose]);
-
-  const modalVariants = {
-    hidden: {
-      opacity: 0,
-      scale: 0.8,
-      y: 50
-    },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      y: 0,
-      transition: {
-        type: 'spring',
-        duration: 0.6,
-        bounce: 0.3
-      }
-    },
-    exit: {
-      opacity: 0,
-      scale: 0.8,
-      y: 50,
-      transition: {
-        duration: 0.3
-      }
-    }
-  };
 
   const cardVariants = {
     hidden: { opacity: 0, y: 20, scale: 0.9 },
@@ -132,184 +89,146 @@ export function RoleSelectionModal({ isOpen, onClose, onSelectRole, selectedRole
   };
 
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <motion.div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.3 }}
-        >
-          {/* Backdrop */}
-          <motion.div
-            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={onClose}
-          />
+    <StandardModal
+      isOpen={isOpen}
+      onClose={onClose}
+      title={language === 'en' ? 'Choose Your Journey' : 'Pilih Perjalanan Anda'}
+      maxWidth="xl"
+      className="text-center"
+    >
+      {/* Header Icon and Description */}
+      <motion.div
+        className="mb-8"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2 }}
+      >
+        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 mb-4">
+          <Layers className="w-8 h-8 text-white" />
+        </div>
+        <p className="text-gray-600 dark:text-gray-300 text-lg max-w-2xl mx-auto">
+          {language === 'en' 
+            ? 'I wear multiple hats as both a creative designer and technical developer. Which perspective would you like to explore?'
+            : 'Saya berperan ganda sebagai desainer kreatif dan pengembang teknis. Perspektif mana yang ingin Anda jelajahi?'
+          }
+        </p>
+      </motion.div>
 
-          {/* Modal Container */}
-          <motion.div
-            className="relative w-full max-w-3xl lg:max-w-4xl max-h-[85vh] overflow-y-auto mx-4"
-            variants={modalVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-          >
-            {/* Glass Card Container */}
-            <div className="glass-card-strong p-8 text-center">
-              {/* Close Button */}
-              <motion.button
-                className="absolute top-4 right-4 p-2 rounded-full hover:bg-white/20 transition-colors"
-                onClick={onClose}
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-              >
-                <X className="w-6 h-6 text-gray-700 dark:text-gray-300" />
-              </motion.button>
+      {/* Role Selection Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+        {roleOptions.map((role, index) => {
+          const IconComponent = role.icon;
+          const isSelected = selectedRole === role.id;
+          const isHovered = hoveredRole === role.id;
 
-              {/* Header */}
-              <motion.div
-                className="mb-8"
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-              >
-                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 mb-4">
-                  <Layers className="w-8 h-8 text-white" />
+          return (
+            <motion.div
+              key={role.id}
+              className="relative group cursor-pointer"
+              variants={cardVariants}
+              initial="hidden"
+              animate="visible"
+              whileHover="hover"
+              whileTap="tap"
+              onHoverStart={() => setHoveredRole(role.id)}
+              onHoverEnd={() => setHoveredRole(null)}
+              onClick={() => handleRoleSelect(role.id)}
+              style={{
+                animationDelay: `${index * 0.1}s`
+              }}
+            >
+              {/* Glow effect */}
+              {(isHovered || isSelected) && (
+                <motion.div
+                  className={`absolute inset-0 rounded-2xl bg-gradient-to-r ${role.gradient} opacity-20 blur-xl`}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 0.3, scale: 1.1 }}
+                  exit={{ opacity: 0, scale: 0.8 }}
+                  transition={{ duration: 0.3 }}
+                />
+              )}
+
+              {/* Card Content */}
+              <div className={`relative bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl p-8 h-full transition-all duration-300 border border-gray-200/50 dark:border-gray-700/50 ${
+                isSelected ? 'ring-2 ring-blue-400' : ''
+              }`}>
+                {/* Icon */}
+                <div className="mb-6">
+                  <div className={`inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br ${role.gradient} mb-4 group-hover:scale-110 transition-transform duration-300`}>
+                    <IconComponent className="w-8 h-8 text-white" />
+                  </div>
+                  <div className="text-4xl mb-2">{role.iconEmoji}</div>
                 </div>
-                <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-                  {language === 'en' ? 'Choose Your Journey' : 'Pilih Perjalanan Anda'}
-                </h2>
-                <p className="text-gray-600 dark:text-gray-300 text-lg max-w-2xl mx-auto">
-                  {language === 'en' 
-                    ? 'I wear multiple hats as both a creative designer and technical developer. Which perspective would you like to explore?'
-                    : 'Saya berperan ganda sebagai desainer kreatif dan pengembang teknis. Perspektif mana yang ingin Anda jelajahi?'
-                  }
+
+                {/* Title */}
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
+                  {language === 'en' ? role.titleEn : role.titleId}
+                </h3>
+
+                {/* Description */}
+                <p className="text-gray-600 dark:text-gray-300 mb-6 text-sm leading-relaxed">
+                  {language === 'en' ? role.descriptionEn : role.descriptionId}
                 </p>
-              </motion.div>
 
-              {/* Role Selection Cards */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-                {roleOptions.map((role, index) => {
-                  const IconComponent = role.icon;
-                  const isSelected = selectedRole === role.id;
-                  const isHovered = hoveredRole === role.id;
-
-                  return (
+                {/* Features */}
+                <div className="space-y-2">
+                  {(language === 'en' ? role.features.en : role.features.id).map((feature, idx) => (
                     <motion.div
-                      key={role.id}
-                      className="relative group cursor-pointer"
-                      variants={cardVariants}
-                      initial="hidden"
-                      animate="visible"
-                      whileHover="hover"
-                      whileTap="tap"
-                      onHoverStart={() => setHoveredRole(role.id)}
-                      onHoverEnd={() => setHoveredRole(null)}
-                      onClick={() => handleRoleSelect(role.id)}
-                      style={{
-                        animationDelay: `${index * 0.1}s`
-                      }}
+                      key={idx}
+                      className="flex items-center text-xs text-gray-500 dark:text-gray-400"
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.3 + (idx * 0.1) }}
                     >
-                      {/* Glow effect */}
-                      {(isHovered || isSelected) && (
-                        <motion.div
-                          className={`absolute inset-0 rounded-2xl bg-gradient-to-r ${role.gradient} opacity-20 blur-xl`}
-                          initial={{ opacity: 0, scale: 0.8 }}
-                          animate={{ opacity: 0.3, scale: 1.1 }}
-                          exit={{ opacity: 0, scale: 0.8 }}
-                          transition={{ duration: 0.3 }}
-                        />
-                      )}
-
-                      {/* Card Content */}
-                      <div className={`relative glass-card p-8 h-full transition-all duration-300 ${
-                        isSelected ? 'ring-2 ring-blue-400' : ''
-                      }`}>
-                        {/* Icon */}
-                        <div className="mb-6">
-                          <div className={`inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br ${role.gradient} mb-4 group-hover:scale-110 transition-transform duration-300`}>
-                            <IconComponent className="w-8 h-8 text-white" />
-                          </div>
-                          <div className="text-4xl mb-2">{role.iconEmoji}</div>
-                        </div>
-
-                        {/* Title */}
-                        <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
-                          {language === 'en' ? role.titleEn : role.titleId}
-                        </h3>
-
-                        {/* Description */}
-                        <p className="text-gray-600 dark:text-gray-300 mb-6 text-sm leading-relaxed">
-                          {language === 'en' ? role.descriptionEn : role.descriptionId}
-                        </p>
-
-                        {/* Features */}
-                        <div className="space-y-2">
-                          {(language === 'en' ? role.features.en : role.features.id).map((feature, idx) => (
-                            <motion.div
-                              key={idx}
-                              className="flex items-center text-xs text-gray-500 dark:text-gray-400"
-                              initial={{ opacity: 0, x: -10 }}
-                              animate={{ opacity: 1, x: 0 }}
-                              transition={{ delay: 0.3 + (idx * 0.1) }}
-                            >
-                              <div className={`w-2 h-2 rounded-full bg-gradient-to-r ${role.gradient} mr-2 group-hover:scale-125 transition-transform duration-300`} />
-                              {feature}
-                            </motion.div>
-                          ))}
-                        </div>
-
-                        {/* Selection Indicator */}
-                        {isSelected && (
-                          <motion.div
-                            className="absolute -top-2 -right-2 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center"
-                            initial={{ scale: 0 }}
-                            animate={{ scale: 1 }}
-                            transition={{ type: 'spring', delay: 0.2 }}
-                          >
-                            <motion.div
-                              className="w-3 h-3 bg-white rounded-full"
-                              initial={{ scale: 0 }}
-                              animate={{ scale: 1 }}
-                              transition={{ delay: 0.3 }}
-                            />
-                          </motion.div>
-                        )}
-                      </div>
+                      <div className={`w-2 h-2 rounded-full bg-gradient-to-r ${role.gradient} mr-2 group-hover:scale-125 transition-transform duration-300`} />
+                      {feature}
                     </motion.div>
-                  );
-                })}
-              </div>
+                  ))}
+                </div>
 
-              {/* Footer */}
-              <motion.div
-                className="flex flex-col sm:flex-row items-center justify-center gap-4"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 }}
-              >
-                <InteractiveButton
-                  onClick={onClose}
-                  className="px-6 py-3 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-xl font-medium hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-                >
-                  {language === 'en' ? 'Browse Everything' : 'Lihat Semuanya'}
-                </InteractiveButton>
-                
-                <p className="text-xs text-gray-500 dark:text-gray-400">
-                  {language === 'en' 
-                    ? 'You can always switch perspectives later'
-                    : 'Anda selalu dapat mengubah perspektif nanti'
-                  }
-                </p>
-              </motion.div>
-            </div>
-          </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+                {/* Selection Indicator */}
+                {isSelected && (
+                  <motion.div
+                    className="absolute -top-2 -right-2 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center"
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ type: 'spring', delay: 0.2 }}
+                  >
+                    <motion.div
+                      className="w-3 h-3 bg-white rounded-full"
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ delay: 0.3 }}
+                    />
+                  </motion.div>
+                )}
+              </div>
+            </motion.div>
+          );
+        })}
+      </div>
+
+      {/* Footer */}
+      <motion.div
+        className="flex flex-col sm:flex-row items-center justify-center gap-4"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.5 }}
+      >
+        <InteractiveButton
+          onClick={onClose}
+          className="px-6 py-3 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-xl font-medium hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+        >
+          {language === 'en' ? 'Browse Everything' : 'Lihat Semuanya'}
+        </InteractiveButton>
+        
+        <p className="text-xs text-gray-500 dark:text-gray-400">
+          {language === 'en' 
+            ? 'You can always switch perspectives later'
+            : 'Anda selalu dapat mengubah perspektif nanti'
+          }
+        </p>
+      </motion.div>
+    </StandardModal>
   );
 }

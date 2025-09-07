@@ -7,7 +7,8 @@ import { useLanguage } from '../../context/LanguageContext';
 import { AnimatedSectionTitle } from '../shared/AnimatedSectionTitle';
 import { AnimatedCard } from '../shared/AnimatedCard';
 import { InteractiveButton } from '../shared/InteractiveButton';
-import { Code, Palette, Layers, ChevronLeft, ChevronRight, X, ArrowRight, Sparkles } from 'lucide-react';
+import { StandardModal } from '../shared/StandardModal';
+import { Code, Palette, Layers, ChevronLeft, ChevronRight, X, ArrowRight, Sparkles, Eye, ExternalLink } from 'lucide-react';
 import { Projects } from './Projects';
 
 interface Service {
@@ -444,10 +445,13 @@ interface DesignProject {
   titleId: string;
   descriptionEn: string;
   descriptionId: string;
-  image: string;
+  image: string; // Main preview image
+  images: string[]; // Gallery images for modal
+  colors?: string[]; // Color palette
   tools: string[];
   year: string;
   category: string;
+  client?: string;
   links?: {
     demo?: string;
     figma?: string;
@@ -462,9 +466,21 @@ const designProjects: DesignProject[] = [
     descriptionEn: 'A comprehensive web design system for asset management platform with focus on user experience and data visualization.',
     descriptionId: 'Sistem desain web komprehensif untuk platform manajemen aset dengan fokus pada pengalaman pengguna dan visualisasi data.',
     image: '/assets/Assets Manajemen Web Design-01.png',
+    images: [
+      '/assets/Assets Manajemen Web Design-01.png',
+      '/assets/Assets Manajemen Web Design-02.png',
+      '/assets/Assets Manajemen Web Design-03.png',
+      '/assets/Assets Manajemen Web Design-04.png',
+      '/assets/Assets Manajemen Web Design-05.png',
+      '/assets/Assets Manajemen Web Design-06.png',
+      '/assets/Assets Manajemen Web Design-07.png',
+      '/assets/Assets Manajemen Web Design-08.png'
+    ],
+    colors: ['#2563eb', '#06b6d4', '#10b981', '#f59e0b'],
     tools: ['Figma', 'Adobe Photoshop', 'Principle'],
     year: '2024',
-    category: 'Web Design'
+    category: 'Web Design',
+    client: 'Tech Solutions Inc'
   },
   {
     id: 'campus-website',
@@ -473,9 +489,16 @@ const designProjects: DesignProject[] = [
     descriptionEn: 'Modern and accessible campus website design focusing on student experience and information architecture.',
     descriptionId: 'Desain website kampus modern dan accessible yang berfokus pada pengalaman mahasiswa dan arsitektur informasi.',
     image: '/assets/Campuss Website Design-1.png',
+    images: [
+      '/assets/Campuss Website Design-1.png',
+      '/assets/Campuss Website Design-2.png',
+      '/assets/Campuss Website Design-3.png'
+    ],
+    colors: ['#1e40af', '#059669', '#d97706'],
     tools: ['Figma', 'Sketch', 'InVision'],
     year: '2024',
-    category: 'Web Design'
+    category: 'Web Design',
+    client: 'Del Institute'
   },
   {
     id: 'gordenaise',
@@ -484,9 +507,17 @@ const designProjects: DesignProject[] = [
     descriptionEn: 'Luxury home decor e-commerce platform with emphasis on visual appeal and conversion optimization.',
     descriptionId: 'Platform e-commerce dekorasi rumah mewah dengan penekanan pada daya tarik visual dan optimasi konversi.',
     image: '/assets/Gordenaise Website Design-01.png',
+    images: [
+      '/assets/Gordenaise Website Design-01.png',
+      '/assets/Gordenaise Website Design-02.png',
+      '/assets/Gordenaise Website Design-03.png',
+      '/assets/Gordenaise Website Design-04.png'
+    ],
+    colors: ['#a855f7', '#ec4899', '#06b6d4'],
     tools: ['Figma', 'Adobe XD', 'Photoshop'],
     year: '2024',
-    category: 'E-commerce Design'
+    category: 'E-commerce Design',
+    client: 'Gordenaise Home Decor'
   }
 ];
 
@@ -1098,101 +1129,329 @@ export function Services() {
   );
 }
 
-// DesignShowcase Component - Standardized to match Projects component structure
+// Enhanced DesignShowcase Component with Modal Gallery
 const DesignShowcase: React.FC = () => {
   const { language } = useLanguage();
+  const [selectedProject, setSelectedProject] = useState<any>(null);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+
+  const openModal = (project: any) => {
+    setSelectedProject(project);
+    setSelectedImageIndex(0);
+  };
+
+  const closeModal = () => {
+    setSelectedProject(null);
+    setSelectedImageIndex(0);
+  };
+
+  const nextImage = () => {
+    if (selectedProject && selectedProject.images) {
+      setSelectedImageIndex((prev) => 
+        prev === selectedProject.images.length - 1 ? 0 : prev + 1
+      );
+    }
+  };
+
+  const prevImage = () => {
+    if (selectedProject && selectedProject.images) {
+      setSelectedImageIndex((prev) => 
+        prev === 0 ? selectedProject.images.length - 1 : prev - 1
+      );
+    }
+  };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-      {designProjects.map((project, index) => (
-        <AnimatedCard
-          key={project.id}
-          className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-3xl overflow-hidden border border-gray-200/50 dark:border-gray-700/50"
-          delay={index * 0.1}
-          hoverY={-12}
-          hoverScale={1.05}
-        >
-          {/* Project Image */}
-          <div className="relative overflow-hidden">
-            <motion.img 
-              src={project.image} 
-              alt={project.titleEn} 
-              className="w-full h-60 object-cover transition-all duration-700 group-hover:scale-110"
-              whileHover={{ scale: 1.1 }}
-              transition={{ duration: 0.7, ease: "easeOut" }}
-              onError={(e) => {
-                const target = e.target as HTMLImageElement;
-                target.src = '/assets/placeholder-design.svg';
-              }}
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-            
-            {/* Category Badge */}
-            <div className="absolute top-4 left-4">
-              <span className="px-3 py-1 bg-purple-500/90 text-white text-xs font-semibold rounded-full backdrop-blur-sm">
-                {project.category}
-              </span>
-            </div>
-          </div>
-          
-          {/* Project Content */}
-          <div className="p-6">
-            <motion.h3 
-              className="text-xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors duration-300"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-            >
-              {language === 'en' ? project.titleEn : project.titleId}
-            </motion.h3>
-            
-            <motion.p 
-              className="text-gray-600 dark:text-gray-400 mb-4 line-clamp-3 leading-relaxed"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-            >
-              {language === 'en' ? project.descriptionEn : project.descriptionId}
-            </motion.p>
-            
-            {/* Design Tools */}
-            <motion.div 
-              className="flex flex-wrap gap-2 mb-4"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
-            >
-              {project.tools.slice(0, 3).map((tool: string, techIndex: number) => (
-                <motion.span
-                  key={tool}
-                  className="px-3 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 rounded-full text-xs font-medium"
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  transition={{ delay: 0.6 + techIndex * 0.1 }}
-                  whileHover={{ scale: 1.05 }}
+    <>
+      {/* Enhanced Grid Layout with Better Visual Hierarchy */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+        {designProjects.map((project, index) => (
+          <motion.div
+            key={project.id}
+            className="group cursor-pointer"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.1, duration: 0.5 }}
+            whileHover={{ y: -8 }}
+            onClick={() => openModal(project)}
+          >
+            {/* Modern Card Design with Improved UX */}
+            <div className="relative overflow-hidden rounded-2xl bg-white dark:bg-gray-800 shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100 dark:border-gray-700">
+              {/* Enhanced Image Container */}
+              <div className="relative h-64 overflow-hidden">
+                <motion.img 
+                  src={project.image} 
+                  alt={project.titleEn}
+                  className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110"
+                  whileHover={{ scale: 1.1 }}
+                  transition={{ duration: 0.7, ease: "easeOut" }}
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.src = '/assets/placeholder-design.svg';
+                  }}
+                />
+                
+                {/* Improved Hover Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-gray-900/60 via-gray-900/10 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300" />
+                
+                {/* Enhanced Hover Actions */}
+                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300">
+                  <div className="flex items-center gap-3">
+                    <motion.div
+                      className="bg-white/20 backdrop-blur-md rounded-full p-3 border border-white/30"
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ delay: 0.1 }}
+                    >
+                      <Eye className="w-5 h-5 text-white" />
+                    </motion.div>
+                    <motion.span
+                      className="text-white font-medium text-sm bg-white/20 backdrop-blur-md px-3 py-1 rounded-full border border-white/30"
+                      initial={{ opacity: 0, x: 10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.2 }}
+                    >
+                      {language === 'en' ? 'View Gallery' : 'Lihat Galeri'}
+                    </motion.span>
+                  </div>
+                </div>
+                
+                {/* Modern Category Badge */}
+                <div className="absolute top-4 left-4">
+                  <motion.span
+                    className="inline-flex items-center px-3 py-1.5 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-xs font-semibold rounded-full backdrop-blur-sm shadow-lg border border-white/20"
+                    whileHover={{ scale: 1.05 }}
+                  >
+                    <span className="w-2 h-2 bg-white rounded-full mr-2 animate-pulse" />
+                    {project.category}
+                  </motion.span>
+                </div>
+                
+                {/* Quality Indicator */}
+                <div className="absolute top-4 right-4">
+                  <motion.div
+                    className="bg-white/20 backdrop-blur-md rounded-full p-2 border border-white/30"
+                    whileHover={{ scale: 1.1, rotate: 180 }}
+                  >
+                    <ExternalLink className="w-4 h-4 text-white" />
+                  </motion.div>
+                </div>
+              </div>
+              
+              {/* Enhanced Project Content */}
+              <div className="p-6">
+                <div className="flex items-start justify-between mb-3">
+                  <motion.h3 
+                    className="text-lg font-bold text-gray-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors duration-300 line-clamp-1"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3 }}
+                  >
+                    {language === 'en' ? project.titleEn : project.titleId}
+                  </motion.h3>
+                  
+                  <motion.div
+                    className="flex items-center text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded-full"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.4 }}
+                  >
+                    {project.year}
+                  </motion.div>
+                </div>
+                
+                <motion.p 
+                  className="text-gray-600 dark:text-gray-400 mb-4 line-clamp-2 leading-relaxed text-sm"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.4 }}
                 >
-                  {tool}
-                </motion.span>
-              ))}
-              {project.tools.length > 3 && (
-                <span className="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 rounded-full text-xs font-medium">
-                  +{project.tools.length - 3}
-                </span>
+                  {language === 'en' ? project.descriptionEn : project.descriptionId}
+                </motion.p>
+                
+                {/* Enhanced Tools Section */}
+                <motion.div 
+                  className="flex flex-wrap gap-2 mb-4"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.5 }}
+                >
+                  {project.tools.slice(0, 2).map((tool: string, toolIndex: number) => (
+                    <motion.span
+                      key={tool}
+                      className="inline-flex items-center px-2.5 py-1 bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 text-purple-700 dark:text-purple-300 rounded-full text-xs font-medium border border-purple-200 dark:border-purple-700"
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ delay: 0.6 + toolIndex * 0.1 }}
+                      whileHover={{ scale: 1.05, y: -2 }}
+                    >
+                      <span className="w-1.5 h-1.5 bg-purple-500 rounded-full mr-2" />
+                      {tool}
+                    </motion.span>
+                  ))}
+                  {project.tools.length > 2 && (
+                    <motion.span
+                      className="px-2.5 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 rounded-full text-xs font-medium border border-gray-200 dark:border-gray-600"
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ delay: 0.8 }}
+                    >
+                      +{project.tools.length - 2}
+                    </motion.span>
+                  )}
+                </motion.div>
+                
+                {/* Interactive Bottom Section */}
+                <motion.div
+                  className="flex items-center justify-between pt-2 border-t border-gray-100 dark:border-gray-700"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.6 }}
+                >
+                  <span className="text-xs text-gray-500 dark:text-gray-400">
+                    {language === 'en' ? 'Click to view gallery' : 'Klik untuk melihat galeri'}
+                  </span>
+                  <motion.div
+                    className="w-6 h-6 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center opacity-70 group-hover:opacity-100"
+                    whileHover={{ rotate: 360 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <Eye className="w-3 h-3 text-white" />
+                  </motion.div>
+                </motion.div>
+              </div>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+      
+      {/* Enhanced Modal for Design Showcase */}
+      <StandardModal
+        isOpen={!!selectedProject}
+        onClose={closeModal}
+        title={selectedProject ? (language === 'en' ? selectedProject.titleEn : selectedProject.titleId) : ''}
+        maxWidth="2xl"
+        className="overflow-hidden"
+      >
+        {selectedProject && (
+          <>
+            <div className="mb-6">
+              <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
+                <div className="flex flex-wrap items-center gap-3">
+                  <span className="px-3 py-1.5 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-sm font-semibold rounded-full">
+                    {selectedProject.category}
+                  </span>
+                  <span className="text-gray-600 dark:text-gray-300 text-sm">{selectedProject.year}</span>
+                  <span className="text-gray-600 dark:text-gray-300 text-sm">
+                    {selectedImageIndex + 1} / {selectedProject.images?.length || 1}
+                  </span>
+                </div>
+                
+                {selectedProject.client && (
+                  <span className="text-sm text-gray-500 dark:text-gray-400">
+                    <span className="font-medium">{language === 'en' ? 'Client: ' : 'Klien: '}</span>
+                    {selectedProject.client}
+                  </span>
+                )}
+              </div>
+              
+              {selectedProject.colors && (
+                <div className="flex items-center gap-3">
+                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                    {language === 'en' ? 'Color Palette:' : 'Palet Warna:'}
+                  </span>
+                  <div className="flex space-x-2">
+                    {selectedProject.colors.slice(0, 5).map((color: string, i: number) => (
+                      <motion.div 
+                        key={i}
+                        className="w-8 h-8 rounded-full border-2 border-white dark:border-gray-600 shadow-md cursor-pointer"
+                        style={{ backgroundColor: color }}
+                        whileHover={{ scale: 1.2, y: -2 }}
+                        title={color}
+                      />
+                    ))}
+                  </div>
+                </div>
               )}
-            </motion.div>
-            
-            {/* Year */}
-            <motion.div 
-              className="text-sm text-gray-500 dark:text-gray-400"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.7 }}
-            >
-              {project.year}
-            </motion.div>
-          </div>
-        </AnimatedCard>
-      ))}
-    </div>
+            </div>
+
+            <div className="relative bg-gray-50 dark:bg-gray-800 rounded-xl mb-6 overflow-hidden">
+              <div className="relative h-96 flex items-center justify-center">
+                <motion.img
+                  key={selectedImageIndex}
+                  src={selectedProject.images?.[selectedImageIndex] || selectedProject.image}
+                  alt={`${selectedProject.titleEn} - ${selectedImageIndex + 1}`}
+                  className="max-w-full max-h-full object-contain"
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.3 }}
+                />
+
+                {selectedProject.images && selectedProject.images.length > 1 && (
+                  <>
+                    <button
+                      onClick={prevImage}
+                      className="absolute left-4 top-1/2 -translate-y-1/2 p-3 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm text-gray-800 dark:text-white hover:bg-white dark:hover:bg-gray-700 transition-all rounded-full shadow-lg border border-gray-200 dark:border-gray-600"
+                    >
+                      <ChevronLeft className="w-5 h-5" />
+                    </button>
+                    <button
+                      onClick={nextImage}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 p-3 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm text-gray-800 dark:text-white hover:bg-white dark:hover:bg-gray-700 transition-all rounded-full shadow-lg border border-gray-200 dark:border-gray-600"
+                    >
+                      <ChevronRight className="w-5 h-5" />
+                    </button>
+                  </>
+                )}
+              </div>
+
+              {selectedProject.images && selectedProject.images.length > 1 && (
+                <div className="p-4 bg-white/50 dark:bg-gray-700/50 backdrop-blur-sm">
+                  <div className="flex space-x-2 overflow-x-auto scrollbar-hide">
+                    {selectedProject.images.map((image: string, index: number) => (
+                      <button
+                        key={index}
+                        onClick={() => setSelectedImageIndex(index)}
+                        className={`flex-shrink-0 w-16 h-12 rounded-lg overflow-hidden border-2 transition-all ${
+                          index === selectedImageIndex
+                            ? 'border-purple-500 shadow-lg scale-105'
+                            : 'border-gray-300 dark:border-gray-600 hover:border-purple-300 hover:scale-105'
+                        }`}
+                      >
+                        <img
+                          src={image}
+                          alt={`Thumbnail ${index + 1}`}
+                          className="w-full h-full object-cover"
+                        />
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="space-y-4">
+              <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+                {language === 'en' ? selectedProject.descriptionEn : selectedProject.descriptionId}
+              </p>
+              
+              <div className="flex flex-wrap gap-2">
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300 mr-2">
+                  {language === 'en' ? 'Tools:' : 'Tools:'}
+                </span>
+                {selectedProject.tools.map((tool: string) => (
+                  <span
+                    key={tool}
+                    className="px-3 py-1 bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 text-purple-700 dark:text-purple-300 text-sm rounded-full border border-purple-200 dark:border-purple-700"
+                  >
+                    {tool}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </>
+        )}
+      </StandardModal>
+    </>
   );
 };

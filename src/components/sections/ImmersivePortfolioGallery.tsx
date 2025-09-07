@@ -5,7 +5,8 @@ import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
 import { useLanguage } from '../../context/LanguageContext';
 import { AnimatedSectionTitle } from '../shared/AnimatedSectionTitle';
 import { InteractiveButton } from '../shared/InteractiveButton';
-import { Play, Pause, X, ChevronLeft, ChevronRight, ExternalLink, Eye } from 'lucide-react';
+import { StandardModal } from '../shared/StandardModal';
+import { Play, Pause, ChevronLeft, ChevronRight, ExternalLink, Eye } from 'lucide-react';
 
 interface DesignProject {
   id: string;
@@ -213,14 +214,16 @@ export function ImmersivePortfolioGallery() {
       </div>
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <AnimatedSectionTitle
-          badge={language === 'en' ? 'Design Showcase' : 'Showcase Desain'}
-          title={language === 'en' ? 'Immersive Creative Portfolio' : 'Portofolio Kreatif Imersif'}
-          subtitle={language === 'en' 
-            ? 'Experience visual storytelling through interactive design projects that push creative boundaries' 
-            : 'Rasakan bercerita visual melalui proyek desain interaktif yang mendorong batas kreativitas'
-          }
-        />
+        <div className="text-center mb-12">
+          <span className="text-emerald-600 dark:text-emerald-400 font-bold text-sm tracking-wider uppercase badge-label">Design Showcase</span>
+          <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight mt-2 text-gray-900 dark:text-white relative">
+            <span className="relative">Creative Project Design</span>
+            <span className="absolute inset-0 bg-gradient-to-r from-emerald-600 via-blue-600 via-purple-600 to-emerald-600 bg-clip-text text-transparent blur-sm opacity-50 animate-gradient-bg bg-[length:400%_400%]" aria-hidden="true">Creative Project Design</span>
+          </h2>
+          <p className="mt-4 text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+            Berikut adalah beberapa desain UI/UX yang telah saya kerjakan, berfokus pada pengalaman pengguna yang intuitif dan menarik.
+          </p>
+        </div>
 
         {/* View Controls */}
         <motion.div 
@@ -314,7 +317,7 @@ export function ImmersivePortfolioGallery() {
                         alt={project.titleEn}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-gray-900/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                       
                       {/* Hover Overlay */}
                       <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300">
@@ -428,7 +431,7 @@ export function ImmersivePortfolioGallery() {
                           alt={project.titleEn}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-gray-900/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                       </div>
                       
                       <div className="p-6">
@@ -461,154 +464,128 @@ export function ImmersivePortfolioGallery() {
         </AnimatePresence>
 
         {/* Enhanced Modal */}
-        <AnimatePresence>
+        <StandardModal
+          isOpen={!!selectedProject}
+          onClose={closeModal}
+          title={selectedProject ? (language === 'en' ? selectedProject.titleEn : selectedProject.titleId) : ''}
+          maxWidth="2xl"
+          className="overflow-hidden"
+        >
           {selectedProject && (
-            <motion.div
-              className="fixed inset-0 z-50 flex items-center justify-center bg-white/95 dark:bg-gray-900/95"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={closeModal}
-            >
-              <motion.div
-                className="relative w-full max-w-5xl max-h-[85vh] mx-4 glass-card-strong overflow-hidden flex flex-col"
-                initial={{ scale: 0.8, opacity: 0, y: 50 }}
-                animate={{ scale: 1, opacity: 1, y: 0 }}
-                exit={{ scale: 0.8, opacity: 0, y: 50 }}
-                transition={{ type: 'spring', duration: 0.5 }}
-                onClick={(e) => e.stopPropagation()}
-              >
-                {/* Modal Header */}
-                <div className="flex-shrink-0 p-4 sm:p-6 border-b border-border-primary bg-surface-primary/80 backdrop-blur-sm">
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1 min-w-0 pr-4">
-                      <h2 className="text-lg sm:text-xl font-bold text-text-primary truncate">
-                        {language === 'en' ? selectedProject.titleEn : selectedProject.titleId}
-                      </h2>
-                      <div className="flex flex-wrap items-center gap-2 mt-1 text-text-secondary text-sm">
-                        <span className="px-2 py-1 bg-surface-secondary rounded text-xs">
-                          {selectedProject.category}
-                        </span>
-                        <span>{selectedProject.year}</span>
-                        <span>
-                          {selectedImageIndex + 1} / {selectedProject.images.length}
-                        </span>
-                      </div>
-                      
-                      {/* Color Palette - Mobile Friendly */}
-                      <div className="flex space-x-1 mt-2">
-                        {selectedProject.colors.slice(0, 3).map((color, i) => (
-                          <div 
-                            key={i}
-                            className="w-5 h-5 sm:w-6 sm:h-6 rounded-full border border-white/50 shadow-sm"
-                            style={{ backgroundColor: color }}
-                          />
-                        ))}
-                      </div>
-                    </div>
-                    
+            <>
+              {/* Project Info Header */}
+              <div className="mb-4">
+                <div className="flex flex-wrap items-center gap-2 text-gray-600 dark:text-gray-300 text-sm">
+                  <span className="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded text-xs">
+                    {selectedProject.category}
+                  </span>
+                  <span>{selectedProject.year}</span>
+                  <span>
+                    {selectedImageIndex + 1} / {selectedProject.images.length}
+                  </span>
+                </div>
+                
+                {/* Color Palette */}
+                <div className="flex space-x-1 mt-2">
+                  {selectedProject.colors.slice(0, 3).map((color, i) => (
+                    <div 
+                      key={i}
+                      className="w-5 h-5 sm:w-6 sm:h-6 rounded-full border border-gray-300 dark:border-gray-600 shadow-sm"
+                      style={{ backgroundColor: color }}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              {/* Image Container */}
+              <div className="relative bg-gray-100 dark:bg-gray-800 min-h-[300px] flex items-center justify-center rounded-lg mb-4">
+                <motion.img
+                  key={selectedImageIndex}
+                  src={selectedProject.images[selectedImageIndex]}
+                  alt={`${selectedProject.titleEn} - ${selectedImageIndex + 1}`}
+                  className="w-full max-h-[50vh] sm:max-h-[60vh] object-contain"
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.3 }}
+                />
+
+                {/* Navigation Arrows */}
+                {selectedProject.images.length > 1 && (
+                  <>
                     <InteractiveButton
-                      onClick={closeModal}
-                      className="flex-shrink-0 p-2 hover:bg-surface-secondary rounded-full transition-colors"
+                      onClick={prevImage}
+                      className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 p-2 sm:p-3 bg-white/20 dark:bg-black/20 backdrop-blur-sm text-gray-800 dark:text-white hover:bg-white/30 dark:hover:bg-black/30 transition-all rounded-full"
                     >
-                      <X className="w-5 h-5 sm:w-6 sm:h-6 text-text-primary" />
+                      <ChevronLeft className="w-4 h-4 sm:w-6 sm:h-6" />
                     </InteractiveButton>
+                    <InteractiveButton
+                      onClick={nextImage}
+                      className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 p-2 sm:p-3 bg-white/20 dark:bg-black/20 backdrop-blur-sm text-gray-800 dark:text-white hover:bg-white/30 dark:hover:bg-black/30 transition-all rounded-full"
+                    >
+                      <ChevronRight className="w-4 h-4 sm:w-6 sm:h-6" />
+                    </InteractiveButton>
+                  </>
+                )}
+              </div>
+
+              {/* Enhanced Image Thumbnails */}
+              {selectedProject.images.length > 1 && (
+                <div className="mb-4 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                  <div className="flex space-x-2 overflow-x-auto scrollbar-hide">
+                    {selectedProject.images.map((image, index) => (
+                      <motion.button
+                        key={index}
+                        onClick={() => setSelectedImageIndex(index)}
+                        className={`flex-shrink-0 w-14 h-12 sm:w-16 sm:h-12 rounded-lg overflow-hidden border-2 transition-all ${
+                          index === selectedImageIndex
+                            ? 'border-emerald-500 shadow-lg'
+                            : 'border-gray-300 dark:border-gray-600 hover:border-emerald-300'
+                        }`}
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        <img
+                          src={image}
+                          alt={`Thumbnail ${index + 1}`}
+                          className="w-full h-full object-cover"
+                        />
+                      </motion.button>
+                    ))}
                   </div>
                 </div>
+              )}
 
-                {/* Modal Content - Scrollable */}
-                <div className="flex-1 overflow-y-auto">
-                  {/* Image Container */}
-                  <div className="relative bg-surface-secondary min-h-[300px] flex items-center justify-center">
-                    <motion.img
-                      key={selectedImageIndex}
-                      src={selectedProject.images[selectedImageIndex]}
-                      alt={`${selectedProject.titleEn} - ${selectedImageIndex + 1}`}
-                      className="w-full max-h-[50vh] sm:max-h-[60vh] object-contain"
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ duration: 0.3 }}
-                    />
-
-                    {/* Navigation Arrows */}
-                    {selectedProject.images.length > 1 && (
-                      <>
-                        <InteractiveButton
-                          onClick={prevImage}
-                          className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 p-2 sm:p-3 glass-card text-white hover:bg-white/20 transition-all"
-                        >
-                          <ChevronLeft className="w-4 h-4 sm:w-6 sm:h-6" />
-                        </InteractiveButton>
-                        <InteractiveButton
-                          onClick={nextImage}
-                          className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 p-2 sm:p-3 glass-card text-white hover:bg-white/20 transition-all"
-                        >
-                          <ChevronRight className="w-4 h-4 sm:w-6 sm:h-6" />
-                        </InteractiveButton>
-                      </>
-                    )}
+              {/* Project Details Footer */}
+              <div>
+                <p className="text-gray-600 dark:text-gray-300 mb-3 text-sm leading-relaxed">
+                  {language === 'en' ? selectedProject.descriptionEn : selectedProject.descriptionId}
+                </p>
+                
+                <div className="space-y-3">
+                  <div className="flex flex-wrap gap-2">
+                    {selectedProject.tools.map((tool) => (
+                      <span
+                        key={tool}
+                        className="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs rounded-md"
+                      >
+                        {tool}
+                      </span>
+                    ))}
                   </div>
-
-                  {/* Enhanced Image Thumbnails */}
-                  {selectedProject.images.length > 1 && (
-                    <div className="flex-shrink-0 p-3 sm:p-4 bg-surface-primary/80 backdrop-blur-sm border-t border-border-primary">
-                      <div className="flex space-x-2 overflow-x-auto scrollbar-hide">
-                        {selectedProject.images.map((image, index) => (
-                          <motion.button
-                            key={index}
-                            onClick={() => setSelectedImageIndex(index)}
-                            className={`flex-shrink-0 w-14 h-12 sm:w-16 sm:h-12 rounded-lg overflow-hidden border-2 transition-all ${
-                              index === selectedImageIndex
-                                ? 'border-primary-500 shadow-lg'
-                                : 'border-border-secondary hover:border-primary-300'
-                            }`}
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                          >
-                            <img
-                              src={image}
-                              alt={`Thumbnail ${index + 1}`}
-                              className="w-full h-full object-cover"
-                            />
-                          </motion.button>
-                        ))}
-                      </div>
+                  
+                  {selectedProject.client && (
+                    <div className="text-xs text-gray-500 dark:text-gray-400">
+                      <span className="font-medium">
+                        {language === 'en' ? 'Client: ' : 'Klien: '}
+                      </span>
+                      {selectedProject.client}
                     </div>
                   )}
-
-                  {/* Project Details Footer */}
-                  <div className="flex-shrink-0 p-4 sm:p-6 bg-surface-primary/80 backdrop-blur-sm border-t border-border-primary">
-                    <p className="text-text-secondary mb-3 text-sm leading-relaxed">
-                      {language === 'en' ? selectedProject.descriptionEn : selectedProject.descriptionId}
-                    </p>
-                    
-                    <div className="space-y-3">
-                      <div className="flex flex-wrap gap-2">
-                        {selectedProject.tools.map((tool) => (
-                          <span
-                            key={tool}
-                            className="px-2 py-1 bg-surface-secondary text-text-tertiary text-xs rounded-md"
-                          >
-                            {tool}
-                          </span>
-                        ))}
-                      </div>
-                      
-                      {selectedProject.client && (
-                        <div className="text-xs text-text-tertiary">
-                          <span className="font-medium">
-                            {language === 'en' ? 'Client: ' : 'Klien: '}
-                          </span>
-                          {selectedProject.client}
-                        </div>
-                      )}
-                    </div>
-                  </div>
                 </div>
-              </motion.div>
-            </motion.div>
+              </div>
+            </>
           )}
-        </AnimatePresence>
+        </StandardModal>
       </div>
     </section>
   );
