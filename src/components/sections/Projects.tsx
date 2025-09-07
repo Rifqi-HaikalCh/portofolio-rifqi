@@ -27,7 +27,16 @@ export const Projects: React.FC = () => {
   };
 
   return (
-    <section id="projects" className="py-20 relative overflow-hidden bg-transparent">
+    <>
+      <style jsx>{`
+        #projects {
+          background: transparent !important;
+        }
+        #projects::before {
+          display: none !important;
+        }
+      `}</style>
+      <section id="projects" className="py-20 relative overflow-hidden">
       
       <div className="container mx-auto px-4 relative z-10">
         {/* Enhanced Header */}
@@ -83,7 +92,7 @@ export const Projects: React.FC = () => {
             {currentProjects.map((project, index) => (
               <AnimatedCard
                 key={project.id}
-                className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-3xl overflow-hidden border border-gray-200/50 dark:border-gray-700/50 cursor-pointer"
+                className="bg-white dark:bg-gray-800 backdrop-blur-sm rounded-3xl overflow-hidden border border-gray-200/50 dark:border-gray-700/50 cursor-pointer"
                 delay={index * 0.1}
                 hoverY={-12}
                 hoverScale={1.05}
@@ -266,5 +275,6 @@ export const Projects: React.FC = () => {
         )}
       </StandardModal>
     </section>
+    </>
   );
 };

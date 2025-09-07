@@ -50,40 +50,11 @@ export const AnimatedCard: React.FC<AnimatedCardProps> = ({
         backfaceVisibility: 'hidden'
       }}
     >
-      {/* Hover gradient overlay */}
-      <motion.div
-        className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 via-blue-500/10 to-purple-500/10 opacity-0 transition-opacity duration-300"
-        animate={{ opacity: isHovered ? 1 : 0 }}
-      />
+      {/* Removed hover gradient overlay to prevent background highlight */}
       
-      {/* Animated border glow */}
-      {glowEffect && (
-        <motion.div
-          className="absolute inset-0 rounded-inherit"
-          initial={{ 
-            backgroundColor: 'rgba(0, 0, 0, 0)' 
-          }}
-          animate={{
-            background: isHovered 
-              ? 'linear-gradient(45deg, rgba(16, 185, 129, 0.3), rgba(59, 130, 246, 0.3), rgba(168, 85, 247, 0.3))'
-              : 'rgba(0, 0, 0, 0)'
-          }}
-          transition={{ duration: 0.3 }}
-          style={{ 
-            padding: '1px',
-            backgroundColor: 'rgba(0, 0, 0, 0)'
-          }}
-        >
-          <div className="w-full h-full bg-white dark:bg-gray-800 rounded-inherit" />
-        </motion.div>
-      )}
+      {/* Removed animated border glow to prevent background highlight */}
       
-      {/* Corner accent */}
-      <motion.div
-        className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-br from-emerald-500/20 to-blue-500/20 rounded-bl-2xl opacity-0"
-        animate={{ opacity: isHovered ? 1 : 0 }}
-        transition={{ duration: 0.3 }}
-      />
+      {/* Removed corner accent to prevent background highlight */}
       
       {/* Content */}
       <div className="relative z-10">

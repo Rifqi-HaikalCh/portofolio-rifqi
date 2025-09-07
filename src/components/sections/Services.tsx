@@ -769,69 +769,117 @@ export function Services() {
           }
         />
 
-        {/* Tab Navigation */}
+        {/* Enhanced Mobile-First Tab Navigation */}
         <motion.div 
-          className="flex justify-center mb-12"
+          className="mb-8 sm:mb-12 lg:mb-16"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
         >
-          <div className="bg-white dark:bg-gray-800 p-1.5 lg:p-2 rounded-xl lg:rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 inline-flex flex-col sm:flex-row w-full sm:w-auto">
-            {tabs.map((tab) => {
-              const IconComponent = tab.icon;
-              const isActive = activeTab === tab.id;
-
-              return (
-                <motion.button
-                  key={tab.id}
-                  className={`relative px-4 lg:px-8 py-3 lg:py-4 rounded-lg lg:rounded-xl font-semibold text-sm flex items-center space-x-2 lg:space-x-3 transition-all duration-300 min-w-0 sm:min-w-[220px] justify-center ${
-                    isActive
-                      ? `bg-gradient-to-r ${tab.gradient} text-white shadow-lg`
-                      : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
-                  }`}
-                  onClick={() => setActiveTab(tab.id)}
-                  variants={tabVariants}
-                  animate={isActive ? 'active' : 'inactive'}
-                  whileHover={{ 
-                    scale: 1.02,
-                    boxShadow: isActive 
-                      ? "0 20px 40px rgba(139, 92, 246, 0.3), 0 0 20px rgba(139, 92, 246, 0.2)"
-                      : "0 10px 25px rgba(0, 0, 0, 0.1)"
-                  }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  {/* Sliding indicator background */}
-                  {isActive && (
-                    <motion.div
-                      className={`absolute inset-0 bg-gradient-to-r ${tab.gradient} rounded-lg lg:rounded-xl`}
-                      layoutId="activeServiceTab"
-                      transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-                    />
-                  )}
-
-                  {/* Content */}
-                  <div className="relative z-10 flex items-center space-x-2 lg:space-x-3">
-                    <motion.div
-                      whileHover={{ 
-                        rotate: isActive ? [0, -5, 5, 0] : 0,
-                        scale: 1.1 
-                      }}
-                      transition={{ duration: 0.3, ease: "easeOut" }}
+          {/* Mobile: Compact Tab Switcher */}
+          <div className="block sm:hidden mb-6">
+            <div className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-md p-1 rounded-2xl shadow-2xl border border-gray-200/50 dark:border-gray-700/50 mx-4">
+              <div className="flex rounded-xl overflow-hidden">
+                {tabs.map((tab) => {
+                  const IconComponent = tab.icon;
+                  const isActive = activeTab === tab.id;
+                  
+                  return (
+                    <motion.button
+                      key={tab.id}
+                      className={`relative flex-1 py-3 px-2 rounded-lg transition-all duration-300 ${
+                        isActive
+                          ? `bg-gradient-to-r ${tab.gradient} text-white shadow-lg`
+                          : 'text-gray-600 dark:text-gray-300'
+                      }`}
+                      onClick={() => setActiveTab(tab.id)}
+                      whileTap={{ scale: 0.95 }}
                     >
-                      <IconComponent className="w-4 h-4 lg:w-5 lg:h-5 flex-shrink-0" />
-                    </motion.div>
-                    <div className="text-left min-w-0">
-                      <div className="font-semibold text-xs lg:text-sm">
-                        {language === 'en' ? tab.labelEn : tab.labelId}
+                      {isActive && (
+                        <motion.div
+                          className={`absolute inset-0 bg-gradient-to-r ${tab.gradient} rounded-lg`}
+                          layoutId="activeMobileTab"
+                          transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                        />
+                      )}
+                      
+                      <div className="relative z-10 flex flex-col items-center space-y-1">
+                        <IconComponent className="w-6 h-6" />
+                        <span className="text-sm font-semibold leading-tight text-center">
+                          {language === 'en' ? tab.labelEn.split(' ')[0] : tab.labelId.split(' ')[0]}
+                        </span>
                       </div>
-                      <div className={`text-xs hidden sm:block ${isActive ? 'text-white/80' : 'text-gray-500 dark:text-gray-400'}`}>
-                        {language === 'en' ? tab.descriptionEn : tab.descriptionId}
+                    </motion.button>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+
+          {/* Tablet & Desktop: Enhanced Tab Navigation */}
+          <div className="hidden sm:flex justify-center">
+            <div className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-md p-1.5 md:p-2 rounded-2xl shadow-2xl border border-gray-200/50 dark:border-gray-700/50 inline-flex">
+              {tabs.map((tab) => {
+                const IconComponent = tab.icon;
+                const isActive = activeTab === tab.id;
+
+                return (
+                  <motion.button
+                    key={tab.id}
+                    className={`relative px-4 md:px-6 lg:px-8 py-3 md:py-4 rounded-xl font-semibold text-sm md:text-base flex items-center space-x-2 md:space-x-3 transition-all duration-300 min-w-[140px] md:min-w-[180px] lg:min-w-[220px] justify-center group ${
+                      isActive
+                        ? `bg-gradient-to-r ${tab.gradient} text-white shadow-lg`
+                        : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100/80 dark:hover:bg-gray-700/80'
+                    }`}
+                    onClick={() => setActiveTab(tab.id)}
+                    whileHover={{ 
+                      scale: 1.02,
+                      boxShadow: isActive 
+                        ? "0 20px 40px rgba(139, 92, 246, 0.3), 0 0 20px rgba(139, 92, 246, 0.2)"
+                        : "0 10px 25px rgba(0, 0, 0, 0.1)"
+                    }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    {/* Enhanced sliding indicator */}
+                    {isActive && (
+                      <motion.div
+                        className={`absolute inset-0 bg-gradient-to-r ${tab.gradient} rounded-xl shadow-xl`}
+                        layoutId="activeDesktopTab"
+                        transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                      />
+                    )}
+
+                    {/* Content */}
+                    <div className="relative z-10 flex items-center space-x-2 md:space-x-3">
+                      <motion.div
+                        whileHover={{ 
+                          rotate: isActive ? [0, -5, 5, 0] : 0,
+                          scale: 1.1 
+                        }}
+                        transition={{ duration: 0.3, ease: "easeOut" }}
+                      >
+                        <IconComponent className="w-5 h-5 md:w-6 md:h-6 flex-shrink-0" />
+                      </motion.div>
+                      <div className="text-center md:text-left">
+                        <div className="font-semibold text-base md:text-lg">
+                          {language === 'en' ? tab.labelEn : tab.labelId}
+                        </div>
+                        <div className={`text-sm hidden md:block leading-tight ${isActive ? 'text-white/80' : 'text-gray-500 dark:text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-300'}`}>
+                          {language === 'en' ? tab.descriptionEn : tab.descriptionId}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </motion.button>
-              );
-            })}
+
+                    {/* Subtle border highlight */}
+                    <div className={`absolute inset-0 rounded-xl border-2 transition-all duration-300 ${
+                      isActive 
+                        ? 'border-transparent' 
+                        : 'border-transparent group-hover:border-gray-200/30 dark:group-hover:border-gray-600/30'
+                    }`} />
+                  </motion.button>
+                );
+              })}
+            </div>
           </div>
         </motion.div>
 
@@ -932,10 +980,10 @@ export function Services() {
                   </p>
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 mb-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 mb-8">
                   {/* Full-time */}
                   <motion.div 
-                    className="group bg-white dark:bg-gray-800 rounded-xl lg:rounded-2xl p-4 lg:p-6 border border-gray-200 dark:border-gray-700 shadow-lg relative overflow-hidden transition-all duration-300 hover:shadow-2xl"
+                    className="group bg-transparent rounded-xl lg:rounded-2xl p-4 lg:p-6 border border-gray-200 dark:border-gray-700 shadow-lg relative overflow-hidden transition-all duration-300 hover:shadow-2xl min-h-[200px]"
                     whileHover={{ 
                       y: -8, 
                       scale: 1.03,
@@ -977,7 +1025,7 @@ export function Services() {
 
                   {/* Freelance */}
                   <motion.div 
-                    className="group bg-white dark:bg-gray-800 rounded-xl lg:rounded-2xl p-4 lg:p-6 border border-gray-200 dark:border-gray-700 shadow-lg relative overflow-hidden transition-all duration-300 hover:shadow-2xl"
+                    className="group bg-transparent rounded-xl lg:rounded-2xl p-4 lg:p-6 border border-gray-200 dark:border-gray-700 shadow-lg relative overflow-hidden transition-all duration-300 hover:shadow-2xl min-h-[200px]"
                     whileHover={{ 
                       y: -8, 
                       scale: 1.03,
@@ -1026,13 +1074,13 @@ export function Services() {
             {/* Services Section */}
             <div className="space-y-8">
               <div className="text-center">
-                <h3 className="text-xl lg:text-2xl font-bold text-gray-900 dark:text-white mb-2">
+                <h3 className="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white mb-3">
                   {language === 'en' ? 'Services' : 'Layanan'}
                 </h3>
                 <div className={`w-24 h-1 bg-gradient-to-r ${currentTab.gradient} mx-auto rounded-full`} />
               </div>
               
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
                 {currentServices.map((service, index) => (
                   <AnimatedCard
                     key={service.id}
@@ -1040,52 +1088,50 @@ export function Services() {
                     className="group h-full"
                   >
                     <motion.div
-                      className="relative h-full bg-white dark:bg-gray-800 rounded-2xl lg:rounded-3xl p-6 lg:p-8 shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden"
+                      className="relative h-full bg-transparent rounded-xl sm:rounded-2xl lg:rounded-3xl p-4 sm:p-6 lg:p-8 shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden min-h-[220px] sm:min-h-[250px] lg:min-h-[280px]"
                       whileHover={{ 
-                        y: -8,
-                        rotateX: 5,
-                        rotateY: 5,
+                        y: -6,
                         scale: 1.02,
-                        boxShadow: "0 25px 60px rgba(0, 0, 0, 0.15), 0 5px 20px rgba(0, 0, 0, 0.1)"
+                        boxShadow: "0 20px 40px rgba(0, 0, 0, 0.12), 0 5px 15px rgba(0, 0, 0, 0.08)"
                       }}
                       transition={{ 
-                        duration: 0.4, 
+                        duration: 0.3, 
                         ease: "easeOut",
                         type: "spring",
                         stiffness: 300,
-                        damping: 20
+                        damping: 25
                       }}
                     >
                       {/* Gradient Background on Hover */}
                       <div className={`absolute inset-0 bg-gradient-to-r ${service.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-500`} />
                       
                       {/* Icon */}
-                      <div className="relative z-10 text-5xl mb-6 transform group-hover:scale-110 transition-transform duration-300">
+                      <div className="relative z-10 text-3xl sm:text-4xl lg:text-5xl mb-4 sm:mb-6 transform group-hover:scale-110 transition-transform duration-300">
                         {service.icon}
                       </div>
 
-                      {/* Title */}
-                      <h3 className="relative z-10 text-xl font-bold text-gray-900 dark:text-white mb-4">
+                      {/* Title - Proportional Hierarchy */}
+                      <h3 className="relative z-10 text-xl sm:text-2xl lg:text-2xl font-bold text-gray-900 dark:text-white mb-3 sm:mb-4 leading-tight">
                         {language === 'en' ? service.titleEn : service.titleId}
                       </h3>
 
-                      {/* Description */}
-                      <p className="relative z-10 text-gray-600 dark:text-gray-300 mb-6">
+                      {/* Description - Proportional to Title */}
+                      <p className="relative z-10 text-base sm:text-lg lg:text-lg text-gray-600 dark:text-gray-300 mb-4 sm:mb-6 leading-relaxed">
                         {language === 'en' ? service.descriptionEn : service.descriptionId}
                       </p>
 
-                      {/* Features */}
-                      <div className="relative z-10 space-y-3">
+                      {/* Features - Proper Supporting Text Size */}
+                      <div className="relative z-10 space-y-2 sm:space-y-3">
                         {(language === 'en' ? service.features.en : service.features.id).slice(0, 3).map((feature, idx) => (
                           <motion.div
                             key={idx}
-                            className="flex items-center text-sm text-gray-500 dark:text-gray-400"
+                            className="flex items-start text-sm sm:text-base lg:text-base text-gray-500 dark:text-gray-400"
                             initial={{ opacity: 0, x: -10 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: (index * 0.1) + (idx * 0.05) }}
                           >
-                            <div className={`w-2 h-2 bg-gradient-to-r ${service.gradient} rounded-full mr-3 group-hover:scale-125 transition-transform duration-300`} />
-                            {feature}
+                            <div className={`w-2 h-2 sm:w-2.5 sm:h-2.5 bg-gradient-to-r ${service.gradient} rounded-full mr-3 sm:mr-3 mt-2 sm:mt-2 group-hover:scale-125 transition-transform duration-300 flex-shrink-0`} />
+                            <span className="leading-relaxed">{feature}</span>
                           </motion.div>
                         ))}
                       </div>
@@ -1098,13 +1144,13 @@ export function Services() {
             {/* Skills Section */}
             <div className="space-y-8">
               <div className="text-center">
-                <h3 className="text-xl lg:text-2xl font-bold text-gray-900 dark:text-white mb-2">
+                <h3 className="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white mb-3">
                   {language === 'en' ? 'Skills' : 'Keahlian'}
                 </h3>
                 <div className={`w-24 h-1 bg-gradient-to-r ${currentTab.gradient} mx-auto rounded-full`} />
               </div>
               
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5 lg:gap-6">
                 {currentTab.skills.map((skill, index) => (
                   <AnimatedCard
                     key={skill.name}
@@ -1112,83 +1158,156 @@ export function Services() {
                     className="group"
                   >
                     <motion.div
-                      className="bg-white dark:bg-gray-800 rounded-xl lg:rounded-2xl p-4 lg:p-6 shadow-xl border border-gray-200 dark:border-gray-700 h-full hover:shadow-2xl"
-                      whileHover={{ y: -4 }}
-                      transition={{ duration: 0.3 }}
+                      className="bg-transparent rounded-xl lg:rounded-2xl p-3 sm:p-4 lg:p-6 shadow-xl border border-gray-200 dark:border-gray-700 h-full hover:shadow-2xl min-h-[180px] sm:min-h-[200px]"
+                      whileHover={{ y: -4, scale: 1.02 }}
+                      transition={{ duration: 0.3, ease: "easeOut" }}
                     >
-                      {/* Skill Header */}
-                      <div className="flex items-center mb-4">
-                        <div 
-                          className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl mr-4 group-hover:scale-110 transition-transform duration-300"
-                          style={{ backgroundColor: `${skill.color}20` }}
-                        >
-                          {skill.icon}
-                        </div>
-                        <div className="flex-1">
-                          <h4 className="font-bold text-gray-900 dark:text-white mb-1">
-                            {language === 'en' ? skill.name : skill.nameId}
-                          </h4>
-                          <p className="text-sm text-gray-600 dark:text-gray-300">
-                            {language === 'en' ? skill.description : skill.descriptionId}
-                          </p>
-                        </div>
-                      </div>
-
-                      {/* Skill Level */}
-                      <div className="space-y-3">
-                        <div className="flex justify-between items-center">
-                          <span className="text-sm font-medium text-gray-600 dark:text-gray-300">
-                            {language === 'en' ? 'Proficiency' : 'Kemahiran'}
-                          </span>
-                          <span className="text-sm font-bold text-gray-900 dark:text-white">
-                            {skill.level}%
-                          </span>
+                        {/* Skill Header */}
+                        <div className="flex items-start mb-3 sm:mb-4">
+                          <div 
+                            className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl flex items-center justify-center text-lg sm:text-2xl mr-3 sm:mr-4 group-hover:scale-110 transition-transform duration-300 flex-shrink-0"
+                            style={{ backgroundColor: `${skill.color}20` }}
+                          >
+                            {skill.icon}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <h4 className="font-bold text-gray-900 dark:text-white mb-2 text-lg sm:text-xl lg:text-xl leading-tight">
+                              {language === 'en' ? skill.name : skill.nameId}
+                            </h4>
+                            <p className="text-sm sm:text-base lg:text-base text-gray-600 dark:text-gray-300 leading-relaxed">
+                              {language === 'en' ? skill.description : skill.descriptionId}
+                            </p>
+                          </div>
                         </div>
 
-                        {/* Progress Bar */}
-                        <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 overflow-hidden">
-                          <motion.div
-                            className="h-3 rounded-full"
-                            style={{ 
-                              background: `linear-gradient(90deg, ${skill.color}, ${skill.color}dd)`
-                            }}
-                            initial={{ width: 0 }}
-                            animate={{ width: `${skill.level}%` }}
-                            transition={{ 
-                              duration: 1.5, 
-                              delay: index * 0.15,
-                              ease: "anticipate",
-                              type: "spring",
-                              stiffness: 100,
-                              damping: 15
-                            }}
-                          />
+                        {/* Skill Level - Proportional Text */}
+                        <div className="space-y-2 sm:space-y-3">
+                          <div className="flex justify-between items-center">
+                            <span className="text-sm sm:text-base lg:text-base font-medium text-gray-600 dark:text-gray-300">
+                              {language === 'en' ? 'Proficiency' : 'Kemahiran'}
+                            </span>
+                            <span className="text-sm sm:text-base lg:text-base font-bold text-gray-900 dark:text-white">
+                              {skill.level}%
+                            </span>
+                          </div>
+
+                          {/* Progress Bar */}
+                          <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 sm:h-3 overflow-hidden">
+                            <motion.div
+                              className="h-2 sm:h-3 rounded-full"
+                              style={{ 
+                                background: `linear-gradient(90deg, ${skill.color}, ${skill.color}dd)`
+                              }}
+                              initial={{ width: 0 }}
+                              whileInView={{ width: `${skill.level}%` }}
+                              transition={{ 
+                                duration: 1.2, 
+                                delay: index * 0.1,
+                                ease: "easeOut",
+                                type: "spring",
+                                stiffness: 120,
+                                damping: 20
+                              }}
+                              viewport={{ once: true, amount: 0.3 }}
+                            />
+                          </div>
                         </div>
-                      </div>
                     </motion.div>
                   </AnimatedCard>
                 ))}
               </div>
             </div>
 
-            {/* Showcase Section with Carousel */}
-            <div className="space-y-8">
-              <div className="text-center">
-                <h3 className="text-xl lg:text-2xl font-bold text-gray-900 dark:text-white mb-2">
-                  {activeTab === 'uiux' 
-                    ? (language === 'en' ? 'Design Showcase' : 'Showcase Desain')
-                    : (language === 'en' ? 'Portfolio Showcase' : 'Showcase Portofolio')
-                  }
-                </h3>
-                <div className={`w-24 h-1 bg-gradient-to-r ${currentTab.gradient} mx-auto rounded-full`} />
-              </div>
-              
-              {/* Integrated Showcase */}
-              {activeTab === 'uiux' ? (
-                <DesignShowcase />
-              ) : (
-                <Projects />
+            {/* Responsive Showcase Section */}
+            <div className="space-y-6 sm:space-y-8">
+              {/* Only show enhanced header for UI/UX tab to avoid duplication */}
+              {activeTab === 'uiux' && (
+                <motion.div 
+                  className="text-center mb-8 sm:mb-12 lg:mb-16 px-4 sm:px-0"
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, type: "spring", stiffness: 100 }}
+                  viewport={{ once: true }}
+                >
+                  {/* Responsive Badge - Proportional Sizing */}
+                  <motion.div 
+                    className="inline-flex items-center gap-3 sm:gap-3 px-5 sm:px-6 py-3 sm:py-3 bg-gradient-to-r from-emerald-100 via-blue-100 to-purple-100 dark:from-emerald-900/30 dark:via-blue-900/30 dark:to-purple-900/30 rounded-full mb-6 sm:mb-8 shadow-lg backdrop-blur-sm border border-emerald-200/50 dark:border-emerald-700/50"
+                    whileHover={{ scale: 1.05, y: -2 }}
+                    transition={{ type: "spring", stiffness: 400 }}
+                  >
+                    <motion.div
+                      animate={{ rotate: [0, 360] }}
+                      transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                    >
+                      <Palette className="w-5 h-5 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-emerald-600 dark:text-emerald-400" />
+                    </motion.div>
+                    <span className="text-emerald-600 dark:text-emerald-400 font-bold text-sm sm:text-sm tracking-wider uppercase">
+                      {language === 'en' ? 'Design Showcase' : 'Showcase Desain'}
+                    </span>
+                  </motion.div>
+
+                  {/* Responsive Title */}
+                  <motion.h2 
+                    className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold mb-4 sm:mb-6 leading-tight relative section-title"
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8, delay: 0.2 }}
+                    viewport={{ once: true }}
+                  >
+                    <span className="relative inline-block">
+                      <span className="bg-gradient-to-r from-emerald-600 via-blue-600 via-purple-600 to-emerald-600 bg-clip-text text-transparent animate-gradient-bg bg-[length:400%_400%] drop-shadow-2xl">
+                        {language === 'en' ? 'Creative Design Portfolio' : 'Portofolio Desain Kreatif'}
+                      </span>
+                      
+                      {/* Glow effect */}
+                      <span 
+                        className="absolute inset-0 bg-gradient-to-r from-emerald-600 via-blue-600 via-purple-600 to-emerald-600 bg-clip-text text-transparent blur-sm opacity-50 animate-gradient-bg bg-[length:400%_400%]"
+                        aria-hidden="true"
+                      >
+                        {language === 'en' ? 'Creative Design Portfolio' : 'Portofolio Desain Kreatif'}
+                      </span>
+                      
+                      {/* Shimmer overlay */}
+                      <motion.div
+                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0"
+                        animate={{
+                          x: ['-100%', '100%'],
+                          opacity: [0, 1, 0]
+                        }}
+                        transition={{
+                          duration: 3,
+                          repeat: Infinity,
+                          ease: "linear",
+                          delay: 1
+                        }}
+                      />
+                    </span>
+                  </motion.h2>
+                  
+                  {/* Responsive Description */}
+                  <motion.p 
+                    className="text-gray-600 dark:text-gray-300 max-w-3xl mx-auto text-base sm:text-lg lg:text-xl leading-relaxed px-4 sm:px-0"
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8, delay: 0.4 }}
+                    viewport={{ once: true }}
+                  >
+                    {language === 'en' 
+                      ? 'Explore my creative design journey through innovative UI/UX solutions and visual design masterpieces'
+                      : 'Jelajahi perjalanan desain kreatif saya melalui solusi UI/UX inovatif dan karya desain visual yang memukau'
+                    }
+                  </motion.p>
+                </motion.div>
               )}
+              
+              {/* Integrated Showcase - Responsive Container */}
+              <div className="px-4 sm:px-0">
+                {activeTab === 'uiux' ? (
+                  <DesignShowcase />
+                ) : (
+                  <Projects />
+                )}
+              </div>
             </div>
           </motion.div>
         </AnimatePresence>
@@ -1244,7 +1363,7 @@ const DesignShowcase: React.FC = () => {
             onClick={() => openModal(project)}
           >
             {/* Modern Card Design with Improved UX */}
-            <div className="relative overflow-hidden rounded-2xl bg-white dark:bg-gray-800 shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100 dark:border-gray-700">
+            <div className="relative overflow-hidden rounded-2xl bg-transparent shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100 dark:border-gray-700">
               {/* Enhanced Image Container */}
               <div className="relative h-64 overflow-hidden">
                 <motion.img 
@@ -1403,20 +1522,21 @@ const DesignShowcase: React.FC = () => {
       >
         {selectedProject && (
           <>
-            <div className="mb-6">
-              <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
-                <div className="flex flex-wrap items-center gap-3">
-                  <span className="px-3 py-1.5 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-sm font-semibold rounded-full">
+            {/* Responsive Meta Information */}
+            <div className="mb-4 sm:mb-6">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 mb-4">
+                <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+                  <span className="px-2 sm:px-3 py-1 sm:py-1.5 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-xs sm:text-sm font-semibold rounded-full">
                     {selectedProject.category}
                   </span>
-                  <span className="text-gray-600 dark:text-gray-300 text-sm">{selectedProject.year}</span>
-                  <span className="text-gray-600 dark:text-gray-300 text-sm">
+                  <span className="text-gray-600 dark:text-gray-300 text-xs sm:text-sm">{selectedProject.year}</span>
+                  <span className="text-gray-600 dark:text-gray-300 text-xs sm:text-sm">
                     {selectedImageIndex + 1} / {selectedProject.images?.length || 1}
                   </span>
                 </div>
                 
                 {selectedProject.client && (
-                  <span className="text-sm text-gray-500 dark:text-gray-400">
+                  <span className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
                     <span className="font-medium">{language === 'en' ? 'Client: ' : 'Klien: '}</span>
                     {selectedProject.client}
                   </span>
@@ -1424,15 +1544,15 @@ const DesignShowcase: React.FC = () => {
               </div>
               
               {selectedProject.colors && (
-                <div className="flex items-center gap-3">
-                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+                  <span className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300">
                     {language === 'en' ? 'Color Palette:' : 'Palet Warna:'}
                   </span>
-                  <div className="flex space-x-2">
+                  <div className="flex space-x-1.5 sm:space-x-2">
                     {selectedProject.colors.slice(0, 5).map((color: string, i: number) => (
                       <motion.div 
                         key={i}
-                        className="w-8 h-8 rounded-full border-2 border-white dark:border-gray-600 shadow-md cursor-pointer"
+                        className="w-6 h-6 sm:w-8 sm:h-8 rounded-full border-2 border-white dark:border-gray-600 shadow-md cursor-pointer"
                         style={{ backgroundColor: color }}
                         whileHover={{ scale: 1.2, y: -2 }}
                         title={color}
@@ -1443,13 +1563,14 @@ const DesignShowcase: React.FC = () => {
               )}
             </div>
 
-            <div className="relative bg-gray-50 dark:bg-gray-800 rounded-xl mb-6 overflow-hidden">
-              <div className="relative h-96 flex items-center justify-center">
+            {/* Responsive Image Gallery */}
+            <div className="relative bg-gray-50 dark:bg-gray-800 rounded-lg sm:rounded-xl mb-4 sm:mb-6 overflow-hidden">
+              <div className="relative h-64 sm:h-80 lg:h-96 flex items-center justify-center">
                 <motion.img
                   key={selectedImageIndex}
                   src={selectedProject.images?.[selectedImageIndex] || selectedProject.image}
                   alt={`${selectedProject.titleEn} - ${selectedImageIndex + 1}`}
-                  className="max-w-full max-h-full object-contain"
+                  className="max-w-full max-h-full object-contain rounded-lg"
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.3 }}
@@ -1459,28 +1580,29 @@ const DesignShowcase: React.FC = () => {
                   <>
                     <button
                       onClick={prevImage}
-                      className="absolute left-4 top-1/2 -translate-y-1/2 p-3 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm text-gray-800 dark:text-white hover:bg-white dark:hover:bg-gray-700 transition-all rounded-full shadow-lg border border-gray-200 dark:border-gray-600"
+                      className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 p-2 sm:p-3 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm text-gray-800 dark:text-white hover:bg-white dark:hover:bg-gray-700 transition-all rounded-full shadow-lg border border-gray-200 dark:border-gray-600"
                     >
-                      <ChevronLeft className="w-5 h-5" />
+                      <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
                     </button>
                     <button
                       onClick={nextImage}
-                      className="absolute right-4 top-1/2 -translate-y-1/2 p-3 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm text-gray-800 dark:text-white hover:bg-white dark:hover:bg-gray-700 transition-all rounded-full shadow-lg border border-gray-200 dark:border-gray-600"
+                      className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 p-2 sm:p-3 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm text-gray-800 dark:text-white hover:bg-white dark:hover:bg-gray-700 transition-all rounded-full shadow-lg border border-gray-200 dark:border-gray-600"
                     >
-                      <ChevronRight className="w-5 h-5" />
+                      <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
                     </button>
                   </>
                 )}
               </div>
 
+              {/* Responsive Thumbnail Gallery */}
               {selectedProject.images && selectedProject.images.length > 1 && (
-                <div className="p-4 bg-white/50 dark:bg-gray-700/50 backdrop-blur-sm">
-                  <div className="flex space-x-2 overflow-x-auto scrollbar-hide">
+                <div className="p-2 sm:p-4 bg-white/50 dark:bg-gray-700/50 backdrop-blur-sm">
+                  <div className="flex space-x-1.5 sm:space-x-2 overflow-x-auto scrollbar-hide pb-2">
                     {selectedProject.images.map((image: string, index: number) => (
                       <button
                         key={index}
                         onClick={() => setSelectedImageIndex(index)}
-                        className={`flex-shrink-0 w-16 h-12 rounded-lg overflow-hidden border-2 transition-all ${
+                        className={`flex-shrink-0 w-12 h-9 sm:w-16 sm:h-12 rounded-md sm:rounded-lg overflow-hidden border-2 transition-all ${
                           index === selectedImageIndex
                             ? 'border-purple-500 shadow-lg scale-105'
                             : 'border-gray-300 dark:border-gray-600 hover:border-purple-300 hover:scale-105'
@@ -1498,23 +1620,27 @@ const DesignShowcase: React.FC = () => {
               )}
             </div>
 
-            <div className="space-y-4">
-              <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+            {/* Responsive Description Section */}
+            <div className="space-y-3 sm:space-y-4">
+              <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-sm sm:text-base">
                 {language === 'en' ? selectedProject.descriptionEn : selectedProject.descriptionId}
               </p>
               
-              <div className="flex flex-wrap gap-2">
-                <span className="text-sm font-medium text-gray-700 dark:text-gray-300 mr-2">
+              {/* Responsive Tools Section */}
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+                <span className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 flex-shrink-0">
                   {language === 'en' ? 'Tools:' : 'Tools:'}
                 </span>
-                {selectedProject.tools.map((tool: string) => (
-                  <span
-                    key={tool}
-                    className="px-3 py-1 bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 text-purple-700 dark:text-purple-300 text-sm rounded-full border border-purple-200 dark:border-purple-700"
-                  >
-                    {tool}
-                  </span>
-                ))}
+                <div className="flex flex-wrap gap-1.5 sm:gap-2">
+                  {selectedProject.tools.map((tool: string) => (
+                    <span
+                      key={tool}
+                      className="px-2 sm:px-3 py-1 bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 text-purple-700 dark:text-purple-300 text-xs sm:text-sm rounded-full border border-purple-200 dark:border-purple-700"
+                    >
+                      {tool}
+                    </span>
+                  ))}
+                </div>
               </div>
             </div>
           </>
