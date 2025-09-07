@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Poppins, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import "../styles/design-system.css";
+import "../styles/role-themes.css";
 import { Providers } from "../components/shared/Providers";
 
 const poppins = Poppins({

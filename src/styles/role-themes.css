@@ -1,0 +1,202 @@
+/* ===================================================================== */
+/* ROLE-SPECIFIC THEMES AND STYLES                                     */
+/* ===================================================================== */
+
+/* UI/UX Designer Theme */
+[data-role="uiux"] {
+  --role-primary: #8B5CF6;
+  --role-secondary: #EC4899;
+  --role-accent: #F59E0B;
+  --role-bg-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --role-bg-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  --role-bg-tertiary: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+[data-role="uiux"] .role-themed-bg {
+  background: var(--role-bg-primary);
+}
+
+[data-role="uiux"] .role-themed-card {
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(236, 72, 153, 0.05) 100%);
+  border: 1px solid rgba(139, 92, 246, 0.2);
+}
+
+[data-role="uiux"] .role-themed-text {
+  background: linear-gradient(135deg, #8B5CF6, #EC4899);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+[data-role="uiux"] .role-themed-button {
+  background: linear-gradient(135deg, #8B5CF6, #EC4899);
+  box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+}
+
+[data-role="uiux"] .role-themed-button:hover {
+  box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
+  transform: translateY(-2px);
+}
+
+/* Web Developer Theme */
+[data-role="developer"] {
+  --role-primary: #3B82F6;
+  --role-secondary: #10B981;
+  --role-accent: #F59E0B;
+  --role-bg-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --role-bg-secondary: linear-gradient(135deg, #06ffa5 0%, #3d8bfd 100%);
+  --role-bg-tertiary: linear-gradient(135deg, #fdbb2d 0%, #22c1c3 100%);
+}
+
+[data-role="developer"] .role-themed-bg {
+  background: var(--role-bg-secondary);
+}
+
+[data-role="developer"] .role-themed-card {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+[data-role="developer"] .role-themed-text {
+  background: linear-gradient(135deg, #3B82F6, #10B981);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+[data-role="developer"] .role-themed-button {
+  background: linear-gradient(135deg, #3B82F6, #10B981);
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+}
+
+[data-role="developer"] .role-themed-button:hover {
+  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+  transform: translateY(-2px);
+}
+
+/* Full-Stack Theme */
+[data-role="fullstack"] {
+  --role-primary: #10B981;
+  --role-secondary: #8B5CF6;
+  --role-accent: #F59E0B;
+  --role-bg-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --role-bg-secondary: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+  --role-bg-tertiary: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+}
+
+[data-role="fullstack"] .role-themed-bg {
+  background: var(--role-bg-tertiary);
+}
+
+[data-role="fullstack"] .role-themed-card {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(139, 92, 246, 0.05) 100%);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+[data-role="fullstack"] .role-themed-text {
+  background: linear-gradient(135deg, #10B981, #8B5CF6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+[data-role="fullstack"] .role-themed-button {
+  background: linear-gradient(135deg, #10B981, #8B5CF6);
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+}
+
+[data-role="fullstack"] .role-themed-button:hover {
+  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+  transform: translateY(-2px);
+}
+
+/* Role-Specific Section Backgrounds */
+.role-section-uiux {
+  background: linear-gradient(135deg, 
+    rgba(139, 92, 246, 0.05) 0%, 
+    rgba(236, 72, 153, 0.03) 50%, 
+    rgba(245, 158, 11, 0.02) 100%
+  );
+}
+
+.role-section-developer {
+  background: linear-gradient(135deg, 
+    rgba(59, 130, 246, 0.05) 0%, 
+    rgba(16, 185, 129, 0.03) 50%, 
+    rgba(245, 158, 11, 0.02) 100%
+  );
+}
+
+.role-section-fullstack {
+  background: linear-gradient(135deg, 
+    rgba(16, 185, 129, 0.05) 0%, 
+    rgba(139, 92, 246, 0.03) 50%, 
+    rgba(245, 158, 11, 0.02) 100%
+  );
+}
+
+/* Enhanced micro-interactions */
+.role-card-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.role-card-hover:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+.role-card-hover:hover .role-card-content {
+  transform: translateY(-2px);
+}
+
+/* Gradient text animations */
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.role-themed-text-animated {
+  background-size: 200% 200%;
+  animation: gradient-shift 3s ease infinite;
+}
+
+/* Role-specific scrollbars */
+[data-role="uiux"] ::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #8B5CF6, #EC4899);
+}
+
+[data-role="developer"] ::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #3B82F6, #10B981);
+}
+
+[data-role="fullstack"] ::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #10B981, #8B5CF6);
+}
+
+/* Mobile role theme adjustments */
+@media (max-width: 768px) {
+  .role-themed-card {
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .role-card-hover:hover {
+    transform: translateY(-4px) scale(1.01);
+  }
+}
+
+/* Dark mode role theme adjustments */
+.dark [data-role="uiux"] .role-themed-card {
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(236, 72, 153, 0.08) 100%);
+  border: 1px solid rgba(139, 92, 246, 0.3);
+}
+
+.dark [data-role="developer"] .role-themed-card {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(16, 185, 129, 0.08) 100%);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.dark [data-role="fullstack"] .role-themed-card {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(139, 92, 246, 0.08) 100%);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}

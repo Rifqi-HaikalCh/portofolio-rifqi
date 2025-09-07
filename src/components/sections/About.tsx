@@ -71,12 +71,12 @@ export const About: React.FC = () => {
   return (
     <section 
       id="about" 
-      className="py-20 bg-gradient-to-b from-white via-gray-50 to-white dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 relative overflow-hidden"
+      className="py-20 bg-gradient-to-b from-bg-primary to-bg-tertiary relative overflow-hidden"
     >
       {/* Sophisticated Background Elements */}
       <div className="absolute inset-0">
         <motion.div
-          className="absolute top-20 left-10 w-72 h-72 bg-emerald-500/8 rounded-full blur-3xl"
+          className="absolute top-20 left-10 w-72 h-72 bg-accent-500/8 rounded-full blur-3xl"
           animate={{
             x: [0, 100, 0],
             y: [0, -50, 0],
@@ -89,7 +89,7 @@ export const About: React.FC = () => {
           }}
         />
         <motion.div
-          className="absolute bottom-20 right-10 w-96 h-96 bg-blue-500/6 rounded-full blur-3xl"
+          className="absolute bottom-20 right-10 w-96 h-96 bg-primary-500/6 rounded-full blur-3xl"
           animate={{
             x: [0, -80, 0],
             y: [0, 60, 0],
@@ -102,7 +102,7 @@ export const About: React.FC = () => {
           }}
         />
         {/* Geometric accent */}
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-px h-32 bg-gradient-to-b from-emerald-500/20 via-emerald-500/40 to-transparent"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-px h-32 bg-gradient-to-b from-accent-500/20 via-accent-500/40 to-transparent"></div>
       </div>
       
       <div className="container mx-auto px-4 relative z-10">
@@ -136,11 +136,11 @@ export const About: React.FC = () => {
                 transition={{ type: "spring", stiffness: 300, damping: 20 }}
               >
                 {/* Modern Frame */}
-                <div className="relative w-80 h-96 bg-gradient-to-br from-white to-gray-100 dark:from-gray-800 dark:to-gray-700 rounded-3xl p-1 shadow-2xl">
-                  <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/20 via-blue-500/20 to-purple-500/20 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                <div className="relative w-80 h-96 glass-card-strong p-1">
+                  <div className="absolute inset-0 bg-gradient-to-br from-accent-500/20 via-primary-500/20 to-secondary-500/20 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
                   
                   {/* Clean image container */}
-                  <div className="relative w-full h-full bg-white dark:bg-gray-800 rounded-[1.4rem] overflow-hidden">
+                  <div className="relative w-full h-full glass-card rounded-[1.4rem] overflow-hidden">
                     <Image
                       src="/assets/removebg.png"
                       alt="Rifqi Haikal - Developer"

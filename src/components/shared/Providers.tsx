@@ -2,6 +2,8 @@
 
 import { ThemeProvider, useTheme } from 'next-themes';
 import { LanguageProvider } from '../../context/LanguageContext';
+import { RoleProvider } from '../../context/RoleContext';
+import { RoleThemeProvider } from './RoleThemeProvider';
 import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
 
 interface ThemeAnimationContextType {
@@ -73,7 +75,11 @@ export function Providers({ children }: ProvidersProps) {
     <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
       <ThemeAnimationProvider>
         <LanguageProvider>
-          {children}
+          <RoleProvider>
+            <RoleThemeProvider>
+              {children}
+            </RoleThemeProvider>
+          </RoleProvider>
         </LanguageProvider>
       </ThemeAnimationProvider>
     </ThemeProvider>

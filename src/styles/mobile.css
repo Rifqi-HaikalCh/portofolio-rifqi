@@ -179,7 +179,7 @@
   }
   
   /* Portfolio Carousel - Mobile Responsive */
-  #about .h-96.md\\:h-\\[500px\\] {
+  #about [class*='h-96'][class*='md:h-[500px]'] {
     height: clamp(200px, 50vw, 300px) !important;
   }
   
@@ -465,6 +465,7 @@
   /* Mobile navigation (already implemented) */
   .mobile-nav {
     /* FloatingNavigation component handles this */
+    position: relative;
   }
   
 }
@@ -578,7 +579,7 @@
     height: clamp(250px, 62.5vw, 300px) !important;
   }
   
-  #about .h-96.md\\:h-\\[500px\\] {
+  #about [class*='h-96'][class*='md:h-[500px]'] {
     height: clamp(180px, 45vw, 250px) !important;
   }
   
@@ -663,7 +664,7 @@
   }
   
   /* Minimize carousel height */
-  #about .h-96.md\\:h-\\[500px\\] {
+  #about [class*='h-96'][class*='md:h-[500px]'] {
     height: clamp(150px, 37.5vw, 200px) !important;
   }
   
@@ -723,6 +724,232 @@
   #projects .project-card {
     padding: var(--space-xs) !important;
     margin-bottom: var(--space-xs) !important;
+  }
+  
+}
+
+/* ================================================= */
+/* ROLE SELECTION MOBILE RESPONSIVE                  */
+/* ================================================= */
+@media (max-width: 1023px) {
+  
+  /* Role Selection Screen */
+  .role-selection-container {
+    padding: 2rem 1rem !important;
+  }
+  
+  .role-selection-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1.5rem !important;
+  }
+  
+  .role-card {
+    padding: 2rem 1.5rem !important;
+    margin-bottom: 1rem !important;
+  }
+  
+  .role-card h3 {
+    font-size: 1.5rem !important;
+  }
+  
+  .role-card p {
+    font-size: 0.9rem !important;
+    line-height: 1.4 !important;
+  }
+  
+  /* Services Section Mobile */
+  .services-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1.5rem !important;
+  }
+  
+  .service-card {
+    padding: 1.5rem !important;
+    margin-bottom: 1rem !important;
+  }
+  
+  .service-card h3 {
+    font-size: 1.25rem !important;
+  }
+  
+  .service-card p {
+    font-size: 0.875rem !important;
+  }
+  
+  .service-features {
+    font-size: 0.8rem !important;
+  }
+  
+  /* Design Portfolio Mobile */
+  .portfolio-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1.5rem !important;
+  }
+  
+  .portfolio-card {
+    max-width: 100% !important;
+  }
+  
+  .portfolio-image-grid {
+    gap: 0.5rem !important;
+  }
+  
+  .portfolio-modal {
+    margin: 1rem !important;
+    max-height: 85vh !important;
+  }
+  
+  .portfolio-modal img {
+    max-height: 50vh !important;
+  }
+  
+  /* Role Switcher Mobile */
+  .role-switcher {
+    top: 1rem !important;
+    right: 1rem !important;
+    left: 1rem !important;
+    position: fixed !important;
+  }
+  
+  .role-switcher-content {
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    padding: 0.75rem !important;
+  }
+  
+  .role-switcher .role-label {
+    display: none !important;
+  }
+  
+}
+
+@media (max-width: 640px) {
+  
+  /* Ultra-compact role selection */
+  .role-selection-container {
+    padding: 1rem 0.75rem !important;
+  }
+  
+  .role-selection-grid {
+    gap: 1rem !important;
+  }
+  
+  .role-card {
+    padding: 1.5rem 1rem !important;
+  }
+  
+  .role-card h1 {
+    font-size: 2rem !important;
+  }
+  
+  .role-card h3 {
+    font-size: 1.25rem !important;
+  }
+  
+  /* Compact services */
+  .services-grid {
+    gap: 1rem !important;
+  }
+  
+  .service-card {
+    padding: 1rem !important;
+  }
+  
+  .service-card .service-icon {
+    font-size: 2.5rem !important;
+  }
+  
+  /* Portfolio mobile optimization */
+  .portfolio-card {
+    padding: 1rem !important;
+  }
+  
+  .portfolio-category-filter {
+    flex-wrap: wrap !important;
+    gap: 0.5rem !important;
+  }
+  
+  .portfolio-category-button {
+    padding: 0.5rem 1rem !important;
+    font-size: 0.8rem !important;
+  }
+  
+  /* Mobile modal adjustments */
+  .portfolio-modal {
+    margin: 0.5rem !important;
+    border-radius: 1rem !important;
+  }
+  
+  .portfolio-modal-header {
+    padding: 1rem !important;
+  }
+  
+  .portfolio-modal h2 {
+    font-size: 1.25rem !important;
+  }
+  
+  .portfolio-modal img {
+    max-height: 40vh !important;
+  }
+  
+  .portfolio-thumbnails {
+    padding: 0.75rem !important;
+  }
+  
+  .portfolio-thumbnail {
+    width: 3rem !important;
+    height: 3rem !important;
+  }
+  
+  /* Role switcher compact */
+  .role-switcher {
+    position: relative !important;
+    top: auto !important;
+    right: auto !important;
+    left: auto !important;
+    margin: 1rem !important;
+  }
+  
+}
+
+@media (max-width: 480px) {
+  
+  /* Extreme mobile optimization */
+  .role-selection-container h1 {
+    font-size: 1.75rem !important;
+  }
+  
+  .role-selection-container p {
+    font-size: 0.9rem !important;
+  }
+  
+  .role-card {
+    padding: 1.25rem 0.75rem !important;
+  }
+  
+  .role-card-features {
+    font-size: 0.75rem !important;
+  }
+  
+  .service-card {
+    padding: 0.75rem !important;
+  }
+  
+  .service-features {
+    font-size: 0.75rem !important;
+  }
+  
+  .portfolio-modal {
+    margin: 0.25rem !important;
+    max-height: 90vh !important;
+  }
+  
+  .portfolio-modal img {
+    max-height: 35vh !important;
+  }
+  
+  .portfolio-navigation-arrow {
+    padding: 0.5rem !important;
   }
   
 }

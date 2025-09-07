@@ -44,6 +44,7 @@ const Navbar: React.FC = () => {
     };
   }, []);
 
+
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
     const target = document.querySelector(href);
