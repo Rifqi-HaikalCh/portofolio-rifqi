@@ -21,8 +21,6 @@ import { Footer } from '../components/sections/Footer';
 import LoadingScreen from '../components/shared/LoadingScreen';
 import { FloatingNavigation } from '../components/shared/FloatingNavigation';
 import { Services } from '../components/sections/Services';
-import { RoleSelectionModal, SelectedRole } from '../components/sections/RoleSelectionModal';
-import { FloatingRoleSwitcher } from '../components/shared/FloatingRoleSwitcher';
 
 // EQbot notification messages
 const getEQbotMessages = (): NotificationMessage[] => [
@@ -105,9 +103,6 @@ export default function Home() {
   const [showNotification, setShowNotification] = useState(false);
   const [currentNotification, setCurrentNotification] = useState<NotificationMessage | null>(null);
   const [notificationStep, setNotificationStep] = useState(0);
-  const [selectedRole, setSelectedRole] = useState<SelectedRole>(null);
-  const [showRoleModal, setShowRoleModal] = useState(false);
-  const [hasScrolledPastHero, setHasScrolledPastHero] = useState(false);
 
   useEffect(() => {
     AOS.init({
@@ -117,26 +112,6 @@ export default function Home() {
     });
   }, []);
 
-  // Scroll detection for role modal
-  useEffect(() => {
-    if (loading) return;
-
-    const handleScroll = () => {
-      const heroSection = document.querySelector('#home');
-      if (heroSection) {
-        const heroBottom = heroSection.getBoundingClientRect().bottom;
-        const hasScrolledPast = heroBottom < -100; // Show modal when 100px past hero
-        
-        if (hasScrolledPast && !hasScrolledPastHero && !selectedRole) {
-          setHasScrolledPastHero(true);
-          setTimeout(() => setShowRoleModal(true), 500); // Small delay for smoother UX
-        }
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [loading, hasScrolledPastHero, selectedRole]);
 
   const eqbotMessages = getEQbotMessages();
   const rifqiFacts = getRifqiFacts();
@@ -161,17 +136,6 @@ export default function Home() {
     return rifqiFacts[randomIndex];
   };
 
-  const handleRoleSelect = (role: SelectedRole) => {
-    setSelectedRole(role);
-  };
-
-  const handleCloseRoleModal = () => {
-    setShowRoleModal(false);
-  };
-
-  const handleOpenRoleModal = () => {
-    setShowRoleModal(true);
-  };
 
   // Enhanced EQbot notification timing system
   useEffect(() => {
@@ -230,29 +194,12 @@ export default function Home() {
           <main>
             <Hero />
             <AnimatedSection id="about"><About /></AnimatedSection>
-            <AnimatedSection id="services"><Services /></AnimatedSection>
-            <UnifiedSkills selectedRole={selectedRole} />
             <AnimatedSection id="experience"><Experience /></AnimatedSection>
-            <DualFunnelProjects selectedRole={selectedRole} />
+            <AnimatedSection id="services"><Services /></AnimatedSection>
             <AnimatedSection id="certificates"><Certificates /></AnimatedSection>
             <AnimatedSection id="contact"><Contact /></AnimatedSection>
           </main>
           <Footer />
-          
-          {/* Role Selection Modal */}
-          <RoleSelectionModal
-            isOpen={showRoleModal}
-            onClose={handleCloseRoleModal}
-            onSelectRole={handleRoleSelect}
-            selectedRole={selectedRole}
-          />
-          
-          {/* Floating Role Switcher */}
-          <FloatingRoleSwitcher
-            selectedRole={selectedRole}
-            onRoleChange={handleRoleSelect}
-            onOpenModal={handleOpenRoleModal}
-          />
         </>
       )}
       

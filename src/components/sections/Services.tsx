@@ -1,11 +1,14 @@
 "use client";
 
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '../../context/LanguageContext';
-import { useRole } from '../../context/RoleContext';
 import { AnimatedSectionTitle } from '../shared/AnimatedSectionTitle';
 import { AnimatedCard } from '../shared/AnimatedCard';
+import { InteractiveButton } from '../shared/InteractiveButton';
+import { Code, Palette, Layers, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Projects } from './Projects';
+import { ImmersivePortfolioGallery } from './ImmersivePortfolioGallery';
 
 interface Service {
   id: string;
@@ -434,24 +437,185 @@ const fullstackServices: Service[] = [
   }
 ];
 
+// Skills data integrated from UnifiedSkills
+interface Skill {
+  name: string;
+  nameId: string;
+  icon: string;
+  level: number;
+  color: string;
+  description: string;
+  descriptionId: string;
+  category: string;
+}
+
+// Developer Skills
+const developerSkills: Skill[] = [
+  {
+    name: 'HTML5',
+    nameId: 'HTML5',
+    icon: '🌐',
+    level: 95,
+    color: '#E34F26',
+    description: 'Semantic markup and modern web standards',
+    descriptionId: 'Markup semantik dan standar web modern',
+    category: 'Web Fundamentals'
+  },
+  {
+    name: 'CSS3',
+    nameId: 'CSS3',
+    icon: '🎨',
+    level: 90,
+    color: '#1572B6',
+    description: 'Advanced styling and responsive design',
+    descriptionId: 'Styling canggih dan desain responsif',
+    category: 'Web Fundamentals'
+  },
+  {
+    name: 'JavaScript',
+    nameId: 'JavaScript',
+    icon: '⚡',
+    level: 92,
+    color: '#F7DF1E',
+    description: 'Modern ES6+ and dynamic programming',
+    descriptionId: 'ES6+ modern dan pemrograman dinamis',
+    category: 'Programming Language'
+  },
+  {
+    name: 'TypeScript',
+    nameId: 'TypeScript',
+    icon: '📘',
+    level: 88,
+    color: '#3178C6',
+    description: 'Type-safe JavaScript development',
+    descriptionId: 'Pengembangan JavaScript yang type-safe',
+    category: 'Programming Language'
+  },
+  {
+    name: 'Angular',
+    nameId: 'Angular',
+    icon: '🅰️',
+    level: 95,
+    color: '#DD0031',
+    description: 'Expert in building scalable applications',
+    descriptionId: 'Ahli dalam membangun aplikasi yang skalabel',
+    category: 'Frontend Framework'
+  },
+  {
+    name: 'React.js',
+    nameId: 'React.js',
+    icon: '⚛️',
+    level: 90,
+    color: '#61DAFB',
+    description: 'Modern component-based development',
+    descriptionId: 'Pengembangan berbasis komponen modern',
+    category: 'Frontend Framework'
+  }
+];
+
+// UI/UX Design Skills
+const designSkills: Skill[] = [
+  {
+    name: 'Figma',
+    nameId: 'Figma',
+    icon: '🎨',
+    level: 95,
+    color: '#F24E1E',
+    description: 'Advanced interface design and prototyping',
+    descriptionId: 'Desain antarmuka lanjutan dan prototyping',
+    category: 'Design Tools'
+  },
+  {
+    name: 'Adobe Creative Suite',
+    nameId: 'Adobe Creative Suite',
+    icon: '🖼️',
+    level: 90,
+    color: '#FF0000',
+    description: 'Complete creative workflow mastery',
+    descriptionId: 'Penguasaan alur kerja kreatif lengkap',
+    category: 'Design Tools'
+  },
+  {
+    name: 'User Research',
+    nameId: 'Riset Pengguna',
+    icon: '🔍',
+    level: 88,
+    color: '#8B5CF6',
+    description: 'Understanding user needs and behaviors',
+    descriptionId: 'Memahami kebutuhan dan perilaku pengguna',
+    category: 'UX Research'
+  },
+  {
+    name: 'Prototyping',
+    nameId: 'Prototyping',
+    icon: '⚡',
+    level: 92,
+    color: '#F59E0B',
+    description: 'Interactive and high-fidelity prototypes',
+    descriptionId: 'Prototype interaktif dan fidelitas tinggi',
+    category: 'Design Process'
+  }
+];
+
 export function Services() {
   const { language } = useLanguage();
+  const [activeTab, setActiveTab] = useState<'uiux' | 'development'>('uiux');
 
-  // Show all services by default since we removed role selection
-  const getServices = (): Service[] => {
-    return [...uiuxServices.slice(0, 3), ...developerServices.slice(0, 3), ...fullstackServices.slice(0, 3)];
+  const tabs = [
+    {
+      id: 'uiux' as const,
+      icon: Palette,
+      labelEn: 'UI/UX Design',
+      labelId: 'Desain UI/UX',
+      descriptionEn: 'Creative design and user experience',
+      descriptionId: 'Desain kreatif dan pengalaman pengguna',
+      gradient: 'from-purple-500 to-pink-500',
+      skills: designSkills,
+      services: uiuxServices
+    },
+    {
+      id: 'development' as const,
+      icon: Code,
+      labelEn: 'Web Development',
+      labelId: 'Pengembangan Web',
+      descriptionEn: 'Technical development expertise',
+      descriptionId: 'Keahlian pengembangan teknis',
+      gradient: 'from-blue-500 to-cyan-500',
+      skills: developerSkills,
+      services: developerServices
+    }
+  ];
+
+  const currentTab = tabs.find(tab => tab.id === activeTab) || tabs[0];
+  const currentServices = currentTab.services.slice(0, 6);
+
+  const tabVariants = {
+    inactive: {
+      scale: 1,
+      opacity: 0.7
+    },
+    active: {
+      scale: 1,
+      opacity: 1
+    }
   };
 
-  const services = getServices();
-
-  const getRoleTitle = () => {
-    return language === 'en' ? 'My Professional Services' : 'Layanan Profesional Saya';
-  };
-
-  const getRoleDescription = () => {
-    return language === 'en'
-      ? 'I offer comprehensive digital solutions combining design creativity with technical expertise. Available for both full-time positions and freelance projects.'
-      : 'Saya menawarkan solusi digital komprehensif yang menggabungkan kreativitas desain dengan keahlian teknis. Tersedia untuk posisi full-time dan proyek freelance.';
+  const contentVariants = {
+    hidden: { 
+      opacity: 0, 
+      x: 20,
+      scale: 0.95
+    },
+    visible: { 
+      opacity: 1, 
+      x: 0,
+      scale: 1,
+      transition: {
+        duration: 0.4,
+        ease: "easeOut",
+        staggerChildren: 0.1
+      }
+    }
   };
 
   return (
@@ -459,59 +623,230 @@ export function Services() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <AnimatedSectionTitle
           badge={language === 'en' ? 'Services' : 'Layanan'}
-          title={getRoleTitle()}
-          subtitle={getRoleDescription()}
+          title={language === 'en' ? 'Professional Services' : 'Layanan Profesional'}
+          subtitle={language === 'en' 
+            ? 'Comprehensive digital solutions combining design creativity with technical expertise'
+            : 'Solusi digital komprehensif yang menggabungkan kreativitas desain dengan keahlian teknis'
+          }
         />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-          {services.map((service, index) => (
-            <AnimatedCard
-              key={service.id}
-              delay={index * 0.1}
-              className="group h-full"
-            >
-              <motion.div
-                className="relative h-full bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden"
-                whileHover={{ y: -5 }}
-                transition={{ duration: 0.3, ease: "easeOut" }}
-              >
-                {/* Gradient Background on Hover */}
-                <div className={`absolute inset-0 bg-gradient-to-r ${service.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-500`} />
-                
-                {/* Icon */}
-                <div className="relative z-10 text-5xl mb-6 transform group-hover:scale-110 transition-transform duration-300">
-                  {service.icon}
-                </div>
+        {/* Tab Navigation */}
+        <motion.div 
+          className="flex justify-center mb-12"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+        >
+          <div className="bg-white dark:bg-gray-800 p-2 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 inline-flex">
+            {tabs.map((tab) => {
+              const IconComponent = tab.icon;
+              const isActive = activeTab === tab.id;
 
-                {/* Title */}
-                <h3 className="relative z-10 text-xl font-bold text-gray-900 dark:text-white mb-4">
-                  {language === 'en' ? service.titleEn : service.titleId}
-                </h3>
-
-                {/* Description */}
-                <p className="relative z-10 text-gray-600 dark:text-gray-300 mb-6">
-                  {language === 'en' ? service.descriptionEn : service.descriptionId}
-                </p>
-
-                {/* Features */}
-                <div className="relative z-10 space-y-3">
-                  {(language === 'en' ? service.features.en : service.features.id).map((feature, idx) => (
+              return (
+                <motion.button
+                  key={tab.id}
+                  className={`relative px-8 py-4 rounded-xl font-semibold text-sm flex items-center space-x-3 transition-all duration-300 min-w-[220px] justify-center ${
+                    isActive
+                      ? `bg-gradient-to-r ${tab.gradient} text-white shadow-lg`
+                      : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                  }`}
+                  onClick={() => setActiveTab(tab.id)}
+                  variants={tabVariants}
+                  animate={isActive ? 'active' : 'inactive'}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  {/* Sliding indicator background */}
+                  {isActive && (
                     <motion.div
-                      key={idx}
-                      className="flex items-center text-sm text-gray-500 dark:text-gray-400"
-                      initial={{ opacity: 0, x: -10 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: (index * 0.1) + (idx * 0.05) }}
+                      className={`absolute inset-0 bg-gradient-to-r ${tab.gradient} rounded-xl`}
+                      layoutId="activeServiceTab"
+                      transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                    />
+                  )}
+
+                  {/* Content */}
+                  <div className="relative z-10 flex items-center space-x-3">
+                    <IconComponent className="w-5 h-5" />
+                    <div className="text-left">
+                      <div className="font-semibold">
+                        {language === 'en' ? tab.labelEn : tab.labelId}
+                      </div>
+                      <div className={`text-xs ${isActive ? 'text-white/80' : 'text-gray-500 dark:text-gray-400'}`}>
+                        {language === 'en' ? tab.descriptionEn : tab.descriptionId}
+                      </div>
+                    </div>
+                  </div>
+                </motion.button>
+              );
+            })}
+          </div>
+        </motion.div>
+
+        {/* Tab Content */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeTab}
+            variants={contentVariants}
+            initial="hidden"
+            animate="visible"
+            exit="hidden"
+            className="space-y-16"
+          >
+            {/* Skills Section */}
+            <div className="space-y-8">
+              <div className="text-center">
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+                  {language === 'en' ? 'Skills' : 'Keahlian'}
+                </h3>
+                <div className={`w-24 h-1 bg-gradient-to-r ${currentTab.gradient} mx-auto rounded-full`} />
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {currentTab.skills.map((skill, index) => (
+                  <AnimatedCard
+                    key={skill.name}
+                    delay={index * 0.1}
+                    className="group"
+                  >
+                    <motion.div
+                      className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-xl border border-gray-200 dark:border-gray-700 h-full hover:shadow-2xl"
+                      whileHover={{ y: -4 }}
+                      transition={{ duration: 0.3 }}
                     >
-                      <div className={`w-2 h-2 bg-gradient-to-r ${service.gradient} rounded-full mr-3 group-hover:scale-125 transition-transform duration-300`} />
-                      {feature}
+                      {/* Skill Header */}
+                      <div className="flex items-center mb-4">
+                        <div 
+                          className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl mr-4 group-hover:scale-110 transition-transform duration-300"
+                          style={{ backgroundColor: `${skill.color}20` }}
+                        >
+                          {skill.icon}
+                        </div>
+                        <div className="flex-1">
+                          <h4 className="font-bold text-gray-900 dark:text-white mb-1">
+                            {language === 'en' ? skill.name : skill.nameId}
+                          </h4>
+                          <p className="text-sm text-gray-600 dark:text-gray-300">
+                            {language === 'en' ? skill.description : skill.descriptionId}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Skill Level */}
+                      <div className="space-y-3">
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm font-medium text-gray-600 dark:text-gray-300">
+                            {language === 'en' ? 'Proficiency' : 'Kemahiran'}
+                          </span>
+                          <span className="text-sm font-bold text-gray-900 dark:text-white">
+                            {skill.level}%
+                          </span>
+                        </div>
+
+                        {/* Progress Bar */}
+                        <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 overflow-hidden">
+                          <motion.div
+                            className="h-3 rounded-full"
+                            style={{ 
+                              background: `linear-gradient(90deg, ${skill.color}, ${skill.color}dd)`
+                            }}
+                            initial={{ width: 0 }}
+                            animate={{ width: `${skill.level}%` }}
+                            transition={{ 
+                              duration: 1.2, 
+                              delay: index * 0.1,
+                              ease: "easeOut" 
+                            }}
+                          />
+                        </div>
+                      </div>
                     </motion.div>
-                  ))}
-                </div>
-              </motion.div>
-            </AnimatedCard>
-          ))}
-        </div>
+                  </AnimatedCard>
+                ))}
+              </div>
+            </div>
+
+            {/* Services Section */}
+            <div className="space-y-8">
+              <div className="text-center">
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+                  {language === 'en' ? 'Services' : 'Layanan'}
+                </h3>
+                <div className={`w-24 h-1 bg-gradient-to-r ${currentTab.gradient} mx-auto rounded-full`} />
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {currentServices.map((service, index) => (
+                  <AnimatedCard
+                    key={service.id}
+                    delay={index * 0.1}
+                    className="group h-full"
+                  >
+                    <motion.div
+                      className="relative h-full bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden"
+                      whileHover={{ y: -5 }}
+                      transition={{ duration: 0.3, ease: "easeOut" }}
+                    >
+                      {/* Gradient Background on Hover */}
+                      <div className={`absolute inset-0 bg-gradient-to-r ${service.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-500`} />
+                      
+                      {/* Icon */}
+                      <div className="relative z-10 text-5xl mb-6 transform group-hover:scale-110 transition-transform duration-300">
+                        {service.icon}
+                      </div>
+
+                      {/* Title */}
+                      <h3 className="relative z-10 text-xl font-bold text-gray-900 dark:text-white mb-4">
+                        {language === 'en' ? service.titleEn : service.titleId}
+                      </h3>
+
+                      {/* Description */}
+                      <p className="relative z-10 text-gray-600 dark:text-gray-300 mb-6">
+                        {language === 'en' ? service.descriptionEn : service.descriptionId}
+                      </p>
+
+                      {/* Features */}
+                      <div className="relative z-10 space-y-3">
+                        {(language === 'en' ? service.features.en : service.features.id).slice(0, 3).map((feature, idx) => (
+                          <motion.div
+                            key={idx}
+                            className="flex items-center text-sm text-gray-500 dark:text-gray-400"
+                            initial={{ opacity: 0, x: -10 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: (index * 0.1) + (idx * 0.05) }}
+                          >
+                            <div className={`w-2 h-2 bg-gradient-to-r ${service.gradient} rounded-full mr-3 group-hover:scale-125 transition-transform duration-300`} />
+                            {feature}
+                          </motion.div>
+                        ))}
+                      </div>
+                    </motion.div>
+                  </AnimatedCard>
+                ))}
+              </div>
+            </div>
+
+            {/* Showcase Section with Carousel */}
+            <div className="space-y-8">
+              <div className="text-center">
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+                  {activeTab === 'uiux' 
+                    ? (language === 'en' ? 'Design Showcase' : 'Showcase Desain')
+                    : (language === 'en' ? 'Portfolio Showcase' : 'Showcase Portofolio')
+                  }
+                </h3>
+                <div className={`w-24 h-1 bg-gradient-to-r ${currentTab.gradient} mx-auto rounded-full`} />
+              </div>
+              
+              {/* Integrated Showcase */}
+              {activeTab === 'uiux' ? (
+                <ImmersivePortfolioGallery />
+              ) : (
+                <Projects />
+              )}
+            </div>
+          </motion.div>
+        </AnimatePresence>
 
         {/* Availability Section */}
         <motion.div
