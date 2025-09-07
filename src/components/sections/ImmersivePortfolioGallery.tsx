@@ -464,7 +464,7 @@ export function ImmersivePortfolioGallery() {
         <AnimatePresence>
           {selectedProject && (
             <motion.div
-              className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-lg"
+              className="fixed inset-0 z-50 flex items-center justify-center bg-white/95 dark:bg-gray-900/95"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}

@@ -16,10 +16,7 @@ export const Projects: React.FC = () => {
   const currentProjects = activeTab === 'individual' ? individualProjects : groupProjects;
 
   return (
-    <section id="projects" className="py-20 bg-gradient-to-br from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 relative overflow-hidden">
-      {/* Clean Background */}
-      <div className="absolute top-0 left-0 w-72 h-72 bg-emerald-500/5 rounded-full blur-3xl"></div>
-      <div className="absolute bottom-0 right-0 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl"></div>
+    <section id="projects" className="py-20 relative overflow-hidden">
       
       <div className="container mx-auto px-4 relative z-10">
         {/* Enhanced Header */}
@@ -89,7 +86,6 @@ export const Projects: React.FC = () => {
                     whileHover={{ scale: 1.1 }}
                     transition={{ duration: 0.7, ease: "easeOut" }}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
                   
                   {/* Floating Action Buttons */}
                   <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300">
