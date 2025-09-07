@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { useLanguage } from '../../context/LanguageContext';
 import { InteractiveButton } from '../shared/InteractiveButton';
 import { Palette, Code, Layers } from 'lucide-react';
-import { StandardModal } from '../shared/StandardModal';
+import StandardModal from '../shared/StandardModal';
 
 export type SelectedRole = 'uiux' | 'developer' | null;
 

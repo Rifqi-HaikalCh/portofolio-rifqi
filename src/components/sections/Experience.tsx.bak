@@ -1,7 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import ReactDOM from 'react-dom';
+import React, { useState } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '../../context/LanguageContext';
@@ -227,133 +226,6 @@ const MobileTimelineCard = ({ exp, icon, onClick, index }: {
   );
 };
 
-// Enhanced Modal Component with Portal
-const ExperienceModal = ({ selectedExp, onClose }: { selectedExp: any, onClose: () => void }) => {
-  const { t } = useLanguage();
-  const [isBrowser, setIsBrowser] = useState(false);
-
-  useEffect(() => {
-    setIsBrowser(true);
-  }, []);
-
-  useEffect(() => {
-    if (selectedExp) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
-  }, [selectedExp]);
-
-  if (!selectedExp || !isBrowser) return null;
-
-  const modalContent = (
-    <motion.div
-      className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      onClick={onClose}
-    >
-      <motion.div
-        className="bg-white dark:bg-gray-800 rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-auto shadow-2xl border border-gray-200 dark:border-gray-700"
-        initial={{ scale: 0.7, opacity: 0, y: 50 }}
-        animate={{ scale: 1, opacity: 1, y: 0 }}
-        exit={{ scale: 0.7, opacity: 0, y: 50 }}
-        transition={{ type: "spring", stiffness: 300, damping: 30 }}
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Modal Header */}
-        <div className="bg-gradient-to-r from-emerald-500 to-blue-500 text-white p-8 rounded-t-3xl relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-xl"></div>
-          <div className="relative z-10 flex justify-between items-start">
-            <div>
-              <h3 className="text-2xl font-bold mb-2">{selectedExp.company}</h3>
-              <p className="text-white/90 text-lg">{t(selectedExp.title, selectedExp.titleId || selectedExp.title)}</p>
-              <div className="flex items-center gap-4 text-white/80 text-sm mt-3">
-                <div className="flex items-center gap-1">
-                  <Calendar className="w-4 h-4" />
-                  <span>{selectedExp.period}</span>
-                </div>
-                {selectedExp.location && (
-                  <div className="flex items-center gap-1">
-                    <MapPin className="w-4 h-4" />
-                    <span>{selectedExp.location}</span>
-                  </div>
-                )}
-              </div>
-            </div>
-            <motion.button
-              onClick={onClose}
-              className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center hover:bg-white/30 transition-colors"
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-            >
-              <X size={20} />
-            </motion.button>
-          </div>
-        </div>
-
-        {/* Modal Content */}
-        <div className="p-8">
-          {selectedExp.image && (
-            <motion.div
-              className="mb-6 rounded-2xl overflow-hidden shadow-lg"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-            >
-              <Image 
-                src={selectedExp.image} 
-                alt={selectedExp.company} 
-                width={600} 
-                height={300} 
-                className="w-full h-48 object-cover"
-              />
-            </motion.div>
-          )}
-          
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-          >
-            <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-lg mb-6">
-              {t(selectedExp.description, selectedExp.descriptionId || selectedExp.description)}
-            </p>
-
-            {selectedExp.techStack && (
-              <div>
-                <h4 className="font-semibold text-gray-900 dark:text-white mb-3">
-                  {t("Technologies Used", "Teknologi yang Digunakan")}
-                </h4>
-                <div className="flex flex-wrap gap-3">
-                  {selectedExp.techStack.map((tech: string, index: number) => (
-                    <motion.span
-                      key={tech}
-                      className="px-4 py-2 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 rounded-full text-sm font-medium"
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ delay: 0.4 + index * 0.1 }}
-                      whileHover={{ scale: 1.05 }}
-                    >
-                      {tech}
-                    </motion.span>
-                  ))}
-                </div>
-              </div>
-            )}
-          </motion.div>
-        </div>
-      </motion.div>
-    </motion.div>
-  );
-
-  return ReactDOM.createPortal(modalContent, document.body);
-};
-
 export const Experience: React.FC = () => {
   const { t } = useLanguage();
   const [selectedExp, setSelectedExp] = useState<any>(null);
@@ -475,13 +347,108 @@ export const Experience: React.FC = () => {
           </div>
         </motion.div>
 
-        {/* Portal-Based Modal */}
+        {/* Enhanced Modal */}
         <AnimatePresence>
           {selectedExp && (
-            <ExperienceModal
-              selectedExp={selectedExp}
-              onClose={() => setSelectedExp(null)}
-            />
+            <motion.div
+              className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setSelectedExp(null)}
+            >
+              <motion.div
+                className="bg-white dark:bg-gray-800 rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-auto shadow-2xl border border-gray-200 dark:border-gray-700"
+                initial={{ scale: 0.7, opacity: 0, y: 50 }}
+                animate={{ scale: 1, opacity: 1, y: 0 }}
+                exit={{ scale: 0.7, opacity: 0, y: 50 }}
+                transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                onClick={(e) => e.stopPropagation()}
+              >
+                {/* Modal Header */}
+                <div className="bg-gradient-to-r from-emerald-500 to-blue-500 text-white p-8 rounded-t-3xl relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-xl"></div>
+                  <div className="relative z-10 flex justify-between items-start">
+                    <div>
+                      <h3 className="text-2xl font-bold mb-2">{selectedExp.company}</h3>
+                      <p className="text-white/90 text-lg">{t(selectedExp.title, selectedExp.titleId || selectedExp.title)}</p>
+                      <div className="flex items-center gap-4 text-white/80 text-sm mt-3">
+                        <div className="flex items-center gap-1">
+                          <Calendar className="w-4 h-4" />
+                          <span>{selectedExp.period}</span>
+                        </div>
+                        {selectedExp.location && (
+                          <div className="flex items-center gap-1">
+                            <MapPin className="w-4 h-4" />
+                            <span>{selectedExp.location}</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    <motion.button
+                      onClick={() => setSelectedExp(null)}
+                      className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center hover:bg-white/30 transition-colors"
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.9 }}
+                    >
+                      <X size={20} />
+                    </motion.button>
+                  </div>
+                </div>
+
+                {/* Modal Content */}
+                <div className="p-8">
+                  {selectedExp.image && (
+                    <motion.div
+                      className="mb-6 rounded-2xl overflow-hidden shadow-lg"
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.2 }}
+                    >
+                      <Image 
+                        src={selectedExp.image} 
+                        alt={selectedExp.company} 
+                        width={600} 
+                        height={300} 
+                        className="w-full h-48 object-cover"
+                      />
+                    </motion.div>
+                  )}
+                  
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3 }}
+                  >
+                    <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-lg mb-6">
+                      {t(selectedExp.description, selectedExp.descriptionId || selectedExp.description)}
+                    </p>
+
+                    {selectedExp.techStack && (
+                      <div>
+                        <h4 className="font-semibold text-gray-900 dark:text-white mb-3">
+                          {t("Technologies Used", "Teknologi yang Digunakan")}
+                        </h4>
+                        <div className="flex flex-wrap gap-3">
+                          {selectedExp.techStack.map((tech: string, index: number) => (
+                            <motion.span
+                              key={tech}
+                              className="px-4 py-2 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 rounded-full text-sm font-medium"
+                              initial={{ opacity: 0, scale: 0.8 }}
+                              animate={{ opacity: 1, scale: 1 }}
+                              transition={{ delay: 0.4 + index * 0.1 }}
+                              whileHover={{ scale: 1.05 }}
+                            >
+                              {tech}
+                            </motion.span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </motion.div>
+                </div>
+              </motion.div>
+            </motion.div>
           )}
         </AnimatePresence>
       </div>

@@ -5,7 +5,7 @@ import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
 import { useLanguage } from '../../context/LanguageContext';
 import { AnimatedSectionTitle } from '../shared/AnimatedSectionTitle';
 import { InteractiveButton } from '../shared/InteractiveButton';
-import { StandardModal } from '../shared/StandardModal';
+import StandardModal from '../shared/StandardModal';
 import { Play, Pause, ChevronLeft, ChevronRight, ExternalLink, Eye } from 'lucide-react';
 
 interface DesignProject {

@@ -757,7 +757,7 @@ export function Services() {
     <section 
       ref={sectionRef}
       id="services" 
-      className="py-20 bg-transparent relative overflow-hidden"
+      className="py-20 bg-gradient-to-br from-gray-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-blue-900 relative"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <AnimatedSectionTitle
@@ -911,18 +911,7 @@ export function Services() {
                 <div className={`w-24 h-1 bg-gradient-to-r ${currentTab.gradient} mx-auto rounded-full`} />
               </div>
               
-              <motion.div 
-                className="group bg-white/60 dark:bg-gray-800/60 backdrop-blur-lg rounded-2xl lg:rounded-3xl p-6 lg:p-8 border border-gray-200/50 dark:border-gray-700/50 shadow-xl relative overflow-hidden transition-all duration-500"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-                viewport={{ once: true }}
-                whileHover={{ 
-                  scale: 1.02, 
-                  y: -5,
-                  boxShadow: "0 25px 50px rgba(0, 0, 0, 0.15), 0 0 30px rgba(59, 130, 246, 0.1)"
-                }}
-              >
+              <div className="bg-gray-50 dark:bg-gray-900 rounded-2xl lg:rounded-3xl p-6 lg:p-8 border border-gray-200 dark:border-gray-700">
                 <div className="text-center mb-8">
                   <p className="text-gray-600 dark:text-gray-300 text-base lg:text-lg max-w-3xl mx-auto px-4 lg:px-0">
                     {language === 'en' 
@@ -934,29 +923,9 @@ export function Services() {
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 mb-8">
                   {/* Full-time */}
-                  <motion.div 
-                    className="group bg-white dark:bg-gray-800 rounded-xl lg:rounded-2xl p-4 lg:p-6 border border-gray-200 dark:border-gray-700 shadow-lg relative overflow-hidden transition-all duration-300 hover:shadow-2xl"
-                    whileHover={{ 
-                      y: -8, 
-                      scale: 1.03,
-                      boxShadow: "0 20px 40px rgba(0, 0, 0, 0.12)"
-                    }}
-                    initial={{ opacity: 0, x: -20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.6, delay: 0.3 }}
-                    viewport={{ once: true }}
-                  >
-                    {/* Background glow effect */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-emerald-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                    
-                    <div className="relative z-10 flex items-center mb-4">
-                      <motion.span 
-                        className="text-3xl mr-3"
-                        whileHover={{ scale: 1.2, rotate: [0, -10, 10, 0] }}
-                        transition={{ duration: 0.5 }}
-                      >
-                        💼
-                      </motion.span>
+                  <div className="bg-white dark:bg-gray-800 rounded-xl lg:rounded-2xl p-4 lg:p-6 border border-gray-200 dark:border-gray-700 shadow-lg">
+                    <div className="flex items-center mb-4">
+                      <span className="text-3xl mr-3">💼</span>
                       <h4 className="text-lg lg:text-xl font-bold text-gray-900 dark:text-white">
                         {language === 'en' ? 'Full-Time Position' : 'Posisi Full-Time'}
                       </h4>
@@ -973,32 +942,12 @@ export function Services() {
                         : 'Siap bergabung dengan perusahaan inovatif dan berkontribusi pada proyek yang bermakna dengan fokus yang berdedikasi dan pertumbuhan profesional.'
                       }
                     </p>
-                  </motion.div>
+                  </div>
 
                   {/* Freelance */}
-                  <motion.div 
-                    className="group bg-white dark:bg-gray-800 rounded-xl lg:rounded-2xl p-4 lg:p-6 border border-gray-200 dark:border-gray-700 shadow-lg relative overflow-hidden transition-all duration-300 hover:shadow-2xl"
-                    whileHover={{ 
-                      y: -8, 
-                      scale: 1.03,
-                      boxShadow: "0 20px 40px rgba(0, 0, 0, 0.12)"
-                    }}
-                    initial={{ opacity: 0, x: 20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.6, delay: 0.4 }}
-                    viewport={{ once: true }}
-                  >
-                    {/* Background glow effect */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                    
-                    <div className="relative z-10 flex items-center mb-4">
-                      <motion.span 
-                        className="text-3xl mr-3"
-                        whileHover={{ scale: 1.2, rotate: [0, -10, 10, 0] }}
-                        transition={{ duration: 0.5 }}
-                      >
-                        🚀
-                      </motion.span>
+                  <div className="bg-white dark:bg-gray-800 rounded-xl lg:rounded-2xl p-4 lg:p-6 border border-gray-200 dark:border-gray-700 shadow-lg">
+                    <div className="flex items-center mb-4">
+                      <span className="text-3xl mr-3">🚀</span>
                       <h4 className="text-lg lg:text-xl font-bold text-gray-900 dark:text-white">
                         {language === 'en' ? 'Freelance Projects' : 'Proyek Freelance'}
                       </h4>
@@ -1015,12 +964,9 @@ export function Services() {
                         : 'Sempurna untuk startup, agensi, dan bisnis yang mencari bantuan ahli untuk proyek spesifik atau dukungan berkelanjutan.'
                       }
                     </p>
-                  </motion.div>
+                  </div>
                 </div>
-                
-                {/* Subtle background animation */}
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-emerald-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              </motion.div>
+              </div>
             </div>
 
             {/* Services Section */}

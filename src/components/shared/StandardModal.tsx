@@ -1,26 +1,37 @@
-"use client";
+'use client';
 
-import React, { ReactNode } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { X } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import ReactDOM from 'react-dom';
 
 interface StandardModalProps {
   isOpen: boolean;
   onClose: () => void;
-  children: ReactNode;
+  children: React.ReactNode;
   title?: string;
   maxWidth?: 'sm' | 'md' | 'lg' | 'xl' | '2xl';
   className?: string;
 }
 
-export const StandardModal: React.FC<StandardModalProps> = ({
-  isOpen,
-  onClose,
-  children,
-  title,
-  maxWidth = 'md',
-  className = ''
-}) => {
+const StandardModal: React.FC<StandardModalProps> = ({ isOpen, onClose, children, title, maxWidth = 'md', className = '' }) => {
+  const [isBrowser, setIsBrowser] = useState(false);
+
+  useEffect(() => {
+    setIsBrowser(true);
+  }, []);
+
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
+
+  if (!isOpen || !isBrowser) return null;
+
   const maxWidthClasses = {
     sm: 'max-w-sm',
     md: 'max-w-md md:max-w-2xl',
@@ -29,49 +40,48 @@ export const StandardModal: React.FC<StandardModalProps> = ({
     '2xl': 'max-w-2xl md:max-w-6xl'
   };
 
-  return (
-    <AnimatePresence>
-      {isOpen && (
-        <div className="modal-backdrop">
-          <motion.div
-            className="modal-backdrop-overlay"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            onClick={onClose}
-          />
-          <motion.div
-            className={`modal-content ${maxWidthClasses[maxWidth]} ${className}`}
-            initial={{ scale: 0.9, opacity: 0, y: 20 }}
-            animate={{ scale: 1, opacity: 1, y: 0 }}
-            exit={{ scale: 0.9, opacity: 0, y: 20 }}
-            transition={{ duration: 0.3, ease: "easeOut" }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Header with Close Button */}
-            <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
-              {title && (
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                  {title}
-                </h3>
-              )}
-              <button
-                onClick={onClose}
-                className="ml-auto p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors duration-200"
-                aria-label="Close modal"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
+  const modalContent = (
+    <>
+      <div
+        className="fixed inset-0 z-40 bg-black/60"
+        onClick={onClose}
+        aria-hidden="true"
+      />
 
-            {/* Content */}
-            <div className="p-6 md:p-8">
-              {children}
-            </div>
-          </motion.div>
+      <div
+        className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto overflow-x-hidden outline-none focus:outline-none p-4"
+        role="dialog"
+        aria-modal="true"
+        onClick={onClose}
+      >
+        <div
+          className={`relative w-full ${maxWidthClasses[maxWidth]} max-h-[90vh] mx-auto my-6 bg-white dark:bg-gray-800 rounded-lg shadow-xl flex flex-col ${className}`}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="flex items-start justify-between p-5 border-b border-solid border-gray-200 dark:border-gray-700 rounded-t">
+            {title && (
+              <h3 className="text-2xl font-semibold text-gray-900 dark:text-white">
+                {title}
+              </h3>
+            )}
+            <button
+              className="p-1 ml-auto bg-transparent border-0 text-black dark:text-white opacity-50 float-right text-3xl leading-none font-semibold outline-none focus:outline-none hover:opacity-100"
+              onClick={onClose}
+              aria-label="Close modal"
+            >
+              <span className="h-6 w-6 text-2xl block">×</span>
+            </button>
+          </div>
+
+          <div className="relative p-6 flex-auto overflow-y-auto">
+            {children}
+          </div>
         </div>
-      )}
-    </AnimatePresence>
+      </div>
+    </>
   );
+
+  return ReactDOM.createPortal(modalContent, document.body);
 };
+
+export default StandardModal;

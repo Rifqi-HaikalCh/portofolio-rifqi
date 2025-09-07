@@ -27,7 +27,7 @@ export const Projects: React.FC = () => {
   };
 
   return (
-    <section id="projects" className="py-20 relative overflow-hidden bg-transparent">
+    <section id="projects" className="py-20 relative overflow-hidden">
       
       <div className="container mx-auto px-4 relative z-10">
         {/* Enhanced Header */}
