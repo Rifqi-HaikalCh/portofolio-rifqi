@@ -776,10 +776,11 @@ export function Services() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
         >
-          {/* Mobile: Compact Tab Switcher */}
+          {/* Mobile: Clean Title-Only Tab Design */}
           <div className="block sm:hidden mb-6">
-            <div className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-md p-1 rounded-2xl shadow-2xl border border-gray-200/50 dark:border-gray-700/50 mx-4">
-              <div className="flex rounded-xl overflow-hidden">
+            <div className="px-4">
+              {/* Mobile Tab Buttons - Vertical Stack */}
+              <div className="space-y-3">
                 {tabs.map((tab) => {
                   const IconComponent = tab.icon;
                   const isActive = activeTab === tab.id;
@@ -787,27 +788,47 @@ export function Services() {
                   return (
                     <motion.button
                       key={tab.id}
-                      className={`relative flex-1 py-3 px-2 rounded-lg transition-all duration-300 ${
+                      className={`relative w-full p-4 rounded-xl transition-all duration-300 text-left ${
                         isActive
                           ? `bg-gradient-to-r ${tab.gradient} text-white shadow-lg`
-                          : 'text-gray-600 dark:text-gray-300'
+                          : 'bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm text-gray-700 dark:text-gray-300 border border-gray-200/50 dark:border-gray-700/50 hover:bg-gray-50/80 dark:hover:bg-gray-700/80'
                       }`}
                       onClick={() => setActiveTab(tab.id)}
-                      whileTap={{ scale: 0.95 }}
+                      whileTap={{ scale: 0.98 }}
+                      whileHover={{ 
+                        scale: isActive ? 1 : 1.02,
+                        y: isActive ? 0 : -2 
+                      }}
                     >
                       {isActive && (
                         <motion.div
-                          className={`absolute inset-0 bg-gradient-to-r ${tab.gradient} rounded-lg`}
+                          className={`absolute inset-0 bg-gradient-to-r ${tab.gradient} rounded-xl`}
                           layoutId="activeMobileTab"
                           transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                         />
                       )}
                       
-                      <div className="relative z-10 flex flex-col items-center space-y-1">
-                        <IconComponent className="w-6 h-6" />
-                        <span className="text-sm font-semibold leading-tight text-center">
-                          {language === 'en' ? tab.labelEn.split(' ')[0] : tab.labelId.split(' ')[0]}
-                        </span>
+                      <div className="relative z-10 flex items-center space-x-4">
+                        <motion.div
+                          whileHover={{ scale: 1.1, rotate: isActive ? [0, -5, 5, 0] : 0 }}
+                          transition={{ duration: 0.3 }}
+                        >
+                          <IconComponent className={`w-6 h-6 ${isActive ? 'text-white' : 'text-emerald-600 dark:text-emerald-400'}`} />
+                        </motion.div>
+                        <div className="flex-1">
+                          <h3 className={`text-lg font-bold ${isActive ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
+                            {language === 'en' ? tab.labelEn : tab.labelId}
+                          </h3>
+                        </div>
+                        {/* Active indicator */}
+                        {isActive && (
+                          <motion.div
+                            className="w-2 h-2 bg-white/80 rounded-full"
+                            initial={{ scale: 0 }}
+                            animate={{ scale: 1 }}
+                            transition={{ delay: 0.2 }}
+                          />
+                        )}
                       </div>
                     </motion.button>
                   );
@@ -816,9 +837,9 @@ export function Services() {
             </div>
           </div>
 
-          {/* Tablet & Desktop: Enhanced Tab Navigation */}
+          {/* Desktop: Professional Tab Navigation with Descriptions */}
           <div className="hidden sm:flex justify-center">
-            <div className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-md p-1.5 md:p-2 rounded-2xl shadow-2xl border border-gray-200/50 dark:border-gray-700/50 inline-flex">
+            <div className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-md p-2 rounded-2xl shadow-2xl border border-gray-200/50 dark:border-gray-700/50 inline-flex">
               {tabs.map((tab) => {
                 const IconComponent = tab.icon;
                 const isActive = activeTab === tab.id;
@@ -826,17 +847,18 @@ export function Services() {
                 return (
                   <motion.button
                     key={tab.id}
-                    className={`relative px-4 md:px-6 lg:px-8 py-3 md:py-4 rounded-xl font-semibold text-sm md:text-base flex items-center space-x-2 md:space-x-3 transition-all duration-300 min-w-[140px] md:min-w-[180px] lg:min-w-[220px] justify-center group ${
+                    className={`relative px-5 md:px-6 lg:px-8 py-4 md:py-5 rounded-xl font-semibold text-sm md:text-base flex items-center space-x-3 md:space-x-4 transition-all duration-300 min-w-[160px] md:min-w-[200px] lg:min-w-[240px] justify-start group ${
                       isActive
-                        ? `bg-gradient-to-r ${tab.gradient} text-white shadow-lg`
-                        : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100/80 dark:hover:bg-gray-700/80'
+                        ? `bg-gradient-to-r ${tab.gradient} text-white shadow-xl`
+                        : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50/80 dark:hover:bg-gray-700/80'
                     }`}
                     onClick={() => setActiveTab(tab.id)}
                     whileHover={{ 
                       scale: 1.02,
+                      y: -2,
                       boxShadow: isActive 
-                        ? "0 20px 40px rgba(139, 92, 246, 0.3), 0 0 20px rgba(139, 92, 246, 0.2)"
-                        : "0 10px 25px rgba(0, 0, 0, 0.1)"
+                        ? "0 25px 50px rgba(139, 92, 246, 0.25), 0 0 30px rgba(139, 92, 246, 0.15)"
+                        : "0 15px 30px rgba(0, 0, 0, 0.1)"
                     }}
                     whileTap={{ scale: 0.98 }}
                   >
@@ -845,36 +867,36 @@ export function Services() {
                       <motion.div
                         className={`absolute inset-0 bg-gradient-to-r ${tab.gradient} rounded-xl shadow-xl`}
                         layoutId="activeDesktopTab"
-                        transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                        transition={{ type: "spring", bounce: 0.15, duration: 0.7 }}
                       />
                     )}
 
                     {/* Content */}
-                    <div className="relative z-10 flex items-center space-x-2 md:space-x-3">
+                    <div className="relative z-10 flex items-center space-x-3 md:space-x-4">
                       <motion.div
                         whileHover={{ 
-                          rotate: isActive ? [0, -5, 5, 0] : 0,
-                          scale: 1.1 
+                          rotate: isActive ? [0, -8, 8, 0] : [0, -4, 4, 0],
+                          scale: 1.15 
                         }}
-                        transition={{ duration: 0.3, ease: "easeOut" }}
+                        transition={{ duration: 0.4, ease: "easeOut" }}
                       >
-                        <IconComponent className="w-5 h-5 md:w-6 md:h-6 flex-shrink-0" />
+                        <IconComponent className="w-6 h-6 md:w-7 md:h-7 flex-shrink-0" />
                       </motion.div>
-                      <div className="text-center md:text-left">
-                        <div className="font-semibold text-base md:text-lg">
+                      <div className="text-left">
+                        <div className="font-bold text-base md:text-lg leading-tight">
                           {language === 'en' ? tab.labelEn : tab.labelId}
                         </div>
-                        <div className={`text-sm hidden md:block leading-tight ${isActive ? 'text-white/80' : 'text-gray-500 dark:text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-300'}`}>
+                        <div className={`text-xs md:text-sm leading-tight mt-1 ${isActive ? 'text-white/85' : 'text-gray-500 dark:text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-300'}`}>
                           {language === 'en' ? tab.descriptionEn : tab.descriptionId}
                         </div>
                       </div>
                     </div>
 
-                    {/* Subtle border highlight */}
-                    <div className={`absolute inset-0 rounded-xl border-2 transition-all duration-300 ${
+                    {/* Premium border highlight */}
+                    <div className={`absolute inset-0 rounded-xl border transition-all duration-300 ${
                       isActive 
-                        ? 'border-transparent' 
-                        : 'border-transparent group-hover:border-gray-200/30 dark:group-hover:border-gray-600/30'
+                        ? 'border-white/20' 
+                        : 'border-transparent group-hover:border-gray-200/40 dark:group-hover:border-gray-600/40'
                     }`} />
                   </motion.button>
                 );
