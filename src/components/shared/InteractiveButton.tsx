@@ -12,6 +12,8 @@ interface InteractiveButtonProps {
   className?: string;
   disabled?: boolean;
   icon?: React.ReactNode;
+  ariaLabel?: string; // Add this line
+  title?: string; // Add this line for title attribute support
 }
 
 export const InteractiveButton: React.FC<InteractiveButtonProps> = ({
@@ -22,7 +24,9 @@ export const InteractiveButton: React.FC<InteractiveButtonProps> = ({
   size = 'md',
   className = '',
   disabled = false,
-  icon
+  icon,
+  ariaLabel, // Add this parameter
+  title // Add this parameter
 }) => {
   const [ripples, setRipples] = useState<Array<{ id: number; x: number; y: number }>>([]);
 
@@ -57,7 +61,9 @@ export const InteractiveButton: React.FC<InteractiveButtonProps> = ({
   };
 
   const Component = href ? motion.a : motion.button;
-  const componentProps = href ? { href } : { onClick: createRipple };
+  const componentProps = href ? 
+    { href, 'aria-label': ariaLabel, title } : 
+    { onClick: createRipple, 'aria-label': ariaLabel, title }; // Add aria-label and title to props
 
   return (
     <Component
