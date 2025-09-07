@@ -474,7 +474,9 @@ const designProjects: DesignProject[] = [
       '/assets/Assets Manajemen Web Design-05.png',
       '/assets/Assets Manajemen Web Design-06.png',
       '/assets/Assets Manajemen Web Design-07.png',
-      '/assets/Assets Manajemen Web Design-08.png'
+      '/assets/Assets Manajemen Web Design-08.png',
+      '/assets/Assets Manajemen Web Design-09.png',
+      '/assets/Assets Manajemen Web Design-10.png'
     ],
     colors: ['#2563eb', '#06b6d4', '#10b981', '#f59e0b'],
     tools: ['Figma', 'Adobe Photoshop', 'Principle'],
@@ -492,7 +494,13 @@ const designProjects: DesignProject[] = [
     images: [
       '/assets/Campuss Website Design-1.png',
       '/assets/Campuss Website Design-2.png',
-      '/assets/Campuss Website Design-3.png'
+      '/assets/Campuss Website Design-3.png',
+      '/assets/Campuss Website Design-4.png',
+      '/assets/Campuss Website Design-5.png',
+      '/assets/Campuss Website Design-6.png',
+      '/assets/Campuss Website Design-7.png',
+      '/assets/Campuss Website Design-8.png',
+      '/assets/Campuss Website Design-9.png'
     ],
     colors: ['#1e40af', '#059669', '#d97706'],
     tools: ['Figma', 'Sketch', 'InVision'],
@@ -511,7 +519,13 @@ const designProjects: DesignProject[] = [
       '/assets/Gordenaise Website Design-01.png',
       '/assets/Gordenaise Website Design-02.png',
       '/assets/Gordenaise Website Design-03.png',
-      '/assets/Gordenaise Website Design-04.png'
+      '/assets/Gordenaise Website Design-04.png',
+      '/assets/Gordenaise Website Design-05.png',
+      '/assets/Gordenaise Website Design-06.png',
+      '/assets/Gordenaise Website Design-07.png',
+      '/assets/Gordenaise Website Design-08.png',
+      '/assets/Gordenaise Website Design-09.png',
+      '/assets/Gordenaise Website Design-10.png'
     ],
     colors: ['#a855f7', '#ec4899', '#06b6d4'],
     tools: ['Figma', 'Adobe XD', 'Photoshop'],

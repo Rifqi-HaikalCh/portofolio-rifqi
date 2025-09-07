@@ -32,16 +32,17 @@ export const StandardModal: React.FC<StandardModalProps> = ({
   return (
     <AnimatePresence>
       {isOpen && (
-        <motion.div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.3 }}
-          onClick={onClose}
-        >
+        <div className="modal-backdrop">
           <motion.div
-            className={`relative w-11/12 ${maxWidthClasses[maxWidth]} bg-white dark:bg-gray-800 rounded-lg shadow-xl transition-all duration-300 max-h-[90vh] overflow-y-auto ${className}`}
+            className="modal-backdrop-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            onClick={onClose}
+          />
+          <motion.div
+            className={`modal-content ${maxWidthClasses[maxWidth]} ${className}`}
             initial={{ scale: 0.9, opacity: 0, y: 20 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.9, opacity: 0, y: 20 }}
@@ -69,7 +70,7 @@ export const StandardModal: React.FC<StandardModalProps> = ({
               {children}
             </div>
           </motion.div>
-        </motion.div>
+        </div>
       )}
     </AnimatePresence>
   );
