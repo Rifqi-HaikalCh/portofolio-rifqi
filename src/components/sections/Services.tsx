@@ -535,7 +535,7 @@ const designProjects: DesignProject[] = [
   }
 ];
 
-// Skills data integrated from UnifiedSkills
+// Skills data integrated from UiUxSkills
 interface Skill {
   name: string;
   nameId: string;
@@ -549,56 +549,78 @@ interface Skill {
 
 // Developer Skills
 const developerSkills: Skill[] = [
+  // Programming Languages
   {
     name: 'HTML5',
     nameId: 'HTML5',
     icon: '🌐',
-    level: 95,
+    level: 100,
     color: '#E34F26',
     description: 'Semantic markup and modern web standards',
     descriptionId: 'Markup semantik dan standar web modern',
-    category: 'Web Fundamentals'
+    category: 'Programming Languages'
   },
   {
     name: 'CSS3',
     nameId: 'CSS3',
     icon: '🎨',
-    level: 90,
+    level: 100,
     color: '#1572B6',
     description: 'Advanced styling and responsive design',
     descriptionId: 'Styling canggih dan desain responsif',
-    category: 'Web Fundamentals'
+    category: 'Programming Languages'
   },
   {
     name: 'JavaScript',
     nameId: 'JavaScript',
     icon: '⚡',
-    level: 92,
+    level: 95,
     color: '#F7DF1E',
     description: 'Modern ES6+ and dynamic programming',
     descriptionId: 'ES6+ modern dan pemrograman dinamis',
-    category: 'Programming Language'
+    category: 'Programming Languages'
   },
   {
     name: 'TypeScript',
     nameId: 'TypeScript',
     icon: '📘',
-    level: 88,
+    level: 90,
     color: '#3178C6',
     description: 'Type-safe JavaScript development',
     descriptionId: 'Pengembangan JavaScript yang type-safe',
-    category: 'Programming Language'
+    category: 'Programming Languages'
   },
   {
-    name: 'Angular',
-    nameId: 'Angular',
-    icon: '🅰️',
-    level: 95,
-    color: '#DD0031',
-    description: 'Expert in building scalable applications',
-    descriptionId: 'Ahli dalam membangun aplikasi yang skalabel',
-    category: 'Frontend Framework'
+    name: 'Java',
+    nameId: 'Java',
+    icon: '☕',
+    level: 75,
+    color: '#ED8B00',
+    description: 'Enterprise application development',
+    descriptionId: 'Pengembangan aplikasi enterprise',
+    category: 'Programming Languages'
   },
+  {
+    name: 'PHP',
+    nameId: 'PHP',
+    icon: '🐘',
+    level: 70,
+    color: '#777BB4',
+    description: 'Server-side web development',
+    descriptionId: 'Pengembangan web server-side',
+    category: 'Programming Languages'
+  },
+  {
+    name: 'Dart',
+    nameId: 'Dart',
+    icon: '🎯',
+    level: 80,
+    color: '#0175C2',
+    description: 'Flutter and cross-platform development',
+    descriptionId: 'Flutter dan pengembangan cross-platform',
+    category: 'Programming Languages'
+  },
+  // Frontend Development
   {
     name: 'React.js',
     nameId: 'React.js',
@@ -607,51 +629,326 @@ const developerSkills: Skill[] = [
     color: '#61DAFB',
     description: 'Modern component-based development',
     descriptionId: 'Pengembangan berbasis komponen modern',
-    category: 'Frontend Framework'
+    category: 'Frontend Development'
+  },
+  {
+    name: 'Angular',
+    nameId: 'Angular',
+    icon: '🅰️',
+    level: 90,
+    color: '#DD0031',
+    description: 'Full-featured frontend framework',
+    descriptionId: 'Framework frontend berfitur lengkap',
+    category: 'Frontend Development'
+  },
+  {
+    name: 'AngularJS',
+    nameId: 'AngularJS',
+    icon: '🔺',
+    level: 80,
+    color: '#E23237',
+    description: 'Legacy Angular framework',
+    descriptionId: 'Framework Angular legacy',
+    category: 'Frontend Development'
+  },
+  {
+    name: 'Vue.js',
+    nameId: 'Vue.js',
+    icon: '💚',
+    level: 80,
+    color: '#4FC08D',
+    description: 'Progressive JavaScript framework',
+    descriptionId: 'Framework JavaScript progresif',
+    category: 'Frontend Development'
+  },
+  {
+    name: 'State Management',
+    nameId: 'State Management',
+    icon: '🗄️',
+    level: 80,
+    color: '#764ABC',
+    description: 'Redux / Vuex state management',
+    descriptionId: 'Manajemen state Redux / Vuex',
+    category: 'Frontend Development'
+  },
+  {
+    name: 'Tailwind CSS',
+    nameId: 'Tailwind CSS',
+    icon: '🌊',
+    level: 100,
+    color: '#06B6D4',
+    description: 'Utility-first CSS framework',
+    descriptionId: 'Framework CSS utility-first',
+    category: 'Frontend Development'
+  },
+  {
+    name: 'Bootstrap',
+    nameId: 'Bootstrap',
+    icon: '📱',
+    level: 100,
+    color: '#7952B3',
+    description: 'Popular CSS framework',
+    descriptionId: 'Framework CSS populer',
+    category: 'Frontend Development'
+  },
+  {
+    name: 'Responsive Design',
+    nameId: 'Desain Responsif',
+    icon: '📱',
+    level: 90,
+    color: '#10B981',
+    description: 'Multi-device optimization',
+    descriptionId: 'Optimisasi multi-perangkat',
+    category: 'Frontend Development'
+  },
+  // Backend Development
+  {
+    name: 'Node.js',
+    nameId: 'Node.js',
+    icon: '🟢',
+    level: 80,
+    color: '#339933',
+    description: 'Server-side JavaScript runtime',
+    descriptionId: 'Runtime JavaScript server-side',
+    category: 'Backend Development'
+  },
+  {
+    name: 'Express.js',
+    nameId: 'Express.js',
+    icon: '🚂',
+    level: 80,
+    color: '#000000',
+    description: 'Minimalist web framework for Node.js',
+    descriptionId: 'Framework web minimalis untuk Node.js',
+    category: 'Backend Development'
+  },
+  {
+    name: 'Spring Boot',
+    nameId: 'Spring Boot',
+    icon: '🍃',
+    level: 70,
+    color: '#6DB33F',
+    description: 'Java-based enterprise framework',
+    descriptionId: 'Framework enterprise berbasis Java',
+    category: 'Backend Development'
+  },
+  {
+    name: 'Laravel',
+    nameId: 'Laravel',
+    icon: '🎼',
+    level: 75,
+    color: '#FF2D20',
+    description: 'PHP web application framework',
+    descriptionId: 'Framework aplikasi web PHP',
+    category: 'Backend Development'
+  },
+  {
+    name: 'RESTful API',
+    nameId: 'RESTful API',
+    icon: '🔗',
+    level: 90,
+    color: '#FF6B35',
+    description: 'RESTful API design and development',
+    descriptionId: 'Desain dan pengembangan RESTful API',
+    category: 'Backend Development'
   }
 ];
 
 // UI/UX Design Skills
 const designSkills: Skill[] = [
+  // Software & Tools
   {
     name: 'Figma',
     nameId: 'Figma',
     icon: '🎨',
-    level: 95,
+    level: 100,
     color: '#F24E1E',
     description: 'Advanced interface design and prototyping',
     descriptionId: 'Desain antarmuka lanjutan dan prototyping',
-    category: 'Design Tools'
+    category: 'Software & Tools'
   },
   {
     name: 'Adobe Creative Suite',
     nameId: 'Adobe Creative Suite',
     icon: '🖼️',
-    level: 90,
+    level: 80,
     color: '#FF0000',
-    description: 'Complete creative workflow mastery',
-    descriptionId: 'Penguasaan alur kerja kreatif lengkap',
-    category: 'Design Tools'
+    description: 'XD, Photoshop, Illustrator mastery',
+    descriptionId: 'Penguasaan XD, Photoshop, Illustrator',
+    category: 'Software & Tools'
   },
   {
-    name: 'User Research',
-    nameId: 'Riset Pengguna',
-    icon: '🔍',
-    level: 88,
+    name: 'Sketch',
+    nameId: 'Sketch',
+    icon: '💎',
+    level: 80,
+    color: '#FDB300',
+    description: 'Digital design and prototyping',
+    descriptionId: 'Desain digital dan prototyping',
+    category: 'Software & Tools'
+  },
+  {
+    name: 'InVision',
+    nameId: 'InVision',
+    icon: '🔗',
+    level: 90,
+    color: '#FF3366',
+    description: 'Collaborative design and prototyping',
+    descriptionId: 'Desain kolaboratif dan prototyping',
+    category: 'Software & Tools'
+  },
+  {
+    name: 'Webflow',
+    nameId: 'Webflow',
+    icon: '🌊',
+    level: 100,
+    color: '#4353FF',
+    description: 'No-code web design and development',
+    descriptionId: 'Desain dan pengembangan web no-code',
+    category: 'Software & Tools'
+  },
+  {
+    name: 'Balsamiq',
+    nameId: 'Balsamiq',
+    icon: '📝',
+    level: 60,
+    color: '#CC0000',
+    description: 'Low-fidelity wireframing',
+    descriptionId: 'Wireframing fidelitas rendah',
+    category: 'Software & Tools'
+  },
+  {
+    name: 'Miro/Mural',
+    nameId: 'Miro/Mural',
+    icon: '🗺️',
+    level: 70,
+    color: '#050038',
+    description: 'Collaborative visual workspace',
+    descriptionId: 'Workspace visual kolaboratif',
+    category: 'Software & Tools'
+  },
+  // Hard Skills
+  {
+    name: 'Wireframing',
+    nameId: 'Wireframing',
+    icon: '📐',
+    level: 90,
+    color: '#6B7280',
+    description: 'Creating low-fidelity design blueprints',
+    descriptionId: 'Membuat blueprint desain fidelitas rendah',
+    category: 'Hard Skills'
+  },
+  {
+    name: 'Mockup Design',
+    nameId: 'Desain Mockup',
+    icon: '🖼️',
+    level: 100,
     color: '#8B5CF6',
-    description: 'Understanding user needs and behaviors',
-    descriptionId: 'Memahami kebutuhan dan perilaku pengguna',
-    category: 'UX Research'
+    description: 'High-fidelity visual design',
+    descriptionId: 'Desain visual fidelitas tinggi',
+    category: 'Hard Skills'
   },
   {
     name: 'Prototyping',
     nameId: 'Prototyping',
     icon: '⚡',
-    level: 92,
+    level: 100,
     color: '#F59E0B',
     description: 'Interactive and high-fidelity prototypes',
     descriptionId: 'Prototype interaktif dan fidelitas tinggi',
-    category: 'Design Process'
+    category: 'Hard Skills'
+  },
+  {
+    name: 'User Flow',
+    nameId: 'User Flow',
+    icon: '🔄',
+    level: 100,
+    color: '#10B981',
+    description: 'Mapping user journey and interactions',
+    descriptionId: 'Memetakan perjalanan dan interaksi pengguna',
+    category: 'Hard Skills'
+  },
+  {
+    name: 'Journey Mapping',
+    nameId: 'Journey Mapping',
+    icon: '🗺️',
+    level: 100,
+    color: '#06B6D4',
+    description: 'Visualizing end-to-end user experience',
+    descriptionId: 'Memvisualisasikan pengalaman pengguna end-to-end',
+    category: 'Hard Skills'
+  },
+  // Riset & Analisis
+  {
+    name: 'User Research',
+    nameId: 'Riset Pengguna',
+    icon: '🔍',
+    level: 90,
+    color: '#8B5CF6',
+    description: 'Understanding user needs and behaviors',
+    descriptionId: 'Memahami kebutuhan dan perilaku pengguna',
+    category: 'Riset & Analisis'
+  },
+  {
+    name: 'User Persona Creation',
+    nameId: 'Pembuatan Persona Pengguna',
+    icon: '👤',
+    level: 100,
+    color: '#EC4899',
+    description: 'Creating detailed user personas',
+    descriptionId: 'Membuat persona pengguna yang detail',
+    category: 'Riset & Analisis'
+  },
+  {
+    name: 'Competitor Analysis',
+    nameId: 'Analisis Kompetitor',
+    icon: '📊',
+    level: 95,
+    color: '#F97316',
+    description: 'Analyzing competitive landscape',
+    descriptionId: 'Menganalisis lanskap kompetitif',
+    category: 'Riset & Analisis'
+  },
+  // Visual & Interaksi
+  {
+    name: 'Color Theory & Typography',
+    nameId: 'Teori Warna & Tipografi',
+    icon: '🎨',
+    level: 100,
+    color: '#EF4444',
+    description: 'Visual design principles and aesthetics',
+    descriptionId: 'Prinsip desain visual dan estetika',
+    category: 'Visual & Interaksi'
+  },
+  {
+    name: 'Interaction Design',
+    nameId: 'Interaction Design',
+    icon: '✨',
+    level: 100,
+    color: '#8B5CF6',
+    description: 'Creating engaging user interactions',
+    descriptionId: 'Membuat interaksi pengguna yang menarik',
+    category: 'Visual & Interaksi'
+  },
+  {
+    name: 'Responsive Design',
+    nameId: 'Desain Responsif',
+    icon: '📱',
+    level: 100,
+    color: '#10B981',
+    description: 'Multi-device design optimization',
+    descriptionId: 'Optimisasi desain multi-perangkat',
+    category: 'Visual & Interaksi'
+  },
+  {
+    name: 'UX Writing',
+    nameId: 'UX Writing',
+    icon: '✍️',
+    level: 80,
+    color: '#F59E0B',
+    description: 'Microcopy and content strategy',
+    descriptionId: 'Microcopy dan strategi konten',
+    category: 'Visual & Interaksi'
   }
 ];
 

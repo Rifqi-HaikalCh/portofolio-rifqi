@@ -1,176 +1,249 @@
 "use client";
 
-import React, { useRef, useEffect, useState } from 'react';
-import { motion, useInView } from 'framer-motion';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Autoplay, FreeMode } from 'swiper/modules';
+import React from 'react';
+import { motion } from 'framer-motion';
 import { useLanguage } from '../../context/LanguageContext';
+import { AnimatedCard } from '../shared/AnimatedCard';
 
-// Import Swiper styles
-import 'swiper/css';
-import 'swiper/css/free-mode';
-import 'swiper/css/autoplay';
-
-interface Skill {
+interface DesignSkill {
   name: string;
+  nameId: string;
+  icon: string;
   level: number;
+  color: string;
+  description: string;
+  descriptionId: string;
+  category: 'Design Tools' | 'UX Research' | 'Design Process';
 }
 
-interface SoftSkillCategory {
-  [key: string]: string[];
-}
-
-interface UiUxSkillsData {
-  "Software & Tools": Skill[];
-  "Hard Skills": Skill[];
-  "Riset & Analisis": Skill[];
-  "Visual & Interaksi": Skill[];
-  "Soft Skills": SoftSkillCategory;
-}
-
-const uiUxSkillsData: UiUxSkillsData = {
-  "Software & Tools": [
-    { name: "Figma", level: 100 },
-    { name: "Adobe Creative Suite (XD, Photoshop, Illustrator)", level: 80 },
-    { name: "Sketch", level: 80 },
-    { name: "InVision", level: 90 },
-    { name: "Webflow", level: 100 },
-    { name: "Balsamiq", level: 60 },
-    { name: "Miro/Mural", level: 70 }
-  ],
-  "Hard Skills": [
-    { name: "Wireframing", level: 90 },
-    { name: "Mockup Design", level: 100 },
-    { name: "Prototyping", level: 100 },
-    { name: "User Flow", level: 100 },
-    { name: "Journey Mapping", level: 100 }
-  ],
-  "Riset & Analisis": [
-    { name: "User Research", level: 90 },
-    { name: "Pembuatan Persona Pengguna", level: 100 },
-    { name: "Analisis Kompetitor", level: 95 }
-  ],
-  "Visual & Interaksi": [
-    { name: "Teori Warna & Tipografi", level: 100 },
-    { name: "Interaction Design", level: 100 },
-    { name: "Desain Responsif", level: 100 },
-    { name: "UX Writing (Microcopy)", level: 80 }
-  ],
-  "Soft Skills": {
-    "Komunikasi & Kolaborasi": [
-      "Komunikasi yang efektif dengan tim (developer, product manager, dll.)",
-      "Presentasi desain kepada klien dan stakeholder",
-      "Kemampuan kolaborasi dalam tim"
-    ],
-    "Pemecahan Masalah & Berpikir Kritis": [
-      "Kemampuan berpikir kritis untuk menganalisis masalah pengguna",
-      "Problem-solving untuk menemukan solusi desain yang efektif",
-      "Rasa empati yang tinggi terhadap pengguna"
-    ],
-    "Manajemen Diri": [
-      "Manajemen waktu untuk menangani beberapa proyek sekaligus",
-      "Kemauan untuk terus belajar dan beradaptasi dengan tren baru"
-    ]
+const designSkills: DesignSkill[] = [
+  // Software & Tools
+  {
+    name: 'Figma',
+    nameId: 'Figma',
+    icon: '🎨',
+    level: 100,
+    color: '#F24E1E',
+    description: 'UI/UX Design Platform',
+    descriptionId: 'Platform Desain UI/UX',
+    category: 'Design Tools'
+  },
+  {
+    name: 'Adobe Creative Suite',
+    nameId: 'Adobe Creative Suite',
+    icon: '🎭',
+    level: 80,
+    color: '#FF0000',
+    description: 'Complete Design Suite',
+    descriptionId: 'Suite Desain Lengkap',
+    category: 'Design Tools'
+  },
+  {
+    name: 'Sketch',
+    nameId: 'Sketch',
+    icon: '💎',
+    level: 80,
+    color: '#F7B500',
+    description: 'Vector Graphics Editor',
+    descriptionId: 'Editor Grafis Vektor',
+    category: 'Design Tools'
+  },
+  {
+    name: 'InVision',
+    nameId: 'InVision',
+    icon: '🔗',
+    level: 90,
+    color: '#FF3366',
+    description: 'Digital Product Design Platform',
+    descriptionId: 'Platform Desain Produk Digital',
+    category: 'Design Tools'
+  },
+  {
+    name: 'Webflow',
+    nameId: 'Webflow',
+    icon: '🌐',
+    level: 100,
+    color: '#4353FF',
+    description: 'Visual Web Development',
+    descriptionId: 'Pengembangan Web Visual',
+    category: 'Design Tools'
+  },
+  {
+    name: 'Balsamiq',
+    nameId: 'Balsamiq',
+    icon: '📝',
+    level: 60,
+    color: '#CC0000',
+    description: 'Rapid Wireframing Tool',
+    descriptionId: 'Tool Wireframing Cepat',
+    category: 'Design Tools'
+  },
+  {
+    name: 'Miro/Mural',
+    nameId: 'Miro/Mural',
+    icon: '🗂️',
+    level: 70,
+    color: '#050038',
+    description: 'Collaborative Design Thinking',
+    descriptionId: 'Design Thinking Kolaboratif',
+    category: 'Design Tools'
+  },
+  // Hard Skills
+  {
+    name: 'Wireframing',
+    nameId: 'Wireframing',
+    icon: '📐',
+    level: 90,
+    color: '#8B5CF6',
+    description: 'Low-fidelity Design Planning',
+    descriptionId: 'Perencanaan Desain Fidelitas Rendah',
+    category: 'UX Research'
+  },
+  {
+    name: 'Mockup Design',
+    nameId: 'Desain Mockup',
+    icon: '🖼️',
+    level: 100,
+    color: '#10B981',
+    description: 'High-fidelity Visual Design',
+    descriptionId: 'Desain Visual Fidelitas Tinggi',
+    category: 'Design Process'
+  },
+  {
+    name: 'Prototyping',
+    nameId: 'Prototyping',
+    icon: '⚡',
+    level: 100,
+    color: '#F59E0B',
+    description: 'Interactive Design Simulation',
+    descriptionId: 'Simulasi Desain Interaktif',
+    category: 'Design Process'
+  },
+  {
+    name: 'User Flow',
+    nameId: 'Alur Pengguna',
+    icon: '🔄',
+    level: 100,
+    color: '#EF4444',
+    description: 'User Journey Mapping',
+    descriptionId: 'Pemetaan Perjalanan Pengguna',
+    category: 'UX Research'
+  },
+  {
+    name: 'Journey Mapping',
+    nameId: 'Pemetaan Perjalanan',
+    icon: '🗺️',
+    level: 100,
+    color: '#06B6D4',
+    description: 'User Experience Visualization',
+    descriptionId: 'Visualisasi Pengalaman Pengguna',
+    category: 'UX Research'
+  },
+  // Riset & Analisis
+  {
+    name: 'User Research',
+    nameId: 'Riset Pengguna',
+    icon: '🔍',
+    level: 90,
+    color: '#8B5CF6',
+    description: 'User Behavior Analysis',
+    descriptionId: 'Analisis Perilaku Pengguna',
+    category: 'UX Research'
+  },
+  {
+    name: 'User Persona Creation',
+    nameId: 'Pembuatan Persona Pengguna',
+    icon: '👤',
+    level: 100,
+    color: '#F97316',
+    description: 'Target User Profiling',
+    descriptionId: 'Profiling Pengguna Target',
+    category: 'UX Research'
+  },
+  {
+    name: 'Competitor Analysis',
+    nameId: 'Analisis Kompetitor',
+    icon: '📊',
+    level: 95,
+    color: '#84CC16',
+    description: 'Market Research & Benchmarking',
+    descriptionId: 'Riset Pasar & Benchmarking',
+    category: 'UX Research'
+  },
+  // Visual & Interaksi
+  {
+    name: 'Color Theory & Typography',
+    nameId: 'Teori Warna & Tipografi',
+    icon: '🎨',
+    level: 100,
+    color: '#EC4899',
+    description: 'Visual Design Fundamentals',
+    descriptionId: 'Fundamental Desain Visual',
+    category: 'Design Process'
+  },
+  {
+    name: 'Interaction Design',
+    nameId: 'Desain Interaksi',
+    icon: '👆',
+    level: 100,
+    color: '#3B82F6',
+    description: 'User Interface Interactions',
+    descriptionId: 'Interaksi Antarmuka Pengguna',
+    category: 'Design Process'
+  },
+  {
+    name: 'Responsive Design',
+    nameId: 'Desain Responsif',
+    icon: '📱',
+    level: 100,
+    color: '#059669',
+    description: 'Multi-device Compatibility',
+    descriptionId: 'Kompatibilitas Multi-perangkat',
+    category: 'Design Process'
+  },
+  {
+    name: 'UX Writing',
+    nameId: 'UX Writing',
+    icon: '✍️',
+    level: 80,
+    color: '#DC2626',
+    description: 'User-focused Content Creation',
+    descriptionId: 'Pembuatan Konten Fokus Pengguna',
+    category: 'Design Process'
   }
-};
+];
 
 const categoryTitles = {
-  "Software & Tools": {
-    en: "Software & Tools",
-    id: "Software & Tools"
+  'Design Tools': {
+    en: 'Design Tools',
+    id: 'Tools Desain'
   },
-  "Hard Skills": {
-    en: "Hard Skills",
-    id: "Hard Skills"
+  'UX Research': {
+    en: 'UX Research',
+    id: 'Riset UX'
   },
-  "Riset & Analisis": {
-    en: "Research & Analysis",
-    id: "Riset & Analisis"
-  },
-  "Visual & Interaksi": {
-    en: "Visual & Interaction",
-    id: "Visual & Interaksi"
-  },
-  "Soft Skills": {
-    en: "Soft Skills",
-    id: "Soft Skills"
+  'Design Process': {
+    en: 'Design Process',
+    id: 'Proses Desain'
   }
-};
-
-interface SkillCardProps {
-  skill: Skill;
-  index: number;
-  inView: boolean;
-}
-
-const SkillCard: React.FC<SkillCardProps> = ({ skill, index, inView }) => {
-  const [animatedLevel, setAnimatedLevel] = useState(0);
-
-  useEffect(() => {
-    if (inView) {
-      const timer = setTimeout(() => {
-        setAnimatedLevel(skill.level);
-      }, index * 100);
-      return () => clearTimeout(timer);
-    }
-  }, [inView, skill.level, index]);
-
-  const getProgressColor = (level: number) => {
-    if (level >= 90) return 'from-green-400 to-green-600';
-    if (level >= 80) return 'from-blue-400 to-blue-600';
-    if (level >= 70) return 'from-yellow-400 to-yellow-600';
-    return 'from-red-400 to-red-600';
-  };
-
-  return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border border-gray-200 dark:border-gray-700 min-h-[140px] flex flex-col justify-between">
-      <div>
-        <h4 className="font-semibold text-gray-900 dark:text-white mb-3 text-sm leading-tight">
-          {skill.name}
-        </h4>
-      </div>
-      
-      <div className="space-y-2">
-        <div className="flex justify-between items-center">
-          <span className="text-xs text-gray-600 dark:text-gray-400">Proficiency</span>
-          <span className="text-sm font-bold text-gray-800 dark:text-gray-200">
-            {skill.level}%
-          </span>
-        </div>
-        <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 overflow-hidden">
-          <motion.div
-            className={`h-full bg-gradient-to-r ${getProgressColor(skill.level)} rounded-full`}
-            initial={{ width: 0 }}
-            animate={{ width: inView ? `${animatedLevel}%` : 0 }}
-            transition={{ 
-              duration: 1.5, 
-              delay: index * 0.1,
-              ease: "easeOut" 
-            }}
-          />
-        </div>
-      </div>
-    </div>
-  );
 };
 
 export function UiUxSkills() {
   const { language } = useLanguage();
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
 
-  const carouselCategories = ["Software & Tools", "Hard Skills", "Riset & Analisis", "Visual & Interaksi"] as const;
+  const skillsByCategory = designSkills.reduce((acc, skill) => {
+    if (!acc[skill.category]) {
+      acc[skill.category] = [];
+    }
+    acc[skill.category].push(skill);
+    return acc;
+  }, {} as Record<string, DesignSkill[]>);
 
   return (
-    <div ref={ref} className="bg-gradient-to-br from-purple-50 via-pink-50 to-rose-50 dark:from-purple-900/20 dark:via-pink-900/20 dark:to-rose-900/20 rounded-3xl p-8 shadow-lg border border-purple-200 dark:border-purple-700">
-      <motion.div 
-        className="text-center mb-12"
-        initial={{ opacity: 0, y: 30 }}
-        animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-        transition={{ duration: 0.6 }}
-      >
+    <div className="bg-gradient-to-br from-purple-50 via-pink-50 to-rose-50 dark:from-purple-900/20 dark:via-pink-900/20 dark:to-rose-900/20 rounded-3xl p-8 shadow-lg border border-purple-200 dark:border-purple-700">
+      <div className="text-center mb-12">
         <h3 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
-          {language === 'en' ? 'UI/UX Design Skills & Creative Expertise' : 'Keahlian Desain UI/UX & Keahlian Kreatif'}
+          {language === 'en' ? 'Design Skills & Creative Expertise' : 'Keahlian Desain & Keahlian Kreatif'}
         </h3>
         <p className="text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed">
           {language === 'en' 
@@ -178,118 +251,90 @@ export function UiUxSkills() {
             : 'Saya menggabungkan visi kreatif dengan keahlian teknis untuk menciptakan pengalaman pengguna yang bermakna dan berdampak. Pendekatan saya berfokus pada desain yang berpusat pada pengguna dan keputusan berbasis data.'
           }
         </p>
-      </motion.div>
-
-      {/* Carousel Sections */}
-      <div className="space-y-12">
-        {carouselCategories.map((category, categoryIndex) => (
-          <motion.div
-            key={category}
-            initial={{ opacity: 0, y: 30 }}
-            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-            transition={{ duration: 0.6, delay: categoryIndex * 0.2 }}
-          >
-            <h4 className="text-xl font-bold text-gray-800 dark:text-gray-200 mb-6 text-center">
-              {language === 'en' 
-                ? categoryTitles[category].en
-                : categoryTitles[category].id
-              }
-            </h4>
-
-            <div className="relative">
-              <Swiper
-                modules={[Autoplay, FreeMode]}
-                spaceBetween={20}
-                slidesPerView="auto"
-                freeMode={true}
-                autoplay={{
-                  delay: 0,
-                  disableOnInteraction: false,
-                  reverseDirection: categoryIndex % 2 === 1
-                }}
-                speed={3000 + categoryIndex * 500}
-                loop={true}
-                allowTouchMove={false}
-                className="!overflow-visible"
-                breakpoints={{
-                  320: {
-                    slidesPerView: 1.2,
-                    spaceBetween: 16
-                  },
-                  640: {
-                    slidesPerView: 2.5,
-                    spaceBetween: 20
-                  },
-                  768: {
-                    slidesPerView: 3.2,
-                    spaceBetween: 20
-                  },
-                  1024: {
-                    slidesPerView: 4,
-                    spaceBetween: 24
-                  }
-                }}
-              >
-                {/* Duplicate skills for infinite loop */}
-                {[...uiUxSkillsData[category], ...uiUxSkillsData[category]].map((skill, index) => (
-                  <SwiperSlide key={`${skill.name}-${index}`} className="!w-auto">
-                    <div className="w-72">
-                      <SkillCard 
-                        skill={skill} 
-                        index={index} 
-                        inView={isInView}
-                      />
-                    </div>
-                  </SwiperSlide>
-                ))}
-              </Swiper>
-            </div>
-          </motion.div>
-        ))}
       </div>
 
-      {/* Soft Skills Section */}
-      <motion.div
-        className="mt-16"
-        initial={{ opacity: 0, y: 30 }}
-        animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-        transition={{ duration: 0.6, delay: 0.8 }}
-      >
-        <h4 className="text-xl font-bold text-gray-800 dark:text-gray-200 mb-8 text-center">
-          {language === 'en' ? categoryTitles["Soft Skills"].en : categoryTitles["Soft Skills"].id}
-        </h4>
+      {Object.entries(skillsByCategory).map(([category, skills], categoryIndex) => (
+        <div key={category} className="mb-12 last:mb-0">
+          <motion.h4 
+            className="text-xl font-bold text-gray-800 dark:text-gray-200 mb-6 text-center"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: categoryIndex * 0.1 }}
+          >
+            {language === 'en' 
+              ? categoryTitles[category as keyof typeof categoryTitles].en
+              : categoryTitles[category as keyof typeof categoryTitles].id
+            }
+          </motion.h4>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {Object.entries(uiUxSkillsData["Soft Skills"]).map(([subCategory, skills], index) => (
-            <motion.div
-              key={subCategory}
-              className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border border-gray-200 dark:border-gray-700"
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-              transition={{ duration: 0.5, delay: 1 + index * 0.1 }}
-              whileHover={{ scale: 1.02 }}
-            >
-              <h5 className="font-semibold text-gray-900 dark:text-white mb-4 text-center border-b border-gray-200 dark:border-gray-700 pb-2">
-                {subCategory}
-              </h5>
-              <ul className="space-y-3">
-                {skills.map((skill, skillIndex) => (
-                  <motion.li
-                    key={skillIndex}
-                    className="flex items-start space-x-2 text-sm text-gray-600 dark:text-gray-300"
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -10 }}
-                    transition={{ duration: 0.3, delay: 1.2 + index * 0.1 + skillIndex * 0.05 }}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {skills.map((skill, index) => (
+              <AnimatedCard key={skill.name} delay={categoryIndex * 0.1 + index * 0.05}>
+                <motion.div
+                  className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700 h-full"
+                  whileHover={{ 
+                    scale: 1.02, 
+                    boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)' 
+                  }}
+                  transition={{ duration: 0.3 }}
+                >
+                  {/* Skill Header */}
+                  <div className="flex items-center mb-4">
+                    <span className="text-3xl mr-4">{skill.icon}</span>
+                    <div className="flex-1">
+                      <h5 className="font-bold text-gray-900 dark:text-white">
+                        {language === 'en' ? skill.name : skill.nameId}
+                      </h5>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">
+                        {language === 'en' ? skill.description : skill.descriptionId}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Skill Level */}
+                  <div className="mb-4">
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                        {language === 'en' ? 'Proficiency' : 'Kemahiran'}
+                      </span>
+                      <span className="text-sm font-bold text-gray-800 dark:text-gray-200">
+                        {skill.level}%
+                      </span>
+                    </div>
+                    <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                      <motion.div
+                        className="h-2 rounded-full"
+                        style={{ backgroundColor: skill.color }}
+                        initial={{ width: 0 }}
+                        animate={{ width: `${skill.level}%` }}
+                        transition={{ 
+                          duration: 1, 
+                          delay: categoryIndex * 0.1 + index * 0.1,
+                          ease: "easeOut" 
+                        }}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Skill Badge */}
+                  <div 
+                    className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium text-white"
+                    style={{ backgroundColor: skill.color }}
                   >
-                    <span className="text-purple-500 dark:text-purple-400 mt-1 flex-shrink-0">•</span>
-                    <span className="leading-relaxed">{skill}</span>
-                  </motion.li>
-                ))}
-              </ul>
-            </motion.div>
-          ))}
+                    {skill.level >= 90 ? (
+                      language === 'en' ? 'Expert' : 'Ahli'
+                    ) : skill.level >= 80 ? (
+                      language === 'en' ? 'Advanced' : 'Lanjutan'
+                    ) : (
+                      language === 'en' ? 'Intermediate' : 'Menengah'
+                    )}
+                  </div>
+                </motion.div>
+              </AnimatedCard>
+            ))}
+          </div>
         </div>
-      </motion.div>
+      ))}
     </div>
   );
 }

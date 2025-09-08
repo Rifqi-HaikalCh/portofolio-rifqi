@@ -19,7 +19,6 @@ import { Footer } from '../components/sections/Footer';
 import LoadingScreen from '../components/shared/LoadingScreen';
 import { FloatingNavigation } from '../components/shared/FloatingNavigation';
 import { Services } from '../components/sections/Services';
-import { DualFunnelProjects } from '../components/sections/DualFunnelProjects';
 
 // EQbot notification messages
 const getEQbotMessages = (): NotificationMessage[] => [
@@ -195,7 +194,6 @@ export default function Home() {
             <AnimatedSection id="about"><About /></AnimatedSection>
             <AnimatedSection id="experience"><Experience /></AnimatedSection>
             <AnimatedSection id="services"><Services /></AnimatedSection>
-            <AnimatedSection id="projects"><DualFunnelProjects /></AnimatedSection>
             <AnimatedSection id="certificates"><Certificates /></AnimatedSection>
             <AnimatedSection id="contact"><Contact /></AnimatedSection>
           </main>
