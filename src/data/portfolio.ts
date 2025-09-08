@@ -28,8 +28,8 @@ export const aboutHighlights: AboutHighlight[] = [
     icon: 'graduation-cap',
     title: 'Education Excellence',
     titleId: 'Keunggulan Pendidikan',
-    description: 'Studying Informatics at Del Institute of Technology',
-    descriptionId: 'Belajar Informatika di Institut Teknologi Del'
+    description: 'Bachelors of Informatics at Del Institute of Technology',
+    descriptionId: 'Sarjana Informatika di Institut Teknologi Del'
   },
   {
     icon: 'briefcase',

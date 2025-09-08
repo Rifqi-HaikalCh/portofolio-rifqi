@@ -52,14 +52,14 @@ export const About: React.FC = () => {
 
   const stats = [
     { 
-      number: "15+", 
+      number: "10+", 
       label: t("Projects Completed", "Proyek Diselesaikan"),
-      description: t("From web apps to mobile solutions", "Dari aplikasi web hingga solusi mobile")
+      description: t("From concept to technology solutions", "Dari konsep hingga solusi teknologi")
     },
     { 
-      number: "3+", 
+      number: "2+", 
       label: t("Years Experience", "Tahun Pengalaman"),
-      description: t("Building digital experiences", "Membangun pengalaman digital")
+      description: t("Development and Design", "Pengembangan dan Desain")
     },
     { 
       number: "10+", 
@@ -170,7 +170,7 @@ export const About: React.FC = () => {
                   >
                     <span className="flex items-center gap-2">
                       <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
-                      Active
+                      Open to Work!
                     </span>
                   </motion.div>
                 </div>

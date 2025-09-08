@@ -29,33 +29,62 @@ export const Contact: React.FC = () => {
       // Primary: Environment variables
       let serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID;
       let templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID;
+      let autoReplyTemplateId = process.env.NEXT_PUBLIC_EMAILJS_AUTO_REPLY_TEMPLATE_ID;
       let publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY;
 
       // Fallback: Hardcoded values (if env vars not loaded)
       if (!serviceId || !templateId || !publicKey) {
         serviceId = 'service_r4ez1t9';
         templateId = 'template_lgl8zbc';
+        autoReplyTemplateId = 'template_wexjx9n';
         publicKey = 'it9csNm7MMiMayM7z';
         console.log('Using fallback EmailJS configuration');
       }
 
-      console.log('EmailJS Config:', { serviceId, templateId, publicKey: publicKey ? '***' : 'missing' });
+      console.log('EmailJS Config:', { 
+        serviceId, 
+        templateId, 
+        autoReplyTemplateId, 
+        publicKey: publicKey ? '***' : 'missing' 
+      });
 
       if (!serviceId || !templateId || !publicKey) {
-        console.error('Missing EmailJS configuration:', { serviceId: !!serviceId, templateId: !!templateId, publicKey: !!publicKey });
+        console.error('Missing EmailJS configuration:', { 
+          serviceId: !!serviceId, 
+          templateId: !!templateId, 
+          publicKey: !!publicKey 
+        });
         throw new Error('EmailJS configuration is missing');
       }
 
-      const result = await emailjs.sendForm(
+      // Send email to you (main template)
+      console.log('Sending email to owner...');
+      const ownerEmailResult = await emailjs.sendForm(
         serviceId,
         templateId,
         form.current,
         publicKey
       );
 
-      console.log('Email sent successfully:', result.text);
+      console.log('Owner email sent successfully:', ownerEmailResult.text);
+
+      // Send auto-reply to visitor (if auto-reply template is configured)
+      if (autoReplyTemplateId) {
+        console.log('Sending auto-reply to visitor...');
+        const autoReplyResult = await emailjs.sendForm(
+          serviceId,
+          autoReplyTemplateId,
+          form.current,
+          publicKey
+        );
+        console.log('Auto-reply sent successfully:', autoReplyResult.text);
+      }
+
       setStatus('success');
-      setStatusMessage(t('Your message has been sent successfully!', 'Pesan Anda berhasil dikirim!') as string);
+      setStatusMessage(t(
+        'Your message has been sent successfully! You will receive a confirmation email shortly.',
+        'Pesan Anda berhasil dikirim! Anda akan menerima email konfirmasi segera.'
+      ) as string);
       form.current.reset();
       setFocusedField(null);
     } catch (error) {

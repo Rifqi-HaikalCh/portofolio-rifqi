@@ -16,12 +16,10 @@ export const AboutText = () => {
   return {
     en: (
       <>
-        I am a recent <HighlightedWord variant="secondary">Bachelors of Informatics</HighlightedWord> from the{' '}
-        <HighlightedWord variant="primary">Del Institute of Technology</HighlightedWord>, passionate about bridging the gap between robust engineering and intuitive design.
-        My skills were honed during internships at <HighlightedWord variant="accent">PT. JAVAN</HighlightedWord> and{' '}
-        <HighlightedWord variant="accent">PT. FIF</HighlightedWord>, where I engineered full-stack applications using{' '}
-        <HighlightedWord variant="primary">Java Spring Boot</HighlightedWord> and modern front-end frameworks like{' '}
-        <HighlightedWord variant="secondary">Vue.js</HighlightedWord>.
+        I am a <HighlightedWord variant="secondary">Bachelors of Informatics</HighlightedWord> from the{' '}
+        <HighlightedWord variant="primary">Institut Teknologi Del</HighlightedWord>, passionate about bridging the gap between robust engineering and intuitive design.
+        My skills were honed during internships at <HighlightedWord variant="accent">PT. Javan Cipta Solusi</HighlightedWord> and{' '}
+        <HighlightedWord variant="accent">PT. Federal International Finance</HighlightedWord>, where I engineered full-stack applications and modern front-end frameworks.
         My services range from <HighlightedWord variant="primary">end-to-end Web and Mobile Development</HighlightedWord> to user-centric{' '}
         <HighlightedWord variant="accent">UI/UX Design</HighlightedWord>, ensuring every product I build is a seamless digital experience.
       </>
@@ -30,10 +28,8 @@ export const AboutText = () => {
       <>
         Saya adalah <HighlightedWord variant="secondary">Sarjana Informatika</HighlightedWord> dari{' '}
         <HighlightedWord variant="primary">Institut Teknologi Del</HighlightedWord> yang bersemangat menjembatani antara rekayasa teknis yang kokoh dan desain yang intuitif.
-        Keahlian saya terasah melalui magang di <HighlightedWord variant="accent">PT. JAVAN</HighlightedWord> dan{' '}
-        <HighlightedWord variant="accent">PT. FIF</HighlightedWord>, tempat saya membangun aplikasi full-stack menggunakan{' '}
-        <HighlightedWord variant="primary">Java Spring Boot</HighlightedWord> dan framework front-end modern seperti{' '}
-        <HighlightedWord variant="secondary">Vue.js</HighlightedWord>.
+        Keahlian saya terasah melalui magang di <HighlightedWord variant="accent">PT. Javan Cipta Solusi</HighlightedWord> dan{' '}
+        <HighlightedWord variant="accent">PT. Federal International Finance</HighlightedWord>, tempat saya membangun aplikasi full-stack dan framework front-end modern.
         Layanan yang saya tawarkan mencakup <HighlightedWord variant="primary">Pengembangan Web dan Mobile</HighlightedWord> secara menyeluruh hingga{' '}
         <HighlightedWord variant="accent">Desain UI/UX</HighlightedWord> yang berpusat pada pengguna, memastikan setiap produk yang saya buat adalah pengalaman digital yang mulus.
       </>
