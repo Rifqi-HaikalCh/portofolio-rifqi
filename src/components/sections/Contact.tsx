@@ -26,11 +26,23 @@ export const Contact: React.FC = () => {
     setStatusMessage('');
 
     try {
-      const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID;
-      const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID;
-      const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY;
+      // Primary: Environment variables
+      let serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID;
+      let templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID;
+      let publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY;
+
+      // Fallback: Hardcoded values (if env vars not loaded)
+      if (!serviceId || !templateId || !publicKey) {
+        serviceId = 'service_r4ez1t9';
+        templateId = 'template_lgl8zbc';
+        publicKey = 'it9csNm7MMiMayM7z';
+        console.log('Using fallback EmailJS configuration');
+      }
+
+      console.log('EmailJS Config:', { serviceId, templateId, publicKey: publicKey ? '***' : 'missing' });
 
       if (!serviceId || !templateId || !publicKey) {
+        console.error('Missing EmailJS configuration:', { serviceId: !!serviceId, templateId: !!templateId, publicKey: !!publicKey });
         throw new Error('EmailJS configuration is missing');
       }
 
