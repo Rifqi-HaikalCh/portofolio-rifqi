@@ -1,42 +1,58 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
+import emailjs from '@emailjs/browser';
 import { useLanguage } from '../../context/LanguageContext';
 import { contactInfo } from '../../data/portfolio';
-import { Mail, Phone, MapPin, Send, MessageSquare } from 'lucide-react';
+import { Mail, Phone, MapPin, Send, MessageSquare, CheckCircle, AlertCircle, Loader } from 'lucide-react';
 import { AnimatedSectionTitle } from '../shared/AnimatedSectionTitle';
 import { staggerContainer, fadeInUp } from '../../lib/animations';
 
 export const Contact: React.FC = () => {
   const { t } = useLanguage();
+  const form = useRef<HTMLFormElement>(null);
   const [focusedField, setFocusedField] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [statusMessage, setStatusMessage] = useState('');
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    
+    if (!form.current) return;
+    
     setIsSubmitting(true);
-    
-    const formData = new FormData(e.currentTarget);
-    const name = formData.get('name');
-    const email = formData.get('email');
-    const subject = formData.get('subject');
-    const message = formData.get('message');
+    setStatus('idle');
+    setStatusMessage('');
 
-    // Simulate loading for better UX
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    // Open Gmail compose
-    const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${contactInfo.email}&su=${encodeURIComponent(
-      subject as string
-    )}&body=${encodeURIComponent(
-      `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`
-    )}`;
+    try {
+      const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID;
+      const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID;
+      const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY;
 
-    window.open(gmailUrl, '_blank');
-    alert(t('Gmail will open in a new tab. Thank you for your message!', 'Gmail akan terbuka di tab baru. Terima kasih atas pesan Anda!'));
-    e.currentTarget.reset();
-    setIsSubmitting(false);
-    setFocusedField(null);
+      if (!serviceId || !templateId || !publicKey) {
+        throw new Error('EmailJS configuration is missing');
+      }
+
+      const result = await emailjs.sendForm(
+        serviceId,
+        templateId,
+        form.current,
+        publicKey
+      );
+
+      console.log('Email sent successfully:', result.text);
+      setStatus('success');
+      setStatusMessage(t('Your message has been sent successfully!', 'Pesan Anda berhasil dikirim!') as string);
+      form.current.reset();
+      setFocusedField(null);
+    } catch (error) {
+      console.error('Failed to send email:', error);
+      setStatus('error');
+      setStatusMessage(t('Failed to send message. Please try again later.', 'Gagal mengirim pesan. Silakan coba lagi nanti.') as string);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -93,6 +109,7 @@ export const Contact: React.FC = () => {
         <div className="max-w-4xl mx-auto">
           {/* Enhanced Glassmorphism Form */}
           <motion.form 
+            ref={form}
             onSubmit={handleSubmit} 
             className="bg-white/10 dark:bg-white/5 backdrop-blur-lg rounded-3xl p-8 shadow-2xl border border-white/20 dark:border-white/10 relative overflow-hidden"
             initial={{ opacity: 0, y: 30 }}
@@ -243,6 +260,26 @@ export const Contact: React.FC = () => {
               />
             </motion.div>
 
+            {/* Status Message */}
+            {status !== 'idle' && statusMessage && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className={`mb-6 p-4 rounded-2xl border-2 relative z-10 flex items-center gap-3 ${
+                  status === 'success' 
+                    ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-600 dark:text-emerald-400' 
+                    : 'bg-red-500/10 border-red-500/30 text-red-600 dark:text-red-400'
+                }`}
+              >
+                {status === 'success' ? (
+                  <CheckCircle size={20} />
+                ) : (
+                  <AlertCircle size={20} />
+                )}
+                <span className="font-medium">{statusMessage}</span>
+              </motion.div>
+            )}
+
             {/* Enhanced Submit Button */}
             <div className="text-center relative z-10">
               <motion.button
@@ -264,7 +301,7 @@ export const Contact: React.FC = () => {
                     transition: { duration: 1, repeat: Infinity, ease: "linear" }
                   } : {}}
                 >
-                  <Send size={20} />
+                  {isSubmitting ? <Loader size={20} /> : <Send size={20} />}
                 </motion.div>
                 {isSubmitting 
                   ? t("Sending...", "Mengirim...")
