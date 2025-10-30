@@ -94,18 +94,18 @@ return (
               >
                 {/* Project Image */}
                 <div className="relative overflow-hidden h-60">
-                  <Image
-                    src={project.image}
-                    alt={project.title}
-                    fill
-                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                    className="object-cover transition-all duration-700 group-hover:scale-110"
-                    motion
-                    motionProps={{
-                      whileHover: { scale: 1.1 },
-                      transition: { duration: 0.7, ease: "easeOut" }
-                    }}
-                  />
+                  <motion.div
+                    whileHover={{ scale: 1.1 }}
+                    transition={{ duration: 0.7, ease: "easeOut" }}
+                  >
+                    <Image
+                      src={project.image}
+                      alt={project.title}
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      className="object-cover transition-all duration-700"
+                    />
+                  </motion.div>
                   
                   {/* Floating Action Buttons */}
                   <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300">
