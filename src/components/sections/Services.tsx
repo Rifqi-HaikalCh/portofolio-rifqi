@@ -9,6 +9,7 @@ import { AnimatedSectionTitle } from '../shared/AnimatedSectionTitle';
 import { AnimatedCard } from '../shared/AnimatedCard';
 import { InteractiveButton } from '../shared/InteractiveButton';
 import StandardModal from '../shared/StandardModal';
+import ElectricBorder from '../shared/ElectricBorder';
 import { Code, Palette, Layers, ChevronLeft, ChevronRight, X, ArrowRight, Sparkles, Eye, ExternalLink } from 'lucide-react';
 import { Projects } from './Projects';
 
@@ -60,31 +61,6 @@ const uiuxServices: Service[] = [
     gradient: 'from-purple-500 to-pink-500'
   },
   {
-    id: 'wireframes',
-    titleEn: 'Wireframes & Mockups',
-    titleId: 'Wireframes & Mockups',
-    icon: '📐',
-    descriptionEn: 'Quickly mapping out your app\'s structure and flow.',
-    descriptionId: 'Memetakan struktur dan alur aplikasi Anda dengan cepat.',
-    features: {
-      en: [
-        'Low-fidelity wireframes',
-        'Information architecture',
-        'User flow diagrams',
-        'Content mapping',
-        'Navigation structure'
-      ],
-      id: [
-        'Wireframes fidelitas rendah',
-        'Arsitektur informasi',
-        'Diagram alur pengguna',
-        'Pemetaan konten',
-        'Struktur navigasi'
-      ]
-    },
-    gradient: 'from-blue-500 to-cyan-500'
-  },
-  {
     id: 'prototypes',
     titleEn: 'High-Fidelity Prototypes',
     titleId: 'Prototype Fidelitas Tinggi',
@@ -133,31 +109,6 @@ const uiuxServices: Service[] = [
       ]
     },
     gradient: 'from-orange-500 to-red-500'
-  },
-  {
-    id: 'user-flow',
-    titleEn: 'User Flow Mapping',
-    titleId: 'Pemetaan Alur Pengguna',
-    icon: '🗺️',
-    descriptionEn: 'Designing intuitive and logical navigation for your users.',
-    descriptionId: 'Merancang navigasi yang intuitif dan logis untuk pengguna Anda.',
-    features: {
-      en: [
-        'User journey mapping',
-        'Task flow analysis',
-        'Navigation optimization',
-        'Conversion funnel design',
-        'User experience strategy'
-      ],
-      id: [
-        'Pemetaan perjalanan pengguna',
-        'Analisis alur tugas',
-        'Optimisasi navigasi',
-        'Desain funnel konversi',
-        'Strategi pengalaman pengguna'
-      ]
-    },
-    gradient: 'from-indigo-500 to-purple-500'
   }
 ];
 
@@ -236,81 +187,6 @@ const developerServices: Service[] = [
       ]
     },
     gradient: 'from-cyan-500 to-blue-500'
-  },
-  {
-    id: 'modern-tech',
-    titleEn: 'Modern Tech Stacks',
-    titleId: 'Tech Stack Modern',
-    icon: '⚛️',
-    descriptionEn: 'Working with your preferred tools, including Angular, React, and Vue.js.',
-    descriptionId: 'Bekerja dengan alat pilihan Anda, termasuk Angular, React, dan Vue.js.',
-    features: {
-      en: [
-        'Angular development',
-        'React.js applications',
-        'Vue.js projects',
-        'TypeScript implementation',
-        'Modern build tools'
-      ],
-      id: [
-        'Pengembangan Angular',
-        'Aplikasi React.js',
-        'Proyek Vue.js',
-        'Implementasi TypeScript',
-        'Tool build modern'
-      ]
-    },
-    gradient: 'from-purple-500 to-pink-500'
-  },
-  {
-    id: 'interactive-features',
-    titleEn: 'Interactive Features',
-    titleId: 'Fitur Interaktif',
-    icon: '✨',
-    descriptionEn: 'Building smooth animations and engaging user-facing features.',
-    descriptionId: 'Membangun animasi yang halus dan fitur yang menarik bagi pengguna.',
-    features: {
-      en: [
-        'Smooth animations',
-        'Micro-interactions',
-        'Loading states',
-        'Form validations',
-        'User feedback systems'
-      ],
-      id: [
-        'Animasi yang halus',
-        'Micro-interactions',
-        'Status loading',
-        'Validasi form',
-        'Sistem feedback pengguna'
-      ]
-    },
-    gradient: 'from-yellow-500 to-orange-500'
-  },
-  {
-    id: 'clean-code',
-    titleEn: 'Clean Code Delivery',
-    titleId: 'Pengiriman Kode Bersih',
-    icon: '🧹',
-    descriptionEn: 'You get well-organized code, shared via Git or a simple .zip file.',
-    descriptionId: 'Anda mendapatkan kode yang terorganisir dengan baik, dibagikan melalui Git atau file .zip sederhana.',
-    features: {
-      en: [
-        'Clean code practices',
-        'Proper documentation',
-        'Git version control',
-        'Code review ready',
-        'Maintenance friendly'
-      ],
-      id: [
-        'Praktik kode bersih',
-        'Dokumentasi yang tepat',
-        'Kontrol versi Git',
-        'Siap untuk code review',
-        'Ramah maintenance'
-      ]
-    },
-    gradient: 'from-teal-500 to-green-500'
   }
 ];
 
@@ -1404,63 +1280,84 @@ return (
               </div>
               
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
-                {currentServices.map((service, index) => (
-                  <AnimatedCard
-                    key={service.id}
-                    delay={index * 0.1}
-                    className="group h-full"
-                  >
-                    <motion.div
-                      className="relative h-full bg-transparent rounded-xl sm:rounded-2xl lg:rounded-3xl p-4 sm:p-6 lg:p-8 shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden min-h-[220px] sm:min-h-[250px] lg:min-h-[280px]"
-                      whileHover={{ 
-                        y: -6,
-                        scale: 1.02,
-                        boxShadow: "0 20px 40px rgba(0, 0, 0, 0.12), 0 5px 15px rgba(0, 0, 0, 0.08)"
-                      }}
-                      transition={{ 
-                        duration: 0.3, 
-                        ease: "easeOut",
-                        type: "spring",
-                        stiffness: 300,
-                        damping: 25
-                      }}
+                {currentServices.map((service, index) => {
+                  // Extract color from gradient for electric border
+                  const gradientColorMap: Record<string, string> = {
+                    'from-purple-500 to-pink-500': '#a855f7',
+                    'from-emerald-500 to-teal-500': '#10b981',
+                    'from-orange-500 to-red-500': '#f97316',
+                    'from-blue-500 to-indigo-500': '#3b82f6',
+                    'from-green-500 to-emerald-500': '#22c55e',
+                    'from-cyan-500 to-blue-500': '#06b6d4'
+                  };
+                  const electricColor = gradientColorMap[service.gradient] || '#10b981';
+
+                  return (
+                    <AnimatedCard
+                      key={service.id}
+                      delay={index * 0.1}
+                      className="group h-full"
                     >
-                      {/* Gradient Background on Hover */}
-                      <div className={`absolute inset-0 bg-gradient-to-r ${service.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-500`} />
-                      
-                      {/* Icon */}
-                      <div className="relative z-10 text-3xl sm:text-4xl lg:text-5xl mb-4 sm:mb-6 transform group-hover:scale-110 transition-transform duration-300">
-                        {service.icon}
-                      </div>
+                      <ElectricBorder
+                        color={electricColor}
+                        speed={1}
+                        chaos={0.5}
+                        thickness={2}
+                        className="h-full"
+                        style={{ borderRadius: '1rem' }}
+                      >
+                        <motion.div
+                          className="relative h-full bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl lg:rounded-3xl p-4 sm:p-6 lg:p-8 overflow-hidden min-h-[220px] sm:min-h-[250px] lg:min-h-[280px]"
+                          whileHover={{
+                            y: -6,
+                            scale: 1.02
+                          }}
+                          transition={{
+                            duration: 0.3,
+                            ease: "easeOut",
+                            type: "spring",
+                            stiffness: 300,
+                            damping: 25
+                          }}
+                        >
+                          {/* Gradient Background on Hover */}
+                          <div className={`absolute inset-0 bg-gradient-to-r ${service.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-500 rounded-xl sm:rounded-2xl lg:rounded-3xl`} />
 
-                      {/* Title - Proportional Hierarchy */}
-                      <h3 className="relative z-10 text-xl sm:text-2xl lg:text-2xl font-bold text-gray-900 dark:text-white mb-3 sm:mb-4 leading-tight">
-                        {language === 'en' ? service.titleEn : service.titleId}
-                      </h3>
+                          {/* Icon */}
+                          <div className="relative z-10 text-3xl sm:text-4xl lg:text-5xl mb-4 sm:mb-6 transform group-hover:scale-110 transition-transform duration-300">
+                            {service.icon}
+                          </div>
 
-                      {/* Description - Proportional to Title */}
-                      <p className="relative z-10 text-base sm:text-lg lg:text-lg text-gray-600 dark:text-gray-300 mb-4 sm:mb-6 leading-relaxed">
-                        {language === 'en' ? service.descriptionEn : service.descriptionId}
-                      </p>
+                          {/* Title - Proportional Hierarchy */}
+                          <h3 className="relative z-10 text-xl sm:text-2xl lg:text-2xl font-bold text-gray-900 dark:text-white mb-3 sm:mb-4 leading-tight">
+                            {language === 'en' ? service.titleEn : service.titleId}
+                          </h3>
 
-                      {/* Features - Proper Supporting Text Size */}
-                      <div className="relative z-10 space-y-2 sm:space-y-3">
-                        {(language === 'en' ? service.features.en : service.features.id).slice(0, 3).map((feature, idx) => (
-                          <motion.div
-                            key={idx}
-                            className="flex items-start text-sm sm:text-base lg:text-base text-gray-500 dark:text-gray-400"
-                            initial={{ opacity: 0, x: -10 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: (index * 0.1) + (idx * 0.05) }}
-                          >
-                            <div className={`w-2 h-2 sm:w-2.5 sm:h-2.5 bg-gradient-to-r ${service.gradient} rounded-full mr-3 sm:mr-3 mt-2 sm:mt-2 group-hover:scale-125 transition-transform duration-300 flex-shrink-0`} />
-                            <span className="leading-relaxed">{feature}</span>
-                          </motion.div>
-                        ))}
-                      </div>
-                    </motion.div>
-                  </AnimatedCard>
-                ))}
+                          {/* Description - Proportional to Title */}
+                          <p className="relative z-10 text-base sm:text-lg lg:text-lg text-gray-600 dark:text-gray-300 mb-4 sm:mb-6 leading-relaxed">
+                            {language === 'en' ? service.descriptionEn : service.descriptionId}
+                          </p>
+
+                          {/* Features - Proper Supporting Text Size */}
+                          <div className="relative z-10 space-y-2 sm:space-y-3">
+                            {(language === 'en' ? service.features.en : service.features.id).slice(0, 3).map((feature, idx) => (
+                              <motion.div
+                                key={idx}
+                                className="flex items-start text-sm sm:text-base lg:text-base text-gray-500 dark:text-gray-400"
+                                initial={{ opacity: 0, x: -10 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ delay: (index * 0.1) + (idx * 0.05) }}
+                              >
+                                <div className={`w-2 h-2 sm:w-2.5 sm:h-2.5 bg-gradient-to-r ${service.gradient} rounded-full mr-3 sm:mr-3 mt-2 sm:mt-2 group-hover:scale-125 transition-transform duration-300 flex-shrink-0`} />
+                                <span className="leading-relaxed">{feature}</span>
+                              </motion.div>
+                            ))}
+                          </div>
+                        </motion.div>
+                      </ElectricBorder>
+                    </AnimatedCard>
+                  );
+                })}
               </div>
             </div>
 
