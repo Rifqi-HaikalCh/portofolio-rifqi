@@ -88,8 +88,8 @@ export function DualFunnelProjects({ selectedRole }: DualFunnelProjectsProps) {
     }
   };
 
-  return (
-    <section id="projects" className="py-20 bg-gradient-to-br from-bg-primary to-bg-tertiary">
+return (
+    <section id="projects" className="py-20 relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <AnimatedSectionTitle

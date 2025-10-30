@@ -2,13 +2,13 @@
 
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
+import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useLanguage } from '../../context/LanguageContext';
+import { useLanguage } from '../../context/LanguageContext'; //
 import { workExperience, organizationExperience } from '../../data/portfolio';
 import { Briefcase, Users, Calendar, MapPin, X, Star, ArrowRight } from 'lucide-react';
 import { staggerContainer, fadeInUp } from '../../lib/animations';
 import { AnimatedSectionTitle } from '../shared/AnimatedSectionTitle';
-import { OptimizedImage } from '../shared/OptimizedImage';
 
 // Desktop Timeline Card Component
 const DesktopTimelineCard = ({ exp, side, icon, onClick }: { 
@@ -17,7 +17,7 @@ const DesktopTimelineCard = ({ exp, side, icon, onClick }: {
   icon: React.ReactNode,
   onClick: () => void 
 }) => {
-  const { t } = useLanguage();
+  const { language } = useLanguage(); // UBAH INI
   const alignment = side === 'left' ? 'flex-row-reverse' : 'flex-row';
   const textAlignment = side === 'left' ? 'text-right' : 'text-left';
   
@@ -61,7 +61,7 @@ const DesktopTimelineCard = ({ exp, side, icon, onClick }: {
           <div className="flex items-center gap-2 mb-2">
             <Star className="w-4 h-4 text-yellow-500" />
             <h4 className="font-bold text-gray-900 dark:text-white text-lg group-hover:text-emerald-600 transition-colors duration-300">
-              {t(exp.title, exp.titleId || exp.title)}
+              {language === 'en' ? exp.title : (exp.titleId || exp.title)} {/* UBAH INI */}
             </h4>
           </div>
           
@@ -83,7 +83,7 @@ const DesktopTimelineCard = ({ exp, side, icon, onClick }: {
           </div>
           
           <p className="text-sm leading-relaxed text-gray-700 dark:text-gray-300 mb-4">
-            {t(exp.description, exp.descriptionId || exp.description)}
+            {language === 'en' ? exp.description : (exp.descriptionId || exp.description)} {/* UBAH INI */}
           </p>
 
           {exp.techStack && (
@@ -106,7 +106,7 @@ const DesktopTimelineCard = ({ exp, side, icon, onClick }: {
           
           {/* Click indicator */}
           <div className={`flex items-center gap-2 text-emerald-600 dark:text-emerald-400 text-sm font-medium group-hover:gap-3 transition-all duration-300 ${side === 'left' ? 'justify-end' : 'justify-start'}`}>
-            <span>{t("View Details", "Lihat Detail")}</span>
+            <span>{language === 'en' ? "View Details" : "Lihat Detail"}</span> {/* UBAH INI */}
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
           </div>
         </div>
@@ -122,7 +122,7 @@ const MobileTimelineCard = ({ exp, icon, onClick, index }: {
   onClick: () => void,
   index: number
 }) => {
-  const { t } = useLanguage();
+  const { language } = useLanguage(); // UBAH INI
   
   return (
     <motion.div 
@@ -173,7 +173,7 @@ const MobileTimelineCard = ({ exp, icon, onClick, index }: {
             </div>
             
             <h4 className="font-bold text-gray-900 dark:text-white text-lg mb-2 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors duration-300">
-              {t(exp.title, exp.titleId || exp.title)}
+              {language === 'en' ? exp.title : (exp.titleId || exp.title)} {/* UBAH INI */}
             </h4>
             
             <h5 className="text-emerald-600 dark:text-emerald-400 font-semibold mb-3 text-base">
@@ -194,7 +194,7 @@ const MobileTimelineCard = ({ exp, icon, onClick, index }: {
             </div>
             
             <p className="text-sm leading-relaxed text-gray-700 dark:text-gray-300 mb-4">
-              {t(exp.description, exp.descriptionId || exp.description)}
+              {language === 'en' ? exp.description : (exp.descriptionId || exp.description)} {/* UBAH INI */}
             </p>
 
             {exp.techStack && (
@@ -217,7 +217,7 @@ const MobileTimelineCard = ({ exp, icon, onClick, index }: {
             
             {/* Click indicator */}
             <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 text-sm font-medium group-hover:gap-3 transition-all duration-300">
-              <span>{t("Tap for Details", "Ketuk untuk Detail")}</span>
+              <span>{language === 'en' ? "Tap for Details" : "Ketuk untuk Detail"}</span> {/* UBAH INI */}
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
             </div>
           </div>
@@ -229,7 +229,7 @@ const MobileTimelineCard = ({ exp, icon, onClick, index }: {
 
 // Enhanced Modal Component with Portal
 const ExperienceModal = ({ selectedExp, onClose }: { selectedExp: any, onClose: () => void }) => {
-  const { t } = useLanguage();
+  const { language } = useLanguage(); // UBAH INI
   const [isBrowser, setIsBrowser] = useState(false);
 
   useEffect(() => {
@@ -271,7 +271,7 @@ const ExperienceModal = ({ selectedExp, onClose }: { selectedExp: any, onClose: 
           <div className="relative z-10 flex justify-between items-start">
             <div>
               <h3 className="text-2xl font-bold mb-2">{selectedExp.company}</h3>
-              <p className="text-white/90 text-lg">{t(selectedExp.title, selectedExp.titleId || selectedExp.title)}</p>
+              <p className="text-white/90 text-lg">{language === 'en' ? selectedExp.title : (selectedExp.titleId || selectedExp.title)}</p> {/* UBAH INI */}
               <div className="flex items-center gap-4 text-white/80 text-sm mt-3">
                 <div className="flex items-center gap-1">
                   <Calendar className="w-4 h-4" />
@@ -305,7 +305,7 @@ const ExperienceModal = ({ selectedExp, onClose }: { selectedExp: any, onClose: 
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
             >
-              <OptimizedImage
+              <Image
                 src={selectedExp.image}
                 alt={selectedExp.company}
                 fill
@@ -322,13 +322,13 @@ const ExperienceModal = ({ selectedExp, onClose }: { selectedExp: any, onClose: 
             transition={{ delay: 0.3 }}
           >
             <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-lg mb-6">
-              {t(selectedExp.description, selectedExp.descriptionId || selectedExp.description)}
+              {language === 'en' ? selectedExp.description : (selectedExp.descriptionId || selectedExp.description)} {/* UBAH INI */}
             </p>
 
             {selectedExp.techStack && (
               <div>
                 <h4 className="font-semibold text-gray-900 dark:text-white mb-3">
-                  {t("Technologies Used", "Teknologi yang Digunakan")}
+                  {language === 'en' ? "Technologies Used" : "Teknologi yang Digunakan"} {/* UBAH INI */}
                 </h4>
                 <div className="flex flex-wrap gap-3">
                   {selectedExp.techStack.map((tech: string, index: number) => (
@@ -356,7 +356,7 @@ const ExperienceModal = ({ selectedExp, onClose }: { selectedExp: any, onClose: 
 };
 
 export const Experience: React.FC = () => {
-  const { t } = useLanguage();
+  const { language } = useLanguage(); // UBAH INI
   const [selectedExp, setSelectedExp] = useState<any>(null);
 
   const allExperiences = [
@@ -365,7 +365,7 @@ export const Experience: React.FC = () => {
   ];
 
   return (
-    <section id="experience" className="py-20 bg-gradient-to-br from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 relative overflow-hidden">
+    <section id="experience" className="py-20 relative overflow-hidden">
       {/* Clean Background */}
       <div className="absolute top-0 left-0 w-72 h-72 bg-emerald-500/5 rounded-full blur-3xl"></div>
       <div className="absolute bottom-0 right-0 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl"></div>
@@ -373,13 +373,13 @@ export const Experience: React.FC = () => {
       <div className="container mx-auto px-4 relative z-10">
         {/* Enhanced Header */}
         <AnimatedSectionTitle
-          badge={t("Professional Journey", "Perjalanan Profesional") as string}
+          badge={language === 'en' ? "Professional Journey" : "Perjalanan Profesional"} // UBAH INI
           badgeIcon={<Star className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />}
-          title={t("My Journey", "Perjalanan Saya") as string}
-          subtitle={t(
-            "A timeline of experiences that shaped my professional growth and expertise",
-            "Garis waktu pengalaman yang membentuk pertumbuhan profesional dan keahlian saya"
-          ) as string}
+          title={language === 'en' ? "My Journey" : "Perjalanan Saya"} // UBAH INI
+          subtitle={language === 'en' // UBAH INI
+            ? "A timeline of experiences that shaped my professional growth and expertise"
+            : "Garis waktu pengalaman yang membentuk pertumbuhan profesional dan keahlian saya"
+          }
         />
 
         {/* Responsive Timeline */}
@@ -431,7 +431,7 @@ export const Experience: React.FC = () => {
                   <Briefcase size={16} className="text-white" />
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 dark:text-white">
-                  {t("Work Experience", "Pengalaman Kerja")}
+                  {language === 'en' ? "Work Experience" : "Pengalaman Kerja"} {/* UBAH INI */}
                 </h3>
               </div>
               
@@ -456,7 +456,7 @@ export const Experience: React.FC = () => {
                   <Users size={16} className="text-white" />
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 dark:text-white">
-                  {t("Organization Experience", "Pengalaman Organisasi")}
+                  {language === 'en' ? "Organization Experience" : "Pengalaman Organisasi"} {/* UBAH INI */}
                 </h3>
               </div>
               

@@ -1,10 +1,10 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { useLanguage } from '../../context/LanguageContext';
 import { aboutHighlights } from '../../data/portfolio';
-import { OptimizedImage } from '../shared/OptimizedImage';
 import ProfileCard from '../shared/ProfileCard';
 import VariableProximity from '../shared/VariableProximity';
 import {

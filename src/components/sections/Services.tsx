@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { useLanguage } from '../../context/LanguageContext';
@@ -10,6 +11,9 @@ import { InteractiveButton } from '../shared/InteractiveButton';
 import StandardModal from '../shared/StandardModal';
 import { Code, Palette, Layers, ChevronLeft, ChevronRight, X, ArrowRight, Sparkles, Eye, ExternalLink } from 'lucide-react';
 import { Projects } from './Projects';
+
+// Create motion-wrapped Image component for animations
+const MotionImage = motion(Image);
 
 interface Service {
   id: string;
@@ -1050,11 +1054,11 @@ export function Services() {
     }
   }, [inView, notificationShown]);
 
-  return (
+return (
     <section 
       ref={sectionRef}
       id="services" 
-      className="py-20 bg-transparent relative overflow-hidden"
+      className="py-20 relative overflow-hidden"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <AnimatedSectionTitle
@@ -1685,16 +1689,15 @@ const DesignShowcase: React.FC = () => {
             <div className="relative overflow-hidden rounded-2xl bg-transparent shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100 dark:border-gray-700">
               {/* Enhanced Image Container */}
               <div className="relative h-64 overflow-hidden">
-                <motion.img 
-                  src={project.image} 
+                <MotionImage
+                  src={project.image}
                   alt={project.titleEn}
-                  className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110"
+                  fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  style={{ objectFit: 'cover' }}
+                  className="transition-all duration-700 group-hover:scale-110"
                   whileHover={{ scale: 1.1 }}
                   transition={{ duration: 0.7, ease: "easeOut" }}
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.src = '/assets/placeholder-design.svg';
-                  }}
                 />
                 
                 {/* Improved Hover Overlay */}
@@ -1885,11 +1888,14 @@ const DesignShowcase: React.FC = () => {
             {/* Responsive Image Gallery */}
             <div className="relative bg-gray-50 dark:bg-gray-800 rounded-lg sm:rounded-xl mb-4 sm:mb-6 overflow-hidden">
               <div className="relative h-64 sm:h-80 lg:h-96 flex items-center justify-center">
-                <motion.img
+                <MotionImage
                   key={selectedImageIndex}
                   src={selectedProject.images?.[selectedImageIndex] || selectedProject.image}
                   alt={`${selectedProject.titleEn} - ${selectedImageIndex + 1}`}
-                  className="max-w-full max-h-full object-contain rounded-lg"
+                  fill
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 80vw, 900px"
+                  style={{ objectFit: 'contain' }}
+                  className="rounded-lg"
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.3 }}
@@ -1921,16 +1927,18 @@ const DesignShowcase: React.FC = () => {
                       <button
                         key={index}
                         onClick={() => setSelectedImageIndex(index)}
-                        className={`flex-shrink-0 w-12 h-9 sm:w-16 sm:h-12 rounded-md sm:rounded-lg overflow-hidden border-2 transition-all ${
+                        className={`relative flex-shrink-0 w-12 h-9 sm:w-16 sm:h-12 rounded-md sm:rounded-lg overflow-hidden border-2 transition-all ${
                           index === selectedImageIndex
                             ? 'border-purple-500 shadow-lg scale-105'
                             : 'border-gray-300 dark:border-gray-600 hover:border-purple-300 hover:scale-105'
                         }`}
                       >
-                        <img
+                        <Image
                           src={image}
                           alt={`Thumbnail ${index + 1}`}
-                          className="w-full h-full object-cover"
+                          fill
+                          sizes="64px"
+                          style={{ objectFit: 'cover' }}
                         />
                       </button>
                     ))}

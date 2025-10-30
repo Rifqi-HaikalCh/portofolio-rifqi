@@ -1,7 +1,8 @@
 'use client';
 import { useState } from 'react';
+import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useLanguage } from '../../context/LanguageContext';
+import { useLanguage } from '../../context/LanguageContext'; //
 import { individualProjects, groupProjects } from '../../data/portfolio';
 import { staggerContainer, fadeInUp } from '../../lib/animations';
 import { ExternalLink, Github, FolderOpen } from 'lucide-react';
@@ -9,11 +10,10 @@ import { AnimatedSectionTitle } from '../shared/AnimatedSectionTitle';
 import { AnimatedCard } from '../shared/AnimatedCard';
 import { InteractiveButton } from '../shared/InteractiveButton';
 import StandardModal from '../shared/StandardModal';
-import { OptimizedImage } from '../shared/OptimizedImage';
 import type { Project } from '../../types';
 
 export const Projects: React.FC = () => {
-  const { t } = useLanguage();
+  const { language } = useLanguage(); // UBAH INI
   const [activeTab, setActiveTab] = useState<'individual' | 'group'>('individual');
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 
@@ -27,16 +27,9 @@ export const Projects: React.FC = () => {
     setSelectedProject(null);
   };
 
-  return (
+return (
     <>
-      <style jsx>{`
-        #projects {
-          background: transparent !important;
-        }
-        #projects::before {
-          display: none !important;
-        }
-      `}</style>
+      {/* Blok <style jsx> dihapus dari sini */}
       <section id="projects" className="py-20 relative overflow-hidden">
       
       <div className="container mx-auto px-4 relative z-10">
@@ -44,11 +37,11 @@ export const Projects: React.FC = () => {
         <AnimatedSectionTitle
           badge="Portfolio Showcase"
           badgeIcon={<FolderOpen className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />}
-          title={t("Featured Projects", "Projek Unggulan") as string}
-          subtitle={t(
-            "Discover the projects that showcase my technical expertise and creative problem-solving abilities",
-            "Temukan proyek-proyek yang menunjukkan keahlian teknis dan kemampuan pemecahan masalah kreatif saya"
-          ) as string}
+          title={language === 'en' ? "Featured Projects" : "Projek Unggulan"} // UBAH INI
+          subtitle={language === 'en' // UBAH INI
+            ? "Discover the projects that showcase my technical expertise and creative problem-solving abilities"
+            : "Temukan proyek-proyek yang menunjukkan keahlian teknis dan kemampuan pemecahan masalah kreatif saya"
+          }
         />
         
         {/* Enhanced Tab Buttons */}
@@ -64,7 +57,7 @@ export const Projects: React.FC = () => {
             whileTap={{ scale: 0.95 }}
           >
             <div className={`absolute inset-0 bg-gradient-to-r from-emerald-500/20 to-blue-500/20 translate-x-[-100%] transition-transform duration-500 ${activeTab === 'individual' ? '' : 'group-hover:translate-x-[100%]'}`}></div>
-            <span className="relative">{t("Individual", "Individu")}</span>
+            <span className="relative">{language === 'en' ? "Individual" : "Individu"}</span> {/* UBAH INI */}
           </motion.button>
           <motion.button 
             onClick={() => setActiveTab('group')} 
@@ -77,7 +70,7 @@ export const Projects: React.FC = () => {
             whileTap={{ scale: 0.95 }}
           >
             <div className={`absolute inset-0 bg-gradient-to-r from-emerald-500/20 to-blue-500/20 translate-x-[-100%] transition-transform duration-500 ${activeTab === 'group' ? '' : 'group-hover:translate-x-[100%]'}`}></div>
-            <span className="relative">{t("Group", "Kelompok")}</span>
+            <span className="relative">{language === 'en' ? "Group" : "Kelompok"}</span> {/* UBAH INI */}
           </motion.button>
         </div>
         {/* Enhanced Projects Grid */}
@@ -101,7 +94,7 @@ export const Projects: React.FC = () => {
               >
                 {/* Project Image */}
                 <div className="relative overflow-hidden h-60">
-                  <OptimizedImage
+                  <Image
                     src={project.image}
                     alt={project.title}
                     fill
@@ -151,7 +144,7 @@ export const Projects: React.FC = () => {
                   {/* Category Badge */}
                   <div className="absolute top-4 left-4">
                     <span className="px-3 py-1 bg-emerald-500/90 text-white text-xs font-semibold rounded-full backdrop-blur-sm">
-                      {activeTab === 'individual' ? t('Individual', 'Individu') : t('Group', 'Kelompok')}
+                      {activeTab === 'individual' ? (language === 'en' ? 'Individual' : 'Individu') : (language === 'en' ? 'Group' : 'Kelompok')} {/* UBAH INI */}
                     </span>
                   </div>
                 </div>
@@ -173,7 +166,7 @@ export const Projects: React.FC = () => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.4 }}
                   >
-                    {t(project.description, project.descriptionId || project.description)}
+                    {language === 'en' ? project.description : (project.descriptionId || project.description)} {/* UBAH INI */}
                   </motion.p>
                   
                   {/* Tech Stack */}
@@ -219,7 +212,7 @@ export const Projects: React.FC = () => {
                         className="flex-1"
                         icon={<ExternalLink size={16} />}
                       >
-                        {t('Live Demo', 'Demo')}
+                        {language === 'en' ? 'Live Demo' : 'Demo'} {/* UBAH INI */}
                       </InteractiveButton>
                     )}
                     {project.links.github && (
@@ -230,7 +223,7 @@ export const Projects: React.FC = () => {
                         className="flex-1"
                         icon={<Github size={16} />}
                       >
-                        {t('Code', 'Kode')}
+                        {language === 'en' ? 'Code' : 'Kode'} {/* UBAH INI */}
                       </InteractiveButton>
                     )}
                   </motion.div>
@@ -246,7 +239,7 @@ export const Projects: React.FC = () => {
         {selectedProject && (
           <div>
             <div className="relative w-full h-96 mb-4 rounded-lg overflow-hidden">
-               <OptimizedImage
+               <Image
                  src={selectedProject.image}
                  alt={selectedProject.title}
                  fill
@@ -256,7 +249,7 @@ export const Projects: React.FC = () => {
                />
             </div>
             <h3 className="text-3xl font-bold mb-2 text-gray-900 dark:text-white">{selectedProject.title}</h3>
-            <p className="text-lg text-gray-700 dark:text-gray-300 mb-4">{t(selectedProject.description, selectedProject.descriptionId || selectedProject.description)}</p>
+            <p className="text-lg text-gray-700 dark:text-gray-300 mb-4">{language === 'en' ? selectedProject.description : (selectedProject.descriptionId || selectedProject.description)}</p> {/* UBAH INI */}
             <div className="flex flex-wrap gap-2 mb-4">
               {selectedProject.techStack?.map(tech => (
                   <span key={tech} className="bg-primary-100 dark:bg-primary-900 text-primary-800 dark:text-primary-200 text-xs font-semibold px-2.5 py-0.5 rounded-full">{tech}</span>
@@ -270,7 +263,7 @@ export const Projects: React.FC = () => {
                   className="flex items-center gap-2 px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg transition-colors"
                 >
                   <ExternalLink size={16} />
-                  {t('Live Demo', 'Demo')}
+                  {language === 'en' ? 'Live Demo' : 'Demo'} {/* UBAH INI */}
                 </a>
               )}
               {selectedProject.links.github && (
@@ -280,7 +273,7 @@ export const Projects: React.FC = () => {
                   className="flex items-center gap-2 px-4 py-2 bg-gray-800 hover:bg-gray-900 text-white rounded-lg transition-colors"
                 >
                   <Github size={16} />
-                  {t('View Code', 'Lihat Kode')}
+                  {language === 'en' ? 'View Code' : 'Lihat Kode'} {/* UBAH INI */}
                 </a>
               )}
             </div>

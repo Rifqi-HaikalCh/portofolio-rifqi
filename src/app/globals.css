@@ -219,17 +219,17 @@
     @apply bg-white dark:bg-gray-800;
   }
 
-  /* Override for specific sections that need transparent background */
+  /* Override for specific sections that need transparent background
   section#services {
     background: transparent !important;
   }
 
   section#services::before {
     display: none !important;
-  }
+  } */
 
   /* Animated background for odd sections */
-  section:nth-child(odd)::before {
+section::before {
     content: '';
     position: absolute;
     top: 0;
@@ -250,6 +250,24 @@
     opacity: 0.6;
     filter: blur(15px);
     pointer-events: none;
+  }
+
+  /* * UBAH ATURAN DI BAWAH INI:
+   * Hapus ':nth-child(odd)' agar berlaku untuk SEMUA section (mode gelap).
+   */
+  .dark section::before {
+    background: linear-gradient(
+      45deg,
+      hsla(222, 47%, 11%, 0.6),
+      hsla(222, 39%, 16%, 0.6),
+      hsla(167, 88%, 13%, 0.6),
+      hsla(206, 76%, 17%, 0.6),
+      hsla(222, 47%, 11%, 0.6)
+    );
+    background-size: 400% 400%;
+    animation: gradient-bg 20s ease infinite;
+    opacity: 0.7;
+    filter: blur(20px);
   }
 
   .dark section:nth-child(odd)::before {
@@ -309,7 +327,6 @@
     animation-delay: -4s;
   }
 }
-
 
 /*
  * Modal Styling Fix

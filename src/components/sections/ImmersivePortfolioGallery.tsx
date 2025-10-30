@@ -1,12 +1,12 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from 'react';
+import Image from 'next/image';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import { useLanguage } from '../../context/LanguageContext';
 import { AnimatedSectionTitle } from '../shared/AnimatedSectionTitle';
 import { InteractiveButton } from '../shared/InteractiveButton';
 import StandardModal from '../shared/StandardModal';
-import { OptimizedImage } from '../shared/OptimizedImage';
 import { Play, Pause, ChevronLeft, ChevronRight, ExternalLink, Eye } from 'lucide-react';
 
 interface DesignProject {
@@ -313,7 +313,7 @@ export function ImmersivePortfolioGallery() {
                   <div className="modern-card overflow-hidden relative">
                     {/* Main Image */}
                     <div className="relative overflow-hidden aspect-[4/3]">
-                      <OptimizedImage
+                      <Image
                         src={project.images[0]}
                         alt={project.titleEn}
                         fill
@@ -429,7 +429,7 @@ export function ImmersivePortfolioGallery() {
                   >
                     <div className="modern-card overflow-hidden h-full">
                       <div className="relative aspect-video overflow-hidden">
-                        <OptimizedImage
+                        <Image
                           src={project.images[0]}
                           alt={project.titleEn}
                           fill
@@ -505,7 +505,7 @@ export function ImmersivePortfolioGallery() {
               {/* Image Container */}
               <div className="relative bg-gray-100 dark:bg-gray-800 min-h-[300px] flex items-center justify-center rounded-lg mb-4">
                 <div className="relative w-full max-h-[60vh] h-[60vh]">
-                  <OptimizedImage
+                  <Image
                     key={selectedImageIndex}
                     src={selectedProject.images[selectedImageIndex]}
                     alt={`${selectedProject.titleEn} - ${selectedImageIndex + 1}`}
@@ -557,7 +557,7 @@ export function ImmersivePortfolioGallery() {
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                       >
-                        <OptimizedImage
+                        <Image
                           src={image}
                           alt={`Thumbnail ${index + 1}`}
                           fill
