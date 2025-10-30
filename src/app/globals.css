@@ -5,9 +5,6 @@
 /* Import Z-Index Hierarchy */
 @import '../styles/z-index.css';
 
-/* Import Mobile-Specific Styles */
-@import '../styles/mobile.css';
-
 @layer base {
   :root {
     --primary-green: #10B981;
@@ -159,6 +156,49 @@
   }
 }
 
+@layer utilities {
+  /* Animations */
+  @keyframes gradient-bg {
+    0%, 100% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+  }
+
+  @keyframes ripple {
+    to {
+      transform: scale(4);
+      opacity: 0;
+    }
+  }
+
+  @keyframes rotate {
+    0% {
+      transform: rotate(0deg) scale(1);
+    }
+    50% {
+      transform: rotate(180deg) scale(1.1);
+    }
+    100% {
+      transform: rotate(360deg) scale(1);
+    }
+  }
+
+  .animate-gradient-bg {
+    animation: gradient-bg 20s ease infinite;
+  }
+
+  .animate-ripple {
+    animation: ripple 0.6s ease-out;
+  }
+
+  .animate-rotate {
+    animation: rotate 10s linear infinite;
+  }
+}
+
 @layer components {
   /* Custom Scrollbar */
   ::-webkit-scrollbar { @apply w-2; }
@@ -166,12 +206,26 @@
   ::-webkit-scrollbar-thumb { @apply bg-primary-green/50 rounded; }
   ::-webkit-scrollbar-thumb:hover { @apply bg-primary-green; }
   
-  /* Section Backgrounds */
-  section:nth-child(odd) {
-    @apply bg-gray-50 dark:bg-gray-900 relative;
+  /* Section Backgrounds - Simplified */
+  section {
+    @apply relative;
   }
+
+  section:nth-child(odd) {
+    @apply bg-gray-50 dark:bg-gray-900;
+  }
+
   section:nth-child(even) {
     @apply bg-white dark:bg-gray-800;
+  }
+
+  /* Override for specific sections that need transparent background */
+  section#services {
+    background: transparent !important;
+  }
+
+  section#services::before {
+    display: none !important;
   }
 
   /* Animated background for odd sections */
@@ -256,73 +310,6 @@
   }
 }
 
-/* ===================================================================== */
-/* DESKTOP STYLES (DO NOT MODIFY - PERFECT AS IS)                       */
-/* ===================================================================== */
-/* 
-   All styles above this section are for DESKTOP (≥1024px)
-   These styles are PERFECT and should NEVER be modified
-   They handle: Layout, Typography, Colors, Animations, Components
-*/
-
-/* ===================================================================== */
-/* MOBILE-SPECIFIC STYLES (SAFE TO MODIFY)                              */
-/* ===================================================================== */
-/* 
-   All styles below this section are MOBILE-ONLY (≤1023px)
-   Safe to modify these without affecting desktop experience
-*/
-
-@media (max-width: 1023px) {
-  /* ================================================= */
-  /* MOBILE LAYOUT OVERRIDES                          */
-  /* ================================================= */
-  
-  /* Container spacing for mobile */
-  .container {
-    padding-left: 1rem;
-    padding-right: 1rem;
-    max-width: 100%;
-  }
-  
-  /* ================================================= */
-  /* MOBILE TYPOGRAPHY OVERRIDES                      */
-  /* ================================================= */
-  
-  /* Mobile text sizing will be added here */
-  /* Currently inheriting desktop sizes */
-  
-  /* ================================================= */
-  /* MOBILE COMPONENT OVERRIDES                       */
-  /* ================================================= */
-  
-  /* Mobile button sizing will be added here */
-  /* Currently inheriting desktop sizes */
-  
-  /* Mobile card sizing will be added here */
-  /* Currently inheriting desktop sizes */
-  
-  /* ================================================= */
-  /* MOBILE SPACING OVERRIDES                         */
-  /* ================================================= */
-  
-  /* Mobile padding/margin adjustments will be added here */
-  /* Currently inheriting desktop spacing */
-  
-}
-
-/* ================================================= */
-/* EXTRA SMALL MOBILE DEVICES (≤640px)              */
-/* ================================================= */
-@media (max-width: 640px) {
-  
-  /* Extra small mobile specific adjustments */
-  .container {
-    padding-left: 0.75rem;
-    padding-right: 0.75rem;
-  }
-  
-}
 
 /*
  * Modal Styling Fix

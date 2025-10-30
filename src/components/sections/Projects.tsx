@@ -9,6 +9,7 @@ import { AnimatedSectionTitle } from '../shared/AnimatedSectionTitle';
 import { AnimatedCard } from '../shared/AnimatedCard';
 import { InteractiveButton } from '../shared/InteractiveButton';
 import StandardModal from '../shared/StandardModal';
+import { OptimizedImage } from '../shared/OptimizedImage';
 import type { Project } from '../../types';
 
 export const Projects: React.FC = () => {
@@ -87,7 +88,7 @@ export const Projects: React.FC = () => {
             initial="hidden"
             animate="show"
             exit="hidden"
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+            className="grid grid-cols-3 gap-8"
           >
             {currentProjects.map((project, index) => (
               <AnimatedCard
@@ -99,13 +100,18 @@ export const Projects: React.FC = () => {
                 onClick={() => openModal(project)}
               >
                 {/* Project Image */}
-                <div className="relative overflow-hidden">
-                  <motion.img 
-                    src={project.image} 
-                    alt={project.title} 
-                    className="w-full h-60 object-cover transition-all duration-700 group-hover:scale-110"
-                    whileHover={{ scale: 1.1 }}
-                    transition={{ duration: 0.7, ease: "easeOut" }}
+                <div className="relative overflow-hidden h-60">
+                  <OptimizedImage
+                    src={project.image}
+                    alt={project.title}
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    className="object-cover transition-all duration-700 group-hover:scale-110"
+                    motion
+                    motionProps={{
+                      whileHover: { scale: 1.1 },
+                      transition: { duration: 0.7, ease: "easeOut" }
+                    }}
                   />
                   
                   {/* Floating Action Buttons */}
@@ -239,8 +245,15 @@ export const Projects: React.FC = () => {
       <StandardModal isOpen={!!selectedProject} onClose={closeModal}>
         {selectedProject && (
           <div>
-            <div className="relative w-full h-64 md:h-96 mb-4 rounded-lg overflow-hidden">
-               <img src={selectedProject.image} alt={selectedProject.title} className="w-full h-full object-cover" />
+            <div className="relative w-full h-96 mb-4 rounded-lg overflow-hidden">
+               <OptimizedImage
+                 src={selectedProject.image}
+                 alt={selectedProject.title}
+                 fill
+                 sizes="(max-width: 768px) 100vw, 90vw"
+                 className="object-cover"
+                 priority
+               />
             </div>
             <h3 className="text-3xl font-bold mb-2 text-gray-900 dark:text-white">{selectedProject.title}</h3>
             <p className="text-lg text-gray-700 dark:text-gray-300 mb-4">{t(selectedProject.description, selectedProject.descriptionId || selectedProject.description)}</p>

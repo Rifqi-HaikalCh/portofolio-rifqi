@@ -1,31 +1,32 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
-import Image from 'next/image';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { useLanguage } from '../../context/LanguageContext';
 import { aboutHighlights } from '../../data/portfolio';
-import { 
-  premiumStagger, 
-  optimizedFadeIn, 
-  sectionEntrance, 
+import { OptimizedImage } from '../shared/OptimizedImage';
+import ProfileCard from '../shared/ProfileCard';
+import VariableProximity from '../shared/VariableProximity';
+import {
+  premiumStagger,
+  optimizedFadeIn,
+  sectionEntrance,
   cardReveal,
   premiumHover,
-  glowPulse 
+  glowPulse
 } from '../../lib/optimized-animations';
-import { 
-  Download, 
-  GraduationCap, 
-  Briefcase, 
-  Trophy, 
-  Users, 
-  Code, 
+import {
+  Download,
+  GraduationCap,
+  Briefcase,
+  Trophy,
+  Users,
+  Code,
   Sparkles,
   ChevronRight,
   ExternalLink
 } from 'lucide-react';
 import { AnimatedSectionTitle } from '../shared/AnimatedSectionTitle';
-import { AboutText } from '../shared/HighlightedText';
 
 const iconMap: { [key: string]: React.ReactNode } = {
   'graduation-cap': <GraduationCap size={20} />,
@@ -36,10 +37,10 @@ const iconMap: { [key: string]: React.ReactNode } = {
 
 export const About: React.FC = () => {
   const { t, language } = useLanguage();
-  const highlightedTextData = AboutText();
   const [activeCard, setActiveCard] = useState<number | null>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const totalImages = 11;
+  const descriptionContainerRef = useRef<HTMLDivElement>(null);
 
   // Auto-slide carousel every 10 seconds
   useEffect(() => {
@@ -124,68 +125,38 @@ export const About: React.FC = () => {
           viewport={{ once: true, amount: 0.2 }}
         >
           {/* Hero Section - Profile + Stats */}
-          <motion.div 
-            className="grid lg:grid-cols-12 gap-12 items-center"
+          <motion.div
+            className="grid grid-cols-12 gap-12 items-center"
             variants={sectionEntrance}
           >
-            {/* Profile Image */}
-            <div className="lg:col-span-5 flex justify-center">
-              <motion.div 
-                className="relative group"
-                whileHover={{ scale: 1.02 }}
-                transition={{ type: "spring", stiffness: 300, damping: 20 }}
-              >
-                {/* Modern Frame */}
-                <div className="relative w-80 h-96 glass-card-strong p-1">
-                  <div className="absolute inset-0 bg-gradient-to-br from-accent-500/20 via-primary-500/20 to-secondary-500/20 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
-                  
-                  {/* Clean image container */}
-                  <div className="relative w-full h-full glass-card rounded-[1.4rem] overflow-hidden">
-                    <Image
-                      src="/assets/removebg.png"
-                      alt="Rifqi Haikal - Developer"
-                      fill
-                      className="object-cover object-center"
-                      style={{ objectPosition: 'center top' }}
-                      priority
-                    />
-                    
-                    {/* Subtle overlay gradient */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-emerald-900/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                  </div>
-                  
-                  {/* Floating badges */}
-                  <motion.div
-                    className="absolute -top-4 -right-4 bg-emerald-500 text-white px-4 py-2 rounded-2xl text-sm font-bold shadow-lg"
-                    animate={{ y: [0, -5, 0] }}
-                    transition={{ duration: 3, repeat: Infinity }}
-                  >
-                    Available
-                  </motion.div>
-                  
-                  <motion.div
-                    className="absolute -bottom-4 -left-4 bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-4 py-2 rounded-2xl text-sm font-semibold shadow-xl border border-gray-200 dark:border-gray-600"
-                    animate={{ y: [0, 5, 0] }}
-                    transition={{ duration: 3, repeat: Infinity, delay: 1.5 }}
-                  >
-                    <span className="flex items-center gap-2">
-                      <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
-                      Open to Work!
-                    </span>
-                  </motion.div>
-                </div>
-              </motion.div>
+            {/* Profile Card - React Bits Animated Card */}
+            <div className="col-span-5 flex justify-center">
+              <ProfileCard
+                avatarUrl="/assets/removebg.png"
+                miniAvatarUrl="/assets/removebg.png"
+                name="Rifqi Haikal"
+                title={t("Software Engineer & UI/UX Designer", "Software Engineer & UI/UX Designer") as string}
+                handle="rifqihaikal"
+                status={t("Available for Work", "Tersedia untuk Bekerja") as string}
+                contactText={t("Contact Me", "Hubungi Saya") as string}
+                showUserInfo={true}
+                enableTilt={true}
+                showBehindGradient={true}
+                behindGradient="radial-gradient(farthest-side circle at var(--pointer-x) var(--pointer-y),hsla(160,100%,90%,var(--card-opacity)) 4%,hsla(160,50%,80%,calc(var(--card-opacity)*0.75)) 10%,hsla(160,25%,70%,calc(var(--card-opacity)*0.5)) 50%,hsla(160,0%,60%,0) 100%),radial-gradient(35% 52% at 55% 20%,#10b981c4 0%,#073aff00 100%),radial-gradient(100% 100% at 50% 50%,#3b82f6ff 1%,#073aff00 76%),conic-gradient(from 124deg at 50% 50%,#8b5cf6ff 0%,#06b6d4ff 40%,#06b6d4ff 60%,#8b5cf6ff 100%)"
+                innerGradient="linear-gradient(145deg,#1f2937cc 0%,#059669aa 100%)"
+                onContactClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+              />
             </div>
 
             {/* Profile Content */}
-            <div className="lg:col-span-7 space-y-8">
+            <div className="col-span-7 space-y-8">
               <motion.div
                 variants={optimizedFadeIn}
                 className="space-y-6"
               >
                 <div className="space-y-4">
-                  <motion.h2 
-                    className="text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white leading-tight"
+                  <motion.h2
+                    className="text-5xl font-bold text-gray-900 dark:text-white leading-tight"
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8, delay: 0.2 }}
@@ -197,14 +168,29 @@ export const About: React.FC = () => {
                     </span>
                   </motion.h2>
                   
-                  <motion.div 
-                    className="text-xl text-gray-600 dark:text-gray-300 leading-relaxed max-w-2xl"
+                  <motion.div
+                    ref={descriptionContainerRef}
+                    className="text-xl text-gray-600 dark:text-gray-300 leading-relaxed max-w-3xl"
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8, delay: 0.4 }}
                     viewport={{ once: true }}
+                    style={{ position: 'relative' }}
                   >
-                    {language === 'en' ? highlightedTextData.en : highlightedTextData.id}
+                    <VariableProximity
+                      label={
+                        language === 'en'
+                          ? "A creative UI/UX Designer and Front-End Developer passionate about building engaging digital experiences. With two years of hands-on experience, I have developed technical and creative solutions as a Freelancer and in professional roles at a leading IT consultant and a Multi-finance company. As a Bachelor of Informatics from Institut Teknologi Del, I am constantly exploring new technologies and am eager to apply my skills at the intersection of design and development in a dynamic team."
+                          : "Seorang UI/UX Designer dan Front-End Developer kreatif yang passionate dalam membangun pengalaman digital yang menarik. Dengan dua tahun pengalaman hands-on, saya telah mengembangkan solusi teknis dan kreatif sebagai Freelancer dan dalam peran profesional di konsultan IT terkemuka dan perusahaan Multi-finance. Sebagai Sarjana Informatika dari Institut Teknologi Del, saya terus mengeksplorasi teknologi baru dan bersemangat untuk menerapkan keterampilan saya di persimpangan desain dan pengembangan dalam tim yang dinamis."
+                      }
+                      fromFontVariationSettings="'wght' 400, 'opsz' 9"
+                      toFontVariationSettings="'wght' 800, 'opsz' 36"
+                      containerRef={descriptionContainerRef}
+                      radius={120}
+                      falloff="exponential"
+                      className="variable-proximity-about"
+                      style={{ fontSize: '1.25rem', lineHeight: '1.8' }}
+                    />
                   </motion.div>
                 </div>
 
@@ -251,16 +237,16 @@ export const About: React.FC = () => {
                     className="text-center space-y-2"
                     whileHover={{ scale: 1.05, y: -5 }}
                   >
-                    <motion.h3 
-                      className="text-2xl lg:text-3xl font-bold bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent"
+                    <motion.h3
+                      className="text-3xl font-bold bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent"
                       animate={glowPulse}
                     >
                       {stat.number}
                     </motion.h3>
-                    <p className="font-semibold text-gray-900 dark:text-white text-sm lg:text-base">
+                    <p className="font-semibold text-gray-900 dark:text-white text-base">
                       {stat.label}
                     </p>
-                    <p className="text-xs lg:text-sm text-gray-600 dark:text-gray-400">
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
                       {stat.description}
                     </p>
                   </motion.div>
@@ -293,8 +279,8 @@ export const About: React.FC = () => {
               viewport={{ once: true }}
             >
               <div className="relative overflow-hidden rounded-3xl shadow-2xl bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 p-2">
-                <motion.div 
-                  className="relative h-96 md:h-[500px] rounded-2xl overflow-hidden"
+                <motion.div
+                  className="relative h-[500px] rounded-2xl overflow-hidden"
                   whileHover={{ scale: 1.01 }}
                   transition={{ duration: 0.5 }}
                 >
@@ -408,7 +394,7 @@ export const About: React.FC = () => {
               {t("My Expertise", "Keahlian Saya")}
             </motion.h3>
 
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-2 gap-6">
               {aboutHighlights.map((highlight, index) => (
                 <motion.div
                   key={index}

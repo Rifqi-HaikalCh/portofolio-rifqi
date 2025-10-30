@@ -2,13 +2,13 @@
 
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
-import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '../../context/LanguageContext';
 import { workExperience, organizationExperience } from '../../data/portfolio';
 import { Briefcase, Users, Calendar, MapPin, X, Star, ArrowRight } from 'lucide-react';
 import { staggerContainer, fadeInUp } from '../../lib/animations';
 import { AnimatedSectionTitle } from '../shared/AnimatedSectionTitle';
+import { OptimizedImage } from '../shared/OptimizedImage';
 
 // Desktop Timeline Card Component
 const DesktopTimelineCard = ({ exp, side, icon, onClick }: { 
@@ -300,17 +300,18 @@ const ExperienceModal = ({ selectedExp, onClose }: { selectedExp: any, onClose: 
         <div className="p-8">
           {selectedExp.image && (
             <motion.div
-              className="mb-6 rounded-2xl overflow-hidden shadow-lg"
+              className="mb-6 rounded-2xl overflow-hidden shadow-lg relative h-48"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
             >
-              <Image 
-                src={selectedExp.image} 
-                alt={selectedExp.company} 
-                width={600} 
-                height={300} 
-                className="w-full h-48 object-cover"
+              <OptimizedImage
+                src={selectedExp.image}
+                alt={selectedExp.company}
+                fill
+                sizes="(max-width: 768px) 100vw, 600px"
+                className="object-cover"
+                priority
               />
             </motion.div>
           )}
@@ -389,7 +390,7 @@ export const Experience: React.FC = () => {
           viewport={{ once: true, amount: 0.2 }}
         >
           {/* Desktop Timeline */}
-          <div className="hidden lg:block relative wrap overflow-hidden p-10 h-full">
+          <div className="block relative wrap overflow-hidden p-10 h-full">
             {/* Enhanced Timeline Line */}
             <div 
               className="absolute border-4 border-gradient-to-b from-emerald-500 via-blue-500 to-emerald-500 h-full opacity-20 rounded-full"
@@ -422,7 +423,7 @@ export const Experience: React.FC = () => {
           </div>
           
           {/* Mobile Timeline */}
-          <div className="lg:hidden px-4">
+          <div className="hidden px-4">
             {/* Mobile Section Header */}
             <div className="mb-8">
               <div className="flex items-center gap-3 mb-4">

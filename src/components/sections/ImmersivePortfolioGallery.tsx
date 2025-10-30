@@ -6,6 +6,7 @@ import { useLanguage } from '../../context/LanguageContext';
 import { AnimatedSectionTitle } from '../shared/AnimatedSectionTitle';
 import { InteractiveButton } from '../shared/InteractiveButton';
 import StandardModal from '../shared/StandardModal';
+import { OptimizedImage } from '../shared/OptimizedImage';
 import { Play, Pause, ChevronLeft, ChevronRight, ExternalLink, Eye } from 'lucide-react';
 
 interface DesignProject {
@@ -175,9 +176,9 @@ export function ImmersivePortfolioGallery() {
   };
 
   const getMasonrySpan = (size: string) => {
-    if (size === 'large') return 'md:col-span-2 md:row-span-2';
-    if (size === 'small') return 'md:col-span-1';
-    return 'md:col-span-1 md:row-span-1';
+    if (size === 'large') return 'col-span-2 row-span-2';
+    if (size === 'small') return 'col-span-1';
+    return 'col-span-1 row-span-1';
   };
 
   return (
@@ -213,10 +214,10 @@ export function ImmersivePortfolioGallery() {
         ))}
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="relative max-w-7xl mx-auto px-8">
         <div className="text-center mb-12">
           <span className="text-emerald-600 dark:text-emerald-400 font-bold text-sm tracking-wider uppercase badge-label">Design Showcase</span>
-          <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight mt-2 text-gray-900 dark:text-white relative">
+          <h2 className="text-5xl font-extrabold tracking-tight mt-2 text-gray-900 dark:text-white relative">
             <span className="relative">Creative Project Design</span>
             <span className="absolute inset-0 bg-gradient-to-r from-emerald-600 via-blue-600 via-purple-600 to-emerald-600 bg-clip-text text-transparent blur-sm opacity-50 animate-gradient-bg bg-[length:400%_400%]" aria-hidden="true">Creative Project Design</span>
           </h2>
@@ -227,7 +228,7 @@ export function ImmersivePortfolioGallery() {
 
         {/* View Controls */}
         <motion.div 
-          className="flex flex-col sm:flex-row items-center justify-between gap-6 mb-12"
+          className="flex flex-row items-center justify-between gap-6 mb-12"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
@@ -297,7 +298,7 @@ export function ImmersivePortfolioGallery() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.5 }}
-              className="columns-1 md:columns-2 lg:columns-3 xl:columns-4 gap-6 space-y-6"
+              className="columns-4 gap-6 space-y-6"
             >
               {filteredProjects.map((project, index) => (
                 <motion.div
@@ -312,10 +313,12 @@ export function ImmersivePortfolioGallery() {
                   <div className="modern-card overflow-hidden relative">
                     {/* Main Image */}
                     <div className="relative overflow-hidden aspect-[4/3]">
-                      <img
+                      <OptimizedImage
                         src={project.images[0]}
                         alt={project.titleEn}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                        fill
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
+                        className="object-cover group-hover:scale-110 transition-transform duration-700"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-gray-900/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                       
@@ -416,7 +419,7 @@ export function ImmersivePortfolioGallery() {
                 {filteredProjects.map((project, index) => (
                   <motion.div
                     key={project.id}
-                    className="flex-shrink-0 w-80 lg:w-96 cursor-pointer group"
+                    className="flex-shrink-0 w-96 cursor-pointer group"
                     style={{ scrollSnapAlign: 'center' }}
                     initial={{ opacity: 0, x: 100 }}
                     animate={{ opacity: 1, x: 0 }}
@@ -426,10 +429,12 @@ export function ImmersivePortfolioGallery() {
                   >
                     <div className="modern-card overflow-hidden h-full">
                       <div className="relative aspect-video overflow-hidden">
-                        <img
+                        <OptimizedImage
                           src={project.images[0]}
                           alt={project.titleEn}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                          fill
+                          sizes="(max-width: 1024px) 80vw, 384px"
+                          className="object-cover group-hover:scale-105 transition-transform duration-500"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-gray-900/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                       </div>
@@ -490,7 +495,7 @@ export function ImmersivePortfolioGallery() {
                   {selectedProject.colors.slice(0, 3).map((color, i) => (
                     <div 
                       key={i}
-                      className="w-5 h-5 sm:w-6 sm:h-6 rounded-full border border-gray-300 dark:border-gray-600 shadow-sm"
+                      className="w-6 h-6 rounded-full border border-gray-300 dark:border-gray-600 shadow-sm"
                       style={{ backgroundColor: color }}
                     />
                   ))}
@@ -499,30 +504,38 @@ export function ImmersivePortfolioGallery() {
 
               {/* Image Container */}
               <div className="relative bg-gray-100 dark:bg-gray-800 min-h-[300px] flex items-center justify-center rounded-lg mb-4">
-                <motion.img
-                  key={selectedImageIndex}
-                  src={selectedProject.images[selectedImageIndex]}
-                  alt={`${selectedProject.titleEn} - ${selectedImageIndex + 1}`}
-                  className="w-full max-h-[50vh] sm:max-h-[60vh] object-contain"
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.3 }}
-                />
+                <div className="relative w-full max-h-[60vh] h-[60vh]">
+                  <OptimizedImage
+                    key={selectedImageIndex}
+                    src={selectedProject.images[selectedImageIndex]}
+                    alt={`${selectedProject.titleEn} - ${selectedImageIndex + 1}`}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 90vw"
+                    objectFit="contain"
+                    className="object-contain"
+                    motion
+                    motionProps={{
+                      initial: { opacity: 0, x: 20 },
+                      animate: { opacity: 1, x: 0 },
+                      transition: { duration: 0.3 }
+                    }}
+                  />
+                </div>
 
                 {/* Navigation Arrows */}
                 {selectedProject.images.length > 1 && (
                   <>
                     <InteractiveButton
                       onClick={prevImage}
-                      className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 p-2 sm:p-3 bg-white/20 dark:bg-black/20 backdrop-blur-sm text-gray-800 dark:text-white hover:bg-white/30 dark:hover:bg-black/30 transition-all rounded-full"
+                      className="absolute left-4 top-1/2 -translate-y-1/2 p-3 bg-white/20 dark:bg-black/20 backdrop-blur-sm text-gray-800 dark:text-white hover:bg-white/30 dark:hover:bg-black/30 transition-all rounded-full"
                     >
-                      <ChevronLeft className="w-4 h-4 sm:w-6 sm:h-6" />
+                      <ChevronLeft className="w-6 h-6" />
                     </InteractiveButton>
                     <InteractiveButton
                       onClick={nextImage}
-                      className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 p-2 sm:p-3 bg-white/20 dark:bg-black/20 backdrop-blur-sm text-gray-800 dark:text-white hover:bg-white/30 dark:hover:bg-black/30 transition-all rounded-full"
+                      className="absolute right-4 top-1/2 -translate-y-1/2 p-3 bg-white/20 dark:bg-black/20 backdrop-blur-sm text-gray-800 dark:text-white hover:bg-white/30 dark:hover:bg-black/30 transition-all rounded-full"
                     >
-                      <ChevronRight className="w-4 h-4 sm:w-6 sm:h-6" />
+                      <ChevronRight className="w-6 h-6" />
                     </InteractiveButton>
                   </>
                 )}
@@ -536,7 +549,7 @@ export function ImmersivePortfolioGallery() {
                       <motion.button
                         key={index}
                         onClick={() => setSelectedImageIndex(index)}
-                        className={`flex-shrink-0 w-14 h-12 sm:w-16 sm:h-12 rounded-lg overflow-hidden border-2 transition-all ${
+                        className={`flex-shrink-0 w-16 h-12 rounded-lg overflow-hidden border-2 transition-all relative ${
                           index === selectedImageIndex
                             ? 'border-emerald-500 shadow-lg'
                             : 'border-gray-300 dark:border-gray-600 hover:border-emerald-300'
@@ -544,10 +557,12 @@ export function ImmersivePortfolioGallery() {
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                       >
-                        <img
+                        <OptimizedImage
                           src={image}
                           alt={`Thumbnail ${index + 1}`}
-                          className="w-full h-full object-cover"
+                          fill
+                          sizes="64px"
+                          className="object-cover"
                         />
                       </motion.button>
                     ))}

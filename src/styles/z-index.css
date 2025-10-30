@@ -53,7 +53,7 @@ nav {
 }
 
 /* Other sections */
-#about, #skills, #experience, #projects, #certificates, #contact {
+#about, #skills, #experience, #services, #projects, #certificates, #contact {
   z-index: 10;
   isolation: isolate;
 }
