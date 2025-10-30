@@ -505,21 +505,25 @@ export function ImmersivePortfolioGallery() {
               {/* Image Container */}
               <div className="relative bg-gray-100 dark:bg-gray-800 min-h-[300px] flex items-center justify-center rounded-lg mb-4">
                 <div className="relative w-full max-h-[60vh] h-[60vh]">
-                  <Image
-                    key={selectedImageIndex}
-                    src={selectedProject.images[selectedImageIndex]}
-                    alt={`${selectedProject.titleEn} - ${selectedImageIndex + 1}`}
-                    fill
-                    sizes="(max-width: 768px) 100vw, 90vw"
-                    objectFit="contain"
-                    className="object-contain"
-                    motion
-                    motionProps={{
-                      initial: { opacity: 0, x: 20 },
-                      animate: { opacity: 1, x: 0 },
-                      transition: { duration: 0.3 }
-                    }}
-                  />
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={selectedImageIndex}
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -20 }}
+                      transition={{ duration: 0.3 }}
+                      className="relative w-full h-full"
+                    >
+                      <Image
+                        src={selectedProject.images[selectedImageIndex]}
+                        alt={`${selectedProject.titleEn} - ${selectedImageIndex + 1}`}
+                        fill
+                        sizes="(max-width: 768px) 100vw, 90vw"
+                        objectFit="contain"
+                        className="object-contain"
+                      />
+                    </motion.div>
+                  </AnimatePresence>
                 </div>
 
                 {/* Navigation Arrows */}
