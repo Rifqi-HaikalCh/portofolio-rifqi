@@ -1,5 +1,3 @@
-'use client';
-
 import React, { CSSProperties, PropsWithChildren, useEffect, useId, useLayoutEffect, useRef } from 'react';
 
 import './ElectricBorder.css';

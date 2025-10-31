@@ -10,6 +10,7 @@ import { AnimatedCard } from '../shared/AnimatedCard';
 import { InteractiveButton } from '../shared/InteractiveButton';
 import StandardModal from '../shared/StandardModal';
 import ElectricBorder from '../shared/ElectricBorder';
+import TiltedCard from '../shared/TiltedCard';
 import { Code, Palette, Layers, ChevronLeft, ChevronRight, X, ArrowRight, Sparkles, Eye, ExternalLink } from 'lucide-react';
 import { Projects } from './Projects';
 
@@ -1293,19 +1294,25 @@ return (
                   const electricColor = gradientColorMap[service.gradient] || '#10b981';
 
                   return (
-                    <AnimatedCard
+                    <TiltedCard
                       key={service.id}
-                      delay={index * 0.1}
-                      className="group h-full"
+                      scaleOnHover={1.08}
+                      rotateAmplitude={10}
+                      containerHeight="100%"
+                      containerWidth="100%"
                     >
-                      <ElectricBorder
-                        color={electricColor}
-                        speed={1}
-                        chaos={0.5}
-                        thickness={2}
-                        className="h-full"
-                        style={{ borderRadius: '1rem' }}
+                      <AnimatedCard
+                        delay={index * 0.1}
+                        className="group h-full"
                       >
+                        <ElectricBorder
+                          color={electricColor}
+                          speed={1}
+                          chaos={0.5}
+                          thickness={2}
+                          className="h-full"
+                          style={{ borderRadius: '1rem' }}
+                        >
                         <motion.div
                           className="relative h-full bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl lg:rounded-3xl p-4 sm:p-6 lg:p-8 overflow-hidden min-h-[220px] sm:min-h-[250px] lg:min-h-[280px]"
                           whileHover={{
@@ -1356,6 +1363,7 @@ return (
                         </motion.div>
                       </ElectricBorder>
                     </AnimatedCard>
+                    </TiltedCard>
                   );
                 })}
               </div>
@@ -1372,11 +1380,17 @@ return (
               
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5 lg:gap-6">
                 {currentTab.skills.map((skill, index) => (
-                  <AnimatedCard
+                  <TiltedCard
                     key={skill.name}
-                    delay={index * 0.1}
-                    className="group"
+                    scaleOnHover={1.06}
+                    rotateAmplitude={8}
+                    containerHeight="100%"
+                    containerWidth="100%"
                   >
+                    <AnimatedCard
+                      delay={index * 0.1}
+                      className="group"
+                    >
                     <motion.div
                       className="bg-transparent rounded-xl lg:rounded-2xl p-3 sm:p-4 lg:p-6 shadow-xl border border-gray-200 dark:border-gray-700 h-full hover:shadow-2xl min-h-[180px] sm:min-h-[200px]"
                       whileHover={{ y: -4, scale: 1.02 }}
@@ -1434,6 +1448,7 @@ return (
                         </div>
                     </motion.div>
                   </AnimatedCard>
+                  </TiltedCard>
                 ))}
               </div>
             </div>
@@ -1573,15 +1588,21 @@ const DesignShowcase: React.FC = () => {
       {/* Enhanced Grid Layout with Better Visual Hierarchy */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
         {designProjects.map((project, index) => (
-          <motion.div
+          <TiltedCard
             key={project.id}
-            className="group cursor-pointer"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.1, duration: 0.5 }}
-            whileHover={{ y: -8 }}
-            onClick={() => openModal(project)}
+            scaleOnHover={1.05}
+            rotateAmplitude={8}
+            containerHeight="100%"
+            containerWidth="100%"
           >
+            <motion.div
+              className="group cursor-pointer"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1, duration: 0.5 }}
+              whileHover={{ y: -8 }}
+              onClick={() => openModal(project)}
+            >
             {/* Modern Card Design with Improved UX */}
             <div className="relative overflow-hidden rounded-2xl bg-transparent shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100 dark:border-gray-700">
               {/* Enhanced Image Container */}
@@ -1728,6 +1749,7 @@ const DesignShowcase: React.FC = () => {
               </div>
             </div>
           </motion.div>
+          </TiltedCard>
         ))}
       </div>
       

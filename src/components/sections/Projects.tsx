@@ -10,6 +10,7 @@ import { AnimatedSectionTitle } from '../shared/AnimatedSectionTitle';
 import { AnimatedCard } from '../shared/AnimatedCard';
 import { InteractiveButton } from '../shared/InteractiveButton';
 import StandardModal from '../shared/StandardModal';
+import TiltedCard from '../shared/TiltedCard';
 import type { Project } from '../../types';
 
 export const Projects: React.FC = () => {
@@ -27,7 +28,7 @@ export const Projects: React.FC = () => {
     setSelectedProject(null);
   };
 
-return (
+  return (
     <>
       {/* Blok <style jsx> dihapus dari sini */}
       <section id="projects" className="py-20 relative overflow-hidden">
@@ -86,14 +87,22 @@ return (
             {currentProjects.map((project, index) => (
               <AnimatedCard
                 key={project.id}
-                className="bg-white dark:bg-gray-800 backdrop-blur-sm rounded-3xl overflow-hidden border border-gray-200/50 dark:border-gray-700/50 cursor-pointer"
                 delay={index * 0.1}
                 hoverY={-12}
                 hoverScale={1.05}
-                onClick={() => openModal(project)}
               >
-                {/* Project Image */}
-                <div className="relative overflow-hidden h-60">
+                <TiltedCard
+                  scaleOnHover={1.05}
+                  rotateAmplitude={8}
+                  containerHeight="100%"
+                  containerWidth="100%"
+                >
+                  <div
+                    className="bg-white dark:bg-gray-800 backdrop-blur-sm rounded-3xl overflow-hidden border border-gray-200/50 dark:border-gray-700/50 cursor-pointer h-full"
+                    onClick={() => openModal(project)}
+                  >
+                    {/* Project Image */}
+                    <div className="relative overflow-hidden h-60">
                   <motion.div
                     whileHover={{ scale: 1.1 }}
                     transition={{ duration: 0.7, ease: "easeOut" }}
@@ -228,6 +237,8 @@ return (
                     )}
                   </motion.div>
                 </div>
+                  </div>
+                </TiltedCard>
               </AnimatedCard>
             ))}
           </motion.div>

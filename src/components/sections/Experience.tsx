@@ -9,6 +9,7 @@ import { workExperience, organizationExperience } from '../../data/portfolio';
 import { Briefcase, Users, Calendar, MapPin, X, Star, ArrowRight } from 'lucide-react';
 import { staggerContainer, fadeInUp } from '../../lib/animations';
 import { AnimatedSectionTitle } from '../shared/AnimatedSectionTitle';
+import TiltedCard from '../shared/TiltedCard';
 
 // Desktop Timeline Card Component
 const DesktopTimelineCard = ({ exp, side, icon, onClick }: { 
@@ -45,72 +46,80 @@ const DesktopTimelineCard = ({ exp, side, icon, onClick }: {
       </motion.div>
       
       {/* Enhanced Experience Card */}
-      <motion.div 
-        className={`order-1 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-2xl shadow-xl w-5/12 p-6 ${textAlignment} border border-gray-200/50 dark:border-gray-700/50 group-hover:shadow-glow transition-all duration-500 relative overflow-hidden`}
-        whileHover={{ 
-          scale: 1.02,
-          y: -5,
-          transition: { type: "spring", stiffness: 300, damping: 20 }
-        }}
+      <TiltedCard
+        scaleOnHover={1.05}
+        rotateAmplitude={8}
+        containerHeight="100%"
+        containerWidth="100%"
+        className="order-1 w-5/12"
       >
-        {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-        
-        {/* Content */}
-        <div className="relative z-10">
-          <div className="flex items-center gap-2 mb-2">
-            <Star className="w-4 h-4 text-yellow-500" />
-            <h4 className="font-bold text-gray-900 dark:text-white text-lg group-hover:text-emerald-600 transition-colors duration-300">
-              {language === 'en' ? exp.title : (exp.titleId || exp.title)} {/* UBAH INI */}
-            </h4>
-          </div>
-          
-          <h5 className="text-emerald-600 dark:text-emerald-400 font-semibold mb-3 text-lg">
-            {exp.company}
-          </h5>
-          
-          <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400 mb-3">
-            <div className="flex items-center gap-1">
-              <Calendar className="w-4 h-4" />
-              <span>{exp.period}</span>
-            </div>
-            {exp.location && (
-              <div className="flex items-center gap-1">
-                <MapPin className="w-4 h-4" />
-                <span>{exp.location}</span>
-              </div>
-            )}
-          </div>
-          
-          <p className="text-sm leading-relaxed text-gray-700 dark:text-gray-300 mb-4">
-            {language === 'en' ? exp.description : (exp.descriptionId || exp.description)} {/* UBAH INI */}
-          </p>
+        <motion.div
+          className={`bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-2xl shadow-xl w-full h-full p-6 ${textAlignment} border border-gray-200/50 dark:border-gray-700/50 group-hover:shadow-glow transition-all duration-500 relative overflow-hidden`}
+          whileHover={{
+            scale: 1.02,
+            y: -5,
+            transition: { type: "spring", stiffness: 300, damping: 20 }
+          }}
+        >
+          {/* Gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 
-          {exp.techStack && (
-            <div className="flex flex-wrap gap-2 mb-4">
-              {exp.techStack.slice(0, 3).map((tech: string) => (
-                <span 
-                  key={tech} 
-                  className="px-3 py-1 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 rounded-full text-xs font-medium"
-                >
-                  {tech}
-                </span>
-              ))}
-              {exp.techStack.length > 3 && (
-                <span className="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 rounded-full text-xs font-medium">
-                  +{exp.techStack.length - 3}
-                </span>
+          {/* Content */}
+          <div className="relative z-10">
+            <div className="flex items-center gap-2 mb-2">
+              <Star className="w-4 h-4 text-yellow-500" />
+              <h4 className="font-bold text-gray-900 dark:text-white text-lg group-hover:text-emerald-600 transition-colors duration-300">
+                {language === 'en' ? exp.title : (exp.titleId || exp.title)} {/* UBAH INI */}
+              </h4>
+            </div>
+
+            <h5 className="text-emerald-600 dark:text-emerald-400 font-semibold mb-3 text-lg">
+              {exp.company}
+            </h5>
+
+            <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400 mb-3">
+              <div className="flex items-center gap-1">
+                <Calendar className="w-4 h-4" />
+                <span>{exp.period}</span>
+              </div>
+              {exp.location && (
+                <div className="flex items-center gap-1">
+                  <MapPin className="w-4 h-4" />
+                  <span>{exp.location}</span>
+                </div>
               )}
             </div>
-          )}
-          
-          {/* Click indicator */}
-          <div className={`flex items-center gap-2 text-emerald-600 dark:text-emerald-400 text-sm font-medium group-hover:gap-3 transition-all duration-300 ${side === 'left' ? 'justify-end' : 'justify-start'}`}>
-            <span>{language === 'en' ? "View Details" : "Lihat Detail"}</span> {/* UBAH INI */}
-            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
+
+            <p className="text-sm leading-relaxed text-gray-700 dark:text-gray-300 mb-4">
+              {language === 'en' ? exp.description : (exp.descriptionId || exp.description)} {/* UBAH INI */}
+            </p>
+
+            {exp.techStack && (
+              <div className="flex flex-wrap gap-2 mb-4">
+                {exp.techStack.slice(0, 3).map((tech: string) => (
+                  <span
+                    key={tech}
+                    className="px-3 py-1 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 rounded-full text-xs font-medium"
+                  >
+                    {tech}
+                  </span>
+                ))}
+                {exp.techStack.length > 3 && (
+                  <span className="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 rounded-full text-xs font-medium">
+                    +{exp.techStack.length - 3}
+                  </span>
+                )}
+              </div>
+            )}
+
+            {/* Click indicator */}
+            <div className={`flex items-center gap-2 text-emerald-600 dark:text-emerald-400 text-sm font-medium group-hover:gap-3 transition-all duration-300 ${side === 'left' ? 'justify-end' : 'justify-start'}`}>
+              <span>{language === 'en' ? "View Details" : "Lihat Detail"}</span> {/* UBAH INI */}
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
+            </div>
           </div>
-        </div>
-      </motion.div>
+        </motion.div>
+      </TiltedCard>
     </motion.div>
   );
 };
@@ -150,78 +159,86 @@ const MobileTimelineCard = ({ exp, icon, onClick, index }: {
         </motion.div>
         
         {/* Mobile Experience Card */}
-        <motion.div 
-          className="flex-1 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-3xl shadow-xl p-6 border border-gray-200/50 dark:border-gray-700/50 group-hover:shadow-glow transition-all duration-500 relative overflow-hidden"
-          whileHover={{ 
-            scale: 1.02,
-            y: -5,
-            transition: { type: "spring", stiffness: 300, damping: 20 }
-          }}
+        <TiltedCard
+          scaleOnHover={1.05}
+          rotateAmplitude={8}
+          containerHeight="100%"
+          containerWidth="100%"
+          className="flex-1"
         >
-          {/* Enhanced gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 via-blue-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-          
-          {/* Content */}
-          <div className="relative z-10">
-            <div className="flex items-start justify-between mb-3">
-              <div className="flex items-center gap-2 mb-1">
-                <Star className="w-4 h-4 text-yellow-500" />
-                <span className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-900/30 px-2 py-1 rounded-full">
-                  #{index + 1}
-                </span>
-              </div>
-            </div>
-            
-            <h4 className="font-bold text-gray-900 dark:text-white text-lg mb-2 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors duration-300">
-              {language === 'en' ? exp.title : (exp.titleId || exp.title)} {/* UBAH INI */}
-            </h4>
-            
-            <h5 className="text-emerald-600 dark:text-emerald-400 font-semibold mb-3 text-base">
-              {exp.company}
-            </h5>
-            
-            <div className="flex flex-col gap-2 text-sm text-gray-600 dark:text-gray-400 mb-4">
-              <div className="flex items-center gap-2">
-                <Calendar className="w-4 h-4" />
-                <span>{exp.period}</span>
-              </div>
-              {exp.location && (
-                <div className="flex items-center gap-2">
-                  <MapPin className="w-4 h-4" />
-                  <span>{exp.location}</span>
-                </div>
-              )}
-            </div>
-            
-            <p className="text-sm leading-relaxed text-gray-700 dark:text-gray-300 mb-4">
-              {language === 'en' ? exp.description : (exp.descriptionId || exp.description)} {/* UBAH INI */}
-            </p>
+          <motion.div
+            className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-3xl shadow-xl p-6 border border-gray-200/50 dark:border-gray-700/50 group-hover:shadow-glow transition-all duration-500 relative overflow-hidden w-full h-full"
+            whileHover={{
+              scale: 1.02,
+              y: -5,
+              transition: { type: "spring", stiffness: 300, damping: 20 }
+            }}
+          >
+            {/* Enhanced gradient overlay */}
+            <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 via-blue-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 
-            {exp.techStack && (
-              <div className="flex flex-wrap gap-2 mb-4">
-                {exp.techStack.slice(0, 4).map((tech: string) => (
-                  <span 
-                    key={tech} 
-                    className="px-3 py-1 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 rounded-full text-xs font-medium"
-                  >
-                    {tech}
+            {/* Content */}
+            <div className="relative z-10">
+              <div className="flex items-start justify-between mb-3">
+                <div className="flex items-center gap-2 mb-1">
+                  <Star className="w-4 h-4 text-yellow-500" />
+                  <span className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-900/30 px-2 py-1 rounded-full">
+                    #{index + 1}
                   </span>
-                ))}
-                {exp.techStack.length > 4 && (
-                  <span className="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 rounded-full text-xs font-medium">
-                    +{exp.techStack.length - 4}
-                  </span>
+                </div>
+              </div>
+
+              <h4 className="font-bold text-gray-900 dark:text-white text-lg mb-2 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors duration-300">
+                {language === 'en' ? exp.title : (exp.titleId || exp.title)} {/* UBAH INI */}
+              </h4>
+
+              <h5 className="text-emerald-600 dark:text-emerald-400 font-semibold mb-3 text-base">
+                {exp.company}
+              </h5>
+
+              <div className="flex flex-col gap-2 text-sm text-gray-600 dark:text-gray-400 mb-4">
+                <div className="flex items-center gap-2">
+                  <Calendar className="w-4 h-4" />
+                  <span>{exp.period}</span>
+                </div>
+                {exp.location && (
+                  <div className="flex items-center gap-2">
+                    <MapPin className="w-4 h-4" />
+                    <span>{exp.location}</span>
+                  </div>
                 )}
               </div>
-            )}
-            
-            {/* Click indicator */}
-            <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 text-sm font-medium group-hover:gap-3 transition-all duration-300">
-              <span>{language === 'en' ? "Tap for Details" : "Ketuk untuk Detail"}</span> {/* UBAH INI */}
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
+
+              <p className="text-sm leading-relaxed text-gray-700 dark:text-gray-300 mb-4">
+                {language === 'en' ? exp.description : (exp.descriptionId || exp.description)} {/* UBAH INI */}
+              </p>
+
+              {exp.techStack && (
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {exp.techStack.slice(0, 4).map((tech: string) => (
+                    <span
+                      key={tech}
+                      className="px-3 py-1 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 rounded-full text-xs font-medium"
+                    >
+                      {tech}
+                    </span>
+                  ))}
+                  {exp.techStack.length > 4 && (
+                    <span className="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 rounded-full text-xs font-medium">
+                      +{exp.techStack.length - 4}
+                    </span>
+                  )}
+                </div>
+              )}
+
+              {/* Click indicator */}
+              <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 text-sm font-medium group-hover:gap-3 transition-all duration-300">
+                <span>{language === 'en' ? "Tap for Details" : "Ketuk untuk Detail"}</span> {/* UBAH INI */}
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
+              </div>
             </div>
-          </div>
-        </motion.div>
+          </motion.div>
+        </TiltedCard>
       </div>
     </motion.div>
   );

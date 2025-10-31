@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '../../context/LanguageContext';
 import { AnimatedSectionTitle } from '../shared/AnimatedSectionTitle';
 import { InteractiveButton } from '../shared/InteractiveButton';
+import TiltedCard from '../shared/TiltedCard';
 import { Projects } from './Projects';
 import { ImmersivePortfolioGallery } from './ImmersivePortfolioGallery';
 import { UiUxSkills } from './UiUxSkills';
@@ -149,17 +150,24 @@ return (
               {activeRole === 'developer' ? (
                 <div className="space-y-16">
                   {/* Developer Skills */}
-                  <div className="glass-card-strong p-8">
-                    <h3 className="text-2xl font-bold text-text-primary mb-6 text-center">
-                      {language === 'en' ? 'Technical Skills & Expertise' : 'Keahlian & Keahlian Teknis'}
-                    </h3>
-                    <p className="text-text-secondary text-center mb-8 max-w-3xl mx-auto">
-                      {language === 'en' 
-                        ? 'I specialize in modern web technologies and frameworks, building scalable and performant applications.'
-                        : 'Saya spesialisasi dalam teknologi web modern dan framework, membangun aplikasi yang skalabel dan berkinerja tinggi.'
-                      }
-                    </p>
-                  </div>
+                  <TiltedCard
+                    scaleOnHover={1.03}
+                    rotateAmplitude={6}
+                    containerHeight="100%"
+                    containerWidth="100%"
+                  >
+                    <div className="glass-card-strong p-8 h-full">
+                      <h3 className="text-2xl font-bold text-text-primary mb-6 text-center">
+                        {language === 'en' ? 'Technical Skills & Expertise' : 'Keahlian & Keahlian Teknis'}
+                      </h3>
+                      <p className="text-text-secondary text-center mb-8 max-w-3xl mx-auto">
+                        {language === 'en'
+                          ? 'I specialize in modern web technologies and frameworks, building scalable and performant applications.'
+                          : 'Saya spesialisasi dalam teknologi web modern dan framework, membangun aplikasi yang skalabel dan berkinerja tinggi.'
+                        }
+                      </p>
+                    </div>
+                  </TiltedCard>
                   
                   {/* Developer Projects */}
                   <Projects />
@@ -178,47 +186,54 @@ return (
         </div>
 
         {/* Call to Action */}
-        <motion.div 
+        <motion.div
           className="mt-16 text-center"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.8 }}
         >
-          <div className="glass-card-strong bg-gradient-to-r from-primary-500 to-secondary-500 p-8 text-white">
-            <h3 className="text-2xl font-bold mb-4">
-              {language === 'en' ? 'Open for Opportunities' : 'Terbuka untuk Peluang'}
-            </h3>
-            <p className="text-white/90 mb-6 max-w-2xl mx-auto">
-              {language === 'en' 
-                ? 'I am available for full-time positions and freelance projects. Let\'s discuss how I can contribute to your team or project!'
-                : 'Saya tersedia untuk posisi full-time dan proyek freelance. Mari diskusikan bagaimana saya dapat berkontribusi pada tim atau proyek Anda!'
-              }
-            </p>
-            <div className="flex flex-wrap justify-center gap-4">
-              <InteractiveButton
-                onClick={() => {
-                  const contactSection = document.querySelector('#contact');
-                  if (contactSection) {
-                    contactSection.scrollIntoView({ behavior: 'smooth' });
-                  }
-                }}
-                className="bg-white text-primary-600 font-semibold py-3 px-6 rounded-xl hover:bg-gray-100 transition-colors shadow-lg"
-              >
-                {language === 'en' ? 'Contact for Full-time' : 'Kontak untuk Full-time'}
-              </InteractiveButton>
-              <InteractiveButton
-                onClick={() => {
-                  const contactSection = document.querySelector('#contact');
-                  if (contactSection) {
-                    contactSection.scrollIntoView({ behavior: 'smooth' });
-                  }
-                }}
-                className="border-2 border-white/80 text-white font-semibold py-3 px-6 rounded-xl hover:bg-white hover:text-primary-600 transition-colors backdrop-blur-sm"
-              >
-                {language === 'en' ? 'Hire for Freelance' : 'Sewa untuk Freelance'}
-              </InteractiveButton>
+          <TiltedCard
+            scaleOnHover={1.03}
+            rotateAmplitude={6}
+            containerHeight="100%"
+            containerWidth="100%"
+          >
+            <div className="glass-card-strong bg-gradient-to-r from-primary-500 to-secondary-500 p-8 text-white h-full">
+              <h3 className="text-2xl font-bold mb-4">
+                {language === 'en' ? 'Open for Opportunities' : 'Terbuka untuk Peluang'}
+              </h3>
+              <p className="text-white/90 mb-6 max-w-2xl mx-auto">
+                {language === 'en'
+                  ? 'I am available for full-time positions and freelance projects. Let\'s discuss how I can contribute to your team or project!'
+                  : 'Saya tersedia untuk posisi full-time dan proyek freelance. Mari diskusikan bagaimana saya dapat berkontribusi pada tim atau proyek Anda!'
+                }
+              </p>
+              <div className="flex flex-wrap justify-center gap-4">
+                <InteractiveButton
+                  onClick={() => {
+                    const contactSection = document.querySelector('#contact');
+                    if (contactSection) {
+                      contactSection.scrollIntoView({ behavior: 'smooth' });
+                    }
+                  }}
+                  className="bg-white text-primary-600 font-semibold py-3 px-6 rounded-xl hover:bg-gray-100 transition-colors shadow-lg"
+                >
+                  {language === 'en' ? 'Contact for Full-time' : 'Kontak untuk Full-time'}
+                </InteractiveButton>
+                <InteractiveButton
+                  onClick={() => {
+                    const contactSection = document.querySelector('#contact');
+                    if (contactSection) {
+                      contactSection.scrollIntoView({ behavior: 'smooth' });
+                    }
+                  }}
+                  className="border-2 border-white/80 text-white font-semibold py-3 px-6 rounded-xl hover:bg-white hover:text-primary-600 transition-colors backdrop-blur-sm"
+                >
+                  {language === 'en' ? 'Hire for Freelance' : 'Sewa untuk Freelance'}
+                </InteractiveButton>
+              </div>
             </div>
-          </div>
+          </TiltedCard>
         </motion.div>
       </div>
     </section>

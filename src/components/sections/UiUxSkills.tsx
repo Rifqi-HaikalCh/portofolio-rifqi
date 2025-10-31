@@ -4,6 +4,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { useLanguage } from '../../context/LanguageContext';
 import { AnimatedCard } from '../shared/AnimatedCard';
+import TiltedCard from '../shared/TiltedCard';
 
 interface DesignSkill {
   name: string;
@@ -270,66 +271,73 @@ export function UiUxSkills() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {skills.map((skill, index) => (
               <AnimatedCard key={skill.name} delay={categoryIndex * 0.1 + index * 0.05}>
-                <motion.div
-                  className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700 h-full"
-                  whileHover={{ 
-                    scale: 1.02, 
-                    boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)' 
-                  }}
-                  transition={{ duration: 0.3 }}
+                <TiltedCard
+                  scaleOnHover={1.05}
+                  rotateAmplitude={8}
+                  containerHeight="100%"
+                  containerWidth="100%"
                 >
-                  {/* Skill Header */}
-                  <div className="flex items-center mb-4">
-                    <span className="text-3xl mr-4">{skill.icon}</span>
-                    <div className="flex-1">
-                      <h5 className="font-bold text-gray-900 dark:text-white">
-                        {language === 'en' ? skill.name : skill.nameId}
-                      </h5>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">
-                        {language === 'en' ? skill.description : skill.descriptionId}
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Skill Level */}
-                  <div className="mb-4">
-                    <div className="flex justify-between items-center mb-2">
-                      <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                        {language === 'en' ? 'Proficiency' : 'Kemahiran'}
-                      </span>
-                      <span className="text-sm font-bold text-gray-800 dark:text-gray-200">
-                        {skill.level}%
-                      </span>
-                    </div>
-                    <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                      <motion.div
-                        className="h-2 rounded-full"
-                        style={{ backgroundColor: skill.color }}
-                        initial={{ width: 0 }}
-                        animate={{ width: `${skill.level}%` }}
-                        transition={{ 
-                          duration: 1, 
-                          delay: categoryIndex * 0.1 + index * 0.1,
-                          ease: "easeOut" 
-                        }}
-                      />
-                    </div>
-                  </div>
-
-                  {/* Skill Badge */}
-                  <div 
-                    className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium text-white"
-                    style={{ backgroundColor: skill.color }}
+                  <motion.div
+                    className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700 h-full"
+                    whileHover={{
+                      scale: 1.02,
+                      boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)'
+                    }}
+                    transition={{ duration: 0.3 }}
                   >
-                    {skill.level >= 90 ? (
-                      language === 'en' ? 'Expert' : 'Ahli'
-                    ) : skill.level >= 80 ? (
-                      language === 'en' ? 'Advanced' : 'Lanjutan'
-                    ) : (
-                      language === 'en' ? 'Intermediate' : 'Menengah'
-                    )}
-                  </div>
-                </motion.div>
+                    {/* Skill Header */}
+                    <div className="flex items-center mb-4">
+                      <span className="text-3xl mr-4">{skill.icon}</span>
+                      <div className="flex-1">
+                        <h5 className="font-bold text-gray-900 dark:text-white">
+                          {language === 'en' ? skill.name : skill.nameId}
+                        </h5>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                          {language === 'en' ? skill.description : skill.descriptionId}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Skill Level */}
+                    <div className="mb-4">
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                          {language === 'en' ? 'Proficiency' : 'Kemahiran'}
+                        </span>
+                        <span className="text-sm font-bold text-gray-800 dark:text-gray-200">
+                          {skill.level}%
+                        </span>
+                      </div>
+                      <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                        <motion.div
+                          className="h-2 rounded-full"
+                          style={{ backgroundColor: skill.color }}
+                          initial={{ width: 0 }}
+                          animate={{ width: `${skill.level}%` }}
+                          transition={{
+                            duration: 1,
+                            delay: categoryIndex * 0.1 + index * 0.1,
+                            ease: "easeOut"
+                          }}
+                        />
+                      </div>
+                    </div>
+
+                    {/* Skill Badge */}
+                    <div
+                      className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium text-white"
+                      style={{ backgroundColor: skill.color }}
+                    >
+                      {skill.level >= 90 ? (
+                        language === 'en' ? 'Expert' : 'Ahli'
+                      ) : skill.level >= 80 ? (
+                        language === 'en' ? 'Advanced' : 'Lanjutan'
+                      ) : (
+                        language === 'en' ? 'Intermediate' : 'Menengah'
+                      )}
+                    </div>
+                  </motion.div>
+                </TiltedCard>
               </AnimatedCard>
             ))}
           </div>

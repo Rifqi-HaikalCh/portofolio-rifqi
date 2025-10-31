@@ -186,7 +186,7 @@ export default function Home() {
       <AnimatePresence>
         {loading && <LoadingScreen onComplete={handleLoadingComplete} />}
       </AnimatePresence>
-      
+
       {!loading && (
         <>
           <Navbar />
@@ -202,15 +202,15 @@ export default function Home() {
           <Footer />
         </>
       )}
-      
+
       {/* Floating Navigation */}
       <FloatingNavigation />
-      
+
       <AnimatePresence>
         {showNotification && currentNotification && (
-          <TimedNotification 
+          <TimedNotification
             message={currentNotification}
-            onClose={handleNotificationClose} 
+            onClose={handleNotificationClose}
           />
         )}
       </AnimatePresence>
