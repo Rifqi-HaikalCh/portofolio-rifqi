@@ -31,8 +31,6 @@ export const Projects: React.FC = () => {
   return (
     <>
       {/* Blok <style jsx> dihapus dari sini */}
-      <section id="projects" className="py-20 relative overflow-hidden">
-      
       <div className="container mx-auto px-4 relative z-10">
         {/* Enhanced Header */}
         <AnimatedSectionTitle
@@ -85,21 +83,24 @@ export const Projects: React.FC = () => {
             className="grid grid-cols-3 gap-8"
           >
             {currentProjects.map((project, index) => (
-              <AnimatedCard
+              <motion.div
                 key={project.id}
-                delay={index * 0.1}
-                hoverY={-12}
-                hoverScale={1.05}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.06, duration: 0.4 }}
+                className="w-full"
               >
+                {/* TiltedCard hanya untuk tilt/3D — TIDAK menambahkan layer visual lain */}
                 <TiltedCard
                   scaleOnHover={1.05}
                   rotateAmplitude={8}
                   containerHeight="100%"
                   containerWidth="100%"
                 >
+                  {/* Pastikan hanya 1 elemen rounded dan bg: */}
                   <div
-                    className="bg-white dark:bg-gray-800 backdrop-blur-sm rounded-3xl overflow-hidden border border-gray-200/50 dark:border-gray-700/50 cursor-pointer h-full"
                     onClick={() => openModal(project)}
+                    className="bg-white dark:bg-gray-800 rounded-3xl overflow-hidden border border-gray-200/50 dark:border-gray-700/50 cursor-pointer h-full shadow-lg"
                   >
                     {/* Project Image */}
                     <div className="relative overflow-hidden h-60">
@@ -239,7 +240,7 @@ export const Projects: React.FC = () => {
                 </div>
                   </div>
                 </TiltedCard>
-              </AnimatedCard>
+              </motion.div>
             ))}
           </motion.div>
         </AnimatePresence>
@@ -291,7 +292,6 @@ export const Projects: React.FC = () => {
           </div>
         )}
       </StandardModal>
-    </section>
     </>
   );
 };

@@ -111,13 +111,14 @@ export default function TiltedCard({
       )}
 
       <motion.div
-        className="tilted-card-inner"
+        className="tilted-card-inner rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl border border-white/10"
         style={{
           width: imageWidth,
           height: imageHeight,
           rotateX,
           rotateY,
-          scale
+          scale,
+          overflow: 'visible',
         }}
       >
         {imageSrc && (

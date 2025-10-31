@@ -1310,25 +1310,25 @@ return (
                           speed={1}
                           chaos={0.5}
                           thickness={2}
-                          className="h-full"
-                          style={{ borderRadius: '1rem' }}
+                          className="h-full rounded-3xl shadow-[0_10px_25px_rgba(0,0,0,0.15)] hover:shadow-[0_15px_35px_rgba(0,0,0,0.25)] transition-shadow duration-500"
                         >
                         <motion.div
-                          className="relative h-full bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl lg:rounded-3xl p-4 sm:p-6 lg:p-8 overflow-hidden min-h-[220px] sm:min-h-[250px] lg:min-h-[280px]"
+                          className="relative h-full bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl rounded-3xl p-6 sm:p-8 overflow-visible min-h-[340px] border border-white/10 dark:border-gray-700/50"
                           whileHover={{
                             y: -6,
-                            scale: 1.02
+                            scale: 1.03,
+                            rotateX: 2,
+                            rotateY: 2
                           }}
                           transition={{
-                            duration: 0.3,
+                            duration: 0.4,
                             ease: "easeOut",
                             type: "spring",
-                            stiffness: 300,
-                            damping: 25
+                            stiffness: 250,
+                            damping: 20
                           }}
                         >
-                          {/* Gradient Background on Hover */}
-                          <div className={`absolute inset-0 bg-gradient-to-r ${service.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-500 rounded-xl sm:rounded-2xl lg:rounded-3xl`} />
+                          <div className={`absolute inset-0 bg-gradient-to-r ${service.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-500 rounded-3xl`} />
 
                           {/* Icon */}
                           <div className="relative z-10 text-3xl sm:text-4xl lg:text-5xl mb-4 sm:mb-6 transform group-hover:scale-110 transition-transform duration-300">
@@ -1408,9 +1408,6 @@ return (
                             <h4 className="font-bold text-gray-900 dark:text-white mb-2 text-lg sm:text-xl lg:text-xl leading-tight">
                               {language === 'en' ? skill.name : skill.nameId}
                             </h4>
-                            <p className="text-sm sm:text-base lg:text-base text-gray-600 dark:text-gray-300 leading-relaxed">
-                              {language === 'en' ? skill.description : skill.descriptionId}
-                            </p>
                           </div>
                         </div>
 

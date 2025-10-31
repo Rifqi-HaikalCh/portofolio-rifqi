@@ -292,9 +292,6 @@ export function UiUxSkills() {
                         <h5 className="font-bold text-gray-900 dark:text-white">
                           {language === 'en' ? skill.name : skill.nameId}
                         </h5>
-                        <p className="text-sm text-gray-500 dark:text-gray-400">
-                          {language === 'en' ? skill.description : skill.descriptionId}
-                        </p>
                       </div>
                     </div>
 

@@ -94,7 +94,18 @@ const ElectricBorder: React.FC<ElectricBorderProps> = ({
   };
 
   return (
-    <div ref={rootRef} className={`electric-border ${className ?? ''}`} style={{ ...vars, ...style }}>
+    <div
+      ref={rootRef}
+      className={`electric-border ${className ?? ''}`}
+      style={{
+        ...vars,
+        ...style,
+        borderRadius: '1.5rem',
+        overflow: 'visible',
+        position: 'relative',
+        filter: 'drop-shadow(0 10px 25px rgba(0,0,0,0.15))',
+      }}
+    >
       <svg ref={svgRef} className="eb-svg" aria-hidden focusable="false">
         <defs>
           <filter id={filterId} colorInterpolationFilters="sRGB" x="-20%" y="-20%" width="140%" height="140%">
@@ -139,7 +150,9 @@ const ElectricBorder: React.FC<ElectricBorderProps> = ({
         <div className="eb-background-glow" />
       </div>
 
-      <div className="eb-content">{children}</div>
+      <div className="eb-content" style={{ borderRadius: 'inherit', overflow: 'visible' }}>
+        {children}
+      </div>
     </div>
   );
 };

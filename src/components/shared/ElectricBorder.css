@@ -3,8 +3,10 @@
   --eb-border-width: 2px;
   position: relative;
   border-radius: inherit;
-  overflow: visible;
-  isolation: isolate;
+  /* Hapus isolasi dan overflow agar tidak terpotong */
+  overflow: visible !important;
+  isolation: unset !important;
+  z-index: 0;
 }
 
 .eb-svg {
@@ -46,6 +48,8 @@
 
 .eb-stroke {
   border: var(--eb-border-width) solid var(--electric-border-color);
+  border-radius: inherit;
+  opacity: 0.3; /* redupkan agar tidak jadi kotak tegas */
 }
 
 .eb-glow-1 {
