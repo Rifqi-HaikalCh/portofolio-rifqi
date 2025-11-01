@@ -47,10 +47,10 @@ export const aboutHighlights: AboutHighlight[] = [
   },
   {
     icon: 'users',
-    title: 'Social Relationships',
-    titleId: 'Relasi Sosial',
-    description: 'GDSC Core Team & BEM Social Division Head',
-    descriptionId: 'Tim Inti GDSC & Kepala Divisi Sosial BEM'
+    title: 'Freelance UI/UX & Web Developer',
+    titleId: 'Freelance UI/UX & Web Developer',
+    description: 'Has 2 years of experience as a freelancer',
+    descriptionId: 'Memiliki 2 tahun pengalaman sebagai freelancer'
   }
 ];
 
@@ -83,21 +83,21 @@ export const softSkills: Skill[] = [
 export const workExperience: Experience[] = [
   {
     id: 'javan',
-    title: 'Programmer Intern',
-    titleId: 'Magang Programmer',
+    title: 'Angular Developer Intern (IT Consulting Company)',
+    titleId: 'Magang Angular Developer',
     company: 'PT. Javan Cipta Solusi',
     period: 'Sep 2024 - Jan 2025',
     location: 'Yogyakarta, Indonesia',
     description: 'Demonstrated strong expertise as an Angular Programmer Intern by successfully implementing full CRUD operations and integrating multiple APIs.',
-    descriptionId: 'Menunjukkan keahlian yang kuat sebagai Magang Programmer Angular dengan berhasil mengimplementasikan operasi CRUD lengkap dan mengintegrasikan beberapa API.',
+    descriptionId: 'Menunjukkan keahlian yang kuat sebagai Magang Angular Developer dengan berhasil mengimplementasikan operasi CRUD lengkap dan mengintegrasikan beberapa API.',
     techStack: ['Angular', 'Spring Boot', 'Express.js', 'React.js', 'Vue.js'],
     type: 'work',
     image: '/assets/javan.webp'
   },
   {
     id: 'fif',
-    title: 'Programmer Intern',
-    titleId: 'Magang Programmer',
+    title: 'Fullstack Developer Intern (Multi-Finance Company)',
+    titleId: 'Magang Angular Developer',
     company: 'PT. Federal International Finance',
     period: 'Jun 2024 - Aug 2024',
     location: 'Jakarta Selatan, Indonesia',
@@ -145,6 +145,60 @@ export const organizationExperience: Experience[] = [
 ];
 
 export const individualProjects: Project[] = [
+    {
+    id: 'marketplace-influencer',
+    title: 'Marketplace Influencer Platform',
+    description: 'Simplifies influencer discovery and collaboration for brands. Engineered a full-stack marketplace from scratch using a modern tech stack (Next.js 14, TypeScript, Supabase) to connect brands with influencers. Designed and implemented a pixel-perfect, responsive UI/UX with Tailwind CSS, featuring separate, optimized views for desktop and mobile to ensure a seamless user journey.',
+    descriptionId: 'Menyederhanakan penemuan influencer dan kolaborasi untuk brand. Platform marketplace full-stack yang dibangun dari awal menggunakan tech stack modern untuk menghubungkan brand dengan influencer.',
+    image: '/assets/marketplaceweb.webp',
+    techStack: ['Next.js 14', 'TypeScript', 'Tailwind CSS', 'Supabase', 'RBAC'],
+    links: {
+      demo: 'https://homepage-redesign-inky.vercel.app/'
+    },
+    category: 'individual',
+    type: 'web'
+  },
+  {
+    id: 'hiring-platform',
+    title: 'Hiring Platform for Jobseeker',
+    description: 'Modern hiring platform enabling administrators to manage job listings and candidates to browse/apply. Implemented secure user authentication and role-based access control (RBAC) leveraging Supabase Auth. Designed and built reusable, responsive UI components using Tailwind CSS and Headless UI, ensuring an intuitive user experience across desktop and mobile platforms.',
+    descriptionId: 'Platform hiring modern yang memungkinkan administrator mengelola lowongan pekerjaan dan kandidat untuk menelusuri/melamar. Sistem otentikasi aman dengan kontrol akses berbasis peran.',
+    image: '/assets/Hiring Platform web.webp',
+    techStack: ['Next.js 16', 'TypeScript', 'Tailwind CSS', 'Supabase', 'React Hook Form', 'Zustand'],
+    links: {
+      demo: 'https://hiring-platform-woad.vercel.app',
+      needToKnow: 'https://drive.google.com/file/d/1sDZJJzx59VfwPaw2Y7J-hss0yh88rDyj/view'
+    },
+    category: 'individual',
+    type: 'web'
+  },
+    {
+    id: 'todo-app',
+    title: 'Todo Application',
+    description: 'A modern and intuitive todo application for task management. Built with modern web technologies for seamless user experience with features like task creation, editing, deletion, and status tracking.',
+    descriptionId: 'Aplikasi todo yang modern dan intuitif untuk manajemen tugas. Dibangun dengan teknologi web modern untuk pengalaman pengguna yang mulus dengan fitur seperti pembuatan tugas, editing, penghapusan, dan pelacakan status.',
+    image: '/assets/todo-app.webp',
+    techStack: ['React', 'TypeScript', 'Tailwind CSS', 'Next.js', 'Local Storage'],
+    links: {
+      demo: 'https://assessment-todo-application.vercel.app/'
+    },
+    category: 'individual',
+    type: 'web'
+  },
+    {
+    id: 'mini-games',
+    title: 'Mini Games Web Portal',
+    description: 'Collection of interactive web-based games developed with JavaScript, featuring engaging user experience.',
+    descriptionId: 'Kumpulan game interaktif berbasis web yang dikembangkan dengan JavaScript, menampilkan pengalaman pengguna yang menarik.',
+    image: '/assets/game.webp',
+    techStack: ['JavaScript', 'HTML5 Canvas', 'CSS3', 'DOM Manipulation', 'Event Handling'],
+    links: {
+      demo: 'https://games-rifqi.netlify.app/',
+      github: 'https://github.com/Rifqi-HaikalCh'
+    },
+    category: 'individual',
+    type: 'web'
+  },
   {
     id: 'api-central',
     title: 'API Central',
@@ -196,125 +250,6 @@ export const individualProjects: Project[] = [
       github: 'https://github.com/Rifqi-HaikalCh/bookshelf-app'
     },
     category: 'individual'
-  },
-  {
-    id: 'mini-games',
-    title: 'Mini Games Web Portal',
-    description: 'Collection of interactive web-based games developed with JavaScript, featuring engaging user experience.',
-    descriptionId: 'Kumpulan game interaktif berbasis web yang dikembangkan dengan JavaScript, menampilkan pengalaman pengguna yang menarik.',
-    image: '/assets/game.webp',
-    techStack: ['JavaScript', 'HTML5 Canvas', 'CSS3', 'DOM Manipulation', 'Event Handling'],
-    links: {
-      demo: 'https://games-rifqi.netlify.app/',
-      github: 'https://github.com/Rifqi-HaikalCh'
-    },
-    category: 'individual',
-    type: 'web'
-  },
-  {
-    id: 'marketplace-influencer',
-    title: 'Marketplace Influencer Platform',
-    description: 'Simplifies influencer discovery and collaboration for brands. Engineered a full-stack marketplace from scratch using a modern tech stack (Next.js 14, TypeScript, Supabase) to connect brands with influencers. Designed and implemented a pixel-perfect, responsive UI/UX with Tailwind CSS, featuring separate, optimized views for desktop and mobile to ensure a seamless user journey.',
-    descriptionId: 'Menyederhanakan penemuan influencer dan kolaborasi untuk brand. Platform marketplace full-stack yang dibangun dari awal menggunakan tech stack modern untuk menghubungkan brand dengan influencer.',
-    image: '/assets/marketplaceweb.webp',
-    techStack: ['Next.js 14', 'TypeScript', 'Tailwind CSS', 'Supabase', 'RBAC'],
-    links: {
-      demo: 'https://homepage-redesign-inky.vercel.app/'
-    },
-    category: 'individual',
-    type: 'web'
-  },
-  {
-    id: 'hiring-platform',
-    title: 'Hiring Platform for Jobseeker',
-    description: 'Modern hiring platform enabling administrators to manage job listings and candidates to browse/apply. Implemented secure user authentication and role-based access control (RBAC) leveraging Supabase Auth. Designed and built reusable, responsive UI components using Tailwind CSS and Headless UI, ensuring an intuitive user experience across desktop and mobile platforms.',
-    descriptionId: 'Platform hiring modern yang memungkinkan administrator mengelola lowongan pekerjaan dan kandidat untuk menelusuri/melamar. Sistem otentikasi aman dengan kontrol akses berbasis peran.',
-    image: '/assets/Hiring Platform web.webp',
-    techStack: ['Next.js 16', 'TypeScript', 'Tailwind CSS', 'Supabase', 'React Hook Form', 'Zustand'],
-    links: {
-      demo: 'https://hiring-platform-woad.vercel.app',
-      needToKnow: 'https://drive.google.com/file/d/1sDZJJzx59VfwPaw2Y7J-hss0yh88rDyj/view'
-    },
-    category: 'individual',
-    type: 'web'
-  },
-  {
-    id: 'dinoShop-design',
-    title: 'DinoShop E-Commerce Design',
-    description: 'Designing the requirements of an electronics store to sell its products to facilitate interactions with customers. Designed a complete, visually-driven user experience for an electronics e-commerce platform, focusing on a clean, minimalist aesthetic and a clear visual hierarchy to enhance product discovery.',
-    descriptionId: 'Merancang kebutuhan toko elektronik untuk menjual produknya guna memfasilitasi interaksi dengan pelanggan. Desain pengalaman pengguna yang lengkap dan visual untuk platform e-commerce elektronik.',
-    image: '/assets/DinoShop.webp',
-    techStack: ['Figma', 'UI/UX Design', 'Prototyping', 'Visual Design', 'Interactive Design'],
-    links: {
-      prototype: 'https://www.figma.com/proto/ZNCYVnAGdOL47VgFPnZGHE/Project-Mock?page-id=0%3A1&node-id=145-4254&p=f&viewport=1008%2C3367%2C0.45&t=a6FkFBiT6pik43fA-1&scaling=contain&content-scaling=fixed&starting-point-node-id=145%3A4254'
-    },
-    category: 'individual',
-    type: 'design'
-  },
-  {
-    id: 'beauty-mobile-app-design',
-    title: 'Beauty E-Commerce Mobile App Design',
-    description: 'Designing a modern and intuitive mobile e-commerce experience dedicated to beauty and skincare products. Developed a comprehensive, component-based design system in Figma, creating reusable elements, navigation, and product cards to ensure visual consistency and accelerate the development workflow. Built a high-fidelity, interactive prototype incorporating smooth navigation flows and micro-interactions to simulate a realistic user experience.',
-    descriptionId: 'Merancang pengalaman e-commerce mobile yang modern dan intuitif khusus untuk produk kecantikan dan perawatan kulit. Sistem desain berbasis komponen yang komprehensif dengan prototype interaktif.',
-    image: '/assets/beautyMobileApp.webp',
-    techStack: ['Figma', 'UI/UX Design', 'Mobile Design', 'Design System', 'Prototyping'],
-    links: {
-      prototype: 'https://www.figma.com/proto/P1HhF2cjWydsS4UtzQ9liv/Beauty-Mobile-App-Design?page-id=0%3A1&node-id=49-1149&p=f&viewport=133%2C397%2C0.55&t=dfdOnSGjlSOq84Zw-1&scaling=scale-down&content-scaling=fixed&starting-point-node-id=49%3A1072'
-    },
-    category: 'individual',
-    type: 'design'
-  },
-  {
-    id: 'campuss-redesign',
-    title: 'IT Del Campus Website Redesign',
-    description: 'The previous website had an outdated interface that struggled to engage users and failed to reflect the institute\'s innovative spirit. Revitalized an outdated campus website by conceptualizing and designing a dynamic, modern interface that better reflects the institute\'s innovative spirit. Successfully applied key UI/UX principles to create an intuitive and visually appealing interface for all user types.',
-    descriptionId: 'Website sebelumnya memiliki antarmuka yang ketinggalan zaman yang kesulitan melibatkan pengguna dan gagal mencerminkan semangat inovatif institut. Merevitalisasi website kampus yang ketinggalan zaman dengan merancang antarmuka modern dan dinamis.',
-    image: '/assets/campuss-redesign.webp',
-    techStack: ['Figma', 'UI/UX Design', 'Web Design', 'Responsive Design', 'Prototyping'],
-    links: {
-      prototype: 'https://www.figma.com/proto/rileM7AuecCrGEnA0soMd1/RE-DESIGN-WEBSITE-DEL?page-id=0%3A1&node-id=447-121&p=f&viewport=845%2C151%2C0.13&t=gbfdy7gE7yozEW3C-1&scaling=scale-down-width&content-scaling=fixed'
-    },
-    category: 'individual',
-    type: 'design'
-  },
-  {
-    id: 'gordenaise-wireframe',
-    title: 'Gordenaise Website Design',
-    description: 'Wireframe design for Gordenaise platform focusing on user flow and interface structure. Emphasized on creating clear information architecture and intuitive navigation patterns.',
-    descriptionId: 'Desain wireframe untuk platform Gordenaise dengan fokus pada alur pengguna dan struktur antarmuka. Penekanan pada arsitektur informasi yang jelas dan pola navigasi yang intuitif.',
-    image: '/assets/gordenaise-wireframe.webp',
-    techStack: ['Figma', 'Wireframing', 'UX Design', 'Information Architecture', 'User Flow'],
-    links: {
-      prototype: 'https://www.figma.com/proto/m63t9o0EJ7aBvG5I09yWVf/Gordenaise?page-id=0%3A1&node-id=34-373&p=f&viewport=89%2C310%2C0.07&t=LJSZaTROUnCZIqfH-1&scaling=scale-down-width&content-scaling=fixed'
-    },
-    category: 'individual',
-    type: 'design'
-  },
-  {
-    id: 'assets-management-design',
-    title: 'Assets Management System Design',
-    description: 'Designing the appearance of the management system in 1 day timeline. Rapidly designed a complete asset management system UI within a 1-day timeline, focusing on creating a logical user flow with minimal friction. Established a cohesive and scalable design system by ensuring consistent use of colors, typography, icons, and UI elements for optimal clarity and aesthetics.',
-    descriptionId: 'Merancang tampilan sistem manajemen dalam waktu 1 hari. Secara cepat merancang UI sistem manajemen aset yang lengkap dalam waktu 1 hari, dengan fokus pada pembuatan alur pengguna yang logis dengan friksi minimal.',
-    image: '/assets/Assets Manajemen Web Design-01.webp',
-    techStack: ['Figma', 'UI/UX Design', 'Design System', 'Rapid Prototyping', 'Information Architecture'],
-    links: {
-      prototype: 'https://www.figma.com/proto/N2eNg8UcsUg3Z4oIpwPn4g/Aplikasi-Manajemen-Aset?page-id=0%3A1&node-id=9-356&p=f&viewport=338%2C243%2C0.06&t=RcXQkGz3wJYNThcT-1&scaling=contain&content-scaling=fixed'
-    },
-    category: 'individual',
-    type: 'design'
-  },
-  {
-    id: 'todo-app',
-    title: 'Todo Application',
-    description: 'A modern and intuitive todo application for task management. Built with modern web technologies for seamless user experience with features like task creation, editing, deletion, and status tracking.',
-    descriptionId: 'Aplikasi todo yang modern dan intuitif untuk manajemen tugas. Dibangun dengan teknologi web modern untuk pengalaman pengguna yang mulus dengan fitur seperti pembuatan tugas, editing, penghapusan, dan pelacakan status.',
-    image: '/assets/todo-app.webp',
-    techStack: ['React', 'TypeScript', 'Tailwind CSS', 'Next.js', 'Local Storage'],
-    links: {
-      demo: 'https://assessment-todo-application.vercel.app/'
-    },
-    category: 'individual',
-    type: 'web'
   }
 ];
 

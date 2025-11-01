@@ -123,7 +123,7 @@ const developerSkills: Skill[] = [
   { name: 'React.js', nameId: 'React.js', icon: '⚛️', level: 90, color: '#61DAFB' },
   { name: 'Angular', nameId: 'Angular', icon: '🅰️', level: 90, color: '#DD0031' },
   { name: 'Vue.js', nameId: 'Vue.js', icon: '💚', level: 80, color: '#4FC08D' },
-  { name: 'TypeScript', nameId: 'TypeScript', icon: '📘', level: 90, color: '#3178C6' },
+  { name: 'Next.js', nameId: 'Next.js', icon: '📘', level: 90, color: '#3178C6' },
   { name: 'Tailwind CSS', nameId: 'Tailwind CSS', icon: '🌊', level: 100, color: '#06B6D4' },
   { name: 'Node.js', nameId: 'Node.js', icon: '🟢', level: 80, color: '#339933' }
 ];

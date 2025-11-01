@@ -136,55 +136,11 @@ export const MobileHero: React.FC = () => {
             <Linkedin size={20} />
           </a>
           <a
-            href="mailto:rifqihaikal2004@gmail.com"
+            href="mailto:r.haikal1610@gmail.com"
             className="w-12 h-12 rounded-full bg-emerald-500 text-white flex items-center justify-center hover:scale-110 active:scale-95 transition-transform shadow-lg"
           >
             <Mail size={20} />
           </a>
-        </motion.div>
-
-        {/* CTA Buttons */}
-        <motion.div
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.5 }}
-          className="flex flex-col w-full max-w-sm gap-3 pt-4"
-        >
-          <button
-            onClick={() => scrollToSection('contact')}
-            className="w-full py-4 px-6 bg-gradient-to-r from-emerald-500 to-blue-500 text-white rounded-full font-semibold shadow-lg hover:shadow-xl active:scale-95 transition-all"
-          >
-            {language === 'en' ? 'Get In Touch' : 'Hubungi Saya'}
-          </button>
-          <a
-            href="/assets/CV-Rifqi-Haikal.pdf"
-            download
-            className="w-full py-4 px-6 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-full font-semibold shadow-lg hover:shadow-xl active:scale-95 transition-all flex items-center justify-center gap-2 border border-gray-200 dark:border-gray-700"
-          >
-            <Download size={18} />
-            {language === 'en' ? 'Download CV' : 'Unduh CV'}
-          </a>
-        </motion.div>
-
-        {/* Scroll Indicator */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1 }}
-          className="absolute bottom-8"
-        >
-          <motion.button
-            onClick={() => scrollToSection('about')}
-            animate={{ y: [0, 10, 0] }}
-            transition={{
-              duration: 1.5,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
-            className="text-gray-400 dark:text-gray-500"
-          >
-            <ChevronDown size={32} />
-          </motion.button>
         </motion.div>
       </div>
     </section>

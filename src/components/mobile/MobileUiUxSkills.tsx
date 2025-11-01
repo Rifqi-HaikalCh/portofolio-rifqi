@@ -28,8 +28,8 @@ const designSkills: DesignSkill[] = [
     category: 'Design Tools'
   },
   {
-    name: 'Adobe Creative Suite',
-    nameId: 'Adobe Creative Suite',
+    name: 'Photoshop',
+    nameId: 'Phototshop',
     icon: '🎭',
     level: 80,
     color: '#FF0000',

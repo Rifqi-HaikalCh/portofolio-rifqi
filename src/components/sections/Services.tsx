@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
@@ -339,6 +339,52 @@ interface DesignProject {
 }
 
 const designProjects: DesignProject[] = [
+    {
+    id: 'beauty-mobile-app-design',
+    titleEn: 'Beauty E-Commerce Mobile App Design',
+    titleId: 'Desain Aplikasi Mobile E-Commerce Kecantikan',
+    descriptionEn: 'Designing a modern and intuitive mobile e-commerce experience dedicated to beauty and skincare products.',
+    descriptionId: 'Merancang pengalaman e-commerce mobile yang modern dan intuitif khusus untuk produk kecantikan dan perawatan kulit.',
+    image: '/assets/beautyMobileApp.webp',
+    images: ['/assets/beautyMobileApp.webp'],
+    tools: ['Figma', 'UI/UX Design', 'Mobile Design', 'Design System', 'Prototyping'],
+    year: '2025',
+    category: 'Mobile Design',
+    links: {
+      figma: 'https://www.figma.com/proto/P1HhF2cjWydsS4UtzQ9liv/Beauty-Mobile-App-Design?page-id=0%3A1&node-id=49-1149&p=f&viewport=133%2C397%2C0.55&t=dfdOnSGjlSOq84Zw-1&scaling=scale-down&content-scaling=fixed&starting-point-node-id=49%3A1072'
+    }
+  },
+    {
+    id: 'dinoshop-design',
+    titleEn: 'DinoShop E-Commerce Design',
+    titleId: 'Desain E-Commerce DinoShop',
+    descriptionEn: 'Designing a complete, visually-driven user experience for an electronics e-commerce platform, focusing on a clean, minimalist aesthetic.',
+    descriptionId: 'Merancang pengalaman pengguna yang lengkap dan visual untuk platform e-commerce elektronik, berfokus pada estetika minimalis yang bersih.',
+    image: '/assets/DinoShop.webp',
+    images: ['/assets/DinoShop.webp'],
+    tools: ['Figma', 'UI/UX Design', 'Prototyping', 'Interactive Design'],
+    year: '2025',
+    category: 'E-commerce Design',
+    links: {
+      figma: 'https://www.figma.com/proto/ZNCYVnAGdOL47VgFPnZGHE/Project-Mock?page-id=0%3A1&node-id=145-4254&p=f&viewport=1008%2C3367%2C0.45&t=a6FkFBiT6pik43fA-1&scaling=contain&content-scaling=fixed&starting-point-node-id=145%3A4254'
+    }
+  },
+
+  {
+    id: 'del-pick-design',
+    titleEn: 'Del-Pick: Mobile Delivery & Logistics App',
+    titleId: 'Aplikasi Mobile Del-Pick: Pengiriman & Logistik',
+    descriptionEn: 'Mobile delivery system designed to overcome logistics problems. Translated high-fidelity Figma UI/UX designs into 20+ polished screens.',
+    descriptionId: 'Sistem pengiriman mobile yang dirancang untuk mengatasi masalah logistik. Menerjemahkan desain Figma UI/UX fidelitas tinggi menjadi 20+ layar.',
+    image: '/assets/del-pick.webp',
+    images: ['/assets/del-pick.webp'],
+    tools: ['Figma', 'UI/UX Design', 'Flutter', 'Mobile Design'],
+    year: '2025',
+    category: 'Mobile Design',
+    links: {
+      demo: 'https://drive.google.com/file/d/1dFmPBOM7i7SubKeOztS6FWffawnltK2p/view'
+    }
+  },
   {
     id: 'assets-management',
     titleEn: 'Assets Management System',
@@ -360,9 +406,12 @@ const designProjects: DesignProject[] = [
     ],
     colors: ['#2563eb', '#06b6d4', '#10b981', '#f59e0b'],
     tools: ['Figma', 'Adobe Photoshop', 'Principle'],
-    year: '2024',
+    year: '2025',
     category: 'Web Design',
-    client: 'Tech Solutions Inc'
+    client: 'Tech Solutions Inc',
+    links: { // <-- LINK DITAMBAHKAN
+      figma: 'https://www.figma.com/proto/N2eNg8UcsUg3Z4oIpwPn4g/Aplikasi-Manajemen-Aset?page-id=0%3A1&node-id=9-356&p=f&viewport=338%2C243%2C0.06&t=RcXQkGz3wJYNThcT-1&scaling=contain&content-scaling=fixed'
+    }
   },
   {
     id: 'campus-website',
@@ -386,7 +435,10 @@ const designProjects: DesignProject[] = [
     tools: ['Figma', 'Sketch', 'InVision'],
     year: '2024',
     category: 'Web Design',
-    client: 'Del Institute'
+    client: 'Del Institute',
+    links: { // <-- LINK DITAMBAHKAN
+      figma: 'https://www.figma.com/proto/rileM7AuecCrGEnA0soMd1/RE-DESIGN-WEBSITE-DEL?page-id=0%3A1&node-id=447-121&p=f&viewport=845%2C151%2C0.13&t=gbfdy7gE7yozEW3C-1&scaling=scale-down-width&content-scaling=fixed'
+    }
   },
   {
     id: 'gordenaise',
@@ -411,8 +463,11 @@ const designProjects: DesignProject[] = [
     tools: ['Figma', 'Adobe XD', 'Photoshop'],
     year: '2024',
     category: 'E-commerce Design',
-    client: 'Gordenaise Home Decor'
-  }
+    client: 'Gordenaise Home Decor',
+    links: { // <-- LINK DITAMBAHKAN
+      figma: 'https://www.figma.com/proto/m63t9o0EJ7aBvG5I09yWVf/Gordenaise?page-id=0%3A1&node-id=34-373&p=f&viewport=89%2C310%2C0.07&t=LJSZaTROUnCZIqfH-1&scaling=scale-down-width&content-scaling=fixed'
+    }
+  },
 ];
 
 // Skills data integrated from UiUxSkills
@@ -522,9 +577,9 @@ const developerSkills: Skill[] = [
     category: 'Frontend Development'
   },
   {
-    name: 'AngularJS',
-    nameId: 'AngularJS',
-    icon: '🔺',
+    name: 'Next.js',
+    nameId: 'Next.js',
+    icon: '📘',
     level: 80,
     color: '#E23237',
     description: 'Legacy Angular framework',
@@ -1442,11 +1497,18 @@ return (
   );
 }
 
-// Enhanced DesignShowcase Component with Modal Gallery
+// GANTI SELURUH KOMPONEN DI BAWAH INI
+// Enhanced DesignShowcase Component with Modal Gallery AND Hybrid Auto-Scroll
 const DesignShowcase: React.FC = () => {
   const { language } = useLanguage();
   const [selectedProject, setSelectedProject] = useState<any>(null);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+
+  // --- State & Ref untuk Hybrid Auto-Scroll ---
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [isInteracting, setIsInteracting] = useState(false);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const isDraggingRef = useRef(false);
 
   const openModal = (project: any) => {
     setSelectedProject(project);
@@ -1474,177 +1536,233 @@ const DesignShowcase: React.FC = () => {
     }
   };
 
+  // --- Logic untuk Hybrid Auto-Scroll ---
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+
+    // Hentikan interval sebelumnya jika ada
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+    }
+
+    // Jika user sedang berinteraksi (hover, touch, drag), jangan lakukan apa-apa
+    if (isInteracting) {
+      return;
+    }
+
+    // Jika user tidak berinteraksi, mulai interval auto-scroll
+    intervalRef.current = setInterval(() => {
+      if (container) {
+        // Cek jika sudah di ujung
+        if (Math.ceil(container.scrollLeft) >= container.scrollWidth - container.clientWidth) {
+          // Kembali ke awal dengan smooth scroll
+          container.scrollTo({ left: 0, behavior: 'smooth' });
+        } else {
+          // Gerakkan 1 pixel
+          container.scrollLeft += 1;
+        }
+      }
+    }, 50); // Kecepatan scroll (ms). 50ms = 20fps, cukup smooth.
+
+    // Cleanup function saat komponen unmount atau state isInteracting berubah
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
+  }, [isInteracting]); // Efek ini akan berjalan ulang setiap kali status interaksi berubah
+
   return (
     <>
-      {/* Enhanced Grid Layout with Better Visual Hierarchy */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-        {designProjects.map((project, index) => (
-          <TiltedCard
-            key={project.id}
-            scaleOnHover={1.05}
-            rotateAmplitude={8}
-            containerHeight="100%"
-            containerWidth="100%"
-          >
-            <motion.div
-              className="group cursor-pointer"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1, duration: 0.5 }}
-              whileHover={{ y: -8 }}
-              onClick={() => openModal(project)}
-            >
-            {/* Modern Card Design with Improved UX */}
-            <div className="relative overflow-hidden rounded-2xl bg-transparent shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100 dark:border-gray-700">
-              {/* Enhanced Image Container */}
-              <div className="relative h-64 overflow-hidden">
-                <MotionImage
-                  src={project.image}
-                  alt={project.titleEn}
-                  fill
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  style={{ objectFit: 'cover' }}
-                  className="transition-all duration-700 group-hover:scale-110"
-                  whileHover={{ scale: 1.1 }}
-                  transition={{ duration: 0.7, ease: "easeOut" }}
-                />
-                
-                {/* Improved Hover Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-gray-900/60 via-gray-900/10 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300" />
-                
-                {/* Enhanced Hover Actions */}
-                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300">
-                  <div className="flex items-center gap-3">
-                    <motion.div
-                      className="bg-white/20 backdrop-blur-md rounded-full p-3 border border-white/30"
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      transition={{ delay: 0.1 }}
+      {/* --- Layout Scroll Manual + Event Handlers --- */}
+      <div 
+        ref={scrollContainerRef}
+        className="relative w-full overflow-x-auto pb-6 scrollbar-thin scrollbar-thumb-purple-500/50 scrollbar-track-purple-100/30 dark:scrollbar-thumb-purple-400/50 dark:scrollbar-track-purple-900/30 cursor-grab active:cursor-grabbing"
+        // Saat mouse masuk, jeda auto-scroll
+        onMouseEnter={() => setIsInteracting(true)}
+        // Saat mouse keluar, lanjut auto-scroll (HANYA jika tidak sedang drag)
+        onMouseLeave={() => {
+          if (!isDraggingRef.current) {
+            setIsInteracting(false);
+          }
+        }}
+        // Saat mouse di-klik (mulai drag)
+        onMouseDown={() => {
+          isDraggingRef.current = true;
+          setIsInteracting(true);
+        }}
+        // Saat mouse dilepas (selesai drag)
+        onMouseUp={() => {
+          isDraggingRef.current = false;
+          setIsInteracting(false);
+        }}
+        // Saat disentuh di mobile
+        onTouchStart={() => setIsInteracting(true)}
+        // Saat dilepas di mobile
+        onTouchEnd={() => setIsInteracting(false)}
+      >
+        {/* --- HANYA SATU BLOK MAP (tidak ada duplikasi) --- */}
+        <div className="flex space-x-6 lg:space-x-8 px-4 sm:px-0 py-6">
+          {designProjects.map((project, index) => (
+            <div key={project.id} className="w-80 md:w-96 flex-shrink-0 h-full">
+              <TiltedCard
+                scaleOnHover={1.05}
+                rotateAmplitude={8}
+                containerHeight="100%"
+                containerWidth="100%"
+              >
+                <motion.div
+                  className="group cursor-pointer h-full"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1, duration: 0.5 }}
+                  whileHover={{ y: -8 }}
+                  onClick={() => openModal(project)}
+                >
+                <div className="relative overflow-hidden rounded-2xl bg-transparent shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100 dark:border-gray-700 h-full flex flex-col">
+                  <div className="relative h-64 overflow-hidden flex-shrink-0">
+                    <MotionImage
+                      src={project.image}
+                      alt={project.titleEn}
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      style={{ objectFit: 'cover' }}
+                      className="transition-all duration-700 group-hover:scale-110"
+                      whileHover={{ scale: 1.1 }}
+                      transition={{ duration: 0.7, ease: "easeOut" }}
+                    />
+                    
+                    <div className="absolute inset-0 bg-gradient-to-t from-gray-900/60 via-gray-900/10 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300" />
+                    
+                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300">
+                      <div className="flex items-center gap-3">
+                        <motion.div
+                          className="bg-white/20 backdrop-blur-md rounded-full p-3 border border-white/30"
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          transition={{ delay: 0.1 }}
+                        >
+                          <Eye className="w-5 h-5 text-white" />
+                        </motion.div>
+                        <motion.span
+                          className="text-white font-medium text-sm bg-white/20 backdrop-blur-md px-3 py-1 rounded-full border border-white/30"
+                          initial={{ opacity: 0, x: 10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: 0.2 }}
+                        >
+                          {language === 'en' ? 'View Gallery' : 'Lihat Galeri'}
+                        </motion.span>
+                      </div>
+                    </div>
+                    
+                    <div className="absolute top-4 left-4">
+                      <motion.span
+                        className="inline-flex items-center px-3 py-1.5 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-xs font-semibold rounded-full backdrop-blur-sm shadow-lg border border-white/20"
+                        whileHover={{ scale: 1.05 }}
+                      >
+                        <span className="w-2 h-2 bg-white rounded-full mr-2 animate-pulse" />
+                        {project.category}
+                      </motion.span>
+                    </div>
+                    
+                    <div className="absolute top-4 right-4">
+                      <motion.div
+                        className="bg-white/20 backdrop-blur-md rounded-full p-2 border border-white/30"
+                        whileHover={{ scale: 1.1, rotate: 180 }}
+                      >
+                        <ExternalLink className="w-4 h-4 text-white" />
+                      </motion.div>
+                    </div>
+                  </div>
+                  
+                  <div className="p-6 flex flex-col flex-grow">
+                    <div className="flex items-start justify-between mb-3">
+                      <motion.h3 
+                        className="text-lg font-bold text-gray-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors duration-300 line-clamp-1"
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.3 }}
+                      >
+                        {language === 'en' ? project.titleEn : project.titleId}
+                      </motion.h3>
+                      
+                      <motion.div
+                        className="flex items-center text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded-full"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.4 }}
+                      >
+                        {project.year}
+                      </motion.div>
+                    </div>
+                    
+                    <motion.p 
+                      className="text-gray-600 dark:text-gray-400 mb-4 line-clamp-2 leading-relaxed text-sm"
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.4 }}
                     >
-                      <Eye className="w-5 h-5 text-white" />
+                      {language === 'en' ? project.descriptionEn : project.descriptionId}
+                    </motion.p>
+                    
+                    <motion.div 
+                      className="flex flex-wrap gap-2 mb-4 flex-grow"
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.5 }}
+                    >
+                      {project.tools.slice(0, 2).map((tool: string, toolIndex: number) => (
+                        <motion.span
+                          key={tool}
+                          className="inline-flex items-center px-2.5 py-1 bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 text-purple-700 dark:text-purple-300 rounded-full text-xs font-medium border border-purple-200 dark:border-purple-700"
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          transition={{ delay: 0.6 + toolIndex * 0.1 }}
+                          whileHover={{ scale: 1.05, y: -2 }}
+                        >
+                          <span className="w-1.5 h-1.5 bg-purple-500 rounded-full mr-2" />
+                          {tool}
+                        </motion.span>
+                      ))}
+                      {project.tools.length > 2 && (
+                        <motion.span
+                          className="px-2.5 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 rounded-full text-xs font-medium border border-gray-200 dark:border-gray-600"
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          transition={{ delay: 0.8 }}
+                        >
+                          +{project.tools.length - 2}
+                        </motion.span>
+                      )}
                     </motion.div>
-                    <motion.span
-                      className="text-white font-medium text-sm bg-white/20 backdrop-blur-md px-3 py-1 rounded-full border border-white/30"
-                      initial={{ opacity: 0, x: 10 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.2 }}
+                    
+                    <motion.div
+                      className="flex items-center justify-between pt-2 border-t border-gray-100 dark:border-gray-700 flex-shrink-0"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: 0.6 }}
                     >
-                      {language === 'en' ? 'View Gallery' : 'Lihat Galeri'}
-                    </motion.span>
+                      <span className="text-xs text-gray-500 dark:text-gray-400">
+                        {language === 'en' ? 'Click to view gallery' : 'Klik untuk melihat galeri'}
+                      </span>
+                      <motion.div
+                        className="w-6 h-6 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center opacity-70 group-hover:opacity-100"
+                        whileHover={{ rotate: 360 }}
+                        transition={{ duration: 0.3 }}
+                      >
+                        <Eye className="w-3 h-3 text-white" />
+                      </motion.div>
+                    </motion.div>
                   </div>
                 </div>
-                
-                {/* Modern Category Badge */}
-                <div className="absolute top-4 left-4">
-                  <motion.span
-                    className="inline-flex items-center px-3 py-1.5 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-xs font-semibold rounded-full backdrop-blur-sm shadow-lg border border-white/20"
-                    whileHover={{ scale: 1.05 }}
-                  >
-                    <span className="w-2 h-2 bg-white rounded-full mr-2 animate-pulse" />
-                    {project.category}
-                  </motion.span>
-                </div>
-                
-                {/* Quality Indicator */}
-                <div className="absolute top-4 right-4">
-                  <motion.div
-                    className="bg-white/20 backdrop-blur-md rounded-full p-2 border border-white/30"
-                    whileHover={{ scale: 1.1, rotate: 180 }}
-                  >
-                    <ExternalLink className="w-4 h-4 text-white" />
-                  </motion.div>
-                </div>
-              </div>
-              
-              {/* Enhanced Project Content */}
-              <div className="p-6">
-                <div className="flex items-start justify-between mb-3">
-                  <motion.h3 
-                    className="text-lg font-bold text-gray-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors duration-300 line-clamp-1"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.3 }}
-                  >
-                    {language === 'en' ? project.titleEn : project.titleId}
-                  </motion.h3>
-                  
-                  <motion.div
-                    className="flex items-center text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded-full"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.4 }}
-                  >
-                    {project.year}
-                  </motion.div>
-                </div>
-                
-                <motion.p 
-                  className="text-gray-600 dark:text-gray-400 mb-4 line-clamp-2 leading-relaxed text-sm"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.4 }}
-                >
-                  {language === 'en' ? project.descriptionEn : project.descriptionId}
-                </motion.p>
-                
-                {/* Enhanced Tools Section */}
-                <motion.div 
-                  className="flex flex-wrap gap-2 mb-4"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.5 }}
-                >
-                  {project.tools.slice(0, 2).map((tool: string, toolIndex: number) => (
-                    <motion.span
-                      key={tool}
-                      className="inline-flex items-center px-2.5 py-1 bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 text-purple-700 dark:text-purple-300 rounded-full text-xs font-medium border border-purple-200 dark:border-purple-700"
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      transition={{ delay: 0.6 + toolIndex * 0.1 }}
-                      whileHover={{ scale: 1.05, y: -2 }}
-                    >
-                      <span className="w-1.5 h-1.5 bg-purple-500 rounded-full mr-2" />
-                      {tool}
-                    </motion.span>
-                  ))}
-                  {project.tools.length > 2 && (
-                    <motion.span
-                      className="px-2.5 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 rounded-full text-xs font-medium border border-gray-200 dark:border-gray-600"
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      transition={{ delay: 0.8 }}
-                    >
-                      +{project.tools.length - 2}
-                    </motion.span>
-                  )}
-                </motion.div>
-                
-                {/* Interactive Bottom Section */}
-                <motion.div
-                  className="flex items-center justify-between pt-2 border-t border-gray-100 dark:border-gray-700"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.6 }}
-                >
-                  <span className="text-xs text-gray-500 dark:text-gray-400">
-                    {language === 'en' ? 'Click to view gallery' : 'Klik untuk melihat galeri'}
-                  </span>
-                  <motion.div
-                    className="w-6 h-6 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center opacity-70 group-hover:opacity-100"
-                    whileHover={{ rotate: 360 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <Eye className="w-3 h-3 text-white" />
-                  </motion.div>
-                </motion.div>
-              </div>
+              </motion.div>
+              </TiltedCard>
             </div>
-          </motion.div>
-          </TiltedCard>
-        ))}
+          ))}
+        </div>
       </div>
       
-      {/* Enhanced Modal for Design Showcase */}
+      {/* Modal JSX - (Ini tidak berubah dari langkah terakhir, sudah ada tombol link) */}
       <StandardModal
         isOpen={!!selectedProject}
         onClose={closeModal}
@@ -1729,7 +1847,6 @@ const DesignShowcase: React.FC = () => {
                 )}
               </div>
 
-              {/* Responsive Thumbnail Gallery */}
               {selectedProject.images && selectedProject.images.length > 1 && (
                 <div className="p-2 sm:p-4 bg-white/50 dark:bg-gray-700/50 backdrop-blur-sm">
                   <div className="flex space-x-1.5 sm:space-x-2 overflow-x-auto scrollbar-hide pb-2">
@@ -1763,8 +1880,34 @@ const DesignShowcase: React.FC = () => {
                 {language === 'en' ? selectedProject.descriptionEn : selectedProject.descriptionId}
               </p>
               
+              {/* Tombol Link (dari langkah terakhir) */}
+              <div className="flex flex-wrap gap-3 pt-2">
+                {selectedProject.links?.figma && (
+                  <a
+                    href={selectedProject.links.figma}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-sm font-medium rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-0.5"
+                  >
+                    <ExternalLink className="w-4 h-4" />
+                    {language === 'en' ? 'View Figma Prototype' : 'Lihat Prototype Figma'}
+                  </a>
+                )}
+                {selectedProject.links?.demo && (
+                  <a
+                    href={selectedProject.links.demo}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-sm font-medium rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-0.5"
+                  >
+                    <Eye className="w-4 h-4" />
+                    {language === 'en' ? 'View Live Demo' : 'Lihat Live Demo'}
+                  </a>
+                )}
+              </div>
+              
               {/* Responsive Tools Section */}
-              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 pt-4">
                 <span className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 flex-shrink-0">
                   {language === 'en' ? 'Tools:' : 'Tools:'}
                 </span>
