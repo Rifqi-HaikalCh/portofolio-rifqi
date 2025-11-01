@@ -107,6 +107,7 @@ export const ViewAllProjects: React.FC<ViewAllProjectsProps> = ({ onBack, projec
                     src={project.image}
                     alt={project.title}
                     fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
                     className="object-cover"
                   />
                   {/* Overlay */}
@@ -226,6 +227,7 @@ export const ViewAllProjects: React.FC<ViewAllProjectsProps> = ({ onBack, projec
                   src={selectedProject.image}
                   alt={selectedProject.title}
                   fill
+                  sizes="(max-width: 768px) 100vw, 90vw"
                   className="object-cover"
                 />
               </div>

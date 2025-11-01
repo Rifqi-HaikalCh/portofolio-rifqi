@@ -226,6 +226,7 @@ export const MobileGallery: React.FC = () => {
                   src={galleryItems[selectedImage]}
                   alt={`Gallery ${selectedImage + 1}`}
                   fill
+                  sizes="100vw"
                   className="object-contain"
                   priority
                 />

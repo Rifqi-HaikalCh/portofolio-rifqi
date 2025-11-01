@@ -156,6 +156,7 @@ export const MobileProjects: React.FC = () => {
                   src={selectedProject.slides?.[imageIndex] || selectedProject.image}
                   alt={selectedProject.title}
                   fill
+                  sizes="(max-width: 768px) 100vw, 90vw"
                   className="object-cover"
                 />
 

@@ -59,6 +59,7 @@ export const MobileHero: React.FC = () => {
               src="/assets/Profile.webp"
               alt="Rifqi Haikal"
               fill
+              sizes="128px"
               className="object-cover"
               priority
             />

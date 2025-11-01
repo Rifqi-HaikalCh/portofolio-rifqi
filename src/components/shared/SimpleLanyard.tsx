@@ -333,6 +333,7 @@ export const SimpleLanyard: React.FC<SimpleLanyardProps> = ({ imageUrl, alt = "P
               src={imageUrl}
               alt={alt}
               fill
+              sizes="300px"
               className="card-image"
               draggable={false}
             />
