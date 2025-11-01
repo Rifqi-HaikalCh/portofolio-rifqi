@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 import { useLanguage } from '../../context/LanguageContext';
 import { aboutHighlights } from '../../data/portfolio';
 import ProfileCard from '../shared/ProfileCard';
+import PortfolioFigmaCard from '../shared/PortfolioFigmaCard';
 import VariableProximity from '../shared/VariableProximity';
 import {
   premiumStagger,
@@ -132,8 +133,8 @@ export const About: React.FC = () => {
             {/* Profile Card - React Bits Animated Card */}
             <div className="col-span-5 flex justify-center">
               <ProfileCard
-                avatarUrl="/assets/removebg.png"
-                miniAvatarUrl="/assets/removebg.png"
+                avatarUrl="/assets/removebg.webp"
+                miniAvatarUrl="/assets/removebg.webp"
                 name="Rifqi Haikal"
                 title={t("Software Engineer & UI/UX Designer", "Software Engineer & UI/UX Designer") as string}
                 handle="rifqihaikal"
@@ -180,8 +181,8 @@ export const About: React.FC = () => {
                     <VariableProximity
                       label={
                         language === 'en'
-                          ? "A creative UI/UX Designer and Front-End Developer passionate about building engaging digital experiences. With two years of hands-on experience, I have developed technical and creative solutions as a Freelancer and in professional roles at a leading IT consultant and a Multi-finance company. As a Bachelor of Informatics from Institut Teknologi Del, I am constantly exploring new technologies and am eager to apply my skills at the intersection of design and development in a dynamic team."
-                          : "Seorang UI/UX Designer dan Front-End Developer kreatif yang passionate dalam membangun pengalaman digital yang menarik. Dengan dua tahun pengalaman hands-on, saya telah mengembangkan solusi teknis dan kreatif sebagai Freelancer dan dalam peran profesional di konsultan IT terkemuka dan perusahaan Multi-finance. Sebagai Sarjana Informatika dari Institut Teknologi Del, saya terus mengeksplorasi teknologi baru dan bersemangat untuk menerapkan keterampilan saya di persimpangan desain dan pengembangan dalam tim yang dinamis."
+                          ? "A creative UI/UX Designer and Web Developer passionate about building engaging digital experiences. With two years of hands-on experience, I have developed technical and creative solutions as a Freelancer and in professional roles at a leading IT consultant and a Multi-finance company. As a Bachelor of Informatics from Institut Teknologi Del, I am constantly exploring new technologies and am eager to apply my skills at the intersection of design and development in a dynamic team."
+                          : "Seorang UI/UX Designer dan Web Developer kreatif yang passionate dalam membangun pengalaman digital yang menarik. Dengan dua tahun pengalaman hands-on, saya telah mengembangkan solusi teknis dan kreatif sebagai Freelancer dan dalam peran profesional di konsultan IT terkemuka dan perusahaan Multi-finance. Sebagai Sarjana Informatika dari Institut Teknologi Del, saya terus mengeksplorasi teknologi baru dan bersemangat untuk menerapkan keterampilan saya di persimpangan desain dan pengembangan dalam tim yang dinamis."
                       }
                       fromFontVariationSettings="'wght' 400, 'opsz' 9"
                       toFontVariationSettings="'wght' 800, 'opsz' 36"
@@ -256,11 +257,11 @@ export const About: React.FC = () => {
           </motion.div>
 
           {/* Portfolio Carousel */}
-          <motion.div 
+          <motion.div
             className="space-y-8"
             variants={sectionEntrance}
           >
-            <motion.h3 
+            <motion.h3
               className="text-3xl font-bold text-center text-gray-900 dark:text-white mb-12"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -270,112 +271,15 @@ export const About: React.FC = () => {
               {t("My Portfolio", "Portofolio Saya")}
             </motion.h3>
 
-            {/* Enhanced Interactive Carousel */}
-            <motion.div 
-              className="relative max-w-6xl mx-auto mb-16"
+            {/* Portfolio Figma Card */}
+            <motion.div
+              className="relative max-w-4xl mx-auto mb-16"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.3 }}
               viewport={{ once: true }}
             >
-              <div className="relative overflow-hidden rounded-3xl shadow-2xl bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 p-2">
-                <motion.div
-                  className="relative h-[500px] rounded-2xl overflow-hidden"
-                  whileHover={{ scale: 1.01 }}
-                  transition={{ duration: 0.5 }}
-                >
-                  {/* Image slides */}
-                  {Array.from({ length: totalImages }, (_, i) => i + 1).map((num, index) => (
-                    <motion.div
-                      key={num}
-                      className="absolute inset-0"
-                      initial={{ opacity: 0 }}
-                      animate={{ 
-                        opacity: index === currentImageIndex ? 1 : 0,
-                        scale: index === currentImageIndex ? [1, 1.05, 1] : 1
-                      }}
-                      transition={{
-                        opacity: { duration: 1.5, ease: "easeInOut" },
-                        scale: { 
-                          duration: 10,
-                          repeat: Infinity,
-                          repeatType: "reverse",
-                          ease: "easeInOut"
-                        }
-                      }}
-                      style={{
-                        backgroundImage: `url(/assets/${num}.png)`,
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center',
-                        backgroundRepeat: 'no-repeat'
-                      }}
-                    >
-                      {/* Gradient overlay */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
-                    </motion.div>
-                  ))}
-
-                  {/* Carousel Navigation Dots */}
-                  <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex gap-2">
-                    {Array.from({ length: totalImages }).map((_, index) => (
-                      <motion.button
-                        key={index}
-                        onClick={() => setCurrentImageIndex(index)}
-                        className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                          index === currentImageIndex 
-                            ? 'bg-emerald-500 scale-125' 
-                            : 'bg-white/60 hover:bg-white/80'
-                        }`}
-                        whileHover={{ scale: 1.2 }}
-                        whileTap={{ scale: 0.9 }}
-                      />
-                    ))}
-                  </div>
-
-                  {/* Navigation Arrows */}
-                  <motion.button
-                    onClick={() => setCurrentImageIndex((prev) => (prev - 1 + totalImages) % totalImages)}
-                    className="absolute left-4 top-1/2 transform -translate-y-1/2 w-12 h-12 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full flex items-center justify-center text-white transition-all duration-300"
-                    whileHover={{ scale: 1.1, x: -2 }}
-                    whileTap={{ scale: 0.9 }}
-                  >
-                    <ChevronRight size={20} className="rotate-180" />
-                  </motion.button>
-                  
-                  <motion.button
-                    onClick={() => setCurrentImageIndex((prev) => (prev + 1) % totalImages)}
-                    className="absolute right-4 top-1/2 transform -translate-y-1/2 w-12 h-12 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full flex items-center justify-center text-white transition-all duration-300"
-                    whileHover={{ scale: 1.1, x: 2 }}
-                    whileTap={{ scale: 0.9 }}
-                  >
-                    <ChevronRight size={20} />
-                  </motion.button>
-                </motion.div>
-              </div>
-
-              {/* Download Portfolio Button */}
-              <motion.div
-                className="text-center mt-8"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.5 }}
-                viewport={{ once: true }}
-              >
-                <motion.a
-                  href="/assets/Portfolio Design.pdf"
-                  download="Rifqi_Haikal_Portfolio.pdf"
-                  className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-2xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 group"
-                  whileHover={{
-                    scale: 1.05,
-                    boxShadow: "0 20px 40px rgba(147, 51, 234, 0.4)"
-                  }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <Download size={20} className="group-hover:animate-bounce" />
-                  {t("Download Portfolio Design", "Unduh Desain Portofolio")}
-                  <ExternalLink size={16} className="opacity-70" />
-                </motion.a>
-              </motion.div>
+              <PortfolioFigmaCard />
             </motion.div>
           </motion.div>
 

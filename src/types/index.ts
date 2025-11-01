@@ -37,8 +37,12 @@ export interface Project {
   links: {
     demo?: string;
     github?: string;
+    prototype?: string;
+    needToKnow?: string;
   };
   category: 'individual' | 'group';
+  slides?: string[];
+  type?: 'web' | 'mobile' | 'design';
 }
 
 export interface Certificate {

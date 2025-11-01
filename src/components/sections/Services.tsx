@@ -6,7 +6,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { useLanguage } from '../../context/LanguageContext';
 import { AnimatedSectionTitle } from '../shared/AnimatedSectionTitle';
-import { AnimatedCard } from '../shared/AnimatedCard';
 import { InteractiveButton } from '../shared/InteractiveButton';
 import StandardModal from '../shared/StandardModal';
 import ElectricBorder from '../shared/ElectricBorder';
@@ -15,7 +14,7 @@ import { Code, Palette, Layers, ChevronLeft, ChevronRight, X, ArrowRight, Sparkl
 import { Projects } from './Projects';
 
 // Create motion-wrapped Image component for animations
-const MotionImage = motion(Image);
+const MotionImage = motion.create(Image);
 
 interface Service {
   id: string;
@@ -432,8 +431,8 @@ interface Skill {
 const developerSkills: Skill[] = [
   // Programming Languages
   {
-    name: 'HTML5',
-    nameId: 'HTML5',
+    name: 'HTML',
+    nameId: 'HTML',
     icon: '🌐',
     level: 100,
     color: '#E34F26',
@@ -442,8 +441,8 @@ const developerSkills: Skill[] = [
     category: 'Programming Languages'
   },
   {
-    name: 'CSS3',
-    nameId: 'CSS3',
+    name: 'CSS',
+    nameId: 'CSS',
     icon: '🎨',
     level: 100,
     color: '#1572B6',
@@ -455,7 +454,7 @@ const developerSkills: Skill[] = [
     name: 'JavaScript',
     nameId: 'JavaScript',
     icon: '⚡',
-    level: 95,
+    level: 90,
     color: '#F7DF1E',
     description: 'Modern ES6+ and dynamic programming',
     descriptionId: 'ES6+ modern dan pemrograman dinamis',
@@ -475,7 +474,7 @@ const developerSkills: Skill[] = [
     name: 'Java',
     nameId: 'Java',
     icon: '☕',
-    level: 75,
+    level: 80,
     color: '#ED8B00',
     description: 'Enterprise application development',
     descriptionId: 'Pengembangan aplikasi enterprise',
@@ -485,7 +484,7 @@ const developerSkills: Skill[] = [
     name: 'PHP',
     nameId: 'PHP',
     icon: '🐘',
-    level: 70,
+    level: 60,
     color: '#777BB4',
     description: 'Server-side web development',
     descriptionId: 'Pengembangan web server-side',
@@ -542,16 +541,7 @@ const developerSkills: Skill[] = [
     descriptionId: 'Framework JavaScript progresif',
     category: 'Frontend Development'
   },
-  {
-    name: 'State Management',
-    nameId: 'State Management',
-    icon: '🗄️',
-    level: 80,
-    color: '#764ABC',
-    description: 'Redux / Vuex state management',
-    descriptionId: 'Manajemen state Redux / Vuex',
-    category: 'Frontend Development'
-  },
+
   {
     name: 'Tailwind CSS',
     nameId: 'Tailwind CSS',
@@ -570,16 +560,6 @@ const developerSkills: Skill[] = [
     color: '#7952B3',
     description: 'Popular CSS framework',
     descriptionId: 'Framework CSS populer',
-    category: 'Frontend Development'
-  },
-  {
-    name: 'Responsive Design',
-    nameId: 'Desain Responsif',
-    icon: '📱',
-    level: 90,
-    color: '#10B981',
-    description: 'Multi-device optimization',
-    descriptionId: 'Optimisasi multi-perangkat',
     category: 'Frontend Development'
   },
   // Backend Development
@@ -617,7 +597,7 @@ const developerSkills: Skill[] = [
     name: 'Laravel',
     nameId: 'Laravel',
     icon: '🎼',
-    level: 75,
+    level: 70,
     color: '#FF2D20',
     description: 'PHP web application framework',
     descriptionId: 'Framework aplikasi web PHP',
@@ -649,8 +629,8 @@ const designSkills: Skill[] = [
     category: 'Software & Tools'
   },
   {
-    name: 'Adobe Creative Suite',
-    nameId: 'Adobe Creative Suite',
+    name: 'Photoshop',
+    nameId: 'Photoshop',
     icon: '🖼️',
     level: 80,
     color: '#FF0000',
@@ -662,50 +642,30 @@ const designSkills: Skill[] = [
     name: 'Sketch',
     nameId: 'Sketch',
     icon: '💎',
-    level: 80,
+    level: 70,
     color: '#FDB300',
     description: 'Digital design and prototyping',
     descriptionId: 'Desain digital dan prototyping',
     category: 'Software & Tools'
   },
   {
-    name: 'InVision',
-    nameId: 'InVision',
-    icon: '🔗',
-    level: 90,
-    color: '#FF3366',
-    description: 'Collaborative design and prototyping',
-    descriptionId: 'Desain kolaboratif dan prototyping',
-    category: 'Software & Tools'
-  },
-  {
     name: 'Webflow',
     nameId: 'Webflow',
     icon: '🌊',
-    level: 100,
+    level: 80,
     color: '#4353FF',
     description: 'No-code web design and development',
     descriptionId: 'Desain dan pengembangan web no-code',
     category: 'Software & Tools'
   },
   {
-    name: 'Balsamiq',
-    nameId: 'Balsamiq',
+    name: 'Framer',
+    nameId: 'Framer',
     icon: '📝',
-    level: 60,
+    level: 90,
     color: '#CC0000',
     description: 'Low-fidelity wireframing',
     descriptionId: 'Wireframing fidelitas rendah',
-    category: 'Software & Tools'
-  },
-  {
-    name: 'Miro/Mural',
-    nameId: 'Miro/Mural',
-    icon: '🗺️',
-    level: 70,
-    color: '#050038',
-    description: 'Collaborative visual workspace',
-    descriptionId: 'Workspace visual kolaboratif',
     category: 'Software & Tools'
   },
   // Hard Skills
@@ -739,29 +699,9 @@ const designSkills: Skill[] = [
     descriptionId: 'Prototype interaktif dan fidelitas tinggi',
     category: 'Hard Skills'
   },
-  {
-    name: 'User Flow',
-    nameId: 'User Flow',
-    icon: '🔄',
-    level: 100,
-    color: '#10B981',
-    description: 'Mapping user journey and interactions',
-    descriptionId: 'Memetakan perjalanan dan interaksi pengguna',
-    category: 'Hard Skills'
-  },
-  {
-    name: 'Journey Mapping',
-    nameId: 'Journey Mapping',
-    icon: '🗺️',
-    level: 100,
-    color: '#06B6D4',
-    description: 'Visualizing end-to-end user experience',
-    descriptionId: 'Memvisualisasikan pengalaman pengguna end-to-end',
-    category: 'Hard Skills'
-  },
   // Riset & Analisis
   {
-    name: 'User Research',
+    name: 'UX Research',
     nameId: 'Riset Pengguna',
     icon: '🔍',
     level: 90,
@@ -770,57 +710,7 @@ const designSkills: Skill[] = [
     descriptionId: 'Memahami kebutuhan dan perilaku pengguna',
     category: 'Riset & Analisis'
   },
-  {
-    name: 'User Persona Creation',
-    nameId: 'Pembuatan Persona Pengguna',
-    icon: '👤',
-    level: 100,
-    color: '#EC4899',
-    description: 'Creating detailed user personas',
-    descriptionId: 'Membuat persona pengguna yang detail',
-    category: 'Riset & Analisis'
-  },
-  {
-    name: 'Competitor Analysis',
-    nameId: 'Analisis Kompetitor',
-    icon: '📊',
-    level: 95,
-    color: '#F97316',
-    description: 'Analyzing competitive landscape',
-    descriptionId: 'Menganalisis lanskap kompetitif',
-    category: 'Riset & Analisis'
-  },
-  // Visual & Interaksi
-  {
-    name: 'Color Theory & Typography',
-    nameId: 'Teori Warna & Tipografi',
-    icon: '🎨',
-    level: 100,
-    color: '#EF4444',
-    description: 'Visual design principles and aesthetics',
-    descriptionId: 'Prinsip desain visual dan estetika',
-    category: 'Visual & Interaksi'
-  },
-  {
-    name: 'Interaction Design',
-    nameId: 'Interaction Design',
-    icon: '✨',
-    level: 100,
-    color: '#8B5CF6',
-    description: 'Creating engaging user interactions',
-    descriptionId: 'Membuat interaksi pengguna yang menarik',
-    category: 'Visual & Interaksi'
-  },
-  {
-    name: 'Responsive Design',
-    nameId: 'Desain Responsif',
-    icon: '📱',
-    level: 100,
-    color: '#10B981',
-    description: 'Multi-device design optimization',
-    descriptionId: 'Optimisasi desain multi-perangkat',
-    category: 'Visual & Interaksi'
-  },
+
   {
     name: 'UX Writing',
     nameId: 'UX Writing',
@@ -830,9 +720,28 @@ const designSkills: Skill[] = [
     description: 'Microcopy and content strategy',
     descriptionId: 'Microcopy dan strategi konten',
     category: 'Visual & Interaksi'
-  }
+  },
+    {
+    name: 'Website Design',
+    nameId: 'Desain Website',
+    icon: '💻',
+    level: 100,
+    color: '#8B5CF6',
+    description: 'Creating engaging user interactions',
+    descriptionId: 'Membuat interaksi pengguna yang menarik',
+    category: 'Visual & Interaksi'
+  },
+  {
+    name: 'Mobile Design',
+    nameId: 'Desain Mobile',  
+    icon: '📱',
+    level: 100,
+    color: '#10B981',
+    description: 'Multi-device design optimization',
+    descriptionId: 'Optimisasi desain multi-perangkat',
+    category: 'Visual & Interaksi'
+  },
 ];
-
 export function Services() {
   const { language } = useLanguage();
   const [activeTab, setActiveTab] = useState<'uiux' | 'development'>('uiux');
@@ -1280,7 +1189,7 @@ return (
                 <div className={`w-24 h-1 bg-gradient-to-r ${currentTab.gradient} mx-auto rounded-full`} />
               </div>
               
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 auto-rows-fr">
                 {currentServices.map((service, index) => {
                   // Extract color from gradient for electric border
                   const gradientColorMap: Record<string, string> = {
@@ -1294,16 +1203,18 @@ return (
                   const electricColor = gradientColorMap[service.gradient] || '#10b981';
 
                   return (
-                    <TiltedCard
+                    <motion.div
                       key={service.id}
-                      scaleOnHover={1.08}
-                      rotateAmplitude={10}
-                      containerHeight="100%"
-                      containerWidth="100%"
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.1, duration: 0.4 }}
+                      className="w-full h-full flex"
                     >
-                      <AnimatedCard
-                        delay={index * 0.1}
-                        className="group h-full"
+                      <TiltedCard
+                        scaleOnHover={1.08}
+                        rotateAmplitude={10}
+                        containerHeight="100%"
+                        containerWidth="100%"
                       >
                         <ElectricBorder
                           color={electricColor}
@@ -1312,41 +1223,26 @@ return (
                           thickness={2}
                           className="h-full rounded-3xl shadow-[0_10px_25px_rgba(0,0,0,0.15)] hover:shadow-[0_15px_35px_rgba(0,0,0,0.25)] transition-shadow duration-500"
                         >
-                        <motion.div
-                          className="relative h-full bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl rounded-3xl p-6 sm:p-8 overflow-visible min-h-[340px] border border-white/10 dark:border-gray-700/50"
-                          whileHover={{
-                            y: -6,
-                            scale: 1.03,
-                            rotateX: 2,
-                            rotateY: 2
-                          }}
-                          transition={{
-                            duration: 0.4,
-                            ease: "easeOut",
-                            type: "spring",
-                            stiffness: 250,
-                            damping: 20
-                          }}
-                        >
+                        <div className="group relative h-full bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl rounded-3xl p-6 sm:p-8 overflow-visible border border-white/10 dark:border-gray-700/50 flex flex-col">
                           <div className={`absolute inset-0 bg-gradient-to-r ${service.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-500 rounded-3xl`} />
 
                           {/* Icon */}
-                          <div className="relative z-10 text-3xl sm:text-4xl lg:text-5xl mb-4 sm:mb-6 transform group-hover:scale-110 transition-transform duration-300">
+                          <div className="relative z-10 text-3xl sm:text-4xl lg:text-5xl mb-4 sm:mb-6 transform group-hover:scale-110 transition-transform duration-300 flex-shrink-0">
                             {service.icon}
                           </div>
 
                           {/* Title - Proportional Hierarchy */}
-                          <h3 className="relative z-10 text-xl sm:text-2xl lg:text-2xl font-bold text-gray-900 dark:text-white mb-3 sm:mb-4 leading-tight">
+                          <h3 className="relative z-10 text-xl sm:text-2xl lg:text-2xl font-bold text-gray-900 dark:text-white mb-3 sm:mb-4 leading-tight flex-shrink-0">
                             {language === 'en' ? service.titleEn : service.titleId}
                           </h3>
 
                           {/* Description - Proportional to Title */}
-                          <p className="relative z-10 text-base sm:text-lg lg:text-lg text-gray-600 dark:text-gray-300 mb-4 sm:mb-6 leading-relaxed">
+                          <p className="relative z-10 text-base sm:text-lg lg:text-lg text-gray-600 dark:text-gray-300 mb-4 sm:mb-6 leading-relaxed flex-shrink-0">
                             {language === 'en' ? service.descriptionEn : service.descriptionId}
                           </p>
 
                           {/* Features - Proper Supporting Text Size */}
-                          <div className="relative z-10 space-y-2 sm:space-y-3">
+                          <div className="relative z-10 space-y-2 sm:space-y-3 flex-grow">
                             {(language === 'en' ? service.features.en : service.features.id).slice(0, 3).map((feature, idx) => (
                               <motion.div
                                 key={idx}
@@ -1360,10 +1256,10 @@ return (
                               </motion.div>
                             ))}
                           </div>
-                        </motion.div>
+                        </div>
                       </ElectricBorder>
-                    </AnimatedCard>
-                    </TiltedCard>
+                      </TiltedCard>
+                    </motion.div>
                   );
                 })}
               </div>
@@ -1380,25 +1276,23 @@ return (
               
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5 lg:gap-6">
                 {currentTab.skills.map((skill, index) => (
-                  <TiltedCard
+                  <motion.div
                     key={skill.name}
-                    scaleOnHover={1.06}
-                    rotateAmplitude={8}
-                    containerHeight="100%"
-                    containerWidth="100%"
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.1, duration: 0.4 }}
+                    className="w-full"
                   >
-                    <AnimatedCard
-                      delay={index * 0.1}
-                      className="group"
+                    <TiltedCard
+                      scaleOnHover={1.06}
+                      rotateAmplitude={8}
+                      containerHeight="100%"
+                      containerWidth="100%"
                     >
-                    <motion.div
-                      className="bg-transparent rounded-xl lg:rounded-2xl p-3 sm:p-4 lg:p-6 shadow-xl border border-gray-200 dark:border-gray-700 h-full hover:shadow-2xl min-h-[180px] sm:min-h-[200px]"
-                      whileHover={{ y: -4, scale: 1.02 }}
-                      transition={{ duration: 0.3, ease: "easeOut" }}
-                    >
+                    <div className="group bg-transparent rounded-xl lg:rounded-2xl p-3 sm:p-4 lg:p-6 shadow-xl border border-gray-200 dark:border-gray-700 h-full hover:shadow-2xl min-h-[180px] sm:min-h-[200px] transition-all duration-300">
                         {/* Skill Header */}
                         <div className="flex items-start mb-3 sm:mb-4">
-                          <div 
+                          <div
                             className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl flex items-center justify-center text-lg sm:text-2xl mr-3 sm:mr-4 group-hover:scale-110 transition-transform duration-300 flex-shrink-0"
                             style={{ backgroundColor: `${skill.color}20` }}
                           >
@@ -1426,13 +1320,13 @@ return (
                           <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 sm:h-3 overflow-hidden">
                             <motion.div
                               className="h-2 sm:h-3 rounded-full"
-                              style={{ 
+                              style={{
                                 background: `linear-gradient(90deg, ${skill.color}, ${skill.color}dd)`
                               }}
                               initial={{ width: 0 }}
                               whileInView={{ width: `${skill.level}%` }}
-                              transition={{ 
-                                duration: 1.2, 
+                              transition={{
+                                duration: 1.2,
                                 delay: index * 0.1,
                                 ease: "easeOut",
                                 type: "spring",
@@ -1443,9 +1337,9 @@ return (
                             />
                           </div>
                         </div>
-                    </motion.div>
-                  </AnimatedCard>
-                  </TiltedCard>
+                    </div>
+                    </TiltedCard>
+                  </motion.div>
                 ))}
               </div>
             </div>

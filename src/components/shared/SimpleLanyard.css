@@ -1,0 +1,249 @@
+.simple-lanyard-container {
+  position: relative;
+  width: 100%;
+  height: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 20px;
+  overflow: visible;
+}
+
+.lanyard-string {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 200px;
+  height: 300px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.lanyard-card {
+  position: relative;
+  width: 180px;
+  height: 240px;
+  margin-top: 180px;
+  transition: box-shadow 0.3s ease;
+  will-change: transform;
+  z-index: 2;
+  touch-action: none;
+  user-select: none;
+}
+
+.lanyard-card.dragging {
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.lanyard-clip {
+  position: absolute;
+  top: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 30px;
+  height: 30px;
+  background: linear-gradient(135deg, #4b5563 0%, #1f2937 100%);
+  border-radius: 50%;
+  border: 3px solid #6b7280;
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.3),
+    inset 0 1px 2px rgba(255, 255, 255, 0.1),
+    inset 0 -1px 2px rgba(0, 0, 0, 0.2);
+  z-index: 3;
+}
+
+.lanyard-clip::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 14px;
+  height: 14px;
+  background: radial-gradient(circle at 30% 30%, #374151, #111827);
+  border-radius: 50%;
+  box-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.5),
+    0 1px 1px rgba(255, 255, 255, 0.1);
+}
+
+.clip-inner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 8px;
+  height: 8px;
+  background: #0f172a;
+  border-radius: 50%;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+.card-border {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(145deg, #ffffff 0%, #f9fafb 100%);
+  border-radius: 16px;
+  padding: 8px;
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.15),
+    0 1px 3px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .card-border {
+    background: linear-gradient(145deg, #374151 0%, #1f2937 100%);
+    box-shadow:
+      0 10px 30px rgba(0, 0, 0, 0.5),
+      0 1px 3px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+  }
+}
+
+.card-image-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Dark mode for image wrapper */
+@media (prefers-color-scheme: dark) {
+  .card-image-wrapper {
+    background: linear-gradient(135deg, #064e3b 0%, #065f46 100%);
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+  }
+}
+
+.card-image {
+  object-fit: cover;
+  object-position: center;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.card-shine {
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.15) 50%,
+    transparent 70%
+  );
+  transform: rotate(45deg);
+  pointer-events: none;
+  animation: shine 3s ease-in-out infinite;
+}
+
+.card-gloss {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.2) 0%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  border-radius: 12px 12px 0 0;
+  pointer-events: none;
+}
+
+@keyframes shine {
+  0%, 100% {
+    transform: translateX(-100%) translateY(-100%) rotate(45deg);
+  }
+  50% {
+    transform: translateX(100%) translateY(100%) rotate(45deg);
+  }
+}
+
+.lanyard-instructions {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(16, 185, 129, 0.15);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  border-radius: 12px;
+  padding: 8px 16px;
+  z-index: 0;
+  animation: bounce 2s ease-in-out infinite;
+  transition: all 0.3s ease;
+}
+
+.lanyard-instructions p {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #059669;
+  transition: color 0.3s ease;
+}
+
+/* Dark mode for instructions */
+@media (prefers-color-scheme: dark) {
+  .lanyard-instructions {
+    background: rgba(16, 185, 129, 0.2);
+    border-color: rgba(16, 185, 129, 0.4);
+  }
+
+  .lanyard-instructions p {
+    color: #10b981;
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateX(-50%) translateY(0);
+  }
+  50% {
+    transform: translateX(-50%) translateY(-5px);
+  }
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .simple-lanyard-container {
+    height: 380px;
+  }
+
+  .lanyard-card {
+    width: 160px;
+    height: 220px;
+    margin-top: 160px;
+  }
+
+  .lanyard-string {
+    width: 180px;
+    height: 280px;
+  }
+
+  .lanyard-clip {
+    width: 26px;
+    height: 26px;
+    top: -13px;
+  }
+
+  .clip-inner {
+    width: 6px;
+    height: 6px;
+  }
+}

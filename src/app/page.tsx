@@ -10,16 +10,10 @@ import { useLanguage } from '../context/LanguageContext';
 // Import HOC dan sections
 import { AnimatedSection } from '../components/hocs/AnimatedSection';
 import Navbar from '../components/sections/Navbar';
-import Hero from '../components/sections/Hero';
-import { About } from '../components/sections/About';
-import { Experience } from '../components/sections/Experience';
-import { Certificates } from '../components/sections/Certificates';
-import { Contact } from '../components/sections/Contact';
 import { Footer } from '../components/sections/Footer';
 import LoadingScreen from '../components/shared/LoadingScreen';
 import { FloatingNavigation } from '../components/shared/FloatingNavigation';
-import { Services } from '../components/sections/Services';
-import MyGallery from '../components/sections/MyGallery';
+import { ResponsiveLayout } from '../components/ResponsiveLayout';
 
 // EQbot notification messages
 const getEQbotMessages = (): NotificationMessage[] => [
@@ -191,13 +185,7 @@ export default function Home() {
         <>
           <Navbar />
           <main>
-            <Hero />
-            <AnimatedSection id="about"><About /></AnimatedSection>
-            <AnimatedSection id="experience"><Experience /></AnimatedSection>
-            <AnimatedSection id="services"><Services /></AnimatedSection>
-            <AnimatedSection id="certificates"><Certificates /></AnimatedSection>
-            <AnimatedSection id="gallery"><MyGallery /></AnimatedSection>
-            <AnimatedSection id="contact"><Contact /></AnimatedSection>
+            <ResponsiveLayout />
           </main>
           <Footer />
         </>

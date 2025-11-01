@@ -3,7 +3,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useLanguage } from '../../context/LanguageContext';
-import { AnimatedCard } from '../shared/AnimatedCard';
 import TiltedCard from '../shared/TiltedCard';
 
 interface DesignSkill {
@@ -270,21 +269,20 @@ export function UiUxSkills() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {skills.map((skill, index) => (
-              <AnimatedCard key={skill.name} delay={categoryIndex * 0.1 + index * 0.05}>
+              <motion.div
+                key={skill.name}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: categoryIndex * 0.1 + index * 0.05, duration: 0.4 }}
+                className="w-full"
+              >
                 <TiltedCard
                   scaleOnHover={1.05}
                   rotateAmplitude={8}
                   containerHeight="100%"
                   containerWidth="100%"
                 >
-                  <motion.div
-                    className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700 h-full"
-                    whileHover={{
-                      scale: 1.02,
-                      boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)'
-                    }}
-                    transition={{ duration: 0.3 }}
-                  >
+                  <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700 h-full transition-all duration-300 hover:shadow-2xl">
                     {/* Skill Header */}
                     <div className="flex items-center mb-4">
                       <span className="text-3xl mr-4">{skill.icon}</span>
@@ -333,9 +331,9 @@ export function UiUxSkills() {
                         language === 'en' ? 'Intermediate' : 'Menengah'
                       )}
                     </div>
-                  </motion.div>
+                  </div>
                 </TiltedCard>
-              </AnimatedCard>
+              </motion.div>
             ))}
           </div>
         </div>

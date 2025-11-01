@@ -1,11 +1,11 @@
 'use client';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '../../context/LanguageContext'; //
 import { individualProjects, groupProjects } from '../../data/portfolio';
 import { staggerContainer, fadeInUp } from '../../lib/animations';
-import { ExternalLink, Github, FolderOpen } from 'lucide-react';
+import { ExternalLink, Github, FolderOpen, Figma, FileText, ChevronLeft, ChevronRight } from 'lucide-react';
 import { AnimatedSectionTitle } from '../shared/AnimatedSectionTitle';
 import { AnimatedCard } from '../shared/AnimatedCard';
 import { InteractiveButton } from '../shared/InteractiveButton';
@@ -14,11 +14,98 @@ import TiltedCard from '../shared/TiltedCard';
 import type { Project } from '../../types';
 
 export const Projects: React.FC = () => {
-  const { language } = useLanguage(); // UBAH INI
+  const { language } = useLanguage();
   const [activeTab, setActiveTab] = useState<'individual' | 'group'>('individual');
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeft, setScrollLeft] = useState(0);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
-  const currentProjects = activeTab === 'individual' ? individualProjects : groupProjects;
+  // Get all individual projects EXCEPT design projects (to keep existing web projects)
+  const webIndividualProjects = individualProjects.filter(project => project.type !== 'design');
+
+  const currentProjects = activeTab === 'individual' ? webIndividualProjects : groupProjects;
+
+  // Check scroll position
+  const checkScroll = () => {
+    const container = scrollRef.current;
+    if (!container) return;
+
+    setCanScrollLeft(container.scrollLeft > 0);
+    setCanScrollRight(
+      container.scrollLeft < container.scrollWidth - container.clientWidth - 10
+    );
+
+    // Calculate scroll progress (0 to 100)
+    const progress = (container.scrollLeft / (container.scrollWidth - container.clientWidth)) * 100;
+    setScrollProgress(Math.min(100, Math.max(0, progress)));
+  };
+
+  // Smooth scroll to direction
+  const scroll = (direction: 'left' | 'right') => {
+    const container = scrollRef.current;
+    if (!container) return;
+
+    const scrollAmount = 420; // Card width (400) + gap (20)
+    const targetScroll = direction === 'left'
+      ? container.scrollLeft - scrollAmount
+      : container.scrollLeft + scrollAmount;
+
+    container.scrollTo({
+      left: targetScroll,
+      behavior: 'smooth'
+    });
+  };
+
+  // Mouse drag to scroll
+  const handleMouseDown = (e: React.MouseEvent) => {
+    const container = scrollRef.current;
+    if (!container) return;
+
+    setIsDragging(true);
+    setStartX(e.pageX - container.offsetLeft);
+    setScrollLeft(container.scrollLeft);
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging) return;
+    e.preventDefault();
+
+    const container = scrollRef.current;
+    if (!container) return;
+
+    const x = e.pageX - container.offsetLeft;
+    const walk = (x - startX) * 2; // Scroll speed multiplier
+    container.scrollLeft = scrollLeft - walk;
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  const handleMouseLeave = () => {
+    setIsDragging(false);
+  };
+
+  // Scroll event listener
+  useEffect(() => {
+    const scrollContainer = scrollRef.current;
+    if (!scrollContainer) return;
+
+    // Initial check
+    checkScroll();
+
+    // Add scroll listener
+    scrollContainer.addEventListener('scroll', checkScroll);
+
+    return () => {
+      scrollContainer.removeEventListener('scroll', checkScroll);
+    };
+  }, [currentProjects]);
 
   const openModal = (project: Project) => {
     setSelectedProject(project);
@@ -30,7 +117,6 @@ export const Projects: React.FC = () => {
 
   return (
     <>
-      {/* Blok <style jsx> dihapus dari sini */}
       <div className="container mx-auto px-4 relative z-10">
         {/* Enhanced Header */}
         <AnimatedSectionTitle
@@ -45,50 +131,95 @@ export const Projects: React.FC = () => {
         
         {/* Enhanced Tab Buttons */}
         <div className="flex justify-center gap-2 mb-16">
-          <motion.button 
-            onClick={() => setActiveTab('individual')} 
+          <motion.button
+            onClick={() => setActiveTab('individual')}
             className={`px-8 py-4 rounded-full font-semibold transition-all duration-300 relative overflow-hidden ${
-              activeTab === 'individual' 
-                ? 'bg-gradient-to-r from-emerald-500 to-blue-500 text-white shadow-glow' 
+              activeTab === 'individual'
+                ? 'bg-gradient-to-r from-emerald-500 to-blue-500 text-white shadow-glow'
                 : 'border-2 border-emerald-500/20 text-gray-700 dark:text-gray-300 hover:border-emerald-500 hover:bg-emerald-500/10'
             }`}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
             <div className={`absolute inset-0 bg-gradient-to-r from-emerald-500/20 to-blue-500/20 translate-x-[-100%] transition-transform duration-500 ${activeTab === 'individual' ? '' : 'group-hover:translate-x-[100%]'}`}></div>
-            <span className="relative">{language === 'en' ? "Individual" : "Individu"}</span> {/* UBAH INI */}
+            <span className="relative">{language === 'en' ? "Individual" : "Individu"}</span>
           </motion.button>
-          <motion.button 
-            onClick={() => setActiveTab('group')} 
+          <motion.button
+            onClick={() => setActiveTab('group')}
             className={`px-8 py-4 rounded-full font-semibold transition-all duration-300 relative overflow-hidden ${
-              activeTab === 'group' 
-                ? 'bg-gradient-to-r from-emerald-500 to-blue-500 text-white shadow-glow' 
+              activeTab === 'group'
+                ? 'bg-gradient-to-r from-emerald-500 to-blue-500 text-white shadow-glow'
                 : 'border-2 border-emerald-500/20 text-gray-700 dark:text-gray-300 hover:border-emerald-500 hover:bg-emerald-500/10'
             }`}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
             <div className={`absolute inset-0 bg-gradient-to-r from-emerald-500/20 to-blue-500/20 translate-x-[-100%] transition-transform duration-500 ${activeTab === 'group' ? '' : 'group-hover:translate-x-[100%]'}`}></div>
-            <span className="relative">{language === 'en' ? "Group" : "Kelompok"}</span> {/* UBAH INI */}
+            <span className="relative">{language === 'en' ? "Group" : "Kelompok"}</span>
           </motion.button>
         </div>
-        {/* Enhanced Projects Grid */}
-        <AnimatePresence mode="wait">
-          <motion.div 
-            key={activeTab}
-            variants={staggerContainer}
-            initial="hidden"
-            animate="show"
-            exit="hidden"
-            className="grid grid-cols-3 gap-8"
+
+        {/* Enhanced Carousel Container */}
+        <div className="relative">
+          {/* Navigation Buttons */}
+          <motion.button
+            onClick={() => scroll('left')}
+            className={`absolute left-0 top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full bg-white dark:bg-gray-800 shadow-xl border-2 border-gray-200 dark:border-gray-700 flex items-center justify-center transition-all duration-300 ${
+              canScrollLeft
+                ? 'opacity-100 hover:scale-110 hover:shadow-2xl cursor-pointer'
+                : 'opacity-0 pointer-events-none'
+            }`}
+            whileHover={{ x: -4 }}
+            whileTap={{ scale: 0.9 }}
+            aria-label="Scroll left"
           >
+            <ChevronLeft className="w-6 h-6 text-gray-900 dark:text-white" />
+          </motion.button>
+
+          <motion.button
+            onClick={() => scroll('right')}
+            className={`absolute right-0 top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full bg-white dark:bg-gray-800 shadow-xl border-2 border-gray-200 dark:border-gray-700 flex items-center justify-center transition-all duration-300 ${
+              canScrollRight
+                ? 'opacity-100 hover:scale-110 hover:shadow-2xl cursor-pointer'
+                : 'opacity-0 pointer-events-none'
+            }`}
+            whileHover={{ x: 4 }}
+            whileTap={{ scale: 0.9 }}
+            aria-label="Scroll right"
+          >
+            <ChevronRight className="w-6 h-6 text-gray-900 dark:text-white" />
+          </motion.button>
+
+          {/* Fade Edges */}
+          <div className={`absolute left-0 top-0 bottom-8 w-24 bg-gradient-to-r from-white dark:from-gray-900 to-transparent z-[5] pointer-events-none transition-opacity duration-300 ${canScrollLeft ? 'opacity-100' : 'opacity-0'}`} />
+          <div className={`absolute right-0 top-0 bottom-8 w-24 bg-gradient-to-l from-white dark:from-gray-900 to-transparent z-[5] pointer-events-none transition-opacity duration-300 ${canScrollRight ? 'opacity-100' : 'opacity-0'}`} />
+
+          {/* Horizontal Scrollable Projects */}
+          <div
+            ref={scrollRef}
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
+            onMouseLeave={handleMouseLeave}
+            className={`flex gap-6 overflow-x-auto pb-8 scroll-smooth scrollbar-hide px-2 ${isDragging ? 'cursor-grabbing select-none' : 'cursor-grab'}`}
+            style={{
+              scrollbarWidth: 'none',
+              msOverflowStyle: 'none'
+            }}
+          >
+            <style jsx>{`
+              div::-webkit-scrollbar {
+                display: none;
+              }
+            `}</style>
+          <AnimatePresence mode="wait">
             {currentProjects.map((project, index) => (
               <motion.div
                 key={project.id}
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.06, duration: 0.4 }}
-                className="w-full"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: index * 0.05, duration: 0.4 }}
+                className="flex-shrink-0 w-[400px]"
               >
                 {/* TiltedCard hanya untuk tilt/3D — TIDAK menambahkan layer visual lain */}
                 <TiltedCard
@@ -104,18 +235,13 @@ export const Projects: React.FC = () => {
                   >
                     {/* Project Image */}
                     <div className="relative overflow-hidden h-60">
-                  <motion.div
-                    whileHover={{ scale: 1.1 }}
-                    transition={{ duration: 0.7, ease: "easeOut" }}
-                  >
                     <Image
                       src={project.image}
                       alt={project.title}
                       fill
                       sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                      className="object-cover transition-all duration-700"
+                      className="object-cover"
                     />
-                  </motion.div>
                   
                   {/* Floating Action Buttons */}
                   <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300">
@@ -134,6 +260,21 @@ export const Projects: React.FC = () => {
                         <ExternalLink size={16} />
                       </motion.a>
                     )}
+                    {project.links.prototype && (
+                      <motion.a
+                        href={project.links.prototype}
+                        target="_blank"
+                        className="w-10 h-10 rounded-full bg-purple-500 hover:bg-purple-600 text-white flex items-center justify-center shadow-lg transition-colors"
+                        whileHover={{ scale: 1.1, y: -2 }}
+                        whileTap={{ scale: 0.9 }}
+                        initial={{ x: 20, opacity: 0 }}
+                        animate={{ x: 0, opacity: 1 }}
+                        transition={{ delay: 0.15 }}
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <Figma size={16} />
+                      </motion.a>
+                    )}
                     {project.links.github && (
                       <motion.a
                         href={project.links.github}
@@ -149,12 +290,27 @@ export const Projects: React.FC = () => {
                         <Github size={16} />
                       </motion.a>
                     )}
+                    {project.links.needToKnow && (
+                      <motion.a
+                        href={project.links.needToKnow}
+                        target="_blank"
+                        className="w-10 h-10 rounded-full bg-blue-500 hover:bg-blue-600 text-white flex items-center justify-center shadow-lg transition-colors"
+                        whileHover={{ scale: 1.1, y: -2 }}
+                        whileTap={{ scale: 0.9 }}
+                        initial={{ x: 20, opacity: 0 }}
+                        animate={{ x: 0, opacity: 1 }}
+                        transition={{ delay: 0.25 }}
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <FileText size={16} />
+                      </motion.a>
+                    )}
                   </div>
                   
                   {/* Category Badge */}
                   <div className="absolute top-4 left-4">
                     <span className="px-3 py-1 bg-emerald-500/90 text-white text-xs font-semibold rounded-full backdrop-blur-sm">
-                      {activeTab === 'individual' ? (language === 'en' ? 'Individual' : 'Individu') : (language === 'en' ? 'Group' : 'Kelompok')} {/* UBAH INI */}
+                      {activeTab === 'individual' ? (language === 'en' ? 'Individual' : 'Individu') : (language === 'en' ? 'Group' : 'Kelompok')}
                     </span>
                   </div>
                 </div>
@@ -208,8 +364,8 @@ export const Projects: React.FC = () => {
                   )}
                   
                   {/* Action Buttons */}
-                  <motion.div 
-                    className="flex gap-3 pt-2"
+                  <motion.div
+                    className="flex gap-3 pt-2 flex-wrap"
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.7 }}
@@ -219,10 +375,21 @@ export const Projects: React.FC = () => {
                         href={project.links.demo}
                         size="sm"
                         variant="primary"
-                        className="flex-1"
+                        className="flex-1 min-w-[120px]"
                         icon={<ExternalLink size={16} />}
                       >
-                        {language === 'en' ? 'Live Demo' : 'Demo'} {/* UBAH INI */}
+                        {language === 'en' ? 'Live Demo' : 'Demo'}
+                      </InteractiveButton>
+                    )}
+                    {project.links.prototype && (
+                      <InteractiveButton
+                        href={project.links.prototype}
+                        size="sm"
+                        variant="primary"
+                        className="flex-1 min-w-[120px] bg-purple-500 hover:bg-purple-600"
+                        icon={<Figma size={16} />}
+                      >
+                        {language === 'en' ? 'Prototype' : 'Prototipe'}
                       </InteractiveButton>
                     )}
                     {project.links.github && (
@@ -230,10 +397,21 @@ export const Projects: React.FC = () => {
                         href={project.links.github}
                         size="sm"
                         variant="outline"
-                        className="flex-1"
+                        className="flex-1 min-w-[120px]"
                         icon={<Github size={16} />}
                       >
-                        {language === 'en' ? 'Code' : 'Kode'} {/* UBAH INI */}
+                        {language === 'en' ? 'Code' : 'Kode'}
+                      </InteractiveButton>
+                    )}
+                    {project.links.needToKnow && (
+                      <InteractiveButton
+                        href={project.links.needToKnow}
+                        size="sm"
+                        variant="outline"
+                        className="flex-1 min-w-[120px] border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white"
+                        icon={<FileText size={16} />}
+                      >
+                        {language === 'en' ? 'Docs' : 'Dokumen'}
                       </InteractiveButton>
                     )}
                   </motion.div>
@@ -242,8 +420,43 @@ export const Projects: React.FC = () => {
                 </TiltedCard>
               </motion.div>
             ))}
-          </motion.div>
-        </AnimatePresence>
+          </AnimatePresence>
+        </div>
+
+        {/* Scroll Progress Indicator */}
+        <div className="mt-6 flex items-center justify-center gap-3 px-4">
+          {/* Progress Bar */}
+          <div className="flex-1 max-w-md h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+            <motion.div
+              className="h-full bg-gradient-to-r from-emerald-500 to-blue-500 rounded-full"
+              style={{ width: `${scrollProgress}%` }}
+              transition={{ duration: 0.1 }}
+            />
+          </div>
+
+          {/* Progress Text */}
+          <span className="text-sm font-medium text-gray-600 dark:text-gray-400 min-w-[80px] text-right">
+            {Math.round(scrollProgress)}% {language === 'en' ? 'viewed' : 'dilihat'}
+          </span>
+        </div>
+
+        {/* Scroll Hint */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: canScrollRight ? 1 : 0, y: canScrollRight ? 0 : 10 }}
+          className="text-center mt-4"
+        >
+          <p className="text-sm text-gray-500 dark:text-gray-400 flex items-center justify-center gap-2">
+            <motion.span
+              animate={{ x: [0, 10, 0] }}
+              transition={{ duration: 1.5, repeat: Infinity }}
+            >
+              →
+            </motion.span>
+            {language === 'en' ? 'Drag or click arrows to explore more projects' : 'Geser atau klik panah untuk melihat lebih banyak projek'}
+          </p>
+        </motion.div>
+      </div>
       </div>
 
       {/* SINGLE MODAL INSTANCE - RENDERED OUTSIDE THE GRID */}
@@ -267,7 +480,7 @@ export const Projects: React.FC = () => {
                   <span key={tech} className="bg-primary-100 dark:bg-primary-900 text-primary-800 dark:text-primary-200 text-xs font-semibold px-2.5 py-0.5 rounded-full">{tech}</span>
               ))}
             </div>
-            <div className="flex gap-4">
+            <div className="flex gap-4 flex-wrap">
               {selectedProject.links.demo && (
                 <a
                   href={selectedProject.links.demo}
@@ -275,7 +488,17 @@ export const Projects: React.FC = () => {
                   className="flex items-center gap-2 px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg transition-colors"
                 >
                   <ExternalLink size={16} />
-                  {language === 'en' ? 'Live Demo' : 'Demo'} {/* UBAH INI */}
+                  {language === 'en' ? 'Live Demo' : 'Demo'}
+                </a>
+              )}
+              {selectedProject.links.prototype && (
+                <a
+                  href={selectedProject.links.prototype}
+                  target="_blank"
+                  className="flex items-center gap-2 px-4 py-2 bg-purple-500 hover:bg-purple-600 text-white rounded-lg transition-colors"
+                >
+                  <Figma size={16} />
+                  {language === 'en' ? 'View Prototype' : 'Lihat Prototipe'}
                 </a>
               )}
               {selectedProject.links.github && (
@@ -285,7 +508,17 @@ export const Projects: React.FC = () => {
                   className="flex items-center gap-2 px-4 py-2 bg-gray-800 hover:bg-gray-900 text-white rounded-lg transition-colors"
                 >
                   <Github size={16} />
-                  {language === 'en' ? 'View Code' : 'Lihat Kode'} {/* UBAH INI */}
+                  {language === 'en' ? 'View Code' : 'Lihat Kode'}
+                </a>
+              )}
+              {selectedProject.links.needToKnow && (
+                <a
+                  href={selectedProject.links.needToKnow}
+                  target="_blank"
+                  className="flex items-center gap-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors"
+                >
+                  <FileText size={16} />
+                  {language === 'en' ? 'Documentation' : 'Dokumentasi'}
                 </a>
               )}
             </div>

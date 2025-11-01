@@ -11,9 +11,9 @@ import type {
 export const navLinks: NavLink[] = [
   { href: '#home', labelEn: 'Home', labelId: 'Beranda' },
   { href: '#about', labelEn: 'About', labelId: 'Tentang' },
-  { href: '#skills', labelEn: 'Skills', labelId: 'Keahlian' },
+  { href: '#services', labelEn: 'Services', labelId: 'Layanan' },
   { href: '#experience', labelEn: 'Experience', labelId: 'Pengalaman' },
-  { href: '#projects', labelEn: 'Projects', labelId: 'Projek' },
+  { href: '#gallery', labelEn: 'Gallery', labelId: 'Galeri' },
   { href: '#certificates', labelEn: 'Certificates', labelId: 'Sertifikat' },
   { href: '#contact', labelEn: 'Contact', labelId: 'Kontak' },
 ];
@@ -92,7 +92,7 @@ export const workExperience: Experience[] = [
     descriptionId: 'Menunjukkan keahlian yang kuat sebagai Magang Programmer Angular dengan berhasil mengimplementasikan operasi CRUD lengkap dan mengintegrasikan beberapa API.',
     techStack: ['Angular', 'Spring Boot', 'Express.js', 'React.js', 'Vue.js'],
     type: 'work',
-    image: '/assets/javan.jpg'
+    image: '/assets/javan.webp'
   },
   {
     id: 'fif',
@@ -105,7 +105,7 @@ export const workExperience: Experience[] = [
     descriptionId: 'Memperoleh pengalaman langsung dalam pengembangan full-stack, menggunakan Java Spring Boot untuk layanan back-end yang kuat dan menguasai manajemen API yang efektif.',
     techStack: ['Angular', 'Spring Boot', 'Swagger', 'MySQL'],
     type: 'work',
-    image: '/assets/fif.jpg'
+    image: '/assets/fif.webp'
   }
 ];
 
@@ -119,7 +119,7 @@ export const organizationExperience: Experience[] = [
     description: 'Played a key role in executing strategic public relations plans and served as Master of Ceremonies during key club events.',
     descriptionId: 'Berperan kunci dalam menjalankan rencana hubungan masyarakat strategis dan menjabat sebagai Master of Ceremonies selama acara klub utama.',
     type: 'organization',
-    image: '/assets/gdsc.jpg'
+    image: '/assets/gdsc.webp'
   },
   {
     id: 'bem',
@@ -130,7 +130,7 @@ export const organizationExperience: Experience[] = [
     description: 'Successfully managed various off-campus activities and drove division\'s public relations efforts through strategic social media management.',
     descriptionId: 'Berhasil mengelola berbagai kegiatan luar kampus dan mendorong upaya hubungan masyarakat divisi melalui manajemen media sosial strategis.',
     type: 'organization',
-    image: '/assets/dhpm.jpeg'
+    image: '/assets/dhpm.webp'
   },
   {
     id: 'delfest',
@@ -140,7 +140,7 @@ export const organizationExperience: Experience[] = [
     description: 'Actively participated as a member of the Public Relations and Documentation division, handling essential documentation tasks to capture and promote key moments of the festival.',
     descriptionId: 'Berpartisipasi aktif sebagai anggota divisi Hubungan Masyarakat dan Dokumentasi, menangani tugas-tugas dokumentasi penting untuk mengabadikan dan mempromosikan momen-momen penting dalam festival.',
     type: 'organization',
-    image: '/assets/delfest.jpeg'
+    image: '/assets/delfest.webp'
   }
 ];
 
@@ -150,7 +150,7 @@ export const individualProjects: Project[] = [
     title: 'API Central',
     description: 'Centralization and standardization of API documentation with Postman-to-Swagger converter tool.',
     descriptionId: 'Sentralisasi dan standardisasi dokumentasi API dengan alat konverter Postman-ke-Swagger.',
-    image: '/assets/api-central.png',
+    image: '/assets/api-central.webp',
     techStack: ['Angular', 'Spring Boot', 'Java', 'TypeScript', 'Tailwind CSS'],
     links: {
       demo: 'https://api-central.netlify.app/',
@@ -163,7 +163,7 @@ export const individualProjects: Project[] = [
     title: 'Employee Management System',
     description: 'Comprehensive employee management application with CRUD functionality and role-based access control.',
     descriptionId: 'Aplikasi manajemen karyawan yang komprehensif dengan fungsi CRUD dan kontrol akses berbasis peran.',
-    image: '/assets/employee.png',
+    image: '/assets/employee.webp',
     techStack: ['Angular', 'Spring Boot', 'JWT', 'MySQL', 'Bootstrap'],
     links: {
       demo: 'https://employee-web.netlify.app/',
@@ -176,7 +176,7 @@ export const individualProjects: Project[] = [
     title: 'Notes Web Application',
     description: 'Responsive single-page note-taking application built with vanilla JavaScript and Web Components API.',
     descriptionId: 'Aplikasi pencatat responsif satu halaman yang dibangun dengan vanilla JavaScript dan Web Components API.',
-    image: '/assets/notes.png',
+    image: '/assets/notes.webp',
     techStack: ['JavaScript', 'Web Components', 'CSS Grid', 'Flexbox', 'HTML5'],
     links: {
       demo: 'https://notes-rifqi.netlify.app/',
@@ -189,7 +189,7 @@ export const individualProjects: Project[] = [
     title: 'Bookshelf Web Application',
     description: 'Interactive front-end application for managing digital bookshelf with full CRUD operations.',
     descriptionId: 'Aplikasi front-end interaktif untuk mengelola rak buku digital dengan operasi CRUD lengkap.',
-    image: '/assets/bookshelf.png',
+    image: '/assets/bookshelf.webp',
     techStack: ['JavaScript', 'HTML5', 'CSS3', 'Local Storage', 'DOM'],
     links: {
       demo: 'https://bookshelf-rifqi.netlify.app/',
@@ -202,13 +202,119 @@ export const individualProjects: Project[] = [
     title: 'Mini Games Web Portal',
     description: 'Collection of interactive web-based games developed with JavaScript, featuring engaging user experience.',
     descriptionId: 'Kumpulan game interaktif berbasis web yang dikembangkan dengan JavaScript, menampilkan pengalaman pengguna yang menarik.',
-    image: '/assets/game.jpg',
+    image: '/assets/game.webp',
     techStack: ['JavaScript', 'HTML5 Canvas', 'CSS3', 'DOM Manipulation', 'Event Handling'],
     links: {
       demo: 'https://games-rifqi.netlify.app/',
       github: 'https://github.com/Rifqi-HaikalCh'
     },
-    category: 'individual'
+    category: 'individual',
+    type: 'web'
+  },
+  {
+    id: 'marketplace-influencer',
+    title: 'Marketplace Influencer Platform',
+    description: 'Simplifies influencer discovery and collaboration for brands. Engineered a full-stack marketplace from scratch using a modern tech stack (Next.js 14, TypeScript, Supabase) to connect brands with influencers. Designed and implemented a pixel-perfect, responsive UI/UX with Tailwind CSS, featuring separate, optimized views for desktop and mobile to ensure a seamless user journey.',
+    descriptionId: 'Menyederhanakan penemuan influencer dan kolaborasi untuk brand. Platform marketplace full-stack yang dibangun dari awal menggunakan tech stack modern untuk menghubungkan brand dengan influencer.',
+    image: '/assets/marketplaceweb.webp',
+    techStack: ['Next.js 14', 'TypeScript', 'Tailwind CSS', 'Supabase', 'RBAC'],
+    links: {
+      demo: 'https://homepage-redesign-inky.vercel.app/'
+    },
+    category: 'individual',
+    type: 'web'
+  },
+  {
+    id: 'hiring-platform',
+    title: 'Hiring Platform for Jobseeker',
+    description: 'Modern hiring platform enabling administrators to manage job listings and candidates to browse/apply. Implemented secure user authentication and role-based access control (RBAC) leveraging Supabase Auth. Designed and built reusable, responsive UI components using Tailwind CSS and Headless UI, ensuring an intuitive user experience across desktop and mobile platforms.',
+    descriptionId: 'Platform hiring modern yang memungkinkan administrator mengelola lowongan pekerjaan dan kandidat untuk menelusuri/melamar. Sistem otentikasi aman dengan kontrol akses berbasis peran.',
+    image: '/assets/Hiring Platform web.webp',
+    techStack: ['Next.js 16', 'TypeScript', 'Tailwind CSS', 'Supabase', 'React Hook Form', 'Zustand'],
+    links: {
+      demo: 'https://hiring-platform-woad.vercel.app',
+      needToKnow: 'https://drive.google.com/file/d/1sDZJJzx59VfwPaw2Y7J-hss0yh88rDyj/view'
+    },
+    category: 'individual',
+    type: 'web'
+  },
+  {
+    id: 'dinoShop-design',
+    title: 'DinoShop E-Commerce Design',
+    description: 'Designing the requirements of an electronics store to sell its products to facilitate interactions with customers. Designed a complete, visually-driven user experience for an electronics e-commerce platform, focusing on a clean, minimalist aesthetic and a clear visual hierarchy to enhance product discovery.',
+    descriptionId: 'Merancang kebutuhan toko elektronik untuk menjual produknya guna memfasilitasi interaksi dengan pelanggan. Desain pengalaman pengguna yang lengkap dan visual untuk platform e-commerce elektronik.',
+    image: '/assets/DinoShop.webp',
+    techStack: ['Figma', 'UI/UX Design', 'Prototyping', 'Visual Design', 'Interactive Design'],
+    links: {
+      prototype: 'https://www.figma.com/proto/ZNCYVnAGdOL47VgFPnZGHE/Project-Mock?page-id=0%3A1&node-id=145-4254&p=f&viewport=1008%2C3367%2C0.45&t=a6FkFBiT6pik43fA-1&scaling=contain&content-scaling=fixed&starting-point-node-id=145%3A4254'
+    },
+    category: 'individual',
+    type: 'design'
+  },
+  {
+    id: 'beauty-mobile-app-design',
+    title: 'Beauty E-Commerce Mobile App Design',
+    description: 'Designing a modern and intuitive mobile e-commerce experience dedicated to beauty and skincare products. Developed a comprehensive, component-based design system in Figma, creating reusable elements, navigation, and product cards to ensure visual consistency and accelerate the development workflow. Built a high-fidelity, interactive prototype incorporating smooth navigation flows and micro-interactions to simulate a realistic user experience.',
+    descriptionId: 'Merancang pengalaman e-commerce mobile yang modern dan intuitif khusus untuk produk kecantikan dan perawatan kulit. Sistem desain berbasis komponen yang komprehensif dengan prototype interaktif.',
+    image: '/assets/beautyMobileApp.webp',
+    techStack: ['Figma', 'UI/UX Design', 'Mobile Design', 'Design System', 'Prototyping'],
+    links: {
+      prototype: 'https://www.figma.com/proto/P1HhF2cjWydsS4UtzQ9liv/Beauty-Mobile-App-Design?page-id=0%3A1&node-id=49-1149&p=f&viewport=133%2C397%2C0.55&t=dfdOnSGjlSOq84Zw-1&scaling=scale-down&content-scaling=fixed&starting-point-node-id=49%3A1072'
+    },
+    category: 'individual',
+    type: 'design'
+  },
+  {
+    id: 'campuss-redesign',
+    title: 'IT Del Campus Website Redesign',
+    description: 'The previous website had an outdated interface that struggled to engage users and failed to reflect the institute\'s innovative spirit. Revitalized an outdated campus website by conceptualizing and designing a dynamic, modern interface that better reflects the institute\'s innovative spirit. Successfully applied key UI/UX principles to create an intuitive and visually appealing interface for all user types.',
+    descriptionId: 'Website sebelumnya memiliki antarmuka yang ketinggalan zaman yang kesulitan melibatkan pengguna dan gagal mencerminkan semangat inovatif institut. Merevitalisasi website kampus yang ketinggalan zaman dengan merancang antarmuka modern dan dinamis.',
+    image: '/assets/campuss-redesign.webp',
+    techStack: ['Figma', 'UI/UX Design', 'Web Design', 'Responsive Design', 'Prototyping'],
+    links: {
+      prototype: 'https://www.figma.com/proto/rileM7AuecCrGEnA0soMd1/RE-DESIGN-WEBSITE-DEL?page-id=0%3A1&node-id=447-121&p=f&viewport=845%2C151%2C0.13&t=gbfdy7gE7yozEW3C-1&scaling=scale-down-width&content-scaling=fixed'
+    },
+    category: 'individual',
+    type: 'design'
+  },
+  {
+    id: 'gordenaise-wireframe',
+    title: 'Gordenaise Website Design',
+    description: 'Wireframe design for Gordenaise platform focusing on user flow and interface structure. Emphasized on creating clear information architecture and intuitive navigation patterns.',
+    descriptionId: 'Desain wireframe untuk platform Gordenaise dengan fokus pada alur pengguna dan struktur antarmuka. Penekanan pada arsitektur informasi yang jelas dan pola navigasi yang intuitif.',
+    image: '/assets/gordenaise-wireframe.webp',
+    techStack: ['Figma', 'Wireframing', 'UX Design', 'Information Architecture', 'User Flow'],
+    links: {
+      prototype: 'https://www.figma.com/proto/m63t9o0EJ7aBvG5I09yWVf/Gordenaise?page-id=0%3A1&node-id=34-373&p=f&viewport=89%2C310%2C0.07&t=LJSZaTROUnCZIqfH-1&scaling=scale-down-width&content-scaling=fixed'
+    },
+    category: 'individual',
+    type: 'design'
+  },
+  {
+    id: 'assets-management-design',
+    title: 'Assets Management System Design',
+    description: 'Designing the appearance of the management system in 1 day timeline. Rapidly designed a complete asset management system UI within a 1-day timeline, focusing on creating a logical user flow with minimal friction. Established a cohesive and scalable design system by ensuring consistent use of colors, typography, icons, and UI elements for optimal clarity and aesthetics.',
+    descriptionId: 'Merancang tampilan sistem manajemen dalam waktu 1 hari. Secara cepat merancang UI sistem manajemen aset yang lengkap dalam waktu 1 hari, dengan fokus pada pembuatan alur pengguna yang logis dengan friksi minimal.',
+    image: '/assets/Assets Manajemen Web Design-01.webp',
+    techStack: ['Figma', 'UI/UX Design', 'Design System', 'Rapid Prototyping', 'Information Architecture'],
+    links: {
+      prototype: 'https://www.figma.com/proto/N2eNg8UcsUg3Z4oIpwPn4g/Aplikasi-Manajemen-Aset?page-id=0%3A1&node-id=9-356&p=f&viewport=338%2C243%2C0.06&t=RcXQkGz3wJYNThcT-1&scaling=contain&content-scaling=fixed'
+    },
+    category: 'individual',
+    type: 'design'
+  },
+  {
+    id: 'todo-app',
+    title: 'Todo Application',
+    description: 'A modern and intuitive todo application for task management. Built with modern web technologies for seamless user experience with features like task creation, editing, deletion, and status tracking.',
+    descriptionId: 'Aplikasi todo yang modern dan intuitif untuk manajemen tugas. Dibangun dengan teknologi web modern untuk pengalaman pengguna yang mulus dengan fitur seperti pembuatan tugas, editing, penghapusan, dan pelacakan status.',
+    image: '/assets/todo-app.webp',
+    techStack: ['React', 'TypeScript', 'Tailwind CSS', 'Next.js', 'Local Storage'],
+    links: {
+      demo: 'https://assessment-todo-application.vercel.app/'
+    },
+    category: 'individual',
+    type: 'web'
   }
 ];
 
@@ -216,21 +322,23 @@ export const groupProjects: Project[] = [
   {
     id: 'del-pick',
     title: 'Del-Pick Delivery App',
-    description: 'Mobile delivery system designed to overcome logistics and transportation problems.',
-    descriptionId: 'Sistem Layanan Antar yang dirancang untuk mengatasi masalah logistik dan transportasi.',
-    image: '/assets/del-pick.png',
-    techStack: ['Dart', 'JavaScript', 'C++', 'MySQL'],
+    description: 'Mobile delivery system designed to overcome logistics and transportation problems. Led a 3-person team through the entire product lifecycle, from initial concept to a fully functional mobile delivery application. Translated high-fidelity Figma UI/UX designs into 20+ polished and intuitive screens using Flutter. Built and integrated 30+ RESTful APIs with Express.js to power real-time order processing, driver matching, and route optimization.',
+    descriptionId: 'Sistem Layanan Antar yang dirancang untuk mengatasi masalah logistik dan transportasi. Memimpin tim 3 orang melalui seluruh siklus produk, dari konsep awal hingga aplikasi pengiriman mobile yang berfungsi penuh.',
+    image: '/assets/del-pick.webp',
+    techStack: ['Flutter', 'Express.js', 'Dart', 'JavaScript', 'C++', 'MySQL'],
     links: {
-      github: 'https://github.com/yeftaamir/Front-end-Del-Pick'
+      github: 'https://github.com/yeftaamir/Front-end-Del-Pick',
+      needToKnow: 'https://drive.google.com/file/d/1dFmPBOM7i7SubKeOztS6FWffawnltK2p/view?usp=sharing'
     },
-    category: 'group'
+    category: 'group',
+    type: 'mobile'
   },
   {
     id: 'semat-del',
     title: 'SEMAT DEL',
     description: 'Web-based information platform for IT Del student candidates built with Laravel 9 and MySQL.',
     descriptionId: 'Platform informasi berbasis web untuk calon mahasiswa IT Del yang dibangun dengan Laravel 9 dan MySQL.',
-    image: '/assets/spmb.png',
+    image: '/assets/spmb.webp',
     techStack: ['Laravel', 'PHP', 'MySQL', 'Blade', 'Bootstrap'],
     links: {
       demo: 'https://semat.del.ac.id/program',
@@ -243,7 +351,7 @@ export const groupProjects: Project[] = [
     title: 'FRK & FED System',
     description: 'Employee performance management system with work planning and evaluation features built for project management course.',
     descriptionId: 'Sistem manajemen kinerja karyawan dengan fitur perencanaan kerja dan evaluasi yang dibangun untuk mata kuliah manajemen proyek.',
-    image: '/assets/frk.jpg',
+    image: '/assets/frk.webp',
     techStack: ['PHP', 'Laravel', 'MySQL', 'Bootstrap', 'Blade'],
     links: {
       github: 'https://github.com/boysitorus/FrontEnd-FRK'
@@ -255,7 +363,7 @@ export const groupProjects: Project[] = [
     title: 'Sistem Pakar Diagnosa Penyakit Gigi',
     description: 'Sistem Pakar Diagnosa Penyakit Gigi is a Python program that employs the forward chaining method for accurate assessment.',
     descriptionId: 'Sistem Pakar Diagnosa Penyakit Gigi adalah sebuah program Python yang menggunakan metode forward chaining untuk penilaian yang akurat.',
-    image: '/assets/dentist.jpeg',
+    image: '/assets/dentist.webp',
     techStack: ['HTML', 'Python', 'Bootstrap', 'JavaScript'],
     links: {
       github: 'https://github.com/Rifqi-HaikalCh/SistemPakarDiagnosaPenyakitGigi'
@@ -267,7 +375,7 @@ export const groupProjects: Project[] = [
     title: 'DES (Data Encryption Standard) Algorithm System',
     description: 'The DES (Data Encryption Standard) algorithm implemented in Python follows a series of steps to encrypt and decrypt data.',
     descriptionId: 'Algoritma DES (Standar Enkripsi Data) yang diimplementasikan dalam Python mengikuti serangkaian langkah untuk mengenkripsi dan mendekripsi data.',
-    image: '/assets/des.png',
+    image: '/assets/des.webp',
     techStack: ['HTML', 'Python', 'Bootstrap', 'JavaScript'],
     links: {
       github: 'https://github.com/Rifqi-HaikalCh/DES_Algorithm'
@@ -279,7 +387,7 @@ export const groupProjects: Project[] = [
     title: 'Clicknik Application',
     description: 'A hospital database that stores a huge data of patient, medication, doctor and diagnoses.',
     descriptionId: 'Database rumah sakit yang menyimpan data pasien, obat, dokter, dan diagnosis dalam jumlah besar.',
-    image: '/assets/clicknic.jpg',
+    image: '/assets/clicknic.webp',
     techStack: ['Java'],
     links: {
       github: 'https://github.com/archicos/clicknic'
@@ -365,7 +473,7 @@ export const certificateCategories: CertificateCategory[] = [
         titleId: 'Pelatihan Keamanan Siber',
         description: 'Comprehensive training in cybersecurity principles, threats, and protection strategies.',
         descriptionId: 'Pelatihan komprehensif dalam prinsip keamanan siber, ancaman, dan strategi perlindungan.',
-        link: '/assets/Sertifikat Cyber Kulum.png',
+        link: '/assets/Sertifikat Cyber Kulum.webp',
         category: 'kegiatan'
       },
       {
@@ -401,7 +509,7 @@ export const certificateCategories: CertificateCategory[] = [
         titleId: 'Sertifikat Anggota BEM',
         description: 'Official membership certificate for participation in the Student Executive Board (BEM) activities.',
         descriptionId: 'Sertifikat keanggotaan resmi untuk partisipasi dalam kegiatan Badan Eksekutif Mahasiswa (BEM).',
-        link: '/assets/Sertifikat BEM - Anggota.jpeg',
+        link: '/assets/Sertifikat BEM - Anggota.webp',
         category: 'organisasi'
       },
       {

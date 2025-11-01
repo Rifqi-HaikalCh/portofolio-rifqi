@@ -8,6 +8,7 @@ import { useLanguage } from '../../context/LanguageContext';
 import { navLinks } from '../../data/portfolio';
 import { Menu, X, Sun, Moon } from 'lucide-react';
 import { premiumEasing, navTransition } from '../../lib/optimized-animations';
+import GooeyNav from '../shared/GooeyNav';
 
 const Navbar: React.FC = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -56,64 +57,146 @@ const Navbar: React.FC = () => {
 
   if (!mounted) return null;
 
+  const gooeyNavItems = navLinks.map(link => ({
+    label: language === 'en' ? link.labelEn : link.labelId,
+    href: link.href
+  }));
+
+  const handleGooeyNavClick = (href: string) => {
+    const target = document.querySelector(href);
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
   return (
-    <motion.nav 
+    <motion.nav
       initial={{ y: -100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
-      className={`hidden lg:block fixed top-0 left-0 w-full z-navigation transition-all duration-300 ${
-        scrolled 
-          ? 'py-4 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl shadow-lg border-b border-gray-200/20 dark:border-gray-700/20' 
-          : 'py-6 bg-transparent'
+      className={`hidden lg:block fixed top-0 left-0 w-full z-navigation transition-all duration-500 ${
+        scrolled ? 'py-3' : 'py-5'
       }`}
     >
-      <div className="container mx-auto px-4 flex justify-between items-center">
-        <Link href="#home" className="text-xl font-bold text-gray-900 dark:text-white hover:text-primary-green transition-colors">
-          Rifqi Haikal
-        </Link>
-        <div className="hidden lg:flex items-center gap-6">
-          {navLinks.map((link) => (
-            <Link key={link.href} href={link.href} className="font-medium text-gray-700 dark:text-gray-300 hover:text-primary-green transition-colors">
-              {language === 'en' ? link.labelEn : link.labelId}
+      <div className="container mx-auto px-6">
+        {/* Single Glassmorphic Container */}
+        <div className="relative">
+          {/* Glossy glow background */}
+          <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/20 via-blue-500/20 to-purple-500/20 rounded-full blur-xl opacity-50" />
+
+          {/* Main glassmorphic wrapper */}
+          <div className={`relative flex items-center justify-between gap-4 px-6 py-3 rounded-full backdrop-blur-2xl shadow-xl border transition-all duration-500 ${
+            scrolled
+              ? 'bg-white/50 dark:bg-gray-900/60 border-white/20 dark:border-gray-700/30 shadow-2xl'
+              : 'bg-white/40 dark:bg-gray-900/50 border-white/15 dark:border-gray-700/20'
+          }`}>
+            {/* Glossy overlay effect */}
+            <div className="absolute inset-0 bg-gradient-to-br from-white/30 via-white/5 to-transparent dark:from-white/5 dark:via-transparent pointer-events-none rounded-full" />
+
+            {/* Logo */}
+            <Link href="#home" className="relative group flex-shrink-0 z-10">
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="text-xl font-bold bg-gradient-to-r from-emerald-600 via-blue-600 to-purple-600 bg-clip-text text-transparent"
+              >
+                Rifqi Haikal
+              </motion.div>
+              <motion.div
+                className="absolute -bottom-1 left-0 h-0.5 bg-gradient-to-r from-emerald-500 to-blue-500"
+                initial={{ width: 0 }}
+                whileHover={{ width: '100%' }}
+                transition={{ duration: 0.3 }}
+              />
             </Link>
-          ))}
-          <motion.button 
-            whileHover={{ scale: 1.1 }} 
-            whileTap={{ scale: 0.9 }}
-            onClick={toggleTheme} 
-            className="w-10 h-10 rounded-full flex items-center justify-center bg-primary-green hover:bg-secondary-green transition-all duration-300 shadow-lg"
-          >
-            <motion.div
-              key={theme}
-              initial={{ rotate: -180, opacity: 0 }}
-              animate={{ rotate: 0, opacity: 1 }}
-              exit={{ rotate: 180, opacity: 0 }}
-              transition={{ duration: 0.3 }}
-            >
-              {theme === 'dark' ? <Sun size={20} className='text-white' /> : <Moon size={20} className='text-white' />}
-            </motion.div>
-          </motion.button>
-          <button onClick={toggleLanguage} className="w-10 h-10 rounded-full flex items-center justify-center bg-primary-green hover:bg-secondary-green font-bold text-white transition-all duration-300 shadow-lg">
-            {language === 'en' ? 'ID' : 'EN'}
-          </button>
+
+            {/* Center Navigation with GooeyNav */}
+            <div className="flex-1 flex justify-center relative z-10">
+              <GooeyNav
+                items={gooeyNavItems}
+                particleCount={12}
+                particleDistances={[80, 8]}
+                particleR={90}
+                animationTime={500}
+                timeVariance={250}
+                colors={[1, 2, 3, 4]}
+                initialActiveIndex={0}
+                onItemClick={handleGooeyNavClick}
+              />
+            </div>
+
+            {/* Right Side Controls */}
+            <div className="flex items-center gap-3 flex-shrink-0 relative z-10">
+              {/* Theme Toggle */}
+              <motion.button
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                onClick={toggleTheme}
+                className="relative w-10 h-10 rounded-full flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-50 dark:from-gray-800 dark:to-gray-700 border border-gray-200/50 dark:border-gray-600/50 shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden group"
+              >
+                {/* Glow effect on hover */}
+                <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/30 to-blue-500/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+                <motion.div
+                  key={theme}
+                  initial={{ rotate: -180, opacity: 0, scale: 0.5 }}
+                  animate={{ rotate: 0, opacity: 1, scale: 1 }}
+                  exit={{ rotate: 180, opacity: 0, scale: 0.5 }}
+                  transition={{ duration: 0.3, type: "spring" }}
+                  className="relative z-10"
+                >
+                  {theme === 'dark' ? (
+                    <Sun size={18} className='text-yellow-500' />
+                  ) : (
+                    <Moon size={18} className='text-blue-600' />
+                  )}
+                </motion.div>
+              </motion.button>
+
+              {/* Language Toggle */}
+              <motion.button
+                onClick={toggleLanguage}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                className="relative w-10 h-10 rounded-full flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-50 dark:from-gray-800 dark:to-gray-700 border border-gray-200/50 dark:border-gray-600/50 shadow-md hover:shadow-lg font-bold text-xs transition-all duration-300 overflow-hidden group"
+              >
+                {/* Glow effect on hover */}
+                <div className="absolute inset-0 bg-gradient-to-r from-purple-500/30 to-pink-500/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+                <span className="relative z-10 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent font-bold">
+                  {language === 'en' ? 'ID' : 'EN'}
+                </span>
+              </motion.button>
+            </div>
+          </div>
         </div>
-        {/* Enhanced Mobile Menu Button */}
-        <motion.button 
-          onClick={() => setMobileMenuOpen(true)} 
-          className="lg:hidden relative w-12 h-12 rounded-2xl bg-emerald-500 hover:bg-emerald-600 text-white flex items-center justify-center transition-all duration-300 shadow-lg hover:shadow-glow"
+      </div>
+
+      {/* Enhanced Glassmorphic Mobile Menu Button */}
+      <div className="lg:hidden absolute top-4 right-4">
+        <motion.button
+          onClick={() => setMobileMenuOpen(true)}
+          className="relative w-14 h-14 rounded-2xl bg-gradient-to-br from-white/80 to-white/60 dark:from-gray-800/80 dark:to-gray-800/60 backdrop-blur-xl border border-white/40 dark:border-gray-700/40 shadow-lg hover:shadow-xl text-gray-700 dark:text-gray-300 flex items-center justify-center transition-all duration-300 overflow-hidden group"
           whileHover={{ scale: 1.1, rotate: 5 }}
           whileTap={{ scale: 0.9 }}
         >
+          {/* Glossy overlay */}
+          <div className="absolute inset-0 bg-gradient-to-br from-white/40 to-transparent dark:from-white/10 pointer-events-none" />
+
+          {/* Glow effect on hover */}
+          <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/20 to-blue-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
           <motion.div
             animate={mobileMenuOpen ? { rotate: 180 } : { rotate: 0 }}
             transition={{ duration: 0.3 }}
+            className="relative z-10"
           >
-            <Menu size={24} />
+            <Menu size={24} className="text-emerald-600 dark:text-emerald-400" />
           </motion.div>
-          
+
           {/* Animated indicator */}
           <motion.div
-            className="absolute -top-1 -right-1 w-3 h-3 bg-blue-500 rounded-full"
+            className="absolute -top-1 -right-1 w-3 h-3 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-full shadow-lg"
             animate={{
               scale: [1, 1.2, 1],
               opacity: [0.7, 1, 0.7]
@@ -288,16 +371,16 @@ const Navbar: React.FC = () => {
         )}
       </AnimatePresence>
       
-      {/* Floating Hamburger Button for Mobile */}
+      {/* Enhanced Glassmorphic Floating Button for Mobile */}
       <AnimatePresence>
         {showFloatingButton && (
           <motion.button
             onClick={() => setMobileMenuOpen(true)}
-            className="fixed top-6 right-6 z-[9996] lg:hidden w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-500 via-blue-500 to-purple-600 shadow-2xl hover:shadow-glow flex items-center justify-center text-white border-2 border-white/20 backdrop-blur-sm"
+            className="fixed top-6 right-6 z-[9996] lg:hidden w-16 h-16 rounded-2xl bg-gradient-to-br from-white/90 to-white/70 dark:from-gray-800/90 dark:to-gray-800/70 backdrop-blur-2xl shadow-2xl hover:shadow-3xl flex items-center justify-center border-2 border-white/50 dark:border-gray-700/50 group overflow-hidden"
             initial={{ scale: 0, opacity: 0, rotate: -180 }}
-            animate={{ 
-              scale: 1, 
-              opacity: 1, 
+            animate={{
+              scale: 1,
+              opacity: 1,
               rotate: 0,
               y: [0, -5, 0]
             }}
@@ -306,34 +389,36 @@ const Navbar: React.FC = () => {
               scale: { type: "spring", stiffness: 300, damping: 20 },
               y: { duration: 2, repeat: Infinity, ease: "easeInOut" }
             }}
-            whileHover={{ 
-              scale: 1.1, 
-              rotate: [0, -5, 5, 0],
-              boxShadow: "0 20px 40px rgba(16, 185, 129, 0.4)"
+            whileHover={{
+              scale: 1.1,
+              rotate: [0, -5, 5, 0]
             }}
             whileTap={{ scale: 0.9 }}
           >
-            {/* Rotating background */}
+            {/* Glossy overlay */}
+            <div className="absolute inset-0 bg-gradient-to-br from-white/60 via-white/20 to-transparent dark:from-white/20 dark:via-transparent pointer-events-none rounded-2xl" />
+
+            {/* Animated gradient background */}
             <motion.div
-              className="absolute inset-0 bg-gradient-to-r from-emerald-400/30 via-blue-400/30 to-purple-400/30 rounded-2xl"
+              className="absolute inset-0 bg-gradient-to-r from-emerald-500/20 via-blue-500/20 to-purple-500/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
               animate={{ rotate: [0, 360] }}
               transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
             />
-            
+
             {/* Menu icon */}
             <motion.div
               animate={{ rotate: mobileMenuOpen ? 180 : 0 }}
               transition={{ duration: 0.3 }}
               className="relative z-10"
             >
-              <Menu size={26} />
+              <Menu size={28} className="text-emerald-600 dark:text-emerald-400" />
             </motion.div>
-            
+
             {/* Pulse indicator */}
             <motion.div
-              className="absolute inset-0 rounded-2xl bg-white/20"
+              className="absolute inset-0 rounded-2xl border-2 border-emerald-500/40"
               animate={{
-                scale: [1, 1.2, 1],
+                scale: [1, 1.15, 1],
                 opacity: [0.3, 0, 0.3]
               }}
               transition={{
@@ -342,16 +427,16 @@ const Navbar: React.FC = () => {
                 ease: "easeOut"
               }}
             />
-            
+
             {/* Status dot */}
-            <motion.div 
-              className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full border-2 border-white shadow-lg"
+            <motion.div
+              className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-r from-emerald-400 to-blue-500 rounded-full border-2 border-white dark:border-gray-800 shadow-lg"
               animate={{
                 scale: [1, 1.3, 1],
                 boxShadow: [
-                  "0 0 5px rgba(34, 197, 94, 0.5)",
-                  "0 0 15px rgba(34, 197, 94, 0.8)",
-                  "0 0 5px rgba(34, 197, 94, 0.5)"
+                  "0 0 5px rgba(16, 185, 129, 0.5)",
+                  "0 0 15px rgba(16, 185, 129, 0.8)",
+                  "0 0 5px rgba(16, 185, 129, 0.5)"
                 ]
               }}
               transition={{

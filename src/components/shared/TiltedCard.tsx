@@ -111,14 +111,13 @@ export default function TiltedCard({
       )}
 
       <motion.div
-        className="tilted-card-inner rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl border border-white/10"
+        className="tilted-card-inner"
         style={{
           width: imageWidth,
           height: imageHeight,
           rotateX,
           rotateY,
-          scale,
-          overflow: 'visible',
+          scale
         }}
       >
         {imageSrc && (
@@ -133,10 +132,10 @@ export default function TiltedCard({
           />
         )}
 
-        {displayOverlayContent && (overlayContent || children) && (
-          <motion.div className="tilted-card-overlay">
+        {(overlayContent || children) && (
+          <div className="tilted-card-content">
             {overlayContent || children}
-          </motion.div>
+          </div>
         )}
       </motion.div>
 
