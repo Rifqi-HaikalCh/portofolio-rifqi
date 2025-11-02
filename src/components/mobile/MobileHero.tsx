@@ -129,7 +129,7 @@ export const MobileHero: React.FC = () => {
             <Github size={20} />
           </a>
           <a
-            href="https://www.linkedin.com/in/rifqihaikal/"
+            href="https://www.linkedin.com/in/rifqhaikall"
             target="_blank"
             className="w-12 h-12 rounded-full bg-blue-600 text-white flex items-center justify-center hover:scale-110 active:scale-95 transition-transform shadow-lg"
           >
