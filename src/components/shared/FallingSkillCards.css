@@ -7,6 +7,7 @@
   cursor: grab;
   padding: 10px;
   box-sizing: border-box;
+  z-index: 50;
 }
 
 .falling-skills-container:active {
@@ -15,6 +16,7 @@
 
 .falling-skills-grid {
   position: relative;
+  z-index: 2;
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   gap: 1.5rem;
@@ -29,6 +31,7 @@
 
 .falling-skill-card {
   position: relative;
+  z-index: 3;
   padding: 1.5rem;
   border-radius: 1rem;
   background: rgba(255, 255, 255, 0.1);
