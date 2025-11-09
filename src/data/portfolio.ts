@@ -345,7 +345,7 @@ export const designProjects: Project[] = [
     title: 'Assets Management System',
     description: 'A comprehensive web design system for asset management platform with focus on user experience and data visualization. Features advanced dashboard analytics and intuitive navigation.',
     descriptionId: 'Sistem desain web komprehensif untuk platform manajemen aset dengan fokus pada pengalaman pengguna dan visualisasi data. Menampilkan analitik dashboard canggih dan navigasi intuitif.',
-    image: '/assets/Assets Manajemen Web Design-01.png',
+    image: '/assets/Assets Manajemen Web Design-01.webp',
     techStack: ['Figma', 'Adobe Photoshop', 'Principle'],
     links: {
       prototype: 'https://www.figma.com/proto/N2eNg8UcsUg3Z4oIpwPn4g/Aplikasi-Manajemen-Aset?page-id=0%3A1&node-id=9-356&p=f&viewport=338%2C243%2C0.06&t=RcXQkGz3wJYNThcT-1&scaling=contain&content-scaling=fixed'
@@ -353,16 +353,16 @@ export const designProjects: Project[] = [
     category: 'individual',
     type: 'design',
     slides: [
-      '/assets/Assets Manajemen Web Design-01.png',
-      '/assets/Assets Manajemen Web Design-02.png',
-      '/assets/Assets Manajemen Web Design-03.png',
-      '/assets/Assets Manajemen Web Design-04.png',
-      '/assets/Assets Manajemen Web Design-05.png',
-      '/assets/Assets Manajemen Web Design-06.png',
-      '/assets/Assets Manajemen Web Design-07.png',
-      '/assets/Assets Manajemen Web Design-08.png',
-      '/assets/Assets Manajemen Web Design-09.png',
-      '/assets/Assets Manajemen Web Design-10.png'
+      '/assets/Assets Manajemen Web Design-01.webp',
+      '/assets/Assets Manajemen Web Design-02.webp',
+      '/assets/Assets Manajemen Web Design-03.webp',
+      '/assets/Assets Manajemen Web Design-04.webp',
+      '/assets/Assets Manajemen Web Design-05.webp',
+      '/assets/Assets Manajemen Web Design-06.webp',
+      '/assets/Assets Manajemen Web Design-07.webp',
+      '/assets/Assets Manajemen Web Design-08.webp',
+      '/assets/Assets Manajemen Web Design-09.webp',
+      '/assets/Assets Manajemen Web Design-10.webp'
     ]
   },
   {
