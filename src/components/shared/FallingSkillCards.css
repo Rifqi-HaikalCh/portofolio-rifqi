@@ -3,12 +3,10 @@
   width: 100%;
   min-height: 600px;
   max-height: 800px;
- /* overflow: visible; */
+  overflow: hidden;
   cursor: grab;
-  padding: 10px; /* Padding agar card tidak menempel di tepi */
+  padding: 10px;
   box-sizing: border-box;
-  /* Border untuk visualisasi batas (bisa di-comment jika tidak diperlukan) */
-  /* border: 2px solid rgba(255, 255, 255, 0.2); */
 }
 
 .falling-skills-container:active {

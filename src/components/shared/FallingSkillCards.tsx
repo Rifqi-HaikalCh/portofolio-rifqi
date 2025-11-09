@@ -85,15 +85,12 @@ const FallingSkillCards: React.FC<FallingSkillCardsProps> = ({
     const width = containerRect.width;
     const height = containerRect.height;
 
-    if (width <= 0 || height <= 0) return;
+    if (width <= 0 || height <= 0) {
+      return;
+    }
 
     const engine = Engine.create();
     engine.world.gravity.y = gravity;
-
-    // Timing untuk smooth animation
-    engine.timing.timeScale = 1; // Normal speed
-    engine.positionIterations = 10; // Tingkatkan untuk collision lebih akurat
-    engine.velocityIterations = 8; // Tingkatkan untuk movement lebih smooth
 
     const render = Render.create({
       element: canvasContainerRef.current,
@@ -106,100 +103,46 @@ const FallingSkillCards: React.FC<FallingSkillCardsProps> = ({
       }
     });
 
-    // --- PHYSICS WALLS (BOUNDARIES) ---
-    // Kita buat dinding sedikit di luar area agar kartu memantul utuh
-    const wallOffset = 30; // Jarak pantulan (30px di luar area terlihat)
-    const wallThickness = 60; // Ketebalan dinding
-
-    // Dinding Bawah (Ground)
-    const ground = Bodies.rectangle(
-      width / 2, // Posisi X: di tengah
-      height + wallOffset, // Posisi Y: 30px DI BAWAH area terlihat
-      width, // Lebar: selebar container
-      wallThickness, // Tebal: 60px
-      {
-        isStatic: true, // Diam (ini adalah dinding)
-        render: { visible: false }, // Tidak terlihat
-      }
-    );
-
-    // Dinding Atas (Ceiling)
-    const ceiling = Bodies.rectangle(
-      width / 2, // Posisi X: di tengah
-      -wallOffset, // Posisi Y: 30px DI ATAS area terlihat
-      width, // Lebar: selebar container
-      wallThickness, // Tebal: 60px
-      {
-        isStatic: true,
-        render: { visible: false },
-      }
-    );
-
-    // Dinding Kiri
-    const leftWall = Bodies.rectangle(
-      -wallOffset, // Posisi X: 30px DI KIRI area terlihat
-      height / 2, // Posisi Y: di tengah
-      wallThickness, // Tebal: 60px
-      height, // Tinggi: setinggi container
-      {
-        isStatic: true,
-        render: { visible: false },
-      }
-    );
-
-    // Dinding Kanan
-    const rightWall = Bodies.rectangle(
-      width + wallOffset, // Posisi X: 30px DI KANAN area terlihat
-      height / 2, // Posisi Y: di tengah
-      wallThickness, // Tebal: 60px
-      height, // Tinggi: setinggi container
-      {
-        isStatic: true,
-        render: { visible: false },
-      }
-    );
+    // Boundaries - sama seperti FallingText template
+    const boundaryOptions = {
+      isStatic: true,
+      render: { fillStyle: 'transparent' }
+    };
+    const floor = Bodies.rectangle(width / 2, height + 25, width, 50, boundaryOptions);
+    const leftWall = Bodies.rectangle(-25, height / 2, 50, height, boundaryOptions);
+    const rightWall = Bodies.rectangle(width + 25, height / 2, 50, height, boundaryOptions);
+    const ceiling = Bodies.rectangle(width / 2, -25, width, 50, boundaryOptions);
 
     // Create physics bodies for each card
     const cardElements = cardsContainerRef.current.querySelectorAll<HTMLDivElement>('.falling-skill-card');
-    const cardBodies = Array.from(cardElements).map((elem, index) => {
+    const cardBodies = Array.from(cardElements).map(elem => {
       const rect = elem.getBoundingClientRect();
+
       const x = rect.left - containerRect.left + rect.width / 2;
       const y = rect.top - containerRect.top + rect.height / 2;
 
-      // Dapatkan ukuran card yang sebenarnya (fixed size)
-      const cardWidth = rect.width;
-      const cardHeight = rect.height;
-
-      const body = Bodies.rectangle(x, y, cardWidth, cardHeight, {
+      const body = Bodies.rectangle(x, y, rect.width, rect.height, {
         render: { fillStyle: 'transparent' },
-        restitution: 0.4, // Kurangi bouncing agar lebih smooth
-        frictionAir: 0.05, // Tingkatkan air friction untuk gerakan lebih smooth
-        friction: 0.5, // Tingkatkan friction agar tidak terlalu licin
-        density: 0.03, // Kurangi density agar lebih ringan
-        chamfer: { radius: 10 } // Rounded corners untuk collision lebih smooth
+        restitution: 0.8,
+        frictionAir: 0.01,
+        friction: 0.2
       });
 
-      // Add random initial velocity yang lebih lembut
       Matter.Body.setVelocity(body, {
-        x: (Math.random() - 0.5) * 1.5, // Kurangi kecepatan horizontal
-        y: Math.random() * 1 // Kurangi kecepatan vertikal
+        x: (Math.random() - 0.5) * 5,
+        y: 0
       });
-      Matter.Body.setAngularVelocity(body, (Math.random() - 0.5) * 0.05); // Kurangi rotasi
-
-      return { elem, body, cardWidth, cardHeight, initialIndex: index };
+      Matter.Body.setAngularVelocity(body, (Math.random() - 0.5) * 0.05);
+      return { elem, body };
     });
 
-    // Position elements absolutely dengan ukuran tetap
-    cardBodies.forEach(({ elem, body, cardWidth, cardHeight }) => {
+    cardBodies.forEach(({ elem, body }) => {
       elem.style.position = 'absolute';
-      elem.style.width = `${cardWidth}px`;
-      elem.style.height = `${cardHeight}px`;
-      elem.style.left = `${body.position.x}px`;
-      elem.style.top = `${body.position.y}px`;
-      elem.style.transform = 'translate(-50%, -50%)';
+      elem.style.left = `${body.position.x - body.bounds.max.x + body.bounds.min.x / 2}px`;
+      elem.style.top = `${body.position.y - body.bounds.max.y + body.bounds.min.y / 2}px`;
+      elem.style.transform = 'none';
     });
 
-    // Mouse interaction
     const mouse = Mouse.create(containerRef.current);
     const mouseConstraint = MouseConstraint.create(engine, {
       mouse,
@@ -210,44 +153,23 @@ const FallingSkillCards: React.FC<FallingSkillCardsProps> = ({
     });
     render.mouse = mouse;
 
-    World.add(engine.world, [
-      ground,
-      ceiling,
-      leftWall,
-      rightWall,
-      mouseConstraint,
-      ...cardBodies.map(cb => cb.body)
-    ]);
+    World.add(engine.world, [floor, leftWall, rightWall, ceiling, mouseConstraint, ...cardBodies.map(cb => cb.body)]);
 
     const runner = Runner.create();
     Runner.run(runner, engine);
     Render.run(render);
 
-    // Update loop dengan z-index dinamis dan interpolation untuk smooth movement
-    let lastTime = performance.now();
-    const updateLoop = (currentTime: number) => {
-      const deltaTime = currentTime - lastTime;
-      lastTime = currentTime;
-
-      // Sort cards berdasarkan posisi Y (cards di bawah memiliki z-index lebih tinggi)
-      const sortedBodies = [...cardBodies].sort((a, b) => b.body.position.y - a.body.position.y);
-
-      sortedBodies.forEach(({ body, elem }, index) => {
+    const updateLoop = () => {
+      cardBodies.forEach(({ body, elem }) => {
         const { x, y } = body.position;
-
-        // Smooth interpolation untuk posisi dan rotasi
         elem.style.left = `${x}px`;
         elem.style.top = `${y}px`;
         elem.style.transform = `translate(-50%, -50%) rotate(${body.angle}rad)`;
-        elem.style.transition = 'none'; // Disable CSS transition untuk physics control
-
-        // Z-index lebih tinggi untuk card yang lebih di bawah (menumpuk ke atas)
-        elem.style.zIndex = `${1000 + index}`;
       });
-
+      Matter.Engine.update(engine);
       requestAnimationFrame(updateLoop);
     };
-    requestAnimationFrame(updateLoop);
+    updateLoop();
 
     return () => {
       Render.stop(render);
@@ -258,7 +180,6 @@ const FallingSkillCards: React.FC<FallingSkillCardsProps> = ({
       World.clear(engine.world, false);
       Engine.clear(engine);
     };
-    
   }, [effectStarted, gravity, wireframes, backgroundColor, mouseConstraintStiffness]);
 
   
