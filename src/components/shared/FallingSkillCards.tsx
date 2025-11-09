@@ -103,15 +103,15 @@ const FallingSkillCards: React.FC<FallingSkillCardsProps> = ({
       }
     });
 
-    // Boundaries - positioned to allow full card visibility
+    // Boundaries - positioned to allow full card visibility without colliding with next section
     const boundaryOptions = {
       isStatic: true,
       render: { fillStyle: 'transparent' }
     };
-    // Floor positioned further down to allow cards to be fully visible
-    const floor = Bodies.rectangle(width / 2, height + 100, width, 50, boundaryOptions);
-    const leftWall = Bodies.rectangle(-25, height / 2, 50, height * 1.5, boundaryOptions);
-    const rightWall = Bodies.rectangle(width + 25, height / 2, 50, height * 1.5, boundaryOptions);
+    // Floor positioned slightly below container to show full cards but prevent overflow to next section
+    const floor = Bodies.rectangle(width / 2, height + 150, width, 50, boundaryOptions);
+    const leftWall = Bodies.rectangle(-25, height / 2 + 75, 50, height * 2, boundaryOptions);
+    const rightWall = Bodies.rectangle(width + 25, height / 2 + 75, 50, height * 2, boundaryOptions);
     const ceiling = Bodies.rectangle(width / 2, -25, width, 50, boundaryOptions);
 
     // Create physics bodies for each card
