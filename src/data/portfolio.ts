@@ -87,17 +87,17 @@ export const developerSkills = [
   { name: 'Next.js', image: '/assets/Next JS logo.webp' },
   { name: 'React', image: '/assets/react js logo.webp' },
   { name: 'Vue.js', image: '/assets/Vue.js logo.webp' },
-  { name: 'Bootstrap', image: '/assets/boostrap.webp' },
-  { name: 'CSS', image: '/assets/CSS.webp' },
-  { name: 'Dart', image: '/assets/dart.webp' },
-  { name: 'Express.js', image: '/assets/express_js.webp' },
-  { name: 'HTML', image: '/assets/HTML.webp' },
-  { name: 'Java', image: '/assets/Java.webp' },
-  { name: 'JavaScript', image: '/assets/javascript.webp' },
+  { name: 'Bootstrap', image: '/assets/boostrap-new.webp' },
+  { name: 'CSS', image: '/assets/CSS-new.webp' },
+  { name: 'Dart', image: '/assets/dart-new.webp' },
+  { name: 'Express.js', image: '/assets/express_js-new.webp' },
+  { name: 'HTML', image: '/assets/HTML-new.webp' },
+  { name: 'Java', image: '/assets/Java-new.webp' },
+  { name: 'JavaScript', image: '/assets/javascript-new.webp' },
   { name: 'Node.js', image: '/assets/node_js.webp' },
-  { name: 'PHP', image: '/assets/php.webp' },
-  { name: 'TypeScript', image: '/assets/typescript.webp' },
-  { name: 'Spring Boot', image: '/assets/springboot.webp' },
+  { name: 'PHP', image: '/assets/php-new.webp' },
+  { name: 'TypeScript', image: '/assets/typescript-new.webp' },
+  { name: 'Spring Boot', image: '/assets/springboot-new.webp' },
   { name: 'Tailwind CSS', image: '/assets/tailwind.webp' },
 ];
 
@@ -108,7 +108,7 @@ export const designSkills = [
   { name: 'Photoshop', image: '/assets/Photoshop.webp' },
   { name: 'Framer', image: '/assets/framer.webp' },
   { name: 'SketchUp', image: '/assets/sketchup.webp' },
-  { name: 'Webflow', image: '/assets/webflow.webp' },
+  { name: 'Webflow', image: '/assets/webflow-new.webp' },
 ];
 
 export const workExperience: Experience[] = [
