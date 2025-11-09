@@ -8,7 +8,7 @@ import { InteractiveButton } from '../shared/InteractiveButton';
 import TiltedCard from '../shared/TiltedCard';
 import { Projects } from './Projects';
 import { ImmersivePortfolioGallery } from './ImmersivePortfolioGallery';
-import { UiUxSkills } from './UiUxSkills';
+import UiUxSkills from './UiUxSkills';
 import { SelectedRole } from './RoleSelectionModal';
 
 export type ProjectRole = 'developer' | 'uiux';

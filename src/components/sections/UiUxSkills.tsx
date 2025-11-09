@@ -3,7 +3,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { designSkills, developerSkills } from '../../data/portfolio';
-import AnimatedSectionTitle from '../shared/AnimatedSectionTitle';
+import { AnimatedSectionTitle } from '../shared/AnimatedSectionTitle';
 import GlassSkillCard from '../shared/GlassSkillCard';
 
 const UiUxSkills: React.FC = () => {
@@ -24,7 +24,7 @@ const UiUxSkills: React.FC = () => {
 
   return (
     <section id="skills" className="py-20 px-4 md:px-8 lg:px-16">
-      <AnimatedSectionTitle>My Skills</AnimatedSectionTitle>
+      <AnimatedSectionTitle title="My Skills" />
 
       {/* Design Skills */}
       <div className="mb-16">

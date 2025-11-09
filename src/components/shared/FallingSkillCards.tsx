@@ -175,10 +175,7 @@ const FallingSkillCards: React.FC<FallingSkillCardsProps> = ({
 
     World.add(engine.world, [floor, ceiling, leftWall, rightWall, mouseConstraint, ...cardBodies.map(cb => cb.body)]);
 
-    const runner = Runner.create({
-      delta: 1000 / 60, // 60 FPS untuk smooth animation
-      isFixed: true
-    });
+    const runner = Runner.create();
     Runner.run(runner, engine);
     Render.run(render);
 

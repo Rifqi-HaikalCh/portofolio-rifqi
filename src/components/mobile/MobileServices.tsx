@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '../../context/LanguageContext';
 import { Code, Palette } from 'lucide-react';
 import GlassSkillCard from '../shared/GlassSkillCard';
-import { designSkills, developerSkills } from '../../data/portfolio';
+import { designSkills as designSkillsData, developerSkills as developerSkillsData } from '../../data/portfolio';
 
 interface Service {
   id: string;
@@ -319,7 +319,7 @@ export const MobileServices: React.FC = () => {
             </div>
 
             <div className="px-6 grid grid-cols-3 gap-4">
-              {(activeTab === 'developer' ? developerSkills : designSkills).map((skill, index) => (
+              {(activeTab === 'development' ? developerSkillsData : designSkillsData).map((skill, index) => (
                 <motion.div
                   key={skill.name}
                   initial={{ scale: 0, opacity: 0 }}
