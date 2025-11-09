@@ -290,7 +290,7 @@ export const designProjects: Project[] = [
     title: 'Sportainment App',
     description: 'A platform for sports enthusiasts to easily find activities, events, and track their progress. Complete with features for booking sports facilities, joining community events, and monitoring personal fitness achievements.',
     descriptionId: 'Platform buat yang hobi olahraga, biar gampang cari aktivitas, event, dan tracking progres. Lengkap dengan fitur booking fasilitas olahraga, join event komunitas, dan monitoring pencapaian fitness pribadi.',
-    image: '/assets/Sportainment web.png',
+    image: '/assets/Sportainment-web.webp',
     techStack: ['Figma', 'UI/UX Design', 'Prototyping', 'User Research'],
     links: {
       prototype: 'https://www.figma.com/proto/qzu1Y29B3OPdQwCp62JpbZ/Sportainment?page-id=0%3A1&node-id=22-1273&p=f&viewport=93%2C-29%2C0.17&t=636v3PPntD4Dg81U-1&scaling=contain&content-scaling=fixed'
@@ -370,7 +370,7 @@ export const designProjects: Project[] = [
     title: 'Campus Portal Design',
     description: 'Modern and accessible campus website design focusing on student experience and information architecture.',
     descriptionId: 'Desain website kampus modern dan accessible yang berfokus pada pengalaman mahasiswa dan arsitektur informasi.',
-    image: '/assets/Campuss Website Design-1.png',
+    image: '/assets/Campuss Website Design-1.webp',
     techStack: ['Figma', 'Sketch', 'InVision'],
     links: {
       prototype: 'https://www.figma.com/proto/rileM7AuecCrGEnA0soMd1/RE-DESIGN-WEBSITE-DEL?page-id=0%3A1&node-id=447-121&p=f&viewport=845%2C151%2C0.13&t=gbfdy7gE7yozEW3C-1&scaling=scale-down-width&content-scaling=fixed'
@@ -378,15 +378,15 @@ export const designProjects: Project[] = [
     category: 'individual',
     type: 'design',
     slides: [
-      '/assets/Campuss Website Design-1.png',
-      '/assets/Campuss Website Design-2.png',
-      '/assets/Campuss Website Design-3.png',
-      '/assets/Campuss Website Design-4.png',
-      '/assets/Campuss Website Design-5.png',
-      '/assets/Campuss Website Design-6.png',
-      '/assets/Campuss Website Design-7.png',
-      '/assets/Campuss Website Design-8.png',
-      '/assets/Campuss Website Design-9.png'
+      '/assets/Campuss Website Design-1.webp',
+      '/assets/Campuss Website Design-2.webp',
+      '/assets/Campuss Website Design-3.webp',
+      '/assets/Campuss Website Design-4.webp',
+      '/assets/Campuss Website Design-5.webp',
+      '/assets/Campuss Website Design-6.webp',
+      '/assets/Campuss Website Design-7.webp',
+      '/assets/Campuss Website Design-8.webp',
+      '/assets/Campuss Website Design-9.webp'
     ]
   },
   {
@@ -394,7 +394,7 @@ export const designProjects: Project[] = [
     title: 'Gordenaise E-commerce',
     description: 'Luxury home decor e-commerce platform with emphasis on visual appeal and conversion optimization.',
     descriptionId: 'Platform e-commerce dekorasi rumah mewah dengan penekanan pada daya tarik visual dan optimasi konversi.',
-    image: '/assets/Gordenaise Website Design-01.png',
+    image: '/assets/Gordenaise Website Design-01.webp',
     techStack: ['Figma', 'Adobe XD', 'Photoshop'],
     links: {
       prototype: 'https://www.figma.com/proto/m63t9o0EJ7aBvG5I09yWVf/Gordenaise?page-id=0%3A1&node-id=34-373&p=f&viewport=89%2C310%2C0.07&t=LJSZaTROUnCZIqfH-1&scaling=scale-down-width&content-scaling=fixed'
@@ -402,16 +402,16 @@ export const designProjects: Project[] = [
     category: 'individual',
     type: 'design',
     slides: [
-      '/assets/Gordenaise Website Design-01.png',
-      '/assets/Gordenaise Website Design-02.png',
-      '/assets/Gordenaise Website Design-03.png',
-      '/assets/Gordenaise Website Design-04.png',
-      '/assets/Gordenaise Website Design-05.png',
-      '/assets/Gordenaise Website Design-06.png',
-      '/assets/Gordenaise Website Design-07.png',
-      '/assets/Gordenaise Website Design-08.png',
-      '/assets/Gordenaise Website Design-09.png',
-      '/assets/Gordenaise Website Design-10.png'
+      '/assets/Gordenaise Website Design-01.webp',
+      '/assets/Gordenaise Website Design-02.webp',
+      '/assets/Gordenaise Website Design-03.webp',
+      '/assets/Gordenaise Website Design-04.webp',
+      '/assets/Gordenaise Website Design-05.webp',
+      '/assets/Gordenaise Website Design-06.webp',
+      '/assets/Gordenaise Website Design-07.webp',
+      '/assets/Gordenaise Website Design-08.webp',
+      '/assets/Gordenaise Website Design-09.webp',
+      '/assets/Gordenaise Website Design-10.webp'
     ]
   }
 ];
