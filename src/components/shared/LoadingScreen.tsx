@@ -3,10 +3,14 @@ import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { TypeAnimation } from 'react-type-animation';
 import { SkipForward } from 'lucide-react';
-import Lottie from 'lottie-react';
+import dynamic from 'next/dynamic';
 import { premiumEasing } from '../../lib/optimized-animations';
-import assistantAnimation from '../../../public/assets/assistant2.json';
-import multitaskingAnimation from '../../../public/assets/Multitasking.json';
+
+// Lazy load Lottie for better performance
+const Lottie = dynamic(() => import('lottie-react'), {
+  ssr: false,
+  loading: () => <div className="w-full h-full animate-pulse bg-gradient-to-br from-emerald-100 to-blue-100 dark:from-emerald-900/20 dark:to-blue-900/20 rounded-3xl" />
+});
 
 interface LoadingScreenProps {
   onComplete?: () => void;
@@ -18,8 +22,16 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
   const [isSkipping, setIsSkipping] = useState(false);
   const [canProceed, setCanProceed] = useState(true);
   const [showSkipButton, setShowSkipButton] = useState(false);
+  const [assistantAnimation, setAssistantAnimation] = useState<any>(null);
+  const [multitaskingAnimation, setMultitaskingAnimation] = useState<any>(null);
   const assistantRef = useRef(null);
   const multitaskingRef = useRef(null);
+
+  // Lazy load animations only when needed
+  useEffect(() => {
+    import('../../../public/assets/assistant2.json').then(setAssistantAnimation);
+    import('../../../public/assets/Multitasking.json').then(setMultitaskingAnimation);
+  }, []);
 
 
   // Create visual feedback for typing effect
@@ -49,11 +61,11 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
     }, 800);
   };
 
-  // Show skip button after 2 seconds
+  // Show skip button immediately for better UX
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowSkipButton(true);
-    }, 2000);
+    }, 500); // Reduced from 2000ms to 500ms
     return () => clearTimeout(timer);
   }, []);
 
@@ -62,37 +74,37 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
       id: 0,
       text: "Hello, welcome to this portfolio page.",
       animation: "assistant",
-      duration: 3500
+      duration: 2000 // Reduced from 3500ms
     },
     {
       id: 1,
       text: "I am EQbot, your guide on this page.",
       animation: "assistant",
-      duration: 3500
+      duration: 2000 // Reduced from 3500ms
     },
     {
       id: 2,
       text: "Are you looking for someone to create a website?",
       animation: "assistant",
-      duration: 5000
+      duration: 2500 // Reduced from 5000ms
     },
     {
       id: 3,
       text: "Or looking for someone to create a mobile app?",
       animation: "assistant",
-      duration: 5000
+      duration: 2500 // Reduced from 5000ms
     },
     {
       id: 4,
       text: "Or need someone to design interface and user experience?",
       animation: "assistant",
-      duration: 6000
+      duration: 2500 // Reduced from 6000ms
     },
     {
       id: 5,
       text: "Here he is, the right person for the job!",
       animation: "multitasking",
-      duration: 4000
+      duration: 2000 // Reduced from 4000ms
     }
   ];
 
@@ -246,7 +258,7 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
             }}
           >
           <AnimatePresence mode="wait">
-            {currentStepData.animation === "assistant" && (
+            {currentStepData.animation === "assistant" && assistantAnimation && (
               <motion.div
                 key="assistant"
                 ref={assistantRef}
@@ -257,19 +269,19 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
                 className="w-full h-full"
               >
                 <Lottie
-                  animationData={require('../../../public/assets/assistant2.json')}
+                  animationData={assistantAnimation}
                   loop={true}
                   className="w-full h-full"
                 />
               </motion.div>
             )}
-            
-            {currentStepData.animation === "multitasking" && (
+
+            {currentStepData.animation === "multitasking" && multitaskingAnimation && (
               <motion.div
                 key="multitasking"
                 initial={{ scale: 0, opacity: 0, y: 50 }}
                 animate={{ scale: 1, opacity: 1, y: 0 }}
-                transition={{ 
+                transition={{
                   duration: 1,
                   ease: "backOut",
                   delay: 0.3
@@ -278,7 +290,7 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
               >
                 <Lottie
                   lottieRef={multitaskingRef}
-                  animationData={require('../../../public/assets/Multitasking.json')}
+                  animationData={multitaskingAnimation}
                   loop={true}
                   className="w-full h-full"
                 />

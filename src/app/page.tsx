@@ -1,8 +1,6 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import AOS from 'aos';
-import 'aos/dist/aos.css';
 import { AnimatePresence } from 'framer-motion';
 import { TimedNotification, NotificationMessage } from '../components/shared/TimedNotification';
 import { useLanguage } from '../context/LanguageContext';
@@ -97,13 +95,8 @@ export default function Home() {
   const [currentNotification, setCurrentNotification] = useState<NotificationMessage | null>(null);
   const [notificationStep, setNotificationStep] = useState(0);
 
-  useEffect(() => {
-    AOS.init({
-      duration: 1000,
-      once: true,
-      easing: 'ease-out',
-    });
-  }, []);
+  // AOS library removed - using Framer Motion's IntersectionObserver-based animations instead
+  // This improves INP (Interaction to Next Paint) significantly
 
 
   const eqbotMessages = getEQbotMessages();

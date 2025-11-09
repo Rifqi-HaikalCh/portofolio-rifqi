@@ -10,6 +10,8 @@ const poppins = Poppins({
   weight: ["300", "400", "500", "600", "700", "800"],
   variable: '--font-poppins',
   display: 'swap',
+  preload: true, // Preload for faster LCP
+  adjustFontFallback: true, // Reduce layout shift
 });
 
 const jetbrainsMono = JetBrains_Mono({
@@ -17,6 +19,8 @@ const jetbrainsMono = JetBrains_Mono({
   weight: ["400", "600"],
   variable: '--font-jetbrains-mono',
   display: 'swap',
+  preload: true,
+  adjustFontFallback: true,
 });
 
 export const metadata: Metadata = {
@@ -44,10 +48,12 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <link 
-          rel="stylesheet" 
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" 
-        />
+        {/* Font Awesome CDN removed for performance - using lucide-react instead */}
+        {/* Preconnect to optimize external resources */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        {/* DNS prefetch for faster resource loading */}
+        <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
       </head>
       <body className={`${poppins.variable} ${jetbrainsMono.variable} font-poppins`}>
         <Providers>
