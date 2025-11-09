@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState, useEffect } from 'react';
-import Matter from 'matter-js';
+import Matter, { Bodies } from 'matter-js';
 import Image from 'next/image';
 import './FallingSkillCards.css';
 
@@ -36,6 +36,7 @@ const FallingSkillCards: React.FC<FallingSkillCardsProps> = ({
   const [effectStarted, setEffectStarted] = useState(false);
   const [cardsLoaded, setCardsLoaded] = useState(false);
 
+  
   // Set cards as loaded after initial mount
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -105,22 +106,58 @@ const FallingSkillCards: React.FC<FallingSkillCardsProps> = ({
       }
     });
 
-    // Boundaries - dinding tepat di tepi container agar card tidak tertutup
-    const boundaryOptions = {
-      isStatic: true,
-      render: { fillStyle: 'transparent' }
-    };
-    const wallThickness = 50;
-    const padding = 10; // Padding dari tepi container
+    // --- PHYSICS WALLS (BOUNDARIES) ---
+    // Kita buat dinding sedikit di luar area agar kartu memantul utuh
+    const wallOffset = 30; // Jarak pantulan (30px di luar area terlihat)
+    const wallThickness = 60; // Ketebalan dinding
 
-    // Floor di bagian bawah container
-    const floor = Bodies.rectangle(width / 2, height - padding, width, wallThickness, boundaryOptions);
-    // Ceiling di bagian atas container
-    const ceiling = Bodies.rectangle(width / 2, padding, width, wallThickness, boundaryOptions);
-    // Left wall di sisi kiri
-    const leftWall = Bodies.rectangle(padding, height / 2, wallThickness, height, boundaryOptions);
-    // Right wall di sisi kanan
-    const rightWall = Bodies.rectangle(width - padding, height / 2, wallThickness, height, boundaryOptions);
+    // Dinding Bawah (Ground)
+    const ground = Bodies.rectangle(
+      width / 2, // Posisi X: di tengah
+      height + wallOffset, // Posisi Y: 30px DI BAWAH area terlihat
+      width, // Lebar: selebar container
+      wallThickness, // Tebal: 60px
+      {
+        isStatic: true, // Diam (ini adalah dinding)
+        render: { visible: false }, // Tidak terlihat
+      }
+    );
+
+    // Dinding Atas (Ceiling)
+    const ceiling = Bodies.rectangle(
+      width / 2, // Posisi X: di tengah
+      -wallOffset, // Posisi Y: 30px DI ATAS area terlihat
+      width, // Lebar: selebar container
+      wallThickness, // Tebal: 60px
+      {
+        isStatic: true,
+        render: { visible: false },
+      }
+    );
+
+    // Dinding Kiri
+    const leftWall = Bodies.rectangle(
+      -wallOffset, // Posisi X: 30px DI KIRI area terlihat
+      height / 2, // Posisi Y: di tengah
+      wallThickness, // Tebal: 60px
+      height, // Tinggi: setinggi container
+      {
+        isStatic: true,
+        render: { visible: false },
+      }
+    );
+
+    // Dinding Kanan
+    const rightWall = Bodies.rectangle(
+      width + wallOffset, // Posisi X: 30px DI KANAN area terlihat
+      height / 2, // Posisi Y: di tengah
+      wallThickness, // Tebal: 60px
+      height, // Tinggi: setinggi container
+      {
+        isStatic: true,
+        render: { visible: false },
+      }
+    );
 
     // Create physics bodies for each card
     const cardElements = cardsContainerRef.current.querySelectorAll<HTMLDivElement>('.falling-skill-card');
@@ -173,7 +210,14 @@ const FallingSkillCards: React.FC<FallingSkillCardsProps> = ({
     });
     render.mouse = mouse;
 
-    World.add(engine.world, [floor, ceiling, leftWall, rightWall, mouseConstraint, ...cardBodies.map(cb => cb.body)]);
+    World.add(engine.world, [
+      ground,
+      ceiling,
+      leftWall,
+      rightWall,
+      mouseConstraint,
+      ...cardBodies.map(cb => cb.body)
+    ]);
 
     const runner = Runner.create();
     Runner.run(runner, engine);
@@ -214,8 +258,10 @@ const FallingSkillCards: React.FC<FallingSkillCardsProps> = ({
       World.clear(engine.world, false);
       Engine.clear(engine);
     };
+    
   }, [effectStarted, gravity, wireframes, backgroundColor, mouseConstraintStiffness]);
 
+  
   const handleTrigger = () => {
     if (!effectStarted && (trigger === 'click' || trigger === 'hover')) {
       setEffectStarted(true);

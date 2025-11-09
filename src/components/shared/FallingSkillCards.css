@@ -3,7 +3,7 @@
   width: 100%;
   min-height: 600px;
   max-height: 800px;
-  overflow: hidden;
+ /* overflow: visible; */
   cursor: grab;
   padding: 10px; /* Padding agar card tidak menempel di tepi */
   box-sizing: border-box;
