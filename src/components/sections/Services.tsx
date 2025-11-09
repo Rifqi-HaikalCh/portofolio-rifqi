@@ -10,8 +10,11 @@ import { InteractiveButton } from '../shared/InteractiveButton';
 import StandardModal from '../shared/StandardModal';
 import ElectricBorder from '../shared/ElectricBorder';
 import TiltedCard from '../shared/TiltedCard';
+import GlassSkillCard from '../shared/GlassSkillCard';
+import FallingSkillCards from '../shared/FallingSkillCards';
 import { Code, Palette, Layers, ChevronLeft, ChevronRight, X, ArrowRight, Sparkles, Eye, ExternalLink } from 'lucide-react';
 import { Projects } from './Projects';
+import { designSkills as designSkillsData, developerSkills as developerSkillsData, designProjects as portfolioDesignProjects } from '../../data/portfolio';
 
 // Create motion-wrapped Image component for animations
 const MotionImage = motion.create(Image);
@@ -338,137 +341,29 @@ interface DesignProject {
   };
 }
 
-const designProjects: DesignProject[] = [
-    {
-    id: 'beauty-mobile-app-design',
-    titleEn: 'Beauty E-Commerce Mobile App Design',
-    titleId: 'Desain Aplikasi Mobile E-Commerce Kecantikan',
-    descriptionEn: 'Designing a modern and intuitive mobile e-commerce experience dedicated to beauty and skincare products.',
-    descriptionId: 'Merancang pengalaman e-commerce mobile yang modern dan intuitif khusus untuk produk kecantikan dan perawatan kulit.',
-    image: '/assets/beautyMobileApp.webp',
-    images: ['/assets/beautyMobileApp.webp'],
-    tools: ['Figma', 'UI/UX Design', 'Mobile Design', 'Design System', 'Prototyping'],
-    year: '2025',
-    category: 'Mobile Design',
-    links: {
-      figma: 'https://www.figma.com/proto/P1HhF2cjWydsS4UtzQ9liv/Beauty-Mobile-App-Design?page-id=0%3A1&node-id=49-1149&p=f&viewport=133%2C397%2C0.55&t=dfdOnSGjlSOq84Zw-1&scaling=scale-down&content-scaling=fixed&starting-point-node-id=49%3A1072'
-    }
-  },
-    {
-    id: 'dinoshop-design',
-    titleEn: 'DinoShop E-Commerce Design',
-    titleId: 'Desain E-Commerce DinoShop',
-    descriptionEn: 'Designing a complete, visually-driven user experience for an electronics e-commerce platform, focusing on a clean, minimalist aesthetic.',
-    descriptionId: 'Merancang pengalaman pengguna yang lengkap dan visual untuk platform e-commerce elektronik, berfokus pada estetika minimalis yang bersih.',
-    image: '/assets/DinoShop.webp',
-    images: ['/assets/DinoShop.webp'],
-    tools: ['Figma', 'UI/UX Design', 'Prototyping', 'Interactive Design'],
-    year: '2025',
-    category: 'E-commerce Design',
-    links: {
-      figma: 'https://www.figma.com/proto/ZNCYVnAGdOL47VgFPnZGHE/Project-Mock?page-id=0%3A1&node-id=145-4254&p=f&viewport=1008%2C3367%2C0.45&t=a6FkFBiT6pik43fA-1&scaling=contain&content-scaling=fixed&starting-point-node-id=145%3A4254'
-    }
-  },
-
-  {
-    id: 'del-pick-design',
-    titleEn: 'Del-Pick: Mobile Delivery & Logistics App',
-    titleId: 'Aplikasi Mobile Del-Pick: Pengiriman & Logistik',
-    descriptionEn: 'Mobile delivery system designed to overcome logistics problems. Translated high-fidelity Figma UI/UX designs into 20+ polished screens.',
-    descriptionId: 'Sistem pengiriman mobile yang dirancang untuk mengatasi masalah logistik. Menerjemahkan desain Figma UI/UX fidelitas tinggi menjadi 20+ layar.',
-    image: '/assets/del-pick.webp',
-    images: ['/assets/del-pick.webp'],
-    tools: ['Figma', 'UI/UX Design', 'Flutter', 'Mobile Design'],
-    year: '2025',
-    category: 'Mobile Design',
-    links: {
-      demo: 'https://drive.google.com/file/d/1dFmPBOM7i7SubKeOztS6FWffawnltK2p/view'
-    }
-  },
-  {
-    id: 'assets-management',
-    titleEn: 'Assets Management System',
-    titleId: 'Sistem Manajemen Aset',
-    descriptionEn: 'A comprehensive web design system for asset management platform with focus on user experience and data visualization.',
-    descriptionId: 'Sistem desain web komprehensif untuk platform manajemen aset dengan fokus pada pengalaman pengguna dan visualisasi data.',
-    image: '/assets/Assets Manajemen Web Design-01.png',
-    images: [
-      '/assets/Assets Manajemen Web Design-01.png',
-      '/assets/Assets Manajemen Web Design-02.png',
-      '/assets/Assets Manajemen Web Design-03.png',
-      '/assets/Assets Manajemen Web Design-04.png',
-      '/assets/Assets Manajemen Web Design-05.png',
-      '/assets/Assets Manajemen Web Design-06.png',
-      '/assets/Assets Manajemen Web Design-07.png',
-      '/assets/Assets Manajemen Web Design-08.png',
-      '/assets/Assets Manajemen Web Design-09.png',
-      '/assets/Assets Manajemen Web Design-10.png'
-    ],
-    colors: ['#2563eb', '#06b6d4', '#10b981', '#f59e0b'],
-    tools: ['Figma', 'Adobe Photoshop', 'Principle'],
-    year: '2025',
-    category: 'Web Design',
-    client: 'Tech Solutions Inc',
-    links: { // <-- LINK DITAMBAHKAN
-      figma: 'https://www.figma.com/proto/N2eNg8UcsUg3Z4oIpwPn4g/Aplikasi-Manajemen-Aset?page-id=0%3A1&node-id=9-356&p=f&viewport=338%2C243%2C0.06&t=RcXQkGz3wJYNThcT-1&scaling=contain&content-scaling=fixed'
-    }
-  },
-  {
-    id: 'campus-website',
-    titleEn: 'Campus Portal Design',
-    titleId: 'Desain Portal Kampus',
-    descriptionEn: 'Modern and accessible campus website design focusing on student experience and information architecture.',
-    descriptionId: 'Desain website kampus modern dan accessible yang berfokus pada pengalaman mahasiswa dan arsitektur informasi.',
-    image: '/assets/Campuss Website Design-1.png',
-    images: [
-      '/assets/Campuss Website Design-1.png',
-      '/assets/Campuss Website Design-2.png',
-      '/assets/Campuss Website Design-3.png',
-      '/assets/Campuss Website Design-4.png',
-      '/assets/Campuss Website Design-5.png',
-      '/assets/Campuss Website Design-6.png',
-      '/assets/Campuss Website Design-7.png',
-      '/assets/Campuss Website Design-8.png',
-      '/assets/Campuss Website Design-9.png'
-    ],
-    colors: ['#1e40af', '#059669', '#d97706'],
-    tools: ['Figma', 'Sketch', 'InVision'],
-    year: '2024',
-    category: 'Web Design',
-    client: 'Del Institute',
-    links: { // <-- LINK DITAMBAHKAN
-      figma: 'https://www.figma.com/proto/rileM7AuecCrGEnA0soMd1/RE-DESIGN-WEBSITE-DEL?page-id=0%3A1&node-id=447-121&p=f&viewport=845%2C151%2C0.13&t=gbfdy7gE7yozEW3C-1&scaling=scale-down-width&content-scaling=fixed'
-    }
-  },
-  {
-    id: 'gordenaise',
-    titleEn: 'Gordenaise E-commerce',
-    titleId: 'E-commerce Gordenaise',
-    descriptionEn: 'Luxury home decor e-commerce platform with emphasis on visual appeal and conversion optimization.',
-    descriptionId: 'Platform e-commerce dekorasi rumah mewah dengan penekanan pada daya tarik visual dan optimasi konversi.',
-    image: '/assets/Gordenaise Website Design-01.png',
-    images: [
-      '/assets/Gordenaise Website Design-01.png',
-      '/assets/Gordenaise Website Design-02.png',
-      '/assets/Gordenaise Website Design-03.png',
-      '/assets/Gordenaise Website Design-04.png',
-      '/assets/Gordenaise Website Design-05.png',
-      '/assets/Gordenaise Website Design-06.png',
-      '/assets/Gordenaise Website Design-07.png',
-      '/assets/Gordenaise Website Design-08.png',
-      '/assets/Gordenaise Website Design-09.png',
-      '/assets/Gordenaise Website Design-10.png'
-    ],
-    colors: ['#a855f7', '#ec4899', '#06b6d4'],
-    tools: ['Figma', 'Adobe XD', 'Photoshop'],
-    year: '2024',
-    category: 'E-commerce Design',
-    client: 'Gordenaise Home Decor',
-    links: { // <-- LINK DITAMBAHKAN
-      figma: 'https://www.figma.com/proto/m63t9o0EJ7aBvG5I09yWVf/Gordenaise?page-id=0%3A1&node-id=34-373&p=f&viewport=89%2C310%2C0.07&t=LJSZaTROUnCZIqfH-1&scaling=scale-down-width&content-scaling=fixed'
-    }
-  },
-];
+// Convert portfolio design projects to DesignProject format
+const designProjects: DesignProject[] = portfolioDesignProjects.map(project => ({
+  id: project.id,
+  titleEn: project.title,
+  titleId: project.descriptionId || project.title,
+  descriptionEn: project.description,
+  descriptionId: project.descriptionId || project.description,
+  image: project.image,
+  images: project.slides || [project.image],
+  tools: project.techStack,
+  year: '2025',
+  category: project.id.includes('mobile') ? 'Mobile Design' :
+            project.id.includes('ecommerce') || project.id.includes('shop') ? 'E-commerce Design' :
+            'Web Design',
+  client: project.id === 'campus-website' ? 'Del Institute' : undefined,
+  colors: project.id === 'assets-management' ? ['#2563eb', '#06b6d4', '#10b981', '#f59e0b'] :
+          project.id === 'campus-website' ? ['#1e40af', '#059669', '#d97706'] :
+          project.id === 'gordenaise' ? ['#a855f7', '#ec4899', '#06b6d4'] : undefined,
+  links: {
+    figma: project.links.prototype,
+    demo: project.links.demo || project.links.needToKnow
+  }
+}));
 
 // Skills data integrated from UiUxSkills
 interface Skill {
@@ -1328,74 +1223,32 @@ return (
                 </h3>
                 <div className={`w-24 h-1 bg-gradient-to-r ${currentTab.gradient} mx-auto rounded-full`} />
               </div>
-              
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5 lg:gap-6">
-                {currentTab.skills.map((skill, index) => (
-                  <motion.div
-                    key={skill.name}
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.1, duration: 0.4 }}
-                    className="w-full"
-                  >
-                    <TiltedCard
-                      scaleOnHover={1.06}
-                      rotateAmplitude={8}
-                      containerHeight="100%"
-                      containerWidth="100%"
+
+              {/* Falling Skills Animation - Desktop Only */}
+              <div className="hidden md:block">
+                <FallingSkillCards
+                  skills={activeTab === 'development' ? developerSkillsData : designSkillsData}
+                  trigger="scroll"
+                  gravity={0.8}
+                  mouseConstraintStiffness={0.9}
+                  delay={2000}
+                />
+              </div>
+
+              {/* Mobile - Static Cards */}
+              <div className="block md:hidden">
+                <div className="grid grid-cols-3 gap-4">
+                  {(activeTab === 'development' ? developerSkillsData : designSkillsData).map((skill, index) => (
+                    <motion.div
+                      key={skill.name}
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.05, duration: 0.4 }}
                     >
-                    <div className="group bg-transparent rounded-xl lg:rounded-2xl p-3 sm:p-4 lg:p-6 shadow-xl border border-gray-200 dark:border-gray-700 h-full hover:shadow-2xl min-h-[180px] sm:min-h-[200px] transition-all duration-300">
-                        {/* Skill Header */}
-                        <div className="flex items-start mb-3 sm:mb-4">
-                          <div
-                            className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl flex items-center justify-center text-lg sm:text-2xl mr-3 sm:mr-4 group-hover:scale-110 transition-transform duration-300 flex-shrink-0"
-                            style={{ backgroundColor: `${skill.color}20` }}
-                          >
-                            {skill.icon}
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <h4 className="font-bold text-gray-900 dark:text-white mb-2 text-lg sm:text-xl lg:text-xl leading-tight">
-                              {language === 'en' ? skill.name : skill.nameId}
-                            </h4>
-                          </div>
-                        </div>
-
-                        {/* Skill Level - Proportional Text */}
-                        <div className="space-y-2 sm:space-y-3">
-                          <div className="flex justify-between items-center">
-                            <span className="text-sm sm:text-base lg:text-base font-medium text-gray-600 dark:text-gray-300">
-                              {language === 'en' ? 'Proficiency' : 'Kemahiran'}
-                            </span>
-                            <span className="text-sm sm:text-base lg:text-base font-bold text-gray-900 dark:text-white">
-                              {skill.level}%
-                            </span>
-                          </div>
-
-                          {/* Progress Bar */}
-                          <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 sm:h-3 overflow-hidden">
-                            <motion.div
-                              className="h-2 sm:h-3 rounded-full"
-                              style={{
-                                background: `linear-gradient(90deg, ${skill.color}, ${skill.color}dd)`
-                              }}
-                              initial={{ width: 0 }}
-                              whileInView={{ width: `${skill.level}%` }}
-                              transition={{
-                                duration: 1.2,
-                                delay: index * 0.1,
-                                ease: "easeOut",
-                                type: "spring",
-                                stiffness: 120,
-                                damping: 20
-                              }}
-                              viewport={{ once: true, amount: 0.3 }}
-                            />
-                          </div>
-                        </div>
-                    </div>
-                    </TiltedCard>
-                  </motion.div>
-                ))}
+                      <GlassSkillCard name={skill.name} image={skill.image} />
+                    </motion.div>
+                  ))}
+                </div>
               </div>
             </div>
 

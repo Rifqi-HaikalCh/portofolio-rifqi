@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '../../context/LanguageContext';
-import { individualProjects } from '../../data/portfolio';
+import { individualProjects, designProjects as portfolioDesignProjects } from '../../data/portfolio';
 import { X, ChevronLeft, ChevronRight, Eye } from 'lucide-react';
 import Carousel from '../shared/Carousel';
 import { ViewAllProjects } from './ViewAllProjects';
@@ -114,7 +114,8 @@ export const MobileImmersivePortfolioGallery: React.FC = () => {
   }, []);
 
   // Filter UI/UX design projects from individualProjects
-  const uiuxProjects = individualProjects.filter(project => project.type === 'design');
+  const allPortfolioProjects = [...individualProjects, ...portfolioDesignProjects];
+  const uiuxProjects = allPortfolioProjects.filter(project => project.type === 'design');
 
   const openModal = (project: DesignProject, imageIndex: number = 0) => {
     setSelectedProject(project);

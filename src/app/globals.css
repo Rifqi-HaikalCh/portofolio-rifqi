@@ -5,6 +5,9 @@
 /* Import Z-Index Hierarchy */
 @import '../styles/z-index.css';
 
+/* Import GlassSkillCard Styles */
+@import '../styles/GlassSkillCard.css';
+
 @layer base {
   :root {
     --primary-green: #10B981;

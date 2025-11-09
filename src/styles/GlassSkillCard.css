@@ -1,0 +1,116 @@
+.glass-skill-card {
+  position: relative;
+  padding: 1.5rem; /* 24px */
+  border-radius: 1rem; /* 16px */
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem; /* 12px */
+
+  overflow: hidden; /* Penting untuk overlay */
+  cursor: pointer;
+  transition: transform 0.3s ease, background 0.3s ease;
+
+  /* Ukuran bisa disesuaikan, ini sebagai contoh */
+  width: 100%;
+  height: 150px; /* Atur tinggi agar seragam */
+}
+
+/* Efek hover yang subtle, menggantikan tilted */
+.glass-skill-card:hover {
+  transform: translateY(-5px) scale(1.02);
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* Dark mode adjustments */
+.dark .glass-skill-card {
+  background: rgba(31, 41, 55, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dark .glass-skill-card:hover {
+  background: rgba(31, 41, 55, 0.4);
+}
+
+.glass-skill-card .card-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  z-index: 10; /* Konten di atas overlay */
+  text-align: center;
+}
+
+.glass-skill-card .skill-logo {
+  width: 60px; /* Ukuran logo */
+  height: 60px;
+  object-fit: contain;
+}
+
+.glass-skill-card .skill-name {
+  font-size: 0.875rem; /* 14px */
+  font-weight: 500;
+  color: #1F2937; /* Default color for light mode */
+  margin: 0;
+}
+
+/* Dark mode text color */
+.dark .glass-skill-card .skill-name {
+  color: #F9FAFB;
+}
+
+/* Overlay untuk Efek Retak */
+.crack-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('/assets/crack-effect.svg');
+  background-size: cover;
+  background-position: center;
+
+  opacity: 0;
+  z-index: 5;
+  pointer-events: none; /* Agar tidak menghalangi klik */
+}
+
+.crack-overlay.cracked {
+  animation: crack-animation 0.6s ease-out forwards;
+}
+
+@keyframes crack-animation {
+  0% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.1); /* Sedikit membesar saat hilang */
+  }
+}
+
+/* Responsif untuk mobile (jika diperlukan style tambahan) */
+@media (max-width: 640px) {
+  .glass-skill-card {
+    height: 140px; /* Sedikit lebih kecil di mobile */
+  }
+  .glass-skill-card .skill-logo {
+    width: 50px;
+    height: 50px;
+  }
+  .glass-skill-card .skill-name {
+    font-size: 0.8rem;
+  }
+}

@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" width="300" height="300">
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:rgba(255,255,255,0.8);stop-opacity:1" />
+      <stop offset="100%" style="stop-color:rgba(255,255,255,0.5);stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <path d="M150 0 L 150 150 L 0 150 Z" fill="url(#grad)" stroke="rgba(255,255,255,0.7)" stroke-width="1"/>
+  <path d="M150 0 L 300 150 L 150 150 Z" fill="url(#grad)" stroke="rgba(255,255,255,0.7)" stroke-width="1"/>
+  <path d="M300 150 L 150 300 L 150 150 Z" fill="url(#grad)" stroke="rgba(255,255,255,0.7)" stroke-width="1"/>
+  <path d="M150 300 L 0 150 L 150 150 Z" fill="url(#grad)" stroke="rgba(255,255,255,0.7)" stroke-width="1"/>
+
+  <path d="M150 150 L 140 50 L 200 130 Z" fill="rgba(255,255,255,0.3)" stroke="rgba(255,255,255,0.5)" stroke-width="0.5"/>
+  <path d="M150 150 L 200 170 L 250 140 Z" fill="rgba(255,255,255,0.3)" stroke="rgba(255,255,255,0.5)" stroke-width="0.5"/>
+  <path d="M150 150 L 100 250 L 160 200 Z" fill="rgba(255,255,255,0.3)" stroke="rgba(255,255,255,0.5)" stroke-width="0.5"/>
+  <path d="M150 150 L 50 160 L 130 100 Z" fill="rgba(255,255,255,0.3)" stroke="rgba(255,255,255,0.5)" stroke-width="0.5"/>
+</svg>

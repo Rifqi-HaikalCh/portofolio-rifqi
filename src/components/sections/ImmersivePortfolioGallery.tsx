@@ -4,7 +4,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import { useLanguage } from '../../context/LanguageContext';
-import { individualProjects } from '../../data/portfolio';
+import { individualProjects, designProjects } from '../../data/portfolio';
 import { AnimatedSectionTitle } from '../shared/AnimatedSectionTitle';
 import { InteractiveButton } from '../shared/InteractiveButton';
 import StandardModal from '../shared/StandardModal';
@@ -24,7 +24,8 @@ export function ImmersivePortfolioGallery() {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   // Filter UI/UX design projects from portfolio data
-  const uiuxProjects = individualProjects.filter(project => project.type === 'design');
+  const allProjects = [...individualProjects, ...designProjects];
+  const uiuxProjects = allProjects.filter(project => project.type === 'design');
 
   // Check scroll position
   const checkScroll = () => {

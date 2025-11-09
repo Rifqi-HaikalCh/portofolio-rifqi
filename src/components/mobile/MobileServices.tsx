@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '../../context/LanguageContext';
 import { Code, Palette } from 'lucide-react';
+import GlassSkillCard from '../shared/GlassSkillCard';
+import { designSkills, developerSkills } from '../../data/portfolio';
 
 interface Service {
   id: string;
@@ -316,48 +318,15 @@ export const MobileServices: React.FC = () => {
               <div className={`w-16 h-1 bg-gradient-to-r ${currentTab.gradient} mx-auto rounded-full`} />
             </div>
 
-            <div className="px-6 grid grid-cols-2 gap-4">
-              {currentTab.skills.map((skill, index) => (
+            <div className="px-6 grid grid-cols-3 gap-4">
+              {(activeTab === 'developer' ? developerSkills : designSkills).map((skill, index) => (
                 <motion.div
                   key={skill.name}
                   initial={{ scale: 0, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
                   transition={{ delay: index * 0.05 }}
-                  className="bg-white dark:bg-gray-700 rounded-2xl p-4 shadow-lg border border-gray-200 dark:border-gray-600"
                 >
-                  <div className="flex items-center mb-3">
-                    <div
-                      className="w-10 h-10 rounded-xl flex items-center justify-center text-xl mr-3"
-                      style={{ backgroundColor: `${skill.color}20` }}
-                    >
-                      {skill.icon}
-                    </div>
-                    <h4 className="font-bold text-gray-900 dark:text-white text-sm leading-tight">
-                      {language === 'en' ? skill.name : skill.nameId}
-                    </h4>
-                  </div>
-
-                  {/* Progress Bar */}
-                  <div className="space-y-1">
-                    <div className="flex justify-between items-center">
-                      <span className="text-xs font-medium text-gray-600 dark:text-gray-400">
-                        {language === 'en' ? 'Level' : 'Level'}
-                      </span>
-                      <span className="text-xs font-bold text-gray-900 dark:text-white">
-                        {skill.level}%
-                      </span>
-                    </div>
-                    <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2 overflow-hidden">
-                      <motion.div
-                        className="h-2 rounded-full"
-                        style={{ backgroundColor: skill.color }}
-                        initial={{ width: 0 }}
-                        whileInView={{ width: `${skill.level}%` }}
-                        transition={{ duration: 1, delay: index * 0.05 }}
-                        viewport={{ once: true }}
-                      />
-                    </div>
-                  </div>
+                  <GlassSkillCard name={skill.name} image={skill.image} />
                 </motion.div>
               ))}
             </div>

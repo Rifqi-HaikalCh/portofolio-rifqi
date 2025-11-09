@@ -2,10 +2,11 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '../../context/LanguageContext';
-import { individualProjects } from '../../data/portfolio';
+import { individualProjects, designProjects, designSkills as designSkillsData, developerSkills as developerSkillsData } from '../../data/portfolio';
 import { Code, Palette, Briefcase, Sparkles } from 'lucide-react';
 import Carousel from '../shared/Carousel';
 import { ViewAllProjects } from './ViewAllProjects';
+import GlassSkillCard from '../shared/GlassSkillCard';
 
 export type ProjectRole = 'developer' | 'uiux';
 
@@ -150,8 +151,9 @@ export const MobileRoleBasedPortfolio: React.FC = () => {
   }, []);
 
   // Filter projects by type
-  const webDevProjects = individualProjects.filter(project => project.type === 'web');
-  const uiuxProjects = individualProjects.filter(project => project.type === 'design');
+  const allProjects = [...individualProjects, ...designProjects];
+  const webDevProjects = allProjects.filter(project => project.type === 'web');
+  const uiuxProjects = allProjects.filter(project => project.type === 'design');
 
   // Get current role data
   const currentServices = activeRole === 'developer' ? developerServices : uiuxServices;
@@ -539,79 +541,16 @@ export const MobileRoleBasedPortfolio: React.FC = () => {
               </div>
 
               {/* Skills Grid */}
-              <div className="px-6 grid grid-cols-2 gap-4">
-                {currentSkills.map((skill, index) => (
+              <div className="px-6 grid grid-cols-3 gap-4">
+                {(activeRole === 'developer' ? developerSkillsData : designSkillsData).map((skill, index) => (
                   <motion.div
                     key={skill.name}
-                    initial={{ scale: 0, opacity: 0, rotateY: -90 }}
-                    whileInView={{ scale: 1, opacity: 1, rotateY: 0 }}
+                    initial={{ scale: 0, opacity: 0 }}
+                    whileInView={{ scale: 1, opacity: 1 }}
                     viewport={{ once: true }}
-                    transition={{ delay: index * 0.08, type: "spring", duration: 0.8 }}
-                    whileHover={{ y: -6, scale: 1.05 }}
-                    className="relative group"
+                    transition={{ delay: index * 0.05 }}
                   >
-                    {/* Glassmorphism Card */}
-                    <div className="absolute inset-0 bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl rounded-2xl border border-white/50 dark:border-gray-700/50 shadow-xl" />
-
-                    {/* Gradient Glow on Hover */}
-                    <div className={`absolute inset-0 bg-gradient-to-br ${currentGradient} rounded-2xl opacity-0 group-hover:opacity-20 blur-xl transition-opacity duration-300`} />
-
-                    <div className="relative p-5">
-                      {/* Icon with Animated Background */}
-                      <motion.div
-                        className="w-14 h-14 rounded-xl flex items-center justify-center text-2xl mb-3 shadow-lg relative"
-                        style={{
-                          background: `linear-gradient(135deg, ${skill.color}30, ${skill.color}10)`
-                        }}
-                        whileHover={{ rotate: [0, -10, 10, 0], scale: 1.1 }}
-                        transition={{ duration: 0.5 }}
-                      >
-                        {/* Glow Effect */}
-                        <div
-                          className="absolute inset-0 rounded-xl blur-lg opacity-30"
-                          style={{ backgroundColor: skill.color }}
-                        />
-                        <span className="relative z-10">{skill.icon}</span>
-                      </motion.div>
-
-                      {/* Skill Name */}
-                      <h4 className="font-black text-gray-900 dark:text-white text-sm leading-tight mb-3">
-                        {language === 'en' ? skill.name : skill.nameId}
-                      </h4>
-
-                      {/* Progress Section */}
-                      <div className="space-y-2">
-                        <div className="flex justify-between items-center">
-                          <span className="text-xs font-semibold text-gray-500 dark:text-gray-400">
-                            {language === 'en' ? 'Proficiency' : 'Kemahiran'}
-                          </span>
-                          <span className={`text-xs font-black bg-gradient-to-r ${currentGradient} bg-clip-text text-transparent`}>
-                            {skill.level}%
-                          </span>
-                        </div>
-
-                        {/* Enhanced Progress Bar */}
-                        <div className="relative w-full h-2.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden shadow-inner">
-                          <motion.div
-                            className="h-full rounded-full relative overflow-hidden"
-                            style={{
-                              background: `linear-gradient(90deg, ${skill.color}, ${skill.color}dd)`
-                            }}
-                            initial={{ width: 0 }}
-                            whileInView={{ width: `${skill.level}%` }}
-                            transition={{ duration: 1.2, delay: index * 0.08, ease: "easeOut" }}
-                            viewport={{ once: true }}
-                          >
-                            {/* Shimmer Effect */}
-                            <motion.div
-                              className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent"
-                              animate={{ x: ['-100%', '200%'] }}
-                              transition={{ duration: 2, delay: index * 0.08 + 1.2, ease: "linear" }}
-                            />
-                          </motion.div>
-                        </div>
-                      </div>
-                    </div>
+                    <GlassSkillCard name={skill.name} image={skill.image} />
                   </motion.div>
                 ))}
               </div>

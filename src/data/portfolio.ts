@@ -80,6 +80,37 @@ export const softSkills: Skill[] = [
   { name: 'Adaptability', icon: 'sync-alt', color: '#84CC16', category: 'soft' },
 ];
 
+// Developer Skills for GlassSkillCard
+export const developerSkills = [
+  { name: 'Angular', image: '/assets/angularlogo.webp' },
+  { name: 'Laravel', image: '/assets/laravel.webp' },
+  { name: 'Next.js', image: '/assets/Next JS logo.webp' },
+  { name: 'React', image: '/assets/react js logo.webp' },
+  { name: 'Vue.js', image: '/assets/Vue.js logo.webp' },
+  { name: 'Bootstrap', image: '/assets/boostrap.webp' },
+  { name: 'CSS', image: '/assets/CSS.webp' },
+  { name: 'Dart', image: '/assets/dart.webp' },
+  { name: 'Express.js', image: '/assets/express_js.webp' },
+  { name: 'HTML', image: '/assets/HTML.webp' },
+  { name: 'Java', image: '/assets/Java.webp' },
+  { name: 'JavaScript', image: '/assets/javascript.webp' },
+  { name: 'Node.js', image: '/assets/node_js.webp' },
+  { name: 'PHP', image: '/assets/php.webp' },
+  { name: 'TypeScript', image: '/assets/typescript.webp' },
+  { name: 'Spring Boot', image: '/assets/springboot.webp' },
+  { name: 'Tailwind CSS', image: '/assets/tailwind.webp' },
+];
+
+// Design Skills for GlassSkillCard
+export const designSkills = [
+  { name: 'Canva', image: '/assets/Canva.webp' },
+  { name: 'Figma', image: '/assets/Figma.webp' },
+  { name: 'Photoshop', image: '/assets/Photoshop.webp' },
+  { name: 'Framer', image: '/assets/framer.webp' },
+  { name: 'SketchUp', image: '/assets/sketchup.webp' },
+  { name: 'Webflow', image: '/assets/webflow.webp' },
+];
+
 export const workExperience: Experience[] = [
   {
     id: 'javan',
@@ -250,6 +281,138 @@ export const individualProjects: Project[] = [
       github: 'https://github.com/Rifqi-HaikalCh/bookshelf-app'
     },
     category: 'individual'
+  }
+];
+
+export const designProjects: Project[] = [
+  {
+    id: 'sportainment-app',
+    title: 'Sportainment App',
+    description: 'A platform for sports enthusiasts to easily find activities, events, and track their progress. Complete with features for booking sports facilities, joining community events, and monitoring personal fitness achievements.',
+    descriptionId: 'Platform buat yang hobi olahraga, biar gampang cari aktivitas, event, dan tracking progres. Lengkap dengan fitur booking fasilitas olahraga, join event komunitas, dan monitoring pencapaian fitness pribadi.',
+    image: '/assets/Sportainment web.png',
+    techStack: ['Figma', 'UI/UX Design', 'Prototyping', 'User Research'],
+    links: {
+      prototype: 'https://www.figma.com/proto/qzu1Y29B3OPdQwCp62JpbZ/Sportainment?page-id=0%3A1&node-id=22-1273&p=f&viewport=93%2C-29%2C0.17&t=636v3PPntD4Dg81U-1&scaling=contain&content-scaling=fixed'
+    },
+    category: 'individual',
+    type: 'design'
+  },
+  {
+    id: 'beauty-mobile-app-design',
+    title: 'Beauty E-Commerce Mobile App Design',
+    description: 'Designing a modern and intuitive mobile e-commerce experience dedicated to beauty and skincare products.',
+    descriptionId: 'Merancang pengalaman e-commerce mobile yang modern dan intuitif khusus untuk produk kecantikan dan perawatan kulit.',
+    image: '/assets/beautyMobileApp.webp',
+    techStack: ['Figma', 'UI/UX Design', 'Mobile Design', 'Design System', 'Prototyping'],
+    links: {
+      prototype: 'https://www.figma.com/proto/P1HhF2cjWydsS4UtzQ9liv/Beauty-Mobile-App-Design?page-id=0%3A1&node-id=49-1149&p=f&viewport=133%2C397%2C0.55&t=dfdOnSGjlSOq84Zw-1&scaling=scale-down&content-scaling=fixed&starting-point-node-id=49%3A1072'
+    },
+    category: 'individual',
+    type: 'design',
+    slides: ['/assets/beautyMobileApp.webp']
+  },
+  {
+    id: 'dinoshop-design',
+    title: 'DinoShop E-Commerce Design',
+    description: 'Designing a complete, visually-driven user experience for an electronics e-commerce platform, focusing on a clean, minimalist aesthetic.',
+    descriptionId: 'Merancang pengalaman pengguna yang lengkap dan visual untuk platform e-commerce elektronik, berfokus pada estetika minimalis yang bersih.',
+    image: '/assets/DinoShop.webp',
+    techStack: ['Figma', 'UI/UX Design', 'Prototyping', 'Interactive Design'],
+    links: {
+      prototype: 'https://www.figma.com/proto/ZNCYVnAGdOL47VgFPnZGHE/Project-Mock?page-id=0%3A1&node-id=145-4254&p=f&viewport=1008%2C3367%2C0.45&t=a6FkFBiT6pik43fA-1&scaling=contain&content-scaling=fixed&starting-point-node-id=145%3A4254'
+    },
+    category: 'individual',
+    type: 'design',
+    slides: ['/assets/DinoShop.webp']
+  },
+  {
+    id: 'del-pick-design',
+    title: 'Del-Pick: Mobile Delivery & Logistics App',
+    description: 'Mobile delivery system designed to overcome logistics problems. Translated high-fidelity Figma UI/UX designs into 20+ polished screens.',
+    descriptionId: 'Sistem pengiriman mobile yang dirancang untuk mengatasi masalah logistik. Menerjemahkan desain Figma UI/UX fidelitas tinggi menjadi 20+ layar.',
+    image: '/assets/del-pick.webp',
+    techStack: ['Figma', 'UI/UX Design', 'Flutter', 'Mobile Design'],
+    links: {
+      needToKnow: 'https://drive.google.com/file/d/1dFmPBOM7i7SubKeOztS6FWffawnltK2p/view'
+    },
+    category: 'individual',
+    type: 'design',
+    slides: ['/assets/del-pick.webp']
+  },
+  {
+    id: 'assets-management',
+    title: 'Assets Management System',
+    description: 'A comprehensive web design system for asset management platform with focus on user experience and data visualization. Features advanced dashboard analytics and intuitive navigation.',
+    descriptionId: 'Sistem desain web komprehensif untuk platform manajemen aset dengan fokus pada pengalaman pengguna dan visualisasi data. Menampilkan analitik dashboard canggih dan navigasi intuitif.',
+    image: '/assets/Assets Manajemen Web Design-01.png',
+    techStack: ['Figma', 'Adobe Photoshop', 'Principle'],
+    links: {
+      prototype: 'https://www.figma.com/proto/N2eNg8UcsUg3Z4oIpwPn4g/Aplikasi-Manajemen-Aset?page-id=0%3A1&node-id=9-356&p=f&viewport=338%2C243%2C0.06&t=RcXQkGz3wJYNThcT-1&scaling=contain&content-scaling=fixed'
+    },
+    category: 'individual',
+    type: 'design',
+    slides: [
+      '/assets/Assets Manajemen Web Design-01.png',
+      '/assets/Assets Manajemen Web Design-02.png',
+      '/assets/Assets Manajemen Web Design-03.png',
+      '/assets/Assets Manajemen Web Design-04.png',
+      '/assets/Assets Manajemen Web Design-05.png',
+      '/assets/Assets Manajemen Web Design-06.png',
+      '/assets/Assets Manajemen Web Design-07.png',
+      '/assets/Assets Manajemen Web Design-08.png',
+      '/assets/Assets Manajemen Web Design-09.png',
+      '/assets/Assets Manajemen Web Design-10.png'
+    ]
+  },
+  {
+    id: 'campus-website',
+    title: 'Campus Portal Design',
+    description: 'Modern and accessible campus website design focusing on student experience and information architecture.',
+    descriptionId: 'Desain website kampus modern dan accessible yang berfokus pada pengalaman mahasiswa dan arsitektur informasi.',
+    image: '/assets/Campuss Website Design-1.png',
+    techStack: ['Figma', 'Sketch', 'InVision'],
+    links: {
+      prototype: 'https://www.figma.com/proto/rileM7AuecCrGEnA0soMd1/RE-DESIGN-WEBSITE-DEL?page-id=0%3A1&node-id=447-121&p=f&viewport=845%2C151%2C0.13&t=gbfdy7gE7yozEW3C-1&scaling=scale-down-width&content-scaling=fixed'
+    },
+    category: 'individual',
+    type: 'design',
+    slides: [
+      '/assets/Campuss Website Design-1.png',
+      '/assets/Campuss Website Design-2.png',
+      '/assets/Campuss Website Design-3.png',
+      '/assets/Campuss Website Design-4.png',
+      '/assets/Campuss Website Design-5.png',
+      '/assets/Campuss Website Design-6.png',
+      '/assets/Campuss Website Design-7.png',
+      '/assets/Campuss Website Design-8.png',
+      '/assets/Campuss Website Design-9.png'
+    ]
+  },
+  {
+    id: 'gordenaise',
+    title: 'Gordenaise E-commerce',
+    description: 'Luxury home decor e-commerce platform with emphasis on visual appeal and conversion optimization.',
+    descriptionId: 'Platform e-commerce dekorasi rumah mewah dengan penekanan pada daya tarik visual dan optimasi konversi.',
+    image: '/assets/Gordenaise Website Design-01.png',
+    techStack: ['Figma', 'Adobe XD', 'Photoshop'],
+    links: {
+      prototype: 'https://www.figma.com/proto/m63t9o0EJ7aBvG5I09yWVf/Gordenaise?page-id=0%3A1&node-id=34-373&p=f&viewport=89%2C310%2C0.07&t=LJSZaTROUnCZIqfH-1&scaling=scale-down-width&content-scaling=fixed'
+    },
+    category: 'individual',
+    type: 'design',
+    slides: [
+      '/assets/Gordenaise Website Design-01.png',
+      '/assets/Gordenaise Website Design-02.png',
+      '/assets/Gordenaise Website Design-03.png',
+      '/assets/Gordenaise Website Design-04.png',
+      '/assets/Gordenaise Website Design-05.png',
+      '/assets/Gordenaise Website Design-06.png',
+      '/assets/Gordenaise Website Design-07.png',
+      '/assets/Gordenaise Website Design-08.png',
+      '/assets/Gordenaise Website Design-09.png',
+      '/assets/Gordenaise Website Design-10.png'
+    ]
   }
 ];
 
