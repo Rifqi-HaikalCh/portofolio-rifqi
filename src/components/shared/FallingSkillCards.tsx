@@ -103,14 +103,15 @@ const FallingSkillCards: React.FC<FallingSkillCardsProps> = ({
       }
     });
 
-    // Boundaries - sama seperti FallingText template
+    // Boundaries - positioned to allow full card visibility
     const boundaryOptions = {
       isStatic: true,
       render: { fillStyle: 'transparent' }
     };
-    const floor = Bodies.rectangle(width / 2, height + 25, width, 50, boundaryOptions);
-    const leftWall = Bodies.rectangle(-25, height / 2, 50, height, boundaryOptions);
-    const rightWall = Bodies.rectangle(width + 25, height / 2, 50, height, boundaryOptions);
+    // Floor positioned further down to allow cards to be fully visible
+    const floor = Bodies.rectangle(width / 2, height + 100, width, 50, boundaryOptions);
+    const leftWall = Bodies.rectangle(-25, height / 2, 50, height * 1.5, boundaryOptions);
+    const rightWall = Bodies.rectangle(width + 25, height / 2, 50, height * 1.5, boundaryOptions);
     const ceiling = Bodies.rectangle(width / 2, -25, width, 50, boundaryOptions);
 
     // Create physics bodies for each card

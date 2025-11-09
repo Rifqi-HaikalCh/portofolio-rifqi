@@ -2,8 +2,8 @@
   position: relative;
   width: 100%;
   min-height: 600px;
-  max-height: 800px;
-  overflow: hidden;
+  height: 700px;
+  overflow: visible;
   cursor: grab;
   padding: 10px;
   box-sizing: border-box;
@@ -111,6 +111,7 @@
   left: 0;
   z-index: 0;
   pointer-events: none;
+  overflow: visible;
 }
 
 /* Responsive */
