@@ -54,7 +54,7 @@ export const About: React.FC = () => {
 
   const stats = [
     { 
-      number: "10+", 
+      number: "30+", 
       label: t("Projects Completed", "Proyek Diselesaikan"),
       description: t("From concept to technology solutions", "Dari konsep hingga solusi teknologi")
     },
