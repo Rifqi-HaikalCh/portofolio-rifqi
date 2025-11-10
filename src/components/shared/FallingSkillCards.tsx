@@ -171,17 +171,36 @@ const FallingSkillCards: React.FC<FallingSkillCardsProps> = ({
     });
 
     const mouse = Mouse.create(containerRef.current);
-    // Configure mouse to handle passive touch events properly
-    mouse.element.removeEventListener('mousewheel', mouse.mousewheel);
-    mouse.element.removeEventListener('DOMMouseScroll', mouse.mousewheel);
-    mouse.element.removeEventListener('touchstart', mouse.mousedown);
-    mouse.element.removeEventListener('touchmove', mouse.mousemove);
-    mouse.element.removeEventListener('touchend', mouse.mouseup);
 
-    // Re-add with passive: true to prevent intervention warnings
-    mouse.element.addEventListener('touchstart', mouse.mousedown, { passive: true });
-    mouse.element.addEventListener('touchmove', mouse.mousemove, { passive: true });
-    mouse.element.addEventListener('touchend', mouse.mouseup, { passive: true });
+    // Configure mouse to handle passive touch events properly
+    // Use type assertion to access internal Matter.js mouse properties safely
+    const mouseAny = mouse as any;
+
+    // Remove default event listeners if they exist
+    if (mouseAny.mousewheel) {
+      mouse.element.removeEventListener('mousewheel', mouseAny.mousewheel);
+      mouse.element.removeEventListener('DOMMouseScroll', mouseAny.mousewheel);
+    }
+    if (mouseAny.mousedown) {
+      mouse.element.removeEventListener('touchstart', mouseAny.mousedown);
+    }
+    if (mouseAny.mousemove) {
+      mouse.element.removeEventListener('touchmove', mouseAny.mousemove);
+    }
+    if (mouseAny.mouseup) {
+      mouse.element.removeEventListener('touchend', mouseAny.mouseup);
+    }
+
+    // Re-add touch events with passive: true to prevent intervention warnings
+    if (mouseAny.mousedown) {
+      mouse.element.addEventListener('touchstart', mouseAny.mousedown, { passive: true });
+    }
+    if (mouseAny.mousemove) {
+      mouse.element.addEventListener('touchmove', mouseAny.mousemove, { passive: true });
+    }
+    if (mouseAny.mouseup) {
+      mouse.element.addEventListener('touchend', mouseAny.mouseup, { passive: true });
+    }
 
     const mouseConstraint = MouseConstraint.create(engine, {
       mouse,
