@@ -307,34 +307,41 @@ const FallingSkillCards: React.FC<FallingSkillCardsProps> = ({
     }
   };
 
-  // Rain effect - cards fall from top like rain
+  // Rain effect - cards fall from top like rain (drizzle style)
   const handleRain = () => {
     if (cardBodiesRef.current && cardBodiesRef.current.length > 0 && engineRef.current) {
-      // CRITICAL FIX: Reset gravity to normal first (in case Float mode was active)
-      engineRef.current.world.gravity.y = gravity;
+      // Reset gravity to gentle rain speed (lighter than normal)
+      engineRef.current.world.gravity.y = 0.4; // Reduced from 0.8 for gentle drizzle
 
       cardBodiesRef.current.forEach(({ body }, index) => {
         // Position all cards at top with random X
         const randomX = Math.random() * (containerRef.current?.clientWidth || 800);
 
-        // CRITICAL FIX: Position cards BELOW ceiling but ABOVE viewport
-        // Ceiling is at Y ≈ -38, so we use positive Y near top of container
-        // This ensures cards are inside physics world, not blocked by ceiling
-        const topY = 10 + (index * 15); // Start near top, stagger vertically
+        // Position cards below ceiling, with wider vertical spacing for gentle drizzle
+        const topY = 5 + (index * 25); // More spacing between drops (25px)
 
-        // Delay the drop for stagger effect
+        // Longer delay for slow, steady drizzle effect
         setTimeout(() => {
           Matter.Body.setPosition(body, { x: randomX, y: topY });
 
-          // Give initial downward velocity for immediate rain effect
+          // Very gentle initial velocity for natural drizzle
           Matter.Body.setVelocity(body, {
-            x: (Math.random() - 0.5) * 2, // Small horizontal variance
-            y: 0 // Start from rest, let gravity pull
+            x: (Math.random() - 0.5) * 0.8, // Very subtle horizontal drift
+            y: 1 // Gentle downward start velocity
           });
 
-          Matter.Body.setAngularVelocity(body, (Math.random() - 0.5) * 0.15);
-        }, index * 80); // 80ms delay between each card for faster cascade
+          // Minimal rotation for calm rain
+          Matter.Body.setAngularVelocity(body, (Math.random() - 0.5) * 0.05);
+        }, index * 200); // 200ms delay = slower, more natural drizzle timing
       });
+
+      // Auto-reset gravity back to normal after rain animation completes
+      // Assuming ~3 seconds for all cards to start falling
+      setTimeout(() => {
+        if (engineRef.current) {
+          engineRef.current.world.gravity.y = gravity; // Back to 0.8
+        }
+      }, (cardBodiesRef.current.length * 200) + 2000);
     }
   };
 
