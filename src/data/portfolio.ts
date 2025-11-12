@@ -446,7 +446,8 @@ export const groupProjects: Project[] = [
       demo: 'https://semat.del.ac.id/program',
       github: 'https://github.com/gabrielhtg/project-spmb-pabwe'
     },
-    category: 'group'
+    category: 'group',
+    type: 'web'
   },
   {
     id: 'frk-fed',
@@ -458,7 +459,8 @@ export const groupProjects: Project[] = [
     links: {
       github: 'https://github.com/boysitorus/FrontEnd-FRK'
     },
-    category: 'group'
+    category: 'group',
+    type: 'web'
   },
   {
     id: 'dentist-expert',
@@ -470,7 +472,8 @@ export const groupProjects: Project[] = [
     links: {
       github: 'https://github.com/Rifqi-HaikalCh/SistemPakarDiagnosaPenyakitGigi'
     },
-    category: 'group'
+    category: 'group',
+    type: 'web'
   },
   {
     id: 'des-algorithm',
@@ -482,7 +485,8 @@ export const groupProjects: Project[] = [
     links: {
       github: 'https://github.com/Rifqi-HaikalCh/DES_Algorithm'
     },
-    category: 'group'
+    category: 'group',
+    type: 'web'
   },
   {
     id: 'clicknic',
@@ -494,7 +498,8 @@ export const groupProjects: Project[] = [
     links: {
       github: 'https://github.com/archicos/clicknic'
     },
-    category: 'group'
+    category: 'group',
+    type: 'web'
   }
 ];
 
