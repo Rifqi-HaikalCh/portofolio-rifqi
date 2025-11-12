@@ -317,16 +317,23 @@ const FallingSkillCards: React.FC<FallingSkillCardsProps> = ({
         // Position all cards at top with random X
         const randomX = Math.random() * (containerRef.current?.clientWidth || 800);
 
-        // FIXED: Use staggered timing instead of extreme Y positions
-        // All cards start at same Y (just above viewport)
-        const topY = -80;
+        // CRITICAL FIX: Position cards BELOW ceiling but ABOVE viewport
+        // Ceiling is at Y ≈ -38, so we use positive Y near top of container
+        // This ensures cards are inside physics world, not blocked by ceiling
+        const topY = 10 + (index * 15); // Start near top, stagger vertically
 
         // Delay the drop for stagger effect
         setTimeout(() => {
           Matter.Body.setPosition(body, { x: randomX, y: topY });
-          Matter.Body.setVelocity(body, { x: 0, y: 0 }); // Start with no velocity
-          Matter.Body.setAngularVelocity(body, (Math.random() - 0.5) * 0.1);
-        }, index * 100); // 100ms delay between each card
+
+          // Give initial downward velocity for immediate rain effect
+          Matter.Body.setVelocity(body, {
+            x: (Math.random() - 0.5) * 2, // Small horizontal variance
+            y: 0 // Start from rest, let gravity pull
+          });
+
+          Matter.Body.setAngularVelocity(body, (Math.random() - 0.5) * 0.15);
+        }, index * 80); // 80ms delay between each card for faster cascade
       });
     }
   };
