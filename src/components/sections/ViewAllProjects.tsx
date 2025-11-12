@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '../../context/LanguageContext';
-import { individualProjects, designProjects } from '../../data/portfolio';
+import { individualProjects, designProjects, groupProjects } from '../../data/portfolio';
 import { ExternalLink, Github, Figma, FileText, X, ArrowLeft } from 'lucide-react';
 import type { Project } from '../../types';
 
@@ -17,10 +17,12 @@ export const ViewAllProjects: React.FC<ViewAllProjectsProps> = ({ onBack, projec
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [activeFilter, setActiveFilter] = useState<'all' | 'design' | 'web'>(projectType);
 
-  // Filter projects based on type
-  const allProjects = [...individualProjects, ...designProjects];
+  // Filter projects based on type - include all project sources
+  const allProjects = [...individualProjects, ...groupProjects, ...designProjects];
   const filteredProjects = allProjects.filter(project => {
     if (activeFilter === 'all') return true;
+    // Web filter includes both 'web' and 'mobile' types
+    if (activeFilter === 'web') return project.type === 'web' || project.type === 'mobile';
     return project.type === activeFilter;
   });
 
