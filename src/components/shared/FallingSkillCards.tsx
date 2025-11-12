@@ -309,15 +309,24 @@ const FallingSkillCards: React.FC<FallingSkillCardsProps> = ({
 
   // Rain effect - cards fall from top like rain
   const handleRain = () => {
-    if (cardBodiesRef.current && cardBodiesRef.current.length > 0) {
+    if (cardBodiesRef.current && cardBodiesRef.current.length > 0 && engineRef.current) {
+      // CRITICAL FIX: Reset gravity to normal first (in case Float mode was active)
+      engineRef.current.world.gravity.y = gravity;
+
       cardBodiesRef.current.forEach(({ body }, index) => {
         // Position all cards at top with random X
         const randomX = Math.random() * (containerRef.current?.clientWidth || 800);
-        const topY = -100 - (index * 20); // Stagger the drop
 
-        Matter.Body.setPosition(body, { x: randomX, y: topY });
-        Matter.Body.setVelocity(body, { x: 0, y: 0 });
-        Matter.Body.setAngularVelocity(body, (Math.random() - 0.5) * 0.1);
+        // FIXED: Use staggered timing instead of extreme Y positions
+        // All cards start at same Y (just above viewport)
+        const topY = -80;
+
+        // Delay the drop for stagger effect
+        setTimeout(() => {
+          Matter.Body.setPosition(body, { x: randomX, y: topY });
+          Matter.Body.setVelocity(body, { x: 0, y: 0 }); // Start with no velocity
+          Matter.Body.setAngularVelocity(body, (Math.random() - 0.5) * 0.1);
+        }, index * 100); // 100ms delay between each card
       });
     }
   };
