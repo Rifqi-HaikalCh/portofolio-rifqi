@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect } from 'react'; // DIUBAH: Tambahkan useRef, useEffect
 import Image from 'next/image';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '../../context/LanguageContext';
 import { individualProjects, groupProjects } from '../../data/portfolio';
 import type { Project } from '../../types';
@@ -10,6 +10,7 @@ import { Github, ExternalLink, FileText, Smartphone, FolderOpen } from 'lucide-r
 import StandardModal from '../shared/StandardModal';
 import TiltedCard from '../shared/TiltedCard';
 import { AnimatedSectionTitle } from '../shared/AnimatedSectionTitle';
+import { ViewAllProjects } from './ViewAllProjects';
 
 // Component ProjectCard ada di dalam file ini, kita akan modifikasi
 // ... (ProjectCard component akan ada di bawah)
@@ -17,6 +18,7 @@ import { AnimatedSectionTitle } from '../shared/AnimatedSectionTitle';
 export function Projects() {
   const { language } = useLanguage();
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [showAllProjects, setShowAllProjects] = useState(false);
 
   // --- State & Ref untuk Hybrid Auto-Scroll (Individual) ---
   const individualScrollRef = useRef<HTMLDivElement>(null);
@@ -91,6 +93,11 @@ export function Projects() {
   const openModal = (project: Project) => setSelectedProject(project);
   const closeModal = () => setSelectedProject(null);
 
+  // Show ViewAllProjects if toggled
+  if (showAllProjects) {
+    return <ViewAllProjects onBack={() => setShowAllProjects(false)} projectType="all" />;
+  }
+
   const getCategoryStyles = (category: 'individual' | 'group' | 'design') => {
     switch (category) {
       case 'individual':
@@ -103,7 +110,7 @@ export function Projects() {
   };
 
   return (
-    <>
+    <section id="projects">
     {/* Enhanced Header */}
         <AnimatedSectionTitle
           badge="Portfolio Showcase"
@@ -170,9 +177,21 @@ export function Projects() {
         </div>
       </div>
 
+      {/* View All Projects Button */}
+      <div className="mt-12 text-center">
+        <motion.button
+          onClick={() => setShowAllProjects(true)}
+          className="px-8 py-4 bg-gradient-to-r from-emerald-500 to-blue-500 text-white font-bold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          {language === 'en' ? 'View All Projects' : 'Lihat Semua Projek'}
+        </motion.button>
+      </div>
+
       {/* Modal untuk Detail Proyek */}
       <ProjectModal selectedProject={selectedProject} closeModal={closeModal} />
-    </>
+    </section>
   );
 }
 
