@@ -17,7 +17,11 @@ const ParticlesBackground = dynamic(() => import('../shared/ParticlesBackground'
   loading: () => null,
 });
 
-const Hero: React.FC = () => {
+interface HeroProps {
+  onViewProjects?: () => void;
+}
+
+const Hero: React.FC<HeroProps> = ({ onViewProjects }) => {
   const { language, t } = useLanguage();
 
   const socialIcons = [
@@ -85,22 +89,22 @@ const Hero: React.FC = () => {
           })}
         </motion.div>
         <motion.div variants={fadeInUp} className="flex flex-col sm:flex-row gap-4 justify-center">
-          <motion.a 
-            href="#contact" 
+          <motion.a
+            href="#contact"
             className="btn-primary-custom"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
             {t("Get In Touch", "Hubungi Saya")}
           </motion.a>
-          <motion.a 
-            href="#projects" 
+          <motion.button
+            onClick={onViewProjects}
             className="btn-outline-custom"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
             {t("View Projects", "Lihat Projek")}
-          </motion.a>
+          </motion.button>
         </motion.div>
         </div>
       </motion.div>

@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { useIsMobile } from '../hooks/useMediaQuery';
 import { AnimatedSection } from './hocs/AnimatedSection';
+import { AnimatePresence } from 'framer-motion';
 
 // Mobile Components
 import { MobileHero } from './mobile/MobileHero';
@@ -20,10 +21,12 @@ import { Experience } from './sections/Experience';
 import MyGallery from './sections/MyGallery';
 import { Certificates } from './sections/Certificates';
 import { Contact } from './sections/Contact';
+import { ViewAllProjects } from './sections/ViewAllProjects';
 
 export const ResponsiveLayout: React.FC = () => {
   const isMobile = useIsMobile();
   const [mounted, setMounted] = useState(false);
+  const [showAllProjects, setShowAllProjects] = useState(false);
 
   // Prevent hydration mismatch
   useEffect(() => {
@@ -41,41 +44,52 @@ export const ResponsiveLayout: React.FC = () => {
 
   return (
     <>
-      {isMobile ? (
-        // Mobile Layout - Optimized for touch and vertical scrolling
-        <div className="mobile-layout">
-          <MobileHero />
-          <MobileAbout />
-          <MobileExperience />
-          <MobileRoleBasedPortfolio />
-          <MobileGallery />
-          <MobileCertificates />
-          <MobileContact />
-        </div>
-      ) : (
-        // Desktop Layout - Optimized for hover and horizontal layouts
-        <div className="desktop-layout">
-          <Hero />
-          <AnimatedSection id="about">
-            <About />
-          </AnimatedSection>
-          <AnimatedSection id="experience">
-            <Experience />
-          </AnimatedSection>
-          <AnimatedSection id="services">
-            <Services />
-          </AnimatedSection>
-          <AnimatedSection id="gallery">
-            <MyGallery />
-          </AnimatedSection>
-          <AnimatedSection id="certificates">
-            <Certificates />
-          </AnimatedSection>
-          <AnimatedSection id="contact">
-            <Contact />
-          </AnimatedSection>
-        </div>
-      )}
+      <AnimatePresence mode="wait">
+        {showAllProjects && !isMobile ? (
+          <ViewAllProjects
+            onBack={() => setShowAllProjects(false)}
+            projectType="all"
+          />
+        ) : (
+          <>
+            {isMobile ? (
+              // Mobile Layout - Optimized for touch and vertical scrolling
+              <div className="mobile-layout">
+                <MobileHero />
+                <MobileAbout />
+                <MobileExperience />
+                <MobileRoleBasedPortfolio />
+                <MobileGallery />
+                <MobileCertificates />
+                <MobileContact />
+              </div>
+            ) : (
+              // Desktop Layout - Optimized for hover and horizontal layouts
+              <div className="desktop-layout">
+                <Hero onViewProjects={() => setShowAllProjects(true)} />
+                <AnimatedSection id="about">
+                  <About />
+                </AnimatedSection>
+                <AnimatedSection id="experience">
+                  <Experience />
+                </AnimatedSection>
+                <AnimatedSection id="services">
+                  <Services />
+                </AnimatedSection>
+                <AnimatedSection id="gallery">
+                  <MyGallery />
+                </AnimatedSection>
+                <AnimatedSection id="certificates">
+                  <Certificates />
+                </AnimatedSection>
+                <AnimatedSection id="contact">
+                  <Contact />
+                </AnimatedSection>
+              </div>
+            )}
+          </>
+        )}
+      </AnimatePresence>
     </>
   );
 };
