@@ -241,7 +241,8 @@ export const individualProjects: Project[] = [
       demo: 'https://api-central.netlify.app/',
       github: 'https://github.com/Rifqi-HaikalCh/apicentral-frontend'
     },
-    category: 'individual'
+    category: 'individual',
+    type: 'web'
   },
   {
     id: 'employee-management',
@@ -254,7 +255,8 @@ export const individualProjects: Project[] = [
       demo: 'https://employee-web.netlify.app/',
       github: 'https://github.com/Rifqi-HaikalCh/employee-frontend'
     },
-    category: 'individual'
+    category: 'individual',
+    type: 'web'
   },
   {
     id: 'notes-app',
@@ -267,7 +269,8 @@ export const individualProjects: Project[] = [
       demo: 'https://notes-rifqi.netlify.app/',
       github: 'https://github.com/Rifqi-HaikalCh/notes-app'
     },
-    category: 'individual'
+    category: 'individual',
+    type: 'web'
   },
   {
     id: 'bookshelf',
@@ -280,7 +283,8 @@ export const individualProjects: Project[] = [
       demo: 'https://bookshelf-rifqi.netlify.app/',
       github: 'https://github.com/Rifqi-HaikalCh/bookshelf-app'
     },
-    category: 'individual'
+    category: 'individual',
+    type: 'web'
   }
 ];
 
