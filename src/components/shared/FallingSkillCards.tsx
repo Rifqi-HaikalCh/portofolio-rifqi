@@ -253,47 +253,73 @@ const FallingSkillCards: React.FC<FallingSkillCardsProps> = ({
     }
   };
 
-  // Reload animation - reset all cards to initial positions
-  const handleReloadAnimation = () => {
-    // Cancel animation frame if running
-    if (animationFrameRef.current) {
-      cancelAnimationFrame(animationFrameRef.current);
-      animationFrameRef.current = null;
-    }
+  // Shuffle cards - randomize positions with smooth animation
+  const handleShuffle = () => {
+    if (cardBodiesRef.current && cardBodiesRef.current.length > 0) {
+      cardBodiesRef.current.forEach(({ body }) => {
+        // Random position within container
+        const randomX = Math.random() * (containerRef.current?.clientWidth || 800);
+        const randomY = Math.random() * (containerRef.current?.clientHeight || 600);
 
-    // Stop runner and render
-    if (runnerRef.current && engineRef.current) {
-      Matter.Runner.stop(runnerRef.current);
-    }
-    if (renderRef.current) {
-      Matter.Render.stop(renderRef.current);
-    }
+        // Set new position
+        Matter.Body.setPosition(body, { x: randomX, y: randomY });
 
-    // Clear physics engine and bodies
+        // Add some random velocity for smooth movement
+        Matter.Body.setVelocity(body, {
+          x: (Math.random() - 0.5) * 5,
+          y: (Math.random() - 0.5) * 5
+        });
+
+        // Random rotation
+        Matter.Body.setAngularVelocity(body, (Math.random() - 0.5) * 0.3);
+      });
+    }
+  };
+
+  // Float mode - anti-gravity effect
+  const handleFloat = () => {
     if (engineRef.current) {
-      Matter.World.clear(engineRef.current.world, false);
-      Matter.Engine.clear(engineRef.current);
-      engineRef.current = null;
+      // Toggle between normal and anti-gravity
+      const currentGravity = engineRef.current.world.gravity.y;
+
+      if (currentGravity > 0) {
+        // Anti-gravity mode
+        engineRef.current.world.gravity.y = -0.3;
+
+        // Add upward force to all cards
+        cardBodiesRef.current.forEach(({ body }) => {
+          Matter.Body.applyForce(body, body.position, {
+            x: (Math.random() - 0.5) * 0.02,
+            y: -0.05
+          });
+        });
+
+        // Auto return to normal after 5 seconds
+        setTimeout(() => {
+          if (engineRef.current) {
+            engineRef.current.world.gravity.y = gravity;
+          }
+        }, 5000);
+      } else {
+        // Return to normal gravity
+        engineRef.current.world.gravity.y = gravity;
+      }
     }
+  };
 
-    // Clear refs
-    runnerRef.current = null;
-    renderRef.current = null;
-    cardBodiesRef.current = [];
+  // Rain effect - cards fall from top like rain
+  const handleRain = () => {
+    if (cardBodiesRef.current && cardBodiesRef.current.length > 0) {
+      cardBodiesRef.current.forEach(({ body }, index) => {
+        // Position all cards at top with random X
+        const randomX = Math.random() * (containerRef.current?.clientWidth || 800);
+        const topY = -100 - (index * 20); // Stagger the drop
 
-    // Reset states to show neat grid
-    setEffectStarted(false);
-    setCardsLoaded(false);
-
-    // Show neat grid first
-    setTimeout(() => {
-      setCardsLoaded(true);
-    }, 100);
-
-    // Then start falling animation after delay
-    setTimeout(() => {
-      setEffectStarted(true);
-    }, 100 + delay);
+        Matter.Body.setPosition(body, { x: randomX, y: topY });
+        Matter.Body.setVelocity(body, { x: 0, y: 0 });
+        Matter.Body.setAngularVelocity(body, (Math.random() - 0.5) * 0.1);
+      });
+    }
   };
 
   // Explode animation - WILD explosion effect with sparks everywhere
@@ -401,35 +427,73 @@ const FallingSkillCards: React.FC<FallingSkillCardsProps> = ({
       </div>
 
       {/* Control buttons */}
-      <div className="flex justify-center gap-4">
+      <div className="flex flex-wrap justify-center gap-3 md:gap-4">
         <button
-          onClick={handleReloadAnimation}
-          className="group relative px-6 py-3 bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 flex items-center gap-2"
+          onClick={handleShuffle}
+          className="group relative px-4 md:px-6 py-2.5 md:py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-105 flex items-center gap-2"
+          title="Shuffle cards randomly"
         >
           <svg
-            className="w-5 h-5 group-hover:rotate-180 transition-transform duration-500"
+            className="w-4 h-4 md:w-5 md:h-5 group-hover:rotate-90 transition-transform duration-500"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
           >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
           </svg>
-          <span>Reload Animation</span>
+          <span className="hidden sm:inline">Shuffle</span>
+          <span className="sm:hidden">🎲</span>
+        </button>
+
+        <button
+          onClick={handleFloat}
+          className="group relative px-4 md:px-6 py-2.5 md:py-3 bg-gradient-to-r from-sky-400 to-blue-500 text-white font-semibold rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-105 flex items-center gap-2"
+          title="Toggle float mode (anti-gravity)"
+        >
+          <svg
+            className="w-4 h-4 md:w-5 md:h-5 group-hover:-translate-y-1 transition-transform duration-300"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
+          </svg>
+          <span className="hidden sm:inline">Float</span>
+          <span className="sm:hidden">🎈</span>
+        </button>
+
+        <button
+          onClick={handleRain}
+          className="group relative px-4 md:px-6 py-2.5 md:py-3 bg-gradient-to-r from-cyan-500 to-teal-500 text-white font-semibold rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-105 flex items-center gap-2"
+          title="Rain effect from top"
+        >
+          <svg
+            className="w-4 h-4 md:w-5 md:h-5 group-hover:translate-y-1 transition-transform duration-300"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+          </svg>
+          <span className="hidden sm:inline">Rain</span>
+          <span className="sm:hidden">🌧️</span>
         </button>
 
         <button
           onClick={handleExplode}
-          className="group relative px-6 py-3 bg-gradient-to-r from-orange-500 to-red-500 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 flex items-center gap-2"
+          className="group relative px-4 md:px-6 py-2.5 md:py-3 bg-gradient-to-r from-orange-500 to-red-500 text-white font-semibold rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-105 flex items-center gap-2"
+          title="Explode all cards!"
         >
           <svg
-            className="w-5 h-5 group-hover:scale-125 transition-transform duration-300"
+            className="w-4 h-4 md:w-5 md:h-5 group-hover:scale-125 group-hover:rotate-12 transition-transform duration-300"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
           >
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
           </svg>
-          <span>Explode</span>
+          <span className="hidden sm:inline">Explode</span>
+          <span className="sm:hidden">💥</span>
         </button>
       </div>
     </div>
