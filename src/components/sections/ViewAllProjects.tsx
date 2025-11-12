@@ -35,9 +35,9 @@ export const ViewAllProjects: React.FC<ViewAllProjectsProps> = ({ onBack, projec
 
   return (
     <>
-      <div className="fixed inset-0 bg-white dark:bg-gray-900 z-50 overflow-y-auto">
+      <div className="fixed inset-0 bg-white dark:bg-gray-900 z-[1100] overflow-y-auto">
         {/* Header */}
-        <div className="sticky top-0 bg-white/95 dark:bg-gray-900/95 backdrop-blur-lg border-b border-gray-200 dark:border-gray-700 z-10 shadow-sm">
+        <div className="sticky top-0 bg-white/95 dark:bg-gray-900/95 backdrop-blur-lg border-b border-gray-200 dark:border-gray-700 z-10 shadow-sm mt-0">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between py-4">
               <div className="flex items-center gap-4">
@@ -208,7 +208,7 @@ export const ViewAllProjects: React.FC<ViewAllProjectsProps> = ({ onBack, projec
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[60] flex items-center justify-center p-4"
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[1200] flex items-center justify-center p-4"
             onClick={() => setSelectedProject(null)}
           >
             <motion.div
