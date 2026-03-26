@@ -1,337 +1,282 @@
-'use client';
-import React, { useState } from 'react';
+"use client";
+
+import React, { useState, useMemo } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '../../context/LanguageContext';
-import { individualProjects, designProjects, groupProjects } from '../../data/portfolio';
-import { ExternalLink, Github, Figma, FileText, X, ArrowLeft } from 'lucide-react';
+import { individualProjects, groupProjects, designProjects as uiuxProjects } from '../../data/portfolio';
 import type { Project } from '../../types';
+import { 
+  Github, 
+  ExternalLink, 
+  X, 
+  ArrowLeft, 
+  BadgeCheck, 
+  FileText,
+  Search,
+  Figma,
+  Monitor,
+  Code,
+  Layout
+} from 'lucide-react';
+import TiltedCard from '../shared/TiltedCard';
+import { Portal } from '../shared/Portal';
 
 interface ViewAllProjectsProps {
   onBack: () => void;
-  projectType?: 'design' | 'web' | 'all';
+  projectType?: 'individual' | 'group' | 'design' | 'all';
 }
 
-export const ViewAllProjects: React.FC<ViewAllProjectsProps> = ({ onBack, projectType = 'all' }) => {
+export function ViewAllProjects({ onBack, projectType = 'all' }: ViewAllProjectsProps) {
   const { language } = useLanguage();
-  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
-  const [activeFilter, setActiveFilter] = useState<'all' | 'design' | 'web'>(projectType);
+  const [selectedProject, setSelectedProject] = useState<any | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [activeFilter, setActiveFilter] = useState<'all' | 'development' | 'uiux'>('all');
 
-  // Filter projects based on type - include all project sources
-  const allProjects = [...individualProjects, ...groupProjects, ...designProjects];
-  const filteredProjects = allProjects.filter(project => {
-    if (activeFilter === 'all') return true;
-    // Web filter includes both 'web' and 'mobile' types
-    if (activeFilter === 'web') return project.type === 'web' || project.type === 'mobile';
-    return project.type === activeFilter;
+  // Combine and Transform Data
+  const allProjects = useMemo(() => [
+    ...individualProjects.map(p => ({ ...p, categoryType: 'Development' })),
+    ...groupProjects.map(p => ({ ...p, categoryType: 'Development' })),
+    ...uiuxProjects.map(p => ({ 
+      ...p, 
+      categoryType: 'UI/UX Design',
+      links: { demo: p.links.demo, figma: p.links.prototype, needToKnow: p.links.needToKnow, github: (p.links as any).github }
+    }))
+  ], []);
+
+  const filteredProjects = allProjects.filter(p => {
+    const matchesFilter = 
+      activeFilter === 'all' || 
+      (activeFilter === 'development' && p.categoryType === 'Development') ||
+      (activeFilter === 'uiux' && p.categoryType === 'UI/UX Design');
+    
+    const matchesSearch = 
+      p.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
+      p.techStack.some(t => t.toLowerCase().includes(searchTerm.toLowerCase()));
+
+    return matchesFilter && matchesSearch;
   });
 
-  const getProjectTypeLabel = (type: string = 'web') => {
-    const labels: Record<string, { en: string; id: string }> = {
-      web: { en: 'Web Dev', id: 'Web Dev' },
-      design: { en: 'UI/UX Design', id: 'Desain UI/UX' },
-      mobile: { en: 'Mobile', id: 'Mobile' }
-    };
-    return labels[type]?.[language] || type;
-  };
-
   return (
-    <>
-      <div className="fixed inset-0 bg-white dark:bg-gray-900 z-[1100] overflow-y-auto">
-        {/* Header */}
-        <div className="sticky top-0 bg-white/95 dark:bg-gray-900/95 backdrop-blur-lg border-b border-gray-200 dark:border-gray-700 z-10 shadow-sm mt-0">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between py-4">
-              <div className="flex items-center gap-4">
-                <button
-                  onClick={onBack}
-                  className="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-                >
-                  <ArrowLeft size={20} />
-                </button>
-                <div>
-                  <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-                    {language === 'en' ? 'All Projects' : 'Semua Projek'}
-                  </h1>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    {filteredProjects.length} {language === 'en' ? 'projects' : 'projek'}
-                  </p>
-                </div>
-              </div>
+    <div className="min-h-screen bg-white dark:bg-[#0B1120] py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto">
+        {/* Header & Back Button */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 mb-16">
+          <button
+            onClick={onBack}
+            className="flex items-center gap-2 text-emerald-500 font-black text-xs uppercase tracking-[0.2em] group w-fit"
+          >
+            <ArrowLeft size={18} className="group-hover:-translate-x-2 transition-transform" />
+            {language === 'en' ? 'Back to Overview' : 'Kembali'}
+          </button>
 
-              {/* Filter Tabs */}
-              <div className="flex gap-2">
-                <button
-                  onClick={() => setActiveFilter('all')}
-                  className={`px-6 py-2.5 rounded-full text-sm font-semibold transition-all ${
-                    activeFilter === 'all'
-                      ? 'bg-gradient-to-r from-emerald-500 to-blue-500 text-white shadow-lg'
-                      : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700'
-                  }`}
-                >
-                  {language === 'en' ? 'All' : 'Semua'}
-                </button>
-                <button
-                  onClick={() => setActiveFilter('design')}
-                  className={`px-6 py-2.5 rounded-full text-sm font-semibold transition-all ${
-                    activeFilter === 'design'
-                      ? 'bg-gradient-to-r from-emerald-500 to-blue-500 text-white shadow-lg'
-                      : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700'
-                  }`}
-                >
-                  🎨 {language === 'en' ? 'UI/UX Design' : 'Desain UI/UX'}
-                </button>
-                <button
-                  onClick={() => setActiveFilter('web')}
-                  className={`px-6 py-2.5 rounded-full text-sm font-semibold transition-all ${
-                    activeFilter === 'web'
-                      ? 'bg-gradient-to-r from-emerald-500 to-blue-500 text-white shadow-lg'
-                      : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700'
-                  }`}
-                >
-                  💻 {language === 'en' ? 'Web Dev' : 'Web Dev'}
-                </button>
-              </div>
-            </div>
+          <div className="relative flex-1 max-w-md">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+            <input 
+              type="text"
+              placeholder={language === 'en' ? "Search all projects..." : "Cari semua projek..."}
+              className="w-full pl-12 pr-4 py-4 bg-gray-50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700 rounded-2xl text-sm focus:ring-2 focus:ring-emerald-500 outline-none transition-all shadow-inner"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
           </div>
         </div>
 
-        {/* Projects Grid */}
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredProjects.map((project, index) => (
-              <motion.button
-                key={project.id}
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: index * 0.05 }}
-                onClick={() => setSelectedProject(project)}
-                className="w-full text-left group"
-              >
-                <div className="relative overflow-hidden rounded-2xl bg-white dark:bg-gray-800 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-200 dark:border-gray-700 h-full flex flex-col">
-                  {/* Project Image */}
-                  <div className="relative h-64 overflow-hidden flex-shrink-0">
-                    <Image
-                      src={project.image}
-                      alt={project.title}
-                      fill
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                      className="object-cover transition-transform duration-300 group-hover:scale-110"
-                    />
-                    {/* Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+        {/* Standardized Tab Filter */}
+        <div className="flex justify-center mb-16">
+          <div className="bg-gray-50/50 dark:bg-gray-800/30 backdrop-blur-2xl p-1.5 rounded-[1.5rem] border border-gray-200/50 dark:border-gray-700/50 shadow-xl flex gap-2">
+            <button
+              onClick={() => setActiveFilter('all')}
+              className={`flex items-center gap-2 px-8 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-500 ${
+                activeFilter === 'all'
+                  ? 'bg-white dark:bg-gray-700 text-emerald-500 shadow-md'
+                  : 'text-gray-400 hover:text-emerald-500'
+              }`}
+            >
+              <Layout size={14} />
+              All Projects
+            </button>
+            <button
+              onClick={() => setActiveFilter('development')}
+              className={`flex items-center gap-2 px-8 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-500 ${
+                activeFilter === 'development'
+                  ? 'bg-white dark:bg-gray-700 text-emerald-500 shadow-md'
+                  : 'text-gray-400 hover:text-emerald-500'
+              }`}
+            >
+              <Code size={14} />
+              Development
+            </button>
+            <button
+              onClick={() => setActiveFilter('uiux')}
+              className={`flex items-center gap-2 px-8 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-500 ${
+                activeFilter === 'uiux'
+                  ? 'bg-white dark:bg-gray-700 text-emerald-500 shadow-md'
+                  : 'text-gray-400 hover:text-emerald-500'
+              }`}
+            >
+              <Monitor size={14} />
+              UI/UX Design
+            </button>
+          </div>
+        </div>
 
-                    {/* Type Badge */}
-                    <div className="absolute top-4 left-4">
-                      <span className="px-3 py-1.5 bg-emerald-500 text-white text-xs font-bold rounded-full backdrop-blur-sm shadow-lg">
-                        {getProjectTypeLabel(project.type)}
+        {/* Grid Display */}
+        <motion.div 
+          layout
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10"
+        >
+          <AnimatePresence>
+            {filteredProjects.map((project) => (
+              <motion.div
+                key={project.id}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ duration: 0.3 }}
+                layout
+              >
+                <TiltedCard scaleOnHover={1.02} rotateAmplitude={3} containerHeight="100%" containerWidth="100%">
+                  <div 
+                    onClick={() => setSelectedProject(project)}
+                    className="group relative h-full overflow-hidden rounded-[2.5rem] bg-white dark:bg-gray-800 shadow-[0_20px_50px_rgba(0,0,0,0.05)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.2)] border border-gray-100 dark:border-gray-700 cursor-pointer transition-all duration-500 hover:border-emerald-500/50"
+                  >
+                    <div className="relative h-60 overflow-hidden">
+                      <Image src={project.image} alt={project.title} fill className="object-cover transition-transform duration-1000 group-hover:scale-110" />
+                      <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors" />
+                      <span className={`absolute top-6 left-6 px-4 py-1.5 text-[9px] font-black rounded-full uppercase tracking-widest shadow-lg ${project.categoryType === 'Development' ? 'bg-blue-500' : 'bg-emerald-500'} text-white`}>
+                        {project.categoryType}
                       </span>
                     </div>
-
-                    {/* Quick Actions */}
-                    <div className="absolute top-4 right-4 flex gap-2">
-                      {project.links.demo && (
-                        <a
-                          href={project.links.demo}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          onClick={(e) => e.stopPropagation()}
-                          className="w-9 h-9 rounded-full bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm flex items-center justify-center hover:scale-110 transition-transform shadow-lg"
-                        >
-                          <ExternalLink size={16} className="text-emerald-600" />
-                        </a>
-                      )}
-                      {project.links.prototype && (
-                        <a
-                          href={project.links.prototype}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          onClick={(e) => e.stopPropagation()}
-                          className="w-9 h-9 rounded-full bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm flex items-center justify-center hover:scale-110 transition-transform shadow-lg"
-                        >
-                          <Figma size={16} className="text-purple-600" />
-                        </a>
-                      )}
+                    <div className="p-8">
+                      <h4 className="text-xl font-black text-gray-900 dark:text-white mb-3 uppercase tracking-tighter line-clamp-1 group-hover:text-emerald-500 transition-colors">{project.title}</h4>
+                      <p className="text-xs text-gray-500 dark:text-gray-400 italic line-clamp-2 mb-8 leading-relaxed">"{project.description}"</p>
+                      <div className="flex flex-wrap gap-2">
+                        {project.techStack.slice(0, 3).map((t: string) => (
+                          <span key={t} className="px-3 py-1 bg-gray-50 dark:bg-gray-900/50 text-gray-600 dark:text-gray-300 text-[9px] font-bold rounded-lg uppercase border border-gray-100 dark:border-gray-700">{t}</span>
+                        ))}
+                      </div>
                     </div>
                   </div>
-
-                  {/* Project Info */}
-                  <div className="p-5 flex-grow flex flex-col">
-                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2 line-clamp-1">
-                      {project.title}
-                    </h3>
-                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 line-clamp-2 flex-grow">
-                      {language === 'en' ? project.description : (project.descriptionId || project.description)}
-                    </p>
-
-                    {/* Tech Stack */}
-                    <div className="flex flex-wrap gap-2 mt-auto">
-                      {project.techStack.slice(0, 4).map((tech) => (
-                        <span
-                          key={tech}
-                          className="px-2.5 py-1 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 text-xs font-medium rounded-lg"
-                        >
-                          {tech}
-                        </span>
-                      ))}
-                      {project.techStack.length > 4 && (
-                        <span className="px-2.5 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs font-medium rounded-lg">
-                          +{project.techStack.length - 4}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </motion.button>
+                </TiltedCard>
+              </motion.div>
             ))}
-          </div>
+          </AnimatePresence>
+        </motion.div>
 
-          {/* Empty State */}
-          {filteredProjects.length === 0 && (
-            <div className="flex flex-col items-center justify-center h-[60vh] text-center">
-              <div className="text-8xl mb-6">🔍</div>
-              <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">
-                {language === 'en' ? 'No Projects Found' : 'Tidak Ada Projek'}
-              </h3>
-              <p className="text-gray-600 dark:text-gray-400 text-lg">
-                {language === 'en'
-                  ? 'Try changing the filter to see more projects'
-                  : 'Coba ubah filter untuk melihat projek lainnya'}
-              </p>
+        {filteredProjects.length === 0 && (
+          <div className="text-center py-32">
+            <div className="w-20 h-20 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-6 text-gray-400">
+              <Search size={32} />
             </div>
-          )}
-        </div>
+            <p className="text-gray-500 font-black uppercase tracking-widest text-xs italic">No results matching your criteria.</p>
+          </div>
+        )}
       </div>
 
-      {/* Full Screen Project Detail Modal */}
-      <AnimatePresence>
-        {selectedProject && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[1200] flex items-center justify-center p-4"
-            onClick={() => setSelectedProject(null)}
-          >
+      {/* Standardized Project Modal with 20% Opacity */}
+      <Portal>
+        <AnimatePresence>
+          {selectedProject && (
             <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              className="bg-white dark:bg-gray-900 rounded-3xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl"
-              onClick={(e) => e.stopPropagation()}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/20 backdrop-blur-sm z-[999999] flex items-center justify-center p-4 sm:p-8"
+              onClick={() => setSelectedProject(null)}
             >
-              {/* Modal Header */}
-              <div className="sticky top-0 bg-white/95 dark:bg-gray-900/95 backdrop-blur-lg border-b border-gray-200 dark:border-gray-700 z-10 px-6 py-4">
-                <div className="flex items-center justify-between">
-                  <span className="text-lg font-semibold text-gray-900 dark:text-white">
-                    {language === 'en' ? 'Project Details' : 'Detail Projek'}
-                  </span>
-                  <button
+              <motion.div
+                initial={{ scale: 0.9, opacity: 0, y: 30 }}
+                animate={{ scale: 1, opacity: 1, y: 0 }}
+                exit={{ scale: 0.9, opacity: 0, y: 30 }}
+                className="bg-white dark:bg-gray-900 rounded-[2.5rem] max-w-5xl w-full max-h-[95vh] overflow-hidden shadow-2xl relative border border-gray-100 dark:border-gray-800 flex flex-col"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="absolute top-6 right-6 z-50">
+                  <button 
                     onClick={() => setSelectedProject(null)}
-                    className="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                    className="w-12 h-12 rounded-full bg-white/40 dark:bg-black/40 backdrop-blur-md border border-white/30 text-white hover:bg-emerald-500 transition-all flex items-center justify-center shadow-xl"
                   >
-                    <X size={20} />
+                    <X size={24} />
                   </button>
                 </div>
-              </div>
 
-              {/* Modal Content */}
-              <div className="p-6 space-y-6">
-                {/* Project Image */}
-                <div className="relative aspect-video rounded-2xl overflow-hidden bg-gray-100 dark:bg-gray-800 shadow-xl">
-                  <Image
-                    src={selectedProject.image}
-                    alt={selectedProject.title}
-                    fill
-                    sizes="(max-width: 768px) 100vw, 90vw"
-                    className="object-cover"
-                  />
-                </div>
-
-                {/* Project Info */}
-                <div>
-                  <div className="flex items-center gap-2 mb-3">
-                    <span className="px-3 py-1.5 bg-emerald-500 text-white text-xs font-bold rounded-full">
-                      {getProjectTypeLabel(selectedProject.type)}
-                    </span>
+                <div className="overflow-y-auto custom-scrollbar flex-1">
+                  <div className="relative w-full aspect-video sm:aspect-[21/9] overflow-hidden bg-gray-100 dark:bg-gray-800">
+                    <Image src={selectedProject.image} alt={selectedProject.title} fill className="object-contain" priority />
+                    <div className="absolute inset-0 bg-gradient-to-t from-gray-900/40 via-transparent to-transparent" />
                   </div>
-                  <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-3">
-                    {selectedProject.title}
-                  </h2>
-                  <p className="text-gray-600 dark:text-gray-400 leading-relaxed text-lg">
-                    {language === 'en' ? selectedProject.description : (selectedProject.descriptionId || selectedProject.description)}
-                  </p>
-                </div>
 
-                {/* Tech Stack */}
-                <div>
-                  <h3 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase mb-3">
-                    {language === 'en' ? 'Technologies Used' : 'Teknologi yang Digunakan'}
-                  </h3>
-                  <div className="flex flex-wrap gap-2">
-                    {selectedProject.techStack.map((tech) => (
-                      <span
-                        key={tech}
-                        className="px-4 py-2 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 text-sm font-medium rounded-lg border border-emerald-200 dark:border-emerald-800"
-                      >
-                        {tech}
-                      </span>
-                    ))}
+                  <div className="p-8 sm:p-12">
+                    <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-12 border-b border-gray-100 dark:border-gray-800 pb-12">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-3 mb-4">
+                          <span className={`px-4 py-1.5 ${selectedProject.categoryType === 'Development' ? 'bg-blue-500/10 text-blue-500' : 'bg-emerald-500/10 text-emerald-500'} rounded-full text-[10px] font-black uppercase tracking-[0.2em]`}>
+                            {selectedProject.categoryType}
+                          </span>
+                        </div>
+                        <h3 className="text-4xl sm:text-5xl font-black text-gray-900 dark:text-white tracking-tighter uppercase leading-tight">
+                          {selectedProject.title}
+                        </h3>
+                      </div>
+
+                      <div className="flex flex-wrap gap-4 shrink-0">
+                        {selectedProject.links?.github && (
+                          <a href={selectedProject.links.github} target="_blank" className="flex items-center gap-3 px-8 py-4 bg-gray-900 text-white rounded-2xl font-black text-xs shadow-xl hover:bg-black hover:-translate-y-1 transition-all uppercase tracking-widest">
+                            <Github size={18} /> SOURCE
+                          </a>
+                        )}
+                        {selectedProject.links?.figma && (
+                          <a href={selectedProject.links.figma} target="_blank" className="flex items-center gap-3 px-8 py-4 bg-emerald-500 text-white rounded-2xl font-black text-xs shadow-xl shadow-emerald-500/20 hover:bg-emerald-600 hover:-translate-y-1 transition-all uppercase tracking-widest">
+                            <Figma size={18} /> FIGMA
+                          </a>
+                        )}
+                        {selectedProject.links?.demo && (
+                          <a href={selectedProject.links.demo} target="_blank" className="flex items-center gap-3 px-8 py-4 bg-blue-500 text-white rounded-2xl font-black text-xs shadow-xl shadow-blue-500/20 hover:bg-blue-600 hover:-translate-y-1 transition-all uppercase tracking-widest">
+                            <ExternalLink size={18} /> PREVIEW
+                          </a>
+                        )}
+                        {selectedProject.links?.needToKnow && (
+                          <a href={selectedProject.links.needToKnow} target="_blank" className="flex items-center gap-3 px-8 py-4 bg-orange-500 text-white rounded-2xl font-black text-xs shadow-xl shadow-orange-500/20 hover:bg-orange-600 hover:-translate-y-1 transition-all uppercase tracking-widest">
+                            <FileText size={18} /> DOCUMENTATION
+                          </a>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
+                      <div className="lg:col-span-8">
+                        <h4 className="text-xs font-black uppercase tracking-[0.3em] text-emerald-500 mb-8 flex items-center gap-4">
+                          Project Detail
+                          <span className="flex-1 h-px bg-emerald-500/10"></span>
+                        </h4>
+                        <p className="text-xl text-gray-600 dark:text-gray-300 leading-[2] font-medium italic border-l-4 border-emerald-500/30 pl-8">
+                          "{selectedProject.description}"
+                        </p>
+                      </div>
+
+                      <div className="lg:col-span-4 space-y-12">
+                        <div>
+                          <h4 className="text-xs font-black uppercase tracking-[0.3em] text-emerald-500 mb-6 flex items-center gap-4">
+                            Stack Integration
+                          </h4>
+                          <div className="flex flex-wrap gap-3">
+                            {selectedProject.techStack.map((tech: string) => (
+                              <span key={tech} className="px-4 py-2 bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-200 text-[10px] font-black rounded-xl border border-gray-100 dark:border-gray-700">
+                                {tech}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
-
-                {/* Action Buttons */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-4">
-                  {selectedProject.links.demo && (
-                    <a
-                      href={selectedProject.links.demo}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="py-4 px-6 bg-gradient-to-r from-emerald-500 to-blue-500 text-white rounded-2xl font-bold shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2"
-                    >
-                      <ExternalLink size={18} />
-                      {language === 'en' ? 'View Live Demo' : 'Lihat Demo Langsung'}
-                    </a>
-                  )}
-                  {selectedProject.links.prototype && (
-                    <a
-                      href={selectedProject.links.prototype}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="py-4 px-6 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-2xl font-bold shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2"
-                    >
-                      <Figma size={18} />
-                      {language === 'en' ? 'View Prototype' : 'Lihat Prototipe'}
-                    </a>
-                  )}
-                  {selectedProject.links.github && (
-                    <a
-                      href={selectedProject.links.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="py-4 px-6 bg-gray-800 dark:bg-gray-700 text-white rounded-2xl font-semibold hover:bg-gray-900 dark:hover:bg-gray-600 transition-colors flex items-center justify-center gap-2 shadow-lg"
-                    >
-                      <Github size={18} />
-                      {language === 'en' ? 'View Code' : 'Lihat Kode'}
-                    </a>
-                  )}
-                  {selectedProject.links.needToKnow && (
-                    <a
-                      href={selectedProject.links.needToKnow}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="py-4 px-6 bg-blue-500 text-white rounded-2xl font-semibold hover:bg-blue-600 transition-colors flex items-center justify-center gap-2 shadow-lg"
-                    >
-                      <FileText size={18} />
-                      {language === 'en' ? 'Documentation' : 'Dokumentasi'}
-                    </a>
-                  )}
-                </div>
-              </div>
+              </motion.div>
             </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </>
+          )}
+        </AnimatePresence>
+      </Portal>
+    </div>
   );
-};
+}

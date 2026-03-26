@@ -136,7 +136,7 @@ export const About: React.FC = () => {
                 avatarUrl="/assets/removebg.webp"
                 miniAvatarUrl="/assets/removebg.webp"
                 name="Rifqi Haikal"
-                title={t("Software Engineer & UI/UX Designer", "Software Engineer & UI/UX Designer") as string}
+                title={t("Software Engineer", "Software Engineer") as string}
                 handle="rifqihaikal"
                 status={t("Available for Work", "Tersedia untuk Bekerja") as string}
                 contactText={t("Contact Me", "Hubungi Saya") as string}
@@ -181,7 +181,7 @@ export const About: React.FC = () => {
                     <VariableProximity
                       label={
                         language === 'en'
-                          ? "A creative UI/UX Designer and Web Developer passionate about building engaging digital experiences. With two years of hands-on experience, I have developed technical and creative solutions as a Freelancer and in professional roles at a leading IT consultant and a Multi-finance company. As a Bachelor of Informatics from Institut Teknologi Del, I am constantly exploring new technologies and am eager to apply my skills at the intersection of design and development in a dynamic team."
+                          ? "A Software Engineer passionate about building engaging digital experiences. With two years of hands-on experience, I have developed technical and creative solutions as a Freelancer and in professional roles at a leading Oil & Gas Industry, IT consultant, Multi-finance, and Government company. As a Bachelor of Informatics from Institut Teknologi Del, I am constantly exploring new technologies and am eager to apply my skills in a dynamic team."
                           : "Seorang UI/UX Designer dan Web Developer kreatif yang passionate dalam membangun pengalaman digital yang menarik. Dengan dua tahun pengalaman hands-on, saya telah mengembangkan solusi teknis dan kreatif sebagai Freelancer dan dalam peran profesional di konsultan IT terkemuka dan perusahaan Multi-finance. Sebagai Sarjana Informatika dari Institut Teknologi Del, saya terus mengeksplorasi teknologi baru dan bersemangat untuk menerapkan keterampilan saya di persimpangan desain dan pengembangan dalam tim yang dinamis."
                       }
                       fromFontVariationSettings="'wght' 400, 'opsz' 9"

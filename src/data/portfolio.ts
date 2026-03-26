@@ -113,28 +113,69 @@ export const designSkills = [
 
 export const workExperience: Experience[] = [
   {
+    id: 'phr',
+    title: 'IT BUSINESS SOLUTION INTERN',
+    company: 'PERTAMINA HULU ROKAN (PHR)',
+    companyType: 'OIL & GAS INDUSTRY',
+    period: 'Dec 2025 – Present',
+    location: 'South Jakarta, Indonesia',
+    shortDescription: 'Spearheaded the end-to-end development of an Operational Activity Management System for the Exploration Function.',
+    description: '• Spearheaded the end-to-end development of an Operational Activity Management System for the Exploration Function, streamlining complex oil & gas business processes into a digital platform.\n• Designed high-fidelity UI/UX prototypes using Figma, adhering to Pertamina’s strict design standardization guidelines to ensure consistency and usability.\n• Architected and integrated a robust database schema using SQL Server, ensuring seamless synchronization with existing legacy system tables and data structures.\n• Developed a scalable web application using ASP.NET MVC, complying with the company’s Application Development Standards (ADS), featuring secure authentication integrated with the corporate employee database.\n• Embedded Power BI dashboards directly into the application to provide real-time visualization and monitoring of exploration operational data for stakeholders.',
+    techStack: ['ASP .Net MVC', 'Python', 'Figma', 'SQL Server', 'Power BI', 'C#'],
+    type: 'work',
+    image: '/assets/phr-momen.webp'
+  },
+  {
+    id: 'brin',
+    title: 'SOFTWARE ENGINEER (PROJECT-BASED PARTNER)',
+    company: 'BADAN RISET DAN INOVASI NASIONAL (BRIN)',
+    companyType: 'GOVERNMENT',
+    period: 'Nov 2025 – Dec 2025',
+    location: 'Central Jakarta, Indonesia',
+    shortDescription: 'Technical partner specifically for accelerating the finalization of the Research and Innovation Funding Monitoring System.',
+    description: '• Recruited specifically as a technical partner to accelerate the finalization and enhancement of the Research and Innovation Funding Monitoring System within a critical one-month timeline.\n• Successfully optimized the financial management modules to track research fund inflows and outflows (expenses & income), ensuring data accuracy and accountability.\n• Acted as a technical bridge between non-technical stakeholders and developers, facilitating code reviews and overseeing the deployment pipeline to production servers.',
+    techStack: ['React.js', 'PHP', 'Laravel', 'SQL', 'Postman', 'RESTful API'],
+    type: 'work',
+    image: '/assets/brin-momen.webp'
+  },
+  {
+    id: 'freelance',
+    title: 'WEB DEVELOPER',
+    company: 'FREELANCE CLIENT PROJECTS',
+    companyType: 'VARIOUS INDUSTRIES',
+    period: 'Aug 2023 - Present',
+    location: 'Remote',
+    shortDescription: 'Led 10+ end-to-end projects for diverse clients, managing full product lifecycle from consultation to development.',
+    description: '• Led 10+ end-to-end projects for diverse clients (academic organizations, MSMEs), managing the full product lifecycle from initial consultation and user research to UI design, prototyping, and final development.\n• Translated complex client requirements and high-fidelity Figma designs into 20+ pixel-perfect, component-based UIs using TypeScript, React.js, and Next.js.',
+    techStack: ['Figma', 'React.js', 'Next.js', 'Vue.js', 'TypeScript', 'JavaScript'],
+    type: 'work',
+    image: '/assets/Profile.webp'
+  },
+  {
     id: 'javan',
-    title: 'Angular Developer Intern (IT Consulting Company)',
-    titleId: 'Magang Angular Developer',
-    company: 'PT. Javan Cipta Solusi',
+    title: 'ANGULAR DEVELOPER INTERN',
+    positionDetail: 'MSIB (Internship and Certified Independent Study)',
+    company: 'PT. JAVAN CIPTA SOLUSI',
+    companyType: 'IT CONSULTANT',
     period: 'Sep 2024 - Jan 2025',
     location: 'Yogyakarta, Indonesia',
-    description: 'Demonstrated strong expertise as an Angular Programmer Intern by successfully implementing full CRUD operations and integrating multiple APIs.',
-    descriptionId: 'Menunjukkan keahlian yang kuat sebagai Magang Angular Developer dengan berhasil mengimplementasikan operasi CRUD lengkap dan mengintegrasikan beberapa API.',
-    techStack: ['Angular', 'Spring Boot', 'Express.js', 'React.js', 'Vue.js'],
+    shortDescription: 'Engineered 15+ user-facing features across 2 major web applications and backend services.',
+    description: '• Engineered 15+ user-facing features across 2 major web applications using modern frameworks like React.js, Angular, and Vue.js.\n• Demonstrated extreme adaptability by successfully delivering 7 diverse projects, contributing in various roles from development to system analysis (BPMN) and Quality Assurance (QA).\n• Developed 10+ essential backend services using Express.js and Spring Boot to support core application functionality.',
+    techStack: ['Springboot', 'Express.js', 'React.js', 'Angular', 'Vue.js'],
     type: 'work',
     image: '/assets/javan.webp'
   },
   {
     id: 'fif',
-    title: 'Fullstack Developer Intern (Multi-Finance Company)',
-    titleId: 'Magang Angular Developer',
-    company: 'PT. Federal International Finance',
+    title: 'FULLSTACK DEVELOPER INTERN',
+    positionDetail: 'Individual Internship',
+    company: 'PT. FEDERAL INTERNATIONAL FINANCE',
+    companyType: 'MULTIFINANCE',
     period: 'Jun 2024 - Aug 2024',
-    location: 'Jakarta Selatan, Indonesia',
-    description: 'Gained hands-on experience in full-stack development, utilizing Java Spring Boot for robust back-end services and mastering effective API management.',
-    descriptionId: 'Memperoleh pengalaman langsung dalam pengembangan full-stack, menggunakan Java Spring Boot untuk layanan back-end yang kuat dan menguasai manajemen API yang efektif.',
-    techStack: ['Angular', 'Spring Boot', 'Swagger', 'MySQL'],
+    location: 'South Jakarta, Indonesia',
+    shortDescription: 'Accelerated company internal applications by developing 20+ new features and 10+ backend services.',
+    description: '• Accelerated the enhancement of a critical internal company application by developing over 20 new features with Angular and building 10+ supporting backend services with Java Spring Boot.\n• Managed and standardized documentation for over a dozen APIs using Swagger, ensuring seamless data integration and compliance within a professional fintech environment.',
+    techStack: ['Angular', 'Springboot', 'Swagger'],
     type: 'work',
     image: '/assets/fif.webp'
   }
@@ -144,34 +185,22 @@ export const organizationExperience: Experience[] = [
   {
     id: 'gdsc',
     title: 'Public Relations - Core Team',
-    titleId: 'Hubungan Masyarakat - Tim Inti',
+    shortDescription: 'Played a key role in executing strategic public relations plans and serving as Master of Ceremonies.',
     company: 'Google Developer Student Club IT Del',
     period: 'Oct 2023 - Dec 2024',
     description: 'Played a key role in executing strategic public relations plans and served as Master of Ceremonies during key club events.',
-    descriptionId: 'Berperan kunci dalam menjalankan rencana hubungan masyarakat strategis dan menjabat sebagai Master of Ceremonies selama acara klub utama.',
     type: 'organization',
     image: '/assets/gdsc.webp'
   },
   {
     id: 'bem',
     title: 'Head of Social Division',
-    titleId: 'Kepala Divisi Sosial',
+    shortDescription: 'Managed off-campus activities and social media management for the student executive board.',
     company: 'Student Executive Board - IT Del',
     period: 'Aug 2023 - Sep 2024',
     description: 'Successfully managed various off-campus activities and drove division\'s public relations efforts through strategic social media management.',
-    descriptionId: 'Berhasil mengelola berbagai kegiatan luar kampus dan mendorong upaya hubungan masyarakat divisi melalui manajemen media sosial strategis.',
     type: 'organization',
     image: '/assets/dhpm.webp'
-  },
-  {
-    id: 'delfest',
-    title: 'IT Del Festival',
-    company: 'Public Relations and Documentation Division - Member',
-    period: 'Aug 2023',
-    description: 'Actively participated as a member of the Public Relations and Documentation division, handling essential documentation tasks to capture and promote key moments of the festival.',
-    descriptionId: 'Berpartisipasi aktif sebagai anggota divisi Hubungan Masyarakat dan Dokumentasi, menangani tugas-tugas dokumentasi penting untuk mengabadikan dan mempromosikan momen-momen penting dalam festival.',
-    type: 'organization',
-    image: '/assets/delfest.webp'
   }
 ];
 
@@ -198,7 +227,7 @@ export const individualProjects: Project[] = [
     techStack: ['Next.js 16', 'TypeScript', 'Tailwind CSS', 'Supabase', 'React Hook Form', 'Zustand'],
     links: {
       demo: 'https://hiring-platform-woad.vercel.app',
-      needToKnow: 'https://drive.google.com/file/d/1sDZJJzx59VfwPaw2Y7J-hss0yh88rDyj/view'
+      needToKnow: 'https://drive.google.com/file/d/1sDZJJzx59VfwPaw2Y7J-hss0yh88rDyj/view?usp=sharing'
     },
     category: 'individual',
     type: 'web'

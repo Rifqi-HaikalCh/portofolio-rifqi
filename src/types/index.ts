@@ -18,10 +18,14 @@ export interface Experience {
   title: string;
   titleId?: string;
   company: string;
+  companyType?: string;
   period: string;
   location?: string;
   description: string;
   descriptionId?: string;
+  shortDescription: string;
+  shortDescriptionId?: string;
+  positionDetail?: string;
   techStack?: string[];
   type: 'work' | 'organization';
   image?: string;

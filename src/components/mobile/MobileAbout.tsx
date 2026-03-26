@@ -21,7 +21,7 @@ export const MobileAbout: React.FC = () => {
 
   const stats = [
     {
-      number: "10+",
+      number: "30+",
       label: language === 'en' ? "Projects Completed" : "Proyek Diselesaikan",
     },
     {
@@ -79,8 +79,8 @@ export const MobileAbout: React.FC = () => {
           <RotatingText
             texts={
               language === 'en'
-                ? ['UI/UX Designer', 'Web Developer', 'Mobile Developer']
-                : ['Desainer UI/UX', 'Pengembang Web', 'Pengembang Mobile']
+                ? ['UI/UX Designer', 'Web Developer', 'Software Engineer']
+                : ['Desainer UI/UX', 'Pengembang Web', 'Software Engineer']
             }
             interval={2500}
             className="text-base"
@@ -96,8 +96,8 @@ export const MobileAbout: React.FC = () => {
         className="text-gray-600 dark:text-gray-400 leading-relaxed mb-8 text-center"
       >
         {language === 'en'
-          ? "A creative UI/UX Designer and Web Developer passionate about building engaging digital experiences. With two years of hands-on experience, I have developed technical and creative solutions as a Freelancer and in professional roles."
-          : "Seorang UI/UX Designer dan Web Developer kreatif yang passionate dalam membangun pengalaman digital yang menarik. Dengan dua tahun pengalaman hands-on, saya telah mengembangkan solusi teknis dan kreatif sebagai Freelancer dan dalam peran profesional."}
+          ? "A creative Software Engineer dan UI/UX Designer passionate about building engaging digital experiences. With two years of hands-on experience, I have developed technical and creative solutions as a Freelancer and in professional roles."
+          : "Seorang Software Engineer dan UI/UX Designer kreatif yang passionate dalam membangun pengalaman digital yang menarik. Dengan dua tahun pengalaman hands-on, saya telah mengembangkan solusi teknis dan kreatif sebagai Freelancer dan dalam peran profesional."}
       </motion.p>
 
       {/* CTA Buttons */}
