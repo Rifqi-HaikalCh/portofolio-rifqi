@@ -10,6 +10,7 @@ import { Projects } from './Projects';
 import { ImmersivePortfolioGallery } from './ImmersivePortfolioGallery';
 import UiUxSkills from './UiUxSkills';
 import { SelectedRole } from './RoleSelectionModal';
+import { ViewAllProjects } from './ViewAllProjects';
 
 export type ProjectRole = 'developer' | 'uiux';
 
@@ -19,6 +20,7 @@ interface DualFunnelProjectsProps {
 
 export function DualFunnelProjects({ selectedRole }: DualFunnelProjectsProps) {
   const { language } = useLanguage();
+  const [showAllProjects, setShowAllProjects] = useState(false);
   const [activeRole, setActiveRole] = useState<ProjectRole>(() => {
     if (selectedRole === 'uiux') return 'uiux';
     if (selectedRole === 'developer') return 'developer';
@@ -50,19 +52,6 @@ export function DualFunnelProjects({ selectedRole }: DualFunnelProjectsProps) {
     }
   ];
 
-  const tabVariants = {
-    inactive: {
-      backgroundColor: 'transparent',
-      color: '#6B7280',
-      borderColor: '#E5E7EB'
-    },
-    active: {
-      backgroundColor: '#3B82F6',
-      color: '#FFFFFF',
-      borderColor: '#3B82F6'
-    }
-  };
-
   const contentVariants = {
     hidden: { 
       opacity: 0, 
@@ -89,7 +78,11 @@ export function DualFunnelProjects({ selectedRole }: DualFunnelProjectsProps) {
     }
   };
 
-return (
+  if (showAllProjects) {
+    return <ViewAllProjects onBack={() => setShowAllProjects(false)} projectType="all" />;
+  }
+
+  return (
     <section id="projects" className="py-20 relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
@@ -109,14 +102,14 @@ return (
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
         >
-          <div className="glass-card p-2 inline-flex rounded-2xl">
+          <div className="glass-card p-2 inline-flex rounded-2xl bg-gray-50/50 dark:bg-gray-800/30 backdrop-blur-xl border border-gray-200/50 dark:border-gray-700/50">
             {roleOptions.map((role) => (
               <motion.button
                 key={role.id}
                 className={`px-6 py-4 rounded-xl font-semibold text-sm flex items-center space-x-3 transition-all duration-300 min-w-[180px] justify-center ${
                   activeRole === role.id
-                    ? 'bg-gradient-to-r from-primary-500 to-secondary-500 text-white shadow-lg'
-                    : 'text-text-secondary hover:bg-white/50 dark:hover:bg-gray-700/50'
+                    ? 'bg-gradient-to-r from-emerald-500 to-blue-500 text-white shadow-lg'
+                    : 'text-gray-500 hover:bg-white/50 dark:hover:bg-gray-700/50'
                 }`}
                 onClick={() => setActiveRole(role.id)}
                 whileHover={{ scale: 1.02 }}
@@ -127,7 +120,7 @@ return (
                   <div className="font-semibold">
                     {language === 'en' ? role.titleEn : role.titleId}
                   </div>
-                  <div className={`text-xs ${activeRole === role.id ? 'text-white/80' : 'text-text-tertiary'}`}>
+                  <div className={`text-xs ${activeRole === role.id ? 'text-white/80' : 'text-gray-400'}`}>
                     {language === 'en' ? role.descriptionEn : role.descriptionId}
                   </div>
                 </div>
@@ -156,21 +149,21 @@ return (
                     containerHeight="100%"
                     containerWidth="100%"
                   >
-                    <div className="glass-card-strong p-8 h-full">
-                      <h3 className="text-2xl font-bold text-text-primary mb-6 text-center">
+                    <div className="bg-white dark:bg-gray-800 p-8 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-700">
+                      <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 text-center">
                         {language === 'en' ? 'Technical Skills & Expertise' : 'Keahlian & Keahlian Teknis'}
                       </h3>
-                      <p className="text-text-secondary text-center mb-8 max-w-3xl mx-auto">
-                        {language === 'en'
+                      <p className="text-gray-600 dark:text-gray-400 text-center mb-8 max-w-3xl mx-auto italic leading-relaxed">
+                        "{language === 'en'
                           ? 'I specialize in modern web technologies and frameworks, building scalable and performant applications.'
                           : 'Saya spesialisasi dalam teknologi web modern dan framework, membangun aplikasi yang skalabel dan berkinerja tinggi.'
-                        }
+                        }"
                       </p>
                     </div>
                   </TiltedCard>
                   
                   {/* Developer Projects */}
-                  <Projects />
+                  <Projects onShowAll={() => setShowAllProjects(true)} />
                 </div>
               ) : (
                 <div className="space-y-16">
@@ -198,17 +191,17 @@ return (
             containerHeight="100%"
             containerWidth="100%"
           >
-            <div className="glass-card-strong bg-gradient-to-r from-primary-500 to-secondary-500 p-8 text-white h-full">
-              <h3 className="text-2xl font-bold mb-4">
+            <div className="bg-gradient-to-r from-emerald-500 to-blue-500 p-10 rounded-[2.5rem] text-white shadow-2xl">
+              <h3 className="text-3xl font-black mb-4 uppercase tracking-tighter">
                 {language === 'en' ? 'Open for Opportunities' : 'Terbuka untuk Peluang'}
               </h3>
-              <p className="text-white/90 mb-6 max-w-2xl mx-auto">
+              <p className="text-white/90 mb-8 max-w-2xl mx-auto font-medium text-lg italic">
                 {language === 'en'
                   ? 'I am available for full-time positions and freelance projects. Let\'s discuss how I can contribute to your team or project!'
                   : 'Saya tersedia untuk posisi full-time dan proyek freelance. Mari diskusikan bagaimana saya dapat berkontribusi pada tim atau proyek Anda!'
                 }
               </p>
-              <div className="flex flex-wrap justify-center gap-4">
+              <div className="flex flex-wrap justify-center gap-6">
                 <InteractiveButton
                   onClick={() => {
                     const contactSection = document.querySelector('#contact');
@@ -216,7 +209,7 @@ return (
                       contactSection.scrollIntoView({ behavior: 'smooth' });
                     }
                   }}
-                  className="bg-white text-primary-600 font-semibold py-3 px-6 rounded-xl hover:bg-gray-100 transition-colors shadow-lg"
+                  className="bg-white text-emerald-600 font-black py-4 px-10 rounded-2xl hover:bg-gray-100 transition-all shadow-xl uppercase text-xs tracking-widest"
                 >
                   {language === 'en' ? 'Contact for Full-time' : 'Kontak untuk Full-time'}
                 </InteractiveButton>
@@ -227,7 +220,7 @@ return (
                       contactSection.scrollIntoView({ behavior: 'smooth' });
                     }
                   }}
-                  className="border-2 border-white/80 text-white font-semibold py-3 px-6 rounded-xl hover:bg-white hover:text-primary-600 transition-colors backdrop-blur-sm"
+                  className="border-2 border-white text-white font-black py-4 px-10 rounded-2xl hover:bg-white hover:text-emerald-600 transition-all backdrop-blur-sm uppercase text-xs tracking-widest"
                 >
                   {language === 'en' ? 'Hire for Freelance' : 'Sewa untuk Freelance'}
                 </InteractiveButton>

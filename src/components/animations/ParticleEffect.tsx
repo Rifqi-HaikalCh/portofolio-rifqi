@@ -28,7 +28,7 @@ export const ParticleEffect: React.FC<ParticleEffectProps> = ({ x, y, color, onC
   useEffect(() => {
     // Generate particles
     const newParticles: Particle[] = [];
-    const particleCount = 15;
+    const particleCount = 8;
 
     for (let i = 0; i < particleCount; i++) {
       const angle = (Math.PI * 2 * i) / particleCount;
