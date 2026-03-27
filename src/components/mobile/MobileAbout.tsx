@@ -149,20 +149,6 @@ export const MobileAbout: React.FC = () => {
         ))}
       </motion.div>
 
-      {/* Portfolio Figma Card */}
-      <motion.div
-        initial={{ y: 20, opacity: 0 }}
-        whileInView={{ y: 0, opacity: 1 }}
-        viewport={{ once: true }}
-        className="mb-12"
-      >
-        <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 text-center">
-          {language === 'en' ? 'My Portfolio' : 'Portofolio Saya'}
-        </h3>
-
-        <PortfolioFigmaCard />
-      </motion.div>
-
       {/* Expertise Section */}
       <motion.div
         initial={{ y: 20, opacity: 0 }}

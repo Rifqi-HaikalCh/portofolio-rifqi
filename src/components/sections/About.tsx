@@ -259,33 +259,6 @@ export const About: React.FC = () => {
             </div>
           </motion.div>
 
-          {/* Portfolio Carousel */}
-          <motion.div
-            className="space-y-8"
-            variants={sectionEntrance}
-          >
-            <motion.h3
-              className="text-3xl font-bold text-center text-gray-900 dark:text-white mb-12"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              viewport={{ once: true }}
-            >
-              {t("My Portfolio", "Portofolio Saya")}
-            </motion.h3>
-
-            {/* Portfolio Figma Card */}
-            <motion.div
-              className="relative max-w-4xl mx-auto mb-16"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.3 }}
-              viewport={{ once: true }}
-            >
-              <PortfolioFigmaCard />
-            </motion.div>
-          </motion.div>
-
           {/* Expertise Cards */}
           <motion.div 
             className="space-y-8"

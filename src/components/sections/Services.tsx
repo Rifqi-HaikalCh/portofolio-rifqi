@@ -10,6 +10,7 @@ import ElectricBorder from '../shared/ElectricBorder';
 import TiltedCard from '../shared/TiltedCard';
 import GlassSkillCard from '../shared/GlassSkillCard';
 import FallingSkillCards from '../shared/FallingSkillCards';
+import PortfolioFigmaCard from '../shared/PortfolioFigmaCard';
 import { 
   Code, 
   Palette, 
@@ -255,7 +256,22 @@ export function Services() {
                 <div className="w-12 h-1 bg-emerald-500 mx-auto mt-4 rounded-full" />
               </div>
               {activeTab === 'uiux' ? (
-                <DesignShowcase onShowAll={() => setShowAllProjects(true)} />
+                <>
+                  <DesignShowcase onShowAll={() => setShowAllProjects(true)} />
+                  <div className="pt-24 border-t border-gray-100 dark:border-gray-800/50">
+                    <div className="text-center mb-16">
+                      <h3 className="text-3xl font-black text-gray-900 dark:text-white tracking-tighter uppercase">
+                        {language === 'en' ? 'My Creative Workspace' : 'Lihat Meja Kerja Saya'}
+                      </h3>
+                      <p className="text-gray-500 dark:text-gray-400 mt-4 text-sm font-bold uppercase tracking-widest italic">
+                        {language === 'en' ? 'A deeper look into my design process and tools' : 'Melihat lebih dekat proses desain dan alat saya'}
+                      </p>
+                    </div>
+                    <div className="relative max-w-4xl mx-auto">
+                      <PortfolioFigmaCard />
+                    </div>
+                  </div>
+                </>
               ) : (
                 <Projects onShowAll={() => setShowAllProjects(true)} />
               )}
