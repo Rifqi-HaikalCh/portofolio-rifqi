@@ -130,7 +130,7 @@ export const workExperience: Experience[] = [
     title: 'SOFTWARE ENGINEER (PROJECT-BASED PARTNER)',
     company: 'BADAN RISET DAN INOVASI NASIONAL (BRIN)',
     companyType: 'GOVERNMENT',
-    period: 'Nov 2025 – Dec 2025',
+    period: 'Oct 2025 – Dec 2025',
     location: 'Central Jakarta, Indonesia',
     shortDescription: 'Technical partner specifically for accelerating the finalization of the Research and Innovation Funding Monitoring System.',
     description: '• Recruited specifically as a technical partner to accelerate the finalization and enhancement of the Research and Innovation Funding Monitoring System within a critical one-month timeline.\n• Successfully optimized the financial management modules to track research fund inflows and outflows (expenses & income), ensuring data accuracy and accountability.\n• Acted as a technical bridge between non-technical stakeholders and developers, facilitating code reviews and overseeing the deployment pipeline to production servers.',
@@ -139,29 +139,16 @@ export const workExperience: Experience[] = [
     image: '/assets/brin-momen.webp'
   },
   {
-    id: 'freelance',
-    title: 'WEB DEVELOPER',
-    company: 'FREELANCE CLIENT PROJECTS',
-    companyType: 'VARIOUS INDUSTRIES',
-    period: 'Aug 2023 - Present',
-    location: 'Remote',
-    shortDescription: 'Led 10+ end-to-end projects for diverse clients, managing full product lifecycle from consultation to development.',
-    description: '• Led 10+ end-to-end projects for diverse clients (academic organizations, MSMEs), managing the full product lifecycle from initial consultation and user research to UI design, prototyping, and final development.\n• Translated complex client requirements and high-fidelity Figma designs into 20+ pixel-perfect, component-based UIs using TypeScript, React.js, and Next.js.',
-    techStack: ['Figma', 'React.js', 'Next.js', 'Vue.js', 'TypeScript', 'JavaScript'],
-    type: 'work',
-    image: '/assets/Profile.webp'
-  },
-  {
     id: 'javan',
     title: 'ANGULAR DEVELOPER INTERN',
     positionDetail: 'MSIB (Internship and Certified Independent Study)',
     company: 'PT. JAVAN CIPTA SOLUSI',
     companyType: 'IT CONSULTANT',
-    period: 'Sep 2024 - Jan 2025',
+    period: 'Jan 2025 - Jun 2025',
     location: 'Yogyakarta, Indonesia',
-    shortDescription: 'Engineered 15+ user-facing features across 2 major web applications and backend services.',
-    description: '• Engineered 15+ user-facing features across 2 major web applications using modern frameworks like React.js, Angular, and Vue.js.\n• Demonstrated extreme adaptability by successfully delivering 7 diverse projects, contributing in various roles from development to system analysis (BPMN) and Quality Assurance (QA).\n• Developed 10+ essential backend services using Express.js and Spring Boot to support core application functionality.',
-    techStack: ['Springboot', 'Express.js', 'React.js', 'Angular', 'Vue.js'],
+    shortDescription: 'Delivered 7+ high-impact projects for prestigious institutions, including BRI, KPK, Kominfo and Kemenkeu.',
+    description: '• Delivered 7+ high-impact projects for prestigious institutions, including BRI, KPK, Kominfo and Kemenkeu, within a high-velocity consultancy environment.\n• Managed the end-to-end development cycle for diverse web applications, transitioning seamlessly between Frontend (Angular, React.js, Vue.js), Backend (Java Spring Boot), and UI/UX Design.\n• Translated high-fidelity Figma designs into responsive, component-based UIs for anti-corruption learning platforms (KPK) and practitioner systems (Digitalent).\n• Developed scalable full-stack services for educational, banking and government platforms, including authentication and inventory management systems.',
+    techStack: ['Springboot', 'React.js', 'Angular', 'Vue.js'],
     type: 'work',
     image: '/assets/javan.webp'
   },
@@ -171,13 +158,26 @@ export const workExperience: Experience[] = [
     positionDetail: 'Individual Internship',
     company: 'PT. FEDERAL INTERNATIONAL FINANCE',
     companyType: 'MULTIFINANCE',
-    period: 'Jun 2024 - Aug 2024',
+    period: 'Jun 2024 - Jan 2025',
     location: 'South Jakarta, Indonesia',
-    shortDescription: 'Accelerated company internal applications by developing 20+ new features and 10+ backend services.',
-    description: '• Accelerated the enhancement of a critical internal company application by developing over 20 new features with Angular and building 10+ supporting backend services with Java Spring Boot.\n• Managed and standardized documentation for over a dozen APIs using Swagger, ensuring seamless data integration and compliance within a professional fintech environment.',
+    shortDescription: 'Led the end-to-end development of a Proof-of-Concept (PoC) Employee Management application.',
+    description: '• Led the end-to-end development of a Proof-of-Concept (PoC) Employee Management application, managing everything from database logic in Spring Boot to a dynamic UI in Angular 11.\n• Implemented complex backend logic for multi-role authentication and data parsing, ensuring secure and standardized API communication.\n• Standardized documentation for dozens of APIs using Swagger, enabling seamless integration between legacy systems and modern microservices.\n• Optimized application performance by building component-based UIs with TypeScript and Tailwind CSS, resulting in a cleaner and more maintainable codebase.',
     techStack: ['Angular', 'Springboot', 'Swagger'],
     type: 'work',
     image: '/assets/fif.webp'
+  },
+  {
+    id: 'freelance',
+    title: 'WEB DEVELOPER',
+    company: 'FREELANCE CLIENT PROJECTS',
+    companyType: 'VARIOUS INDUSTRIES',
+    period: 'Aug 2023 - Present',
+    location: 'Remote',
+    shortDescription: 'Led 20+ end-to-end projects for diverse clients, managing full product lifecycle from consultation to development.',
+    description: '• Led 20+ end-to-end projects for diverse clients (academic organizations, MSMEs), managing the full product lifecycle from initial consultation and user research to UI design, prototyping, and final development.\n• Translated complex client requirements and high-fidelity Figma designs into 20+ pixel-perfect, component-based UIs using TypeScript, React.js, and Next.js.',
+    techStack: ['Figma', 'React.js', 'Next.js', 'Vue.js', 'TypeScript', 'JavaScript'],
+    type: 'work',
+    image: '/assets/Profile.webp'
   }
 ];
 

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '../../context/LanguageContext';
@@ -23,6 +23,8 @@ import {
 import { staggerContainer, fadeInUp } from '../../lib/animations';
 import { AnimatedSectionTitle } from '../shared/AnimatedSectionTitle';
 import type { Experience as ExperienceType } from '../../types';
+import { Portal } from '../shared/Portal';
+import { calculateTotalExperience } from '../../lib/experience-utils';
 
 // Desktop Timeline Card Component
 const DesktopTimelineCard = ({ exp, side, icon, onClick }: { 
@@ -97,10 +99,6 @@ const DesktopTimelineCard = ({ exp, side, icon, onClick }: {
   );
 };
 
-import { Portal } from '../shared/Portal';
-
-// ... (DesktopTimelineCard code tetap sama)
-
 export const Experience: React.FC = () => {
   const { language } = useLanguage();
   const [selectedExp, setSelectedExp] = useState<ExperienceType | null>(null);
@@ -108,6 +106,8 @@ export const Experience: React.FC = () => {
 
   const experiences = activeTab === 'work' ? workExperience : organizationExperience;
   const TabIcon = activeTab === 'work' ? Briefcase : Users;
+
+  const totalExp = useMemo(() => calculateTotalExperience(workExperience), []);
 
   return (
     <section id="experience" className="py-24 bg-white dark:bg-[#0B1120] relative overflow-hidden">
@@ -120,6 +120,28 @@ export const Experience: React.FC = () => {
             ? "A chronological journey through my professional milestones and technical impact."
             : "Perjalanan kronologis melalui pencapaian profesional dan dampak teknis saya."}
         />
+
+        {/* Total Experience Highlight */}
+        <div className="flex justify-center mb-12">
+          <motion.div 
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="px-6 py-3 bg-white dark:bg-gray-800/50 backdrop-blur-xl border border-emerald-500/20 rounded-3xl shadow-xl flex items-center gap-4 group hover:border-emerald-500 transition-all duration-500"
+          >
+            <div className="w-12 h-12 bg-emerald-500/10 rounded-2xl flex items-center justify-center text-emerald-500 group-hover:bg-emerald-500 group-hover:text-white transition-all duration-500">
+              <Calendar size={24} />
+            </div>
+            <div>
+              <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-0.5">
+                {language === 'en' ? 'Total Work Experience' : 'Total Pengalaman Kerja'}
+              </p>
+              <p className="text-lg font-black text-gray-900 dark:text-white">
+                {totalExp.years} {language === 'en' ? 'Years' : 'Tahun'} {totalExp.months} {language === 'en' ? 'Months' : 'Bulan'}
+              </p>
+            </div>
+          </motion.div>
+        </div>
 
         {/* Tab Switcher */}
         <div className="flex justify-center mb-20">
@@ -262,9 +284,16 @@ export const Experience: React.FC = () => {
                             Detailed Contributions
                             <span className="flex-1 h-px bg-emerald-500/10"></span>
                           </h4>
-                          <div className="text-sm md:text-base text-gray-600 dark:text-gray-400 whitespace-pre-line leading-loose">
-                            {selectedExp.description}
-                          </div>
+                          <ul className="space-y-3">
+                            {selectedExp.description.split('\n').filter(line => line.trim() !== '').map((line, idx) => (
+                              <li key={idx} className="flex gap-3 text-sm md:text-base text-gray-600 dark:text-gray-400 leading-relaxed">
+                                <span className="text-emerald-500 mt-1.5 shrink-0">
+                                  <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                                </span>
+                                <span>{line.replace(/^[•\-\s]+/, '')}</span>
+                              </li>
+                            ))}
+                          </ul>
                         </div>
 
                         {selectedExp.techStack && (

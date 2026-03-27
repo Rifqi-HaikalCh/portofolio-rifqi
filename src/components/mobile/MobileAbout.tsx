@@ -1,13 +1,14 @@
 'use client';
-import React from 'react';
+import React, { useMemo } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { useLanguage } from '../../context/LanguageContext';
-import { aboutHighlights } from '../../data/portfolio';
+import { aboutHighlights, workExperience } from '../../data/portfolio';
 import { Download, ChevronRight, GraduationCap, Briefcase, Trophy, Users } from 'lucide-react';
 import { SimpleLanyard } from '../shared/SimpleLanyard';
 import PortfolioFigmaCard from '../shared/PortfolioFigmaCard';
 import { RotatingText } from '../shared/RotatingText';
+import { calculateTotalExperience } from '../../lib/experience-utils';
 
 const iconMap: { [key: string]: React.ReactNode } = {
   'graduation-cap': <GraduationCap size={20} />,
@@ -19,13 +20,15 @@ const iconMap: { [key: string]: React.ReactNode } = {
 export const MobileAbout: React.FC = () => {
   const { language } = useLanguage();
 
+  const totalExp = useMemo(() => calculateTotalExperience(workExperience), []);
+
   const stats = [
     {
       number: "30+",
       label: language === 'en' ? "Projects Completed" : "Proyek Diselesaikan",
     },
     {
-      number: "2+",
+      number: `${totalExp.years}+`,
       label: language === 'en' ? "Years Experience" : "Tahun Pengalaman",
     },
     {

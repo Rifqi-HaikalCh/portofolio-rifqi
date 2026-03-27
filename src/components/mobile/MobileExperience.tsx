@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '../../context/LanguageContext';
@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import { Portal } from '../shared/Portal';
 import type { Experience as ExperienceType } from '../../types';
+import { calculateTotalExperience } from '../../lib/experience-utils';
 
 export const MobileExperience: React.FC = () => {
   const { language } = useLanguage();
@@ -26,6 +27,8 @@ export const MobileExperience: React.FC = () => {
   const experiences = activeTab === 'work' ? workExperience : organizationExperience;
   const TabIcon = activeTab === 'work' ? Briefcase : Users;
 
+  const totalExp = useMemo(() => calculateTotalExperience(workExperience), []);
+
   return (
     <section className="py-20 px-6 bg-white dark:bg-[#0B1120] overflow-hidden min-h-screen">
       {/* Section Header */}
@@ -33,7 +36,7 @@ export const MobileExperience: React.FC = () => {
         initial={{ y: 20, opacity: 0 }}
         whileInView={{ y: 0, opacity: 1 }}
         viewport={{ once: true }}
-        className="text-center mb-12"
+        className="text-center mb-8"
       >
         <div className="flex justify-center mb-4">
           <div className="w-10 h-10 bg-emerald-500/10 rounded-xl flex items-center justify-center text-emerald-500">
@@ -46,6 +49,26 @@ export const MobileExperience: React.FC = () => {
         <h2 className="text-3xl font-black text-gray-900 dark:text-white tracking-tighter">
           {language === 'en' ? 'Experience' : 'Pengalaman'}
         </h2>
+      </motion.div>
+
+      {/* Total Experience Highlight (Mobile) */}
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.95 }}
+        whileInView={{ opacity: 1, scale: 1 }}
+        viewport={{ once: true }}
+        className="mb-10 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-2xl border border-emerald-500/20 flex items-center gap-4"
+      >
+        <div className="w-10 h-10 bg-emerald-500/10 rounded-xl flex items-center justify-center text-emerald-500">
+          <Calendar size={18} />
+        </div>
+        <div>
+          <p className="text-[8px] font-black uppercase tracking-widest text-gray-400 mb-0.5">
+            {language === 'en' ? 'Total Work Experience' : 'Total Pengalaman Kerja'}
+          </p>
+          <p className="text-sm font-black text-gray-900 dark:text-white">
+            {totalExp.years} {language === 'en' ? 'Years' : 'Tahun'} {totalExp.months} {language === 'en' ? 'Months' : 'Bulan'}
+          </p>
+        </div>
       </motion.div>
 
       {/* Tab Selection */}
@@ -197,9 +220,16 @@ export const MobileExperience: React.FC = () => {
                         Key Responsibilities
                         <span className="flex-1 h-px bg-emerald-500/10"></span>
                       </h4>
-                      <div className="text-sm text-gray-600 dark:text-gray-400 whitespace-pre-line leading-[1.8]">
-                        {selectedExp.description}
-                      </div>
+                      <ul className="space-y-3">
+                        {selectedExp.description.split('\n').filter(line => line.trim() !== '').map((line, idx) => (
+                          <li key={idx} className="flex gap-3 text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+                            <span className="text-emerald-500 mt-1.5 shrink-0">
+                              <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                            </span>
+                            <span>{line.replace(/^[•\-\s]+/, '')}</span>
+                          </li>
+                        ))}
+                      </ul>
                     </div>
 
                     {selectedExp.techStack && (

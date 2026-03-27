@@ -1,13 +1,14 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { useLanguage } from '../../context/LanguageContext';
-import { aboutHighlights } from '../../data/portfolio';
+import { aboutHighlights, workExperience } from '../../data/portfolio';
 import ProfileCard from '../shared/ProfileCard';
 import PortfolioFigmaCard from '../shared/PortfolioFigmaCard';
 import VariableProximity from '../shared/VariableProximity';
+import { calculateTotalExperience } from '../../lib/experience-utils';
 import {
   premiumStagger,
   optimizedFadeIn,
@@ -52,6 +53,8 @@ export const About: React.FC = () => {
     return () => clearInterval(interval);
   }, []);
 
+  const totalExp = useMemo(() => calculateTotalExperience(workExperience), []);
+
   const stats = [
     { 
       number: "30+", 
@@ -59,7 +62,7 @@ export const About: React.FC = () => {
       description: t("From concept to technology solutions", "Dari konsep hingga solusi teknologi")
     },
     { 
-      number: "2+", 
+      number: `${totalExp.years}+`, 
       label: t("Years Experience", "Tahun Pengalaman"),
       description: t("Development and Design", "Pengembangan dan Desain")
     },
