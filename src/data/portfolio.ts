@@ -35,8 +35,8 @@ export const aboutHighlights: AboutHighlight[] = [
     icon: 'briefcase',
     title: 'Industry Experience',
     titleId: 'Pengalaman Industri',
-    description: 'Internships at PT. Javan Cipta Solusi & FIFGROUP',
-    descriptionId: 'Magang di PT. Javan Cipta Solusi & FIFGROUP'
+    description: ' Oil & Gas, IT Consultant, and Fintech Industry',
+    descriptionId: 'Pengalaman di Industri Oil & Gas, IT Consultant, dan Fintech'
   },
   {
     icon: 'trophy',
@@ -49,7 +49,7 @@ export const aboutHighlights: AboutHighlight[] = [
     icon: 'users',
     title: 'Freelance UI/UX & Web Developer',
     titleId: 'Freelance UI/UX & Web Developer',
-    description: 'Has 2 years of experience as a freelancer',
+    description: 'Has over 2 years of experience as a freelancer',
     descriptionId: 'Memiliki 2 tahun pengalaman sebagai freelancer'
   }
 ];
@@ -205,6 +205,21 @@ export const organizationExperience: Experience[] = [
 ];
 
 export const individualProjects: Project[] = [
+  {
+    id: 'shipment-tracker',
+    title: 'Shipment – Transport Tracker',
+    description: 'Web-based application used for logistic company to track delivery. Developed a responsive Shipment Management SPA using Vue 3 (Composition API) and TypeScript, delivering a seamless user experience across desktop and mobile devices with a built-in Dark/Light mode via Tailwind CSS. Engineered a real-time tracking and filtering system utilizing Pinia for state management. Built a fully simulated REST API environment using Mirage.js to mimic realistic network latency, HTTP status codes, and real-time shipment route simulations with automated status transitions.',
+    descriptionId: 'Aplikasi berbasis web untuk pelacakan pengiriman di perusahaan logistik. Dikembangkan sebagai SPA yang responsif menggunakan Vue 3 dan TypeScript, lengkap dengan fitur Dark/Light mode melalui Tailwind CSS. Mengimplementasikan sistem pelacakan real-time dengan Pinia dan lingkungan REST API simulasi menggunakan Mirage.js untuk mensimulasikan latensi jaringan dan transisi status otomatis.',
+    image: '/assets/ShipTrack-view1.webp',
+    techStack: ['Vue 3', 'Tailwind CSS', 'TypeScript', 'Pinia', 'Mirage.js'],
+    links: {
+      demo: 'https://transport-shipment-tracker-chi.vercel.app/',
+      github: 'https://github.com/Rifqi-HaikalCh/-Transport-Shipment-Tracker'
+    },
+    category: 'individual',
+    type: 'web',
+    slides: ['/assets/ShipTrack-view1.webp', '/assets/ShipTrack-view2.webp']
+  },
     {
     id: 'marketplace-influencer',
     title: 'Marketplace Influencer Platform',
