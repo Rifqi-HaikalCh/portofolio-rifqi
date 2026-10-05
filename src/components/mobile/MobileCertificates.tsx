@@ -13,7 +13,7 @@ export const MobileCertificates: React.FC = () => {
 
   return (
     <section id="certificates" data-studio="archive" className="py-16 px-5 border-b border-line bg-paper">
-      <header className="mb-12">
+      <header className="rise-item mb-12">
         <p className="font-jetbrains-mono text-[11px] tracking-[0.22em] uppercase text-accent mb-3">
           {label('Professional Growth', 'Pertumbuhan Profesional')}
         </p>
@@ -28,7 +28,7 @@ export const MobileCertificates: React.FC = () => {
         </p>
       </header>
 
-      <ul data-eqbot="certificates-list" data-eqbot-at="above" className="border-t border-line mb-8">
+      <ul data-eqbot="certificates-list" data-eqbot-at="above" className="rise-item border-t border-line mb-8">
         {certificateCategories.map((category, index) => {
           const selected = category.id === active?.id;
           return (
@@ -58,7 +58,7 @@ export const MobileCertificates: React.FC = () => {
 
       <div className="border-t border-line" aria-live="polite">
         {active?.certificates.map((cert) => (
-          <article key={cert.id} className="py-5 border-b border-line">
+          <article key={cert.id} className="rise-item py-5 border-b border-line">
             <h3 className="font-serif text-xl font-medium text-ink leading-snug">
               {label(cert.title, cert.titleId || cert.title)}
             </h3>

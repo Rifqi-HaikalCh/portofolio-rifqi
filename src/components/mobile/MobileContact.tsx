@@ -87,7 +87,7 @@ export const MobileContact: React.FC = () => {
         data-eqbot="contact-title"
         data-eqbot-at="above"
         onSubmit={handleSubmit}
-        className="border border-line bg-raised p-5 space-y-5"
+        className="rise-item border border-line bg-raised p-5 space-y-5"
       >
         <label className="block">
           <span className="block text-sm text-ink mb-2">{t('Full Name', 'Nama Lengkap')}</span>
@@ -151,7 +151,7 @@ export const MobileContact: React.FC = () => {
 
       <dl className="mt-10 border-t border-line">
         {details.map((item) => (
-          <div key={item.info} className="py-5 border-b border-line">
+          <div key={item.info} className="rise-item py-5 border-b border-line">
             <dt className="flex items-center gap-2 text-accent">
               {item.icon}
               <span className="font-jetbrains-mono text-[11px] tracking-[0.16em] uppercase">{item.title}</span>

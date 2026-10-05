@@ -2,8 +2,6 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useInView } from 'react-intersection-observer';
 import { useLanguage } from '../../context/LanguageContext';
 import { AnimatedSectionTitle } from '../shared/AnimatedSectionTitle';
 import PortfolioFigmaCard from '../shared/PortfolioFigmaCard';
@@ -17,7 +15,6 @@ import {
 import { ProjectDetailDialog, projectDetailLinks } from '../shared/ProjectDetailDialog';
 import { AdditionalSkillsCell, AdditionalSkillsDialog } from '../shared/AdditionalSkillsDialog';
 import { listedAdditionalGroups } from '../../lib/additional-skills';
-import { staggerContainer, fadeInUp } from '../../lib/animations';
 import { ViewAllProjects } from './ViewAllProjects';
 
 interface Service {
@@ -116,7 +113,6 @@ export function Services() {
   const [activeTab, setActiveTab] = useState<'uiux' | 'development'>('development');
   const [showAllProjects, setShowAllProjects] = useState(false);
   const [skillsOpen, setSkillsOpen] = useState(false);
-  const { ref: sectionRef } = useInView({ threshold: 0.1, triggerOnce: true });
 
   const currentServices = activeTab === 'uiux' ? uiuxServices : developerServices;
 
@@ -125,7 +121,7 @@ export function Services() {
   }
 
   return (
-    <section ref={sectionRef} id="services" data-studio="draft" className="py-12 md:py-16 border-b border-line">
+    <section id="services" data-studio="draft" className="py-12 md:py-16 border-b border-line">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <AnimatedSectionTitle
           badge={language === 'en' ? 'Expertise' : 'Keahlian'}
@@ -136,7 +132,7 @@ export function Services() {
           }
         />
 
-        <div className="flex justify-center mb-16">
+        <div className="rise-item flex justify-center mb-16">
           <div data-eqbot="services-tabs" data-eqbot-at="above" className="inline-flex border border-line" role="tablist">
             <button
               onClick={() => setActiveTab('development')}
@@ -163,19 +159,11 @@ export function Services() {
           </div>
         </div>
 
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={activeTab}
-            variants={staggerContainer}
-            initial="hidden"
-            animate="show"
-            exit="hidden"
-            className="space-y-24"
-          >
+        <div key={activeTab} className="space-y-24">
             {/* Services Grid */}
             <div className="grid grid-cols-1 md:grid-cols-3 border-t border-l border-line">
               {currentServices.map((service) => (
-                <motion.article key={`${activeTab}-${service.id}`} variants={fadeInUp} className="read-row p-7 md:p-8 border-b border-r border-line flex flex-col bg-paper">
+                <article key={`${activeTab}-${service.id}`} className="rise-item read-row p-7 md:p-8 border-b border-r border-line flex flex-col bg-paper">
                   <h3 className="font-serif text-2xl font-medium text-ink mb-3">
                     {language === 'en' ? service.titleEn : service.titleId}
                   </h3>
@@ -190,18 +178,18 @@ export function Services() {
                       </li>
                     ))}
                   </ul>
-                </motion.article>
+                </article>
               ))}
             </div>
 
             {/* Skills Animation */}
             <div className="space-y-8">
-              <h3 className="font-serif text-3xl font-medium text-ink">
+              <h3 className="rise-item font-serif text-3xl font-medium text-ink">
                 {language === 'en' ? 'Technological Stack' : 'Tumpukan Teknologi'}
               </h3>
               {activeTab === 'development' ? (
                 <div className="space-y-10">
-                  <div>
+                  <div className="rise-item">
                     <p className="font-jetbrains-mono text-[11px] tracking-[0.16em] uppercase text-accent mb-4">
                       {language === 'en' ? 'Core · Enterprise web and data' : 'Inti · Web dan data enterprise'}
                     </p>
@@ -216,7 +204,7 @@ export function Services() {
                   </div>
                   <div className="space-y-8">
                     {listedAdditionalGroups.map((group) => (
-                      <div key={group.labelEn}>
+                      <div key={group.labelEn} className="rise-item">
                         <p className="font-jetbrains-mono text-[11px] tracking-[0.16em] uppercase text-accent mb-4">
                           {language === 'en' ? group.labelEn : group.labelId}
                         </p>
@@ -240,7 +228,7 @@ export function Services() {
                       </div>
                     ))}
                   </div>
-                  <div>
+                  <div className="rise-item">
                     <p className="font-jetbrains-mono text-[11px] tracking-[0.16em] uppercase text-accent mb-4">
                       {language === 'en' ? 'Nice to Have' : 'Baik untuk Dimiliki'}
                     </p>
@@ -252,7 +240,7 @@ export function Services() {
                   </div>
                 </div>
               ) : (
-                <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 border-t border-l border-line">
+                <ul className="rise-item grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 border-t border-l border-line">
                   {designSkillsData.map((skill) => (
                     <li key={skill.name} className="read-row flex flex-col items-center gap-3 p-5 border-b border-r border-line bg-paper text-center">
                       <Image src={skill.image} alt="" width={40} height={40} className="h-10 w-10 object-contain" />
@@ -265,7 +253,7 @@ export function Services() {
 
             {/* Showcase */}
             <div className="space-y-8">
-              <h3 className="font-serif text-3xl font-medium text-ink">
+              <h3 className="rise-item font-serif text-3xl font-medium text-ink">
                 {activeTab === 'uiux'
                   ? (language === 'en' ? 'Design Showcase' : 'Pameran Desain')
                   : (language === 'en' ? 'Project Portfolio' : 'Portofolio Projek')}
@@ -273,7 +261,7 @@ export function Services() {
               {activeTab === 'uiux' ? (
                 <>
                   <DesignShowcase onShowAll={() => setShowAllProjects(true)} />
-                  <div className="pt-16 border-t border-line">
+                  <div className="rise-item pt-16 border-t border-line">
                     <div className="mb-8">
                       <h3 className="font-serif text-3xl font-medium text-ink">
                         {language === 'en' ? 'My Creative Workspace' : 'Lihat Meja Kerja Saya'}
@@ -291,8 +279,7 @@ export function Services() {
                 <Projects onShowAll={() => setShowAllProjects(true)} />
               )}
             </div>
-          </motion.div>
-        </AnimatePresence>
+        </div>
       </div>
       {skillsOpen && (
         <AdditionalSkillsDialog language={language} onClose={() => setSkillsOpen(false)} />
@@ -307,7 +294,7 @@ const DesignShowcase = ({ onShowAll }: { onShowAll: () => void }) => {
 
   return (
     <>
-      <div className="flex items-stretch gap-6 overflow-x-auto pb-8 scrollbar-hide px-4 sm:px-0">
+      <div className="rise-item flex items-stretch gap-6 overflow-x-auto pb-8 scrollbar-hide px-4 sm:px-0">
         {portfolioDesignProjects.map((project) => (
           <div key={project.id} className="flex w-80 shrink-0 md:w-96">
             <ProjectCard

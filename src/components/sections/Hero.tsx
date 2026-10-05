@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import { motion } from 'framer-motion';
 import { TypeAnimation } from 'react-type-animation';
 import { Mail, Linkedin, Github } from 'lucide-react';
 import { FaWhatsapp } from 'react-icons/fa';
@@ -24,12 +23,7 @@ const Hero: React.FC<HeroProps> = ({ onViewProjects }) => {
 
   return (
     <section id="home" data-studio="folio" className="bg-paper border-b border-line">
-      <div className="w-full max-w-6xl mx-auto px-5 lg:px-8 pt-28 pb-12">
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.45, ease: 'easeOut' }}
-        >
+      <div className="rise-item w-full max-w-6xl mx-auto px-5 lg:px-8 pt-28 pb-12">
           <p className="font-jetbrains-mono text-[11px] tracking-[0.22em] uppercase text-accent mb-6">
             {t("Web · Mobile · Interface", "Web · Mobile · Antarmuka")}
           </p>
@@ -70,10 +64,9 @@ const Hero: React.FC<HeroProps> = ({ onViewProjects }) => {
               </button>
             </div>
           </div>
-        </motion.div>
       </div>
 
-      <div className="border-t border-line">
+      <div className="rise-item border-t border-line">
         <div className="max-w-6xl mx-auto px-5 lg:px-8 py-5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <p data-eqbot="home-available" data-eqbot-at="end" className="font-jetbrains-mono text-[11px] tracking-[0.16em] uppercase">
             <span className="inline-flex items-center text-accent">

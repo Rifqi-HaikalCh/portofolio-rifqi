@@ -64,7 +64,7 @@ export const Contact: React.FC = () => {
             data-eqbot="contact-title"
             data-eqbot-at="above"
             onSubmit={handleSubmit}
-            className="border border-line bg-raised p-6 md:p-10"
+            className="rise-item border border-line bg-raised p-6 md:p-10"
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <label className="block text-sm text-ink">
@@ -138,13 +138,13 @@ export const Contact: React.FC = () => {
               );
               if (!item.href) {
                 return (
-                  <div key={item.info} className="border border-line bg-raised p-6">
+                  <div key={item.info} className="rise-item border border-line bg-raised p-6">
                     {body}
                   </div>
                 );
               }
               return (
-                <a key={item.info} href={item.href} className="card-hover border border-line bg-raised p-6">
+                <a key={item.info} href={item.href} className="rise-item card-hover border border-line bg-raised p-6">
                   {body}
                 </a>
               );

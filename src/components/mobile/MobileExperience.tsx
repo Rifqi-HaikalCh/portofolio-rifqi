@@ -20,7 +20,7 @@ export const MobileExperience: React.FC = () => {
 
   return (
     <section id="experience" data-studio="ledger" className="py-16 px-5 border-b border-line bg-paper">
-      <header className="mb-12">
+      <header className="rise-item mb-12">
         <p className="font-jetbrains-mono text-[11px] tracking-[0.22em] uppercase text-accent mb-3">
           {t('Professional Journey', 'Perjalanan Profesional')}
         </p>
@@ -29,7 +29,7 @@ export const MobileExperience: React.FC = () => {
         </h2>
       </header>
 
-      <p data-eqbot="experience-total" data-eqbot-at="above" className="mb-8">
+      <p data-eqbot="experience-total" data-eqbot-at="above" className="rise-item mb-8">
         <span className="font-jetbrains-mono text-[11px] tracking-[0.16em] uppercase text-accent">
           {t('Total Work Experience', 'Total Pengalaman Kerja')}
         </span>
@@ -38,7 +38,7 @@ export const MobileExperience: React.FC = () => {
         </span>
       </p>
 
-      <div data-eqbot="experience-tabs" data-eqbot-at="above" className="inline-flex border border-line mb-8" role="tablist">
+      <div data-eqbot="experience-tabs" data-eqbot-at="above" className="rise-item inline-flex border border-line mb-8" role="tablist">
         <button
           type="button"
           role="tab"

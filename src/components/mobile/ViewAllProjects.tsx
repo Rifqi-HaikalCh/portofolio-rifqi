@@ -88,7 +88,7 @@ export const ViewAllProjects: React.FC<ViewAllProjectsProps> = ({ onBack, projec
           </div>
         </div>
 
-        <div className="px-5 py-6 flex flex-col gap-6">
+        <div className="rise-item px-5 py-6 flex flex-col gap-6">
           {filteredProjects.map((project) => (
             <ProjectCard
               key={project.id}

@@ -50,7 +50,7 @@ export const MobileAbout: React.FC = () => {
           ) as string}
         />
 
-        <figure data-eqbot="about-photo" data-eqbot-at="above">
+        <figure data-eqbot="about-photo" data-eqbot-at="above" className="rise-item">
           <div className="border border-line bg-raised">
             <div className="relative aspect-square overflow-hidden bg-raised">
               <Image
@@ -74,6 +74,7 @@ export const MobileAbout: React.FC = () => {
           </div>
         </figure>
 
+        <div className="rise-item">
         <h3 className="mt-10 font-serif text-3xl font-medium tracking-tight text-ink">
           {t("Hi, I'm", "Halo, Saya")}{' '}
           <span className="italic">Rifqi Haikal</span>
@@ -108,13 +109,14 @@ export const MobileAbout: React.FC = () => {
             </div>
           ))}
         </dl>
+        </div>
 
-        <h3 className="mt-14 font-serif text-3xl font-medium text-ink mb-6">
+        <h3 className="rise-item mt-14 font-serif text-3xl font-medium text-ink mb-6">
           {t('My Expertise', 'Keahlian Saya')}
         </h3>
         <div className="border-t border-line">
           {aboutHighlights.map((highlight) => (
-            <article key={highlight.title} className="read-row py-6 border-b border-line">
+            <article key={highlight.title} className="rise-item read-row py-6 border-b border-line">
               <div className="flex items-center gap-3 text-accent mb-3">
                 {iconMap[highlight.icon]}
                 <span className="font-jetbrains-mono text-[11px] tracking-[0.16em] uppercase">

@@ -85,7 +85,7 @@ Contoh yang dilarang:
 
 ## Gerak
 
-Boleh: muncul sekali saat masuk viewport (`opacity` dan geser kecil, sekitar 12px), kursor ketik pada peran, progress notifikasi EQbot. Setiap `section[data-studio]` memakai `section-rise`: geser 14px sekali saat section itu pertama masuk viewport. Baris pengalaman memakai `ledger-item` dengan gerak yang sama. Kelas menunggu hanya dipasang setelah observer siap, jadi tanpa skrip isi tetap terlihat. Isi section harus tetap ada di layout sejak render pertama. Jangan mulai dari `opacity: 0` di markup, `filter: blur`, atau `scale` di pembungkus section.
+Boleh: muncul sekali saat masuk viewport (`opacity` dan geser kecil, sekitar 14px, sekitar 1,6 detik), kursor ketik pada peran, progress notifikasi EQbot. Tiap bagian besar di dalam section memakai `rise-item` dan naik sekali saat bagian itu pertama masuk viewport. Baris pengalaman memakai `ledger-item` dengan gerak yang sama. Footer ikut. Kelas menunggu hanya dipasang setelah observer siap, jadi tanpa skrip isi tetap terlihat. Isi section harus tetap ada di layout sejak render pertama. Jangan mulai dari `opacity: 0` di markup, `filter: blur`, atau `scale` di pembungkus section.
 
 Dilarang pada permukaan baru maupun saat menyentuh file lama:
 
@@ -103,7 +103,7 @@ Respons di seluruh halaman memakai kelas yang sama. Hover dan fokus hanya mengub
 | `card-hover` | Kartu yang diklik: garis menjadi aksen, judul `.card-hover-title` ikut aksen, foto dapat selapis aksen tipis |
 | `row-open` | Baris pengalaman adalah satu tombol. Hover mengisi `.row-open-action` dengan tinta dan menggeser `.row-open-title` ke aksen. Latar baris tidak ikut berubah |
 | `ledger-item` | Tiap baris pengalaman naik sekali ke tempatnya saat pertama masuk viewport. Tanpa `is-settled`, baris tetap terlihat |
-| `section-rise` | Setiap section `data-studio` naik sekali saat pertama discroll masuk viewport. Kelas menunggu dipasang setelah observer siap |
+| `rise-item` | Bagian di dalam section, dan footer, naik 14px sekali saat pertama masuk viewport, sekitar 1,6 detik. Kelas menunggu dipasang setelah observer siap |
 | `field` | Kolom yang sedang diisi memakai garis aksen |
 | `presence` | Titik status di samping kalimat tersedia. Warna aksen, denyut pelan. Bukan palet hijau kedua |
 | `mark-current` | Garis aksen di kiri item yang sedang dipilih |

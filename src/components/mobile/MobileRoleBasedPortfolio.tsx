@@ -46,7 +46,7 @@ export const MobileRoleBasedPortfolio: React.FC = () => {
             : 'Sistem web dan data enterprise dengan C# dan .NET, serta desain antarmuka untuk produk yang sama.'}
         />
 
-        <div data-eqbot="services-tabs" data-eqbot-at="above" className="grid grid-cols-2 border border-line mb-10" role="tablist">
+        <div data-eqbot="services-tabs" data-eqbot-at="above" className="rise-item grid grid-cols-2 border border-line mb-10" role="tablist">
           <button
             type="button"
             onClick={() => setActiveTab('development')}
@@ -71,7 +71,7 @@ export const MobileRoleBasedPortfolio: React.FC = () => {
 
         <div className="border-t border-line">
           {services.map((service) => (
-            <article key={service.id} className="read-row py-7 border-b border-line">
+            <article key={service.id} className="rise-item read-row py-7 border-b border-line">
               <h3 className="font-serif text-2xl font-medium text-ink">
                 {language === 'en' ? service.titleEn : service.titleId}
               </h3>
@@ -90,12 +90,12 @@ export const MobileRoleBasedPortfolio: React.FC = () => {
           ))}
         </div>
 
-        <h3 className="mt-14 font-serif text-3xl font-medium text-ink">
+        <h3 className="rise-item mt-14 font-serif text-3xl font-medium text-ink">
           {language === 'en' ? 'Technological Stack' : 'Tumpukan Teknologi'}
         </h3>
         {activeTab === 'development' ? (
           <div className="mt-6 space-y-8">
-            <div>
+            <div className="rise-item">
               <p className="font-jetbrains-mono text-[11px] tracking-[0.16em] uppercase text-accent mb-4">
                 {language === 'en' ? 'Core · Enterprise web and data' : 'Inti · Web dan data enterprise'}
               </p>
@@ -110,7 +110,7 @@ export const MobileRoleBasedPortfolio: React.FC = () => {
             </div>
             <div className="space-y-8">
               {listedAdditionalGroups.map((group) => (
-                <div key={group.labelEn}>
+                <div key={group.labelEn} className="rise-item">
                   <p className="font-jetbrains-mono text-[11px] tracking-[0.16em] uppercase text-accent mb-4">
                     {language === 'en' ? group.labelEn : group.labelId}
                   </p>
@@ -134,7 +134,7 @@ export const MobileRoleBasedPortfolio: React.FC = () => {
                 </div>
               ))}
             </div>
-            <div>
+            <div className="rise-item">
               <p className="font-jetbrains-mono text-[11px] tracking-[0.16em] uppercase text-accent mb-4">
                 {language === 'en' ? 'Nice to Have' : 'Baik untuk Dimiliki'}
               </p>
@@ -146,7 +146,7 @@ export const MobileRoleBasedPortfolio: React.FC = () => {
             </div>
           </div>
         ) : (
-          <ul className="mt-6 grid grid-cols-3 border-t border-l border-line">
+          <ul className="rise-item mt-6 grid grid-cols-3 border-t border-l border-line">
             {designSkills.map((skill) => (
               <li key={skill.name} className="read-row flex flex-col items-center gap-3 p-4 border-b border-r border-line bg-paper text-center">
                 <Image src={skill.image} alt="" width={36} height={36} className="h-9 w-9 object-contain" />
@@ -156,7 +156,7 @@ export const MobileRoleBasedPortfolio: React.FC = () => {
           </ul>
         )}
 
-        <h3 className="mt-14 font-serif text-3xl font-medium text-ink">
+        <h3 className="rise-item mt-14 font-serif text-3xl font-medium text-ink">
           {activeTab === 'uiux'
             ? (language === 'en' ? 'Design Showcase' : 'Pameran Desain')
             : (language === 'en' ? 'Project Portfolio' : 'Portofolio Projek')}
@@ -185,7 +185,7 @@ export const MobileRoleBasedPortfolio: React.FC = () => {
                 ? (language === 'en' ? 'Mobile Design' : 'Desain Mobile')
                 : (language === 'en' ? 'Web Design' : 'Desain Web')}
             />
-            <a href={workspaceLink} target="_blank" rel="noreferrer" className="block border border-line bg-raised">
+            <a href={workspaceLink} target="_blank" rel="noreferrer" className="rise-item block border border-line bg-raised">
               <div className="relative aspect-[4/3] bg-line">
                 <Image
                   src="/assets/my portfolio.webp"
@@ -210,7 +210,7 @@ export const MobileRoleBasedPortfolio: React.FC = () => {
           </div>
         )}
 
-        <div className="mt-10">
+        <div className="rise-item mt-10">
           <button type="button" onClick={() => setShowAllProjects(true)} className="btn-primary-custom w-full">
             {language === 'en' ? 'View All Projects' : 'Lihat Semua Projek'}
           </button>
@@ -257,7 +257,7 @@ function ProjectRow({
   labelFor?: (project: Project) => string;
 }) {
   return (
-    <div>
+    <div className="rise-item">
       <p className="font-jetbrains-mono text-[11px] tracking-[0.16em] uppercase text-accent mb-4">{title}</p>
       <div className="flex items-stretch gap-4 overflow-x-auto pb-2 snap-x snap-mandatory">
         {projects.map((project) => (

@@ -19,7 +19,7 @@ export const MobileHero: React.FC = () => {
 
   return (
     <section id="home" data-studio="folio" className="border-b border-line bg-paper text-ink">
-      <div className="px-5 pt-24 pb-10">
+      <div className="rise-item px-5 pt-24 pb-10">
         <p className="font-jetbrains-mono text-[11px] tracking-[0.22em] uppercase text-accent mb-5">
           {t('Web · Mobile · Interface', 'Web · Mobile · Antarmuka')}
         </p>
@@ -57,7 +57,7 @@ export const MobileHero: React.FC = () => {
         </div>
       </div>
 
-      <div className="border-t border-line px-5 py-5">
+      <div className="rise-item border-t border-line px-5 py-5">
         <p data-eqbot="home-available" data-eqbot-at="end" className="font-jetbrains-mono text-[11px] tracking-[0.16em] uppercase">
           <span className="inline-flex items-center text-accent">
             <span className="presence" aria-hidden="true" />

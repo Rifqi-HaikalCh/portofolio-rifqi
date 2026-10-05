@@ -19,7 +19,7 @@ export function Projects({ onShowAll }: { onShowAll: () => void }) {
   return (
     <div id="projects-container" className="bg-transparent">
       {/* INDIVIDUAL PROJECTS */}
-      <div className="mb-16">
+      <div className="rise-item mb-16">
         <p className="font-jetbrains-mono text-[11px] tracking-[0.16em] uppercase text-accent mb-4">
           {language === 'en' ? 'Individual Projects' : 'Proyek Individu'}
         </p>
@@ -36,7 +36,7 @@ export function Projects({ onShowAll }: { onShowAll: () => void }) {
       </div>
 
       {/* GROUP PROJECTS */}
-      <div>
+      <div className="rise-item">
         <p className="font-jetbrains-mono text-[11px] tracking-[0.16em] uppercase text-accent mb-4">
           {language === 'en' ? 'Group Projects' : 'Proyek Kelompok'}
         </p>
@@ -52,7 +52,7 @@ export function Projects({ onShowAll }: { onShowAll: () => void }) {
         </div>
       </div>
 
-      <div className="mt-12 text-center">
+      <div className="rise-item mt-12 text-center">
         <button type="button" onClick={onShowAll} className="btn-primary-custom">
           {language === 'en' ? 'View All Projects' : 'Lihat Semua Projek'}
         </button>

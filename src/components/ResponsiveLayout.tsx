@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useIsMobile } from '../hooks/useMediaQuery';
 import { AnimatedSection } from './hocs/AnimatedSection';
 import { AnimatePresence } from 'framer-motion';
@@ -20,14 +20,11 @@ import { Experience } from './sections/Experience';
 import { Certificates } from './sections/Certificates';
 import { Contact } from './sections/Contact';
 import { ViewAllProjects } from './sections/ViewAllProjects';
-import { useSectionRise } from './shared/useLedgerRise';
 
 export const ResponsiveLayout: React.FC = () => {
   const isMobile = useIsMobile();
   const [mounted, setMounted] = useState(false);
   const [showAllProjects, setShowAllProjects] = useState(false);
-  const frameRef = useRef<HTMLDivElement>(null);
-  useSectionRise(frameRef, `${mounted}-${isMobile}-${showAllProjects}`);
 
   // Prevent hydration mismatch
   useEffect(() => {
@@ -44,7 +41,7 @@ export const ResponsiveLayout: React.FC = () => {
   }
 
   return (
-    <div ref={frameRef}>
+    <div>
       <AnimatePresence mode="wait">
         {showAllProjects && !isMobile ? (
           <ViewAllProjects

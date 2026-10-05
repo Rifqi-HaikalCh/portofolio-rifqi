@@ -32,7 +32,7 @@ export const Experience: React.FC = () => {
           )}
         />
 
-        <p data-eqbot="experience-total" data-eqbot-at="above" className="text-center mb-10">
+        <p data-eqbot="experience-total" data-eqbot-at="above" className="rise-item text-center mb-10">
           <span className="font-jetbrains-mono text-[11px] tracking-[0.18em] uppercase text-accent">
             {t('Total Work Experience', 'Total Pengalaman Kerja')}
           </span>
@@ -41,7 +41,7 @@ export const Experience: React.FC = () => {
           </span>
         </p>
 
-        <div className="flex justify-center mb-12">
+        <div className="rise-item flex justify-center mb-12">
           <div data-eqbot="experience-tabs" data-eqbot-at="above" className="inline-flex border border-line" role="tablist">
             <button
               type="button"

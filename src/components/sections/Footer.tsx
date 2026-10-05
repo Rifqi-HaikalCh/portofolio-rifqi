@@ -25,7 +25,7 @@ export const Footer: React.FC = () => {
 
   return (
     <footer data-studio="colophon" className="bg-ink text-paper">
-      <div className="max-w-6xl mx-auto px-5 lg:px-8 pt-16 pb-8">
+      <div className="rise-item max-w-6xl mx-auto px-5 lg:px-8 pt-16 pb-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-14">
           <div>
             <h2 className="font-serif text-2xl font-medium tracking-tight mb-4">

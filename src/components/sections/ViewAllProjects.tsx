@@ -55,7 +55,7 @@ export function ViewAllProjects({ onBack, projectType = 'all' }: ViewAllProjects
   return (
     <section id="projects" data-studio="sheet" className="bg-paper text-ink pt-24 pb-20">
       <div className="max-w-6xl mx-auto px-5 lg:px-8">
-        <div className="flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
+        <div className="rise-item flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
           <div>
             <button
               type="button"
@@ -84,7 +84,7 @@ export function ViewAllProjects({ onBack, projectType = 'all' }: ViewAllProjects
           </label>
         </div>
 
-        <div data-eqbot="projects-filters" data-eqbot-at="above" className="mt-8 inline-flex border border-line" role="tablist">
+        <div data-eqbot="projects-filters" data-eqbot-at="above" className="rise-item mt-8 inline-flex border border-line" role="tablist">
           {filters.map((filter) => (
             <button
               key={filter.id}
@@ -100,7 +100,7 @@ export function ViewAllProjects({ onBack, projectType = 'all' }: ViewAllProjects
         </div>
 
         {filteredProjects.length === 0 ? (
-          <div className="mt-16 border border-line bg-raised px-6 py-16 text-center">
+          <div className="rise-item mt-16 border border-line bg-raised px-6 py-16 text-center">
             <h2 className="font-serif text-2xl text-ink">
               {language === 'en' ? 'No projects found' : 'Projek tidak ditemukan'}
             </h2>
@@ -111,7 +111,7 @@ export function ViewAllProjects({ onBack, projectType = 'all' }: ViewAllProjects
             </p>
           </div>
         ) : (
-          <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
+          <div className="rise-item mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
             {filteredProjects.map((project) => (
               <ProjectCard
                 key={project.id}

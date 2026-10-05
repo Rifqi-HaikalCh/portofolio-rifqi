@@ -51,7 +51,7 @@ export const About: React.FC = () => {
         />
 
         <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-start">
-          <figure data-eqbot="about-photo" data-eqbot-at="above" className="lg:col-span-5">
+          <figure data-eqbot="about-photo" data-eqbot-at="above" className="rise-item lg:col-span-5">
             <div className="border border-line bg-raised">
               <div className="relative aspect-square overflow-hidden bg-raised">
                 <Image
@@ -75,7 +75,7 @@ export const About: React.FC = () => {
             </div>
           </figure>
 
-          <div className="lg:col-span-7">
+          <div className="rise-item lg:col-span-7">
             <h3 className="font-serif text-3xl md:text-4xl font-medium tracking-tight text-ink mb-5">
               {t("Hi, I'm", "Halo, Saya")}{' '}
               <span className="italic">Rifqi Haikal</span>
@@ -114,12 +114,12 @@ export const About: React.FC = () => {
         </div>
 
         <div className="mt-20">
-          <h3 className="font-serif text-3xl font-medium text-ink mb-8">
+          <h3 className="rise-item font-serif text-3xl font-medium text-ink mb-8">
             {t('My Expertise', 'Keahlian Saya')}
           </h3>
           <div className="grid md:grid-cols-2 border-t border-l border-line">
             {aboutHighlights.map((highlight) => (
-              <article key={highlight.title} className="read-row p-6 md:p-8 border-b border-r border-line bg-paper">
+              <article key={highlight.title} className="rise-item read-row p-6 md:p-8 border-b border-r border-line bg-paper">
                 <div className="flex items-center gap-3 text-accent mb-4">
                   {iconMap[highlight.icon]}
                   <span className="font-jetbrains-mono text-[11px] tracking-[0.16em] uppercase">

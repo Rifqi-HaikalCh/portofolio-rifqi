@@ -25,7 +25,7 @@ export const Certificates: React.FC = () => {
 
         <div className="grid lg:grid-cols-12 gap-10 lg:gap-16 items-start">
           <div className="lg:col-span-4 lg:sticky lg:top-24">
-            <ul data-eqbot="certificates-list" data-eqbot-at="above" className="border-t border-line">
+            <ul data-eqbot="certificates-list" data-eqbot-at="above" className="rise-item border-t border-line">
               {certificateCategories.map((category, index) => {
                 const selected = category.id === active?.id;
                 return (
@@ -56,7 +56,7 @@ export const Certificates: React.FC = () => {
 
           <div className="lg:col-span-8 border-t border-line" aria-live="polite">
             {active?.certificates.map((cert) => (
-              <article key={cert.id} className="py-6 border-b border-line">
+              <article key={cert.id} className="rise-item py-6 border-b border-line">
                 <h3 className="font-serif text-2xl font-medium text-ink leading-snug">
                   {t(cert.title, cert.titleId || cert.title)}
                 </h3>
