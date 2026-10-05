@@ -5,7 +5,7 @@ import { TypeAnimation } from 'react-type-animation';
 import { Mail, Linkedin, Github } from 'lucide-react';
 import { FaWhatsapp } from 'react-icons/fa';
 import { useLanguage } from '../../context/LanguageContext';
-import { typingTexts, contactInfo } from '../../data/portfolio';
+import { typingTexts, contactInfo, heroHighlights } from '../../data/portfolio';
 
 export const MobileHero: React.FC = () => {
   const { language, t } = useLanguage();
@@ -55,6 +55,17 @@ export const MobileHero: React.FC = () => {
             {t('View Projects', 'Lihat Projek')}
           </a>
         </div>
+      </div>
+
+      <div className="rise-item grid grid-cols-1 border-t border-l border-line">
+        {heroHighlights.map((item) => (
+          <div key={item.label} className="border-b border-r border-line px-5 py-4">
+            <p className="font-serif text-3xl leading-none text-ink">{item.value}</p>
+            <p className="mt-2 font-jetbrains-mono text-[11px] tracking-[0.12em] uppercase text-muted">
+              {t(item.label, item.labelId)}
+            </p>
+          </div>
+        ))}
       </div>
 
       <div className="rise-item border-t border-line px-5 py-5">

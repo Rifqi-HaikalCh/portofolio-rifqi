@@ -21,6 +21,29 @@ export const typingTexts = {
   id: ['Seorang Pengembang Perangkat Lunak', 'Seorang Pengembang Fullstack', 'Seorang Pengembang Frontend', 'Seorang Pengembang .Net/C#']
 };
 
+export const heroHighlights = [
+  {
+    value: '8',
+    label: 'standalone apps from one monolith',
+    labelId: 'aplikasi mandiri dari satu monolit',
+  },
+  {
+    value: '100+',
+    label: 'standardized APIs',
+    labelId: 'API terstandar',
+  },
+  {
+    value: '5',
+    label: 'enterprise clients',
+    labelId: 'klien enterprise',
+  },
+  {
+    value: '20+',
+    label: 'web projects',
+    labelId: 'proyek web',
+  },
+];
+
 export const aboutHighlights: AboutHighlight[] = [
   {
     icon: 'graduation-cap',
