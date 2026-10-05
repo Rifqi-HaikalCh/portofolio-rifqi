@@ -41,11 +41,7 @@ section {
   z-index: 10;
 }
 
-/* Navbar specific */
-nav {
-  position: fixed;
-  z-index: 1000 !important;
-}
+/* Header carries its own fixed position. Do not fix every nav. */
 
 /* Hero section specific */
 #home {

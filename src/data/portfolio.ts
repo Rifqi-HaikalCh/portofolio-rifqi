@@ -13,14 +13,13 @@ export const navLinks: NavLink[] = [
   { href: '#about', labelEn: 'About', labelId: 'Tentang' },
   { href: '#services', labelEn: 'Services', labelId: 'Layanan' },
   { href: '#experience', labelEn: 'Experience', labelId: 'Pengalaman' },
-  { href: '#gallery', labelEn: 'Gallery', labelId: 'Galeri' },
   { href: '#certificates', labelEn: 'Certificates', labelId: 'Sertifikat' },
   { href: '#contact', labelEn: 'Contact', labelId: 'Kontak' },
 ];
 
 export const typingTexts = {
-  en: ['Web Developer', 'Mobile App Developer', 'UI/UX Designer'],
-  id: ['Pengembang Web', 'Pengembang Aplikasi Mobile', 'Perancang UI/UX']
+  en: ['A Software Developer', 'A Fullstack Developer', 'A Frontend Developer', 'A .Net/C# Developer'],
+  id: ['Seorang Pengembang Perangkat Lunak', 'Seorang Pengembang Fullstack', 'Seorang Pengembang Frontend', 'Seorang Pengembang .Net/C#']
 };
 
 export const aboutHighlights: AboutHighlight[] = [
@@ -28,15 +27,15 @@ export const aboutHighlights: AboutHighlight[] = [
     icon: 'graduation-cap',
     title: 'Education Excellence',
     titleId: 'Keunggulan Pendidikan',
-    description: 'Bachelors of Informatics at Del Institute of Technology',
-    descriptionId: 'Sarjana Informatika di Institut Teknologi Del'
+    description: 'Bachelor of Informatics at Institut Teknologi Del, GPA 3.39/4.00',
+    descriptionId: 'Sarjana Informatika di Institut Teknologi Del, IPK 3,39/4,00'
   },
   {
     icon: 'briefcase',
     title: 'Industry Experience',
     titleId: 'Pengalaman Industri',
-    description: ' Oil & Gas, IT Consultant, and Fintech Industry',
-    descriptionId: 'Pengalaman di Industri Oil & Gas, IT Consultant, dan Fintech'
+    description: 'Telecommunications, oil and gas, research, IT consulting, and multifinance',
+    descriptionId: 'Telekomunikasi, minyak dan gas, riset, konsultan TI, dan multifinance'
   },
   {
     icon: 'trophy',
@@ -47,10 +46,10 @@ export const aboutHighlights: AboutHighlight[] = [
   },
   {
     icon: 'users',
-    title: 'Freelance UI/UX & Web Developer',
-    titleId: 'Freelance UI/UX & Web Developer',
-    description: 'Has over 2 years of experience as a freelancer',
-    descriptionId: 'Memiliki 2 tahun pengalaman sebagai freelancer'
+    title: 'Freelance Software Engineer',
+    titleId: 'Software Engineer Freelance',
+    description: 'More than 3 years delivering web projects for organizations and MSMEs',
+    descriptionId: 'Lebih dari 3 tahun mengerjakan proyek web untuk organisasi dan UMKM'
   }
 ];
 
@@ -82,100 +81,204 @@ export const softSkills: Skill[] = [
 
 // Developer Skills for GlassSkillCard
 export const developerSkills = [
-  { name: 'Angular', image: '/assets/angularlogo.webp' },
-  { name: 'Laravel', image: '/assets/laravel.webp' },
-  { name: 'Next.js', image: '/assets/Next JS logo.webp' },
-  { name: 'React', image: '/assets/react js logo.webp' },
-  { name: 'Vue.js', image: '/assets/Vue.js logo.webp' },
-  { name: 'Bootstrap', image: '/assets/boostrap-new.webp' },
-  { name: 'CSS', image: '/assets/CSS-new.webp' },
-  { name: 'Dart', image: '/assets/dart-new.webp' },
-  { name: 'Express.js', image: '/assets/express_js-new.webp' },
-  { name: 'HTML', image: '/assets/HTML-new.webp' },
-  { name: 'Java', image: '/assets/Java-new.webp' },
-  { name: 'JavaScript', image: '/assets/javascript-new.webp' },
-  { name: 'Node.js', image: '/assets/node_js.webp' },
-  { name: 'PHP', image: '/assets/php-new.webp' },
-  { name: 'TypeScript', image: '/assets/typescript-new.webp' },
-  { name: 'Spring Boot', image: '/assets/springboot-new.webp' },
-  { name: 'Tailwind CSS', image: '/assets/tailwind.webp' },
+  { name: 'C#', image: '/assets/csharp.png', focus: 'core' as const },
+  { name: 'ASP.NET MVC', image: '/assets/aspnet.png', focus: 'core' as const },
+  { name: '.NET Core', image: '/assets/dotnet.png', focus: 'core' as const },
+  { name: 'Entity Framework', image: '/assets/entity-framework.png', focus: 'core' as const },
+  { name: 'SQL Server', image: '/assets/SSMS.webp', focus: 'core' as const },
+  { name: 'Telerik', image: '/assets/telerik.png', focus: 'core' as const },
+  { name: 'TypeScript', image: '/assets/typescript-new.webp', focus: 'additional' as const },
+  { name: 'JavaScript', image: '/assets/javascript-new.webp', focus: 'additional' as const },
+  { name: 'HTML', image: '/assets/HTML-new.webp', focus: 'additional' as const },
+  { name: 'CSS', image: '/assets/CSS-new.webp', focus: 'additional' as const },
+  { name: 'Angular', image: '/assets/angularlogo.webp', focus: 'additional' as const },
+  { name: 'Next.js', image: '/assets/Next JS logo.webp', focus: 'additional' as const },
+  { name: 'Tailwind CSS', image: '/assets/tailwind.webp', focus: 'additional' as const },
+  { name: 'Bootstrap', image: '/assets/boostrap-new.webp', focus: 'additional' as const },
+  { name: 'React', image: '/assets/react js logo.webp', focus: 'additional' as const },
+  { name: 'Vue.js', image: '/assets/Vue.js logo.webp', focus: 'additional' as const },
+  { name: 'Java', image: '/assets/Java-new.webp', focus: 'additional' as const },
+  { name: 'Spring Boot', image: '/assets/springboot-new.webp', focus: 'additional' as const },
+  { name: 'Express.js', image: '/assets/express_js-new.webp', focus: 'additional' as const },
+  { name: 'Node.js', image: '/assets/node_js.webp', focus: 'additional' as const },
+  { name: 'Laravel', image: '/assets/laravel.webp', focus: 'additional' as const },
+  { name: 'PHP', image: '/assets/php-new.webp', focus: 'additional' as const },
+];
+
+export const additionalSkillGroups = [
+  {
+    labelEn: 'Language',
+    labelId: 'Bahasa',
+    skills: [
+      { name: 'JavaScript', level: 'advance' as const, image: '/assets/javascript-new.webp' },
+      { name: 'TypeScript', level: 'advance' as const, image: '/assets/typescript-new.webp' },
+      { name: 'HTML', level: 'advance' as const, image: '/assets/HTML-new.webp' },
+      { name: 'CSS', level: 'advance' as const, image: '/assets/CSS-new.webp' },
+      { name: 'Java', level: 'intermediate' as const, image: '/assets/Java-new.webp' },
+      { name: 'PHP', level: 'basic' as const, image: '/assets/php-new.webp' },
+      { name: 'Python', level: 'basic' as const, image: '/assets/python.png' },
+    ],
+  },
+  {
+    labelEn: 'Framework',
+    labelId: 'Framework',
+    skills: [
+      { name: 'Angular', level: 'advance' as const, image: '/assets/angularlogo.webp' },
+      { name: 'Next.js', level: 'advance' as const, image: '/assets/Next JS logo.webp' },
+      { name: 'Tailwind CSS', level: 'advance' as const, image: '/assets/tailwind.webp' },
+      { name: 'Bootstrap', level: 'advance' as const, image: '/assets/boostrap-new.webp' },
+      { name: 'Vue.js', level: 'intermediate' as const, image: '/assets/Vue.js logo.webp' },
+      { name: 'React.js', level: 'intermediate' as const, image: '/assets/react js logo.webp' },
+      { name: 'Spring Boot', level: 'intermediate' as const, image: '/assets/springboot-new.webp' },
+      { name: 'Express.js', level: 'intermediate' as const, image: '/assets/express_js-new.webp' },
+      { name: 'Node.js', level: 'intermediate' as const, image: '/assets/node_js.webp' },
+      { name: 'Laravel', level: 'basic' as const, image: '/assets/laravel.webp' },
+      { name: 'Flutter', level: 'basic' as const, image: '/assets/flutter.png' },
+    ],
+  },
+  {
+    labelEn: 'Development tools',
+    labelId: 'Alat pengembangan',
+    skills: [
+      { name: 'Git', level: 'advance' as const, image: '/assets/git.png' },
+      { name: 'GitHub / GitLab', level: 'advance' as const, image: '/assets/github-gitlab.png', imageDark: '/assets/github-gitlab-dark.png' },
+      { name: 'Postman', level: 'intermediate' as const, image: '/assets/postman.png' },
+      { name: 'Swagger', level: 'intermediate' as const, image: '/assets/swagger.png' },
+    ],
+  },
+  {
+    labelEn: 'Application',
+    labelId: 'Aplikasi',
+    skills: [
+      { name: 'VS Code', level: 'advance' as const, image: '/assets/vscode.png' },
+      { name: 'Visual Studio Community', level: 'basic' as const, image: '/assets/visual-studio.png' },
+      { name: 'JetBrains IDEs', level: 'basic' as const, image: '/assets/jetbrains.png' },
+      { name: 'Android Studio', level: 'basic' as const, image: '/assets/android-studio.png' },
+    ],
+  },
 ];
 
 // Design Skills for GlassSkillCard
 export const designSkills = [
-  { name: 'Canva', image: '/assets/Canva.webp' },
   { name: 'Figma', image: '/assets/Figma.webp' },
-  { name: 'Photoshop', image: '/assets/Photoshop.webp' },
+  { name: 'Canva', image: '/assets/Canva.webp' },
   { name: 'Framer', image: '/assets/framer.webp' },
   { name: 'SketchUp', image: '/assets/sketchup.webp' },
   { name: 'Webflow', image: '/assets/webflow-new.webp' },
+  { name: 'Photoshop', image: '/assets/Photoshop.webp' },
 ];
 
 export const workExperience: Experience[] = [
   {
+    id: 'tbg',
+    title: 'IT SOFTWARE DEVELOPER',
+    titleId: 'PENGEMBANG PERANGKAT LUNAK TI',
+    positionDetail: 'Contract based',
+    positionDetailId: 'Berbasis kontrak',
+    company: 'PT TOWER BERSAMA INFRASTRUCTURE TBK',
+    companyType: 'TELECOMMUNICATION INFRASTRUCTURE',
+    companyTypeId: 'INFRASTRUKTUR TELEKOMUNIKASI',
+    period: 'Jul 2026 – Present',
+    location: 'South Jakarta, Indonesia',
+    shortDescription: 'Re-architected an enterprise monolith into 8 standalone applications and delivered 3 operational monitoring dashboards.',
+    shortDescriptionId: 'Merancang ulang monolit enterprise menjadi 8 aplikasi mandiri dan menyelesaikan 3 dashboard pemantauan operasional.',
+    description: '• Re-architected a monolithic enterprise application into 8 standalone applications, isolating codebases and deployments so a change or failure in one module no longer affected the others.\n• Developed 3 enterprise monitoring dashboards for Payout, Business Projects, and HSE using C#, ASP.NET MVC, and Telerik, giving management centralized operational visibility.\n• Optimized SQL Server data processing with stored procedures, set-based queries, indexing, and transactional logic across 8 applications and 3 dashboards.\n• Collaborated with project managers and business users across requirements analysis, system design, development, testing, deployment, and maintenance.',
+    descriptionId: '• Merancang ulang aplikasi enterprise monolitik menjadi 8 aplikasi mandiri, memisahkan basis kode dan deployment agar perubahan atau kegagalan di satu modul tidak memengaruhi modul lain.\n• Mengembangkan 3 dashboard pemantauan enterprise untuk Payout, Business Projects, dan HSE memakai C#, ASP.NET MVC, dan Telerik, sehingga manajemen mendapat visibilitas operasional yang terpusat.\n• Mengoptimalkan pemrosesan data SQL Server dengan stored procedure, kueri set-based, indexing, dan logika transaksional pada 8 aplikasi dan 3 dashboard.\n• Berkolaborasi dengan manajer proyek dan pengguna bisnis dari analisis kebutuhan, desain sistem, pengembangan, pengujian, deployment, hingga pemeliharaan.',
+    techStack: ['C#', 'ASP.NET MVC', '.NET Core', 'Telerik', 'SQL Server', 'Stored Procedure'],
+    type: 'work',
+    image: '/assets/Logo-TBG.png',
+    logo: '/assets/logo-tower-bersama.png'
+  },
+  {
     id: 'phr',
     title: 'IT BUSINESS SOLUTION INTERN',
-    company: 'PERTAMINA HULU ROKAN (PHR)',
+    titleId: 'MAGANG SOLUSI BISNIS TI',
+    company: 'PT. PERTAMINA HULU ROKAN (PHR)',
     companyType: 'OIL & GAS INDUSTRY',
-    period: 'Dec 2025 – Present',
+    companyTypeId: 'INDUSTRI MINYAK & GAS',
+    period: 'Dec 2025 – Jun 2026',
     location: 'South Jakarta, Indonesia',
-    shortDescription: 'Spearheaded the end-to-end development of an Operational Activity Management System for the Exploration Function.',
-    description: '• Spearheaded the end-to-end development of an Operational Activity Management System for the Exploration Function, streamlining complex oil & gas business processes into a digital platform.\n• Designed high-fidelity UI/UX prototypes using Figma, adhering to Pertamina’s strict design standardization guidelines to ensure consistency and usability.\n• Architected and integrated a robust database schema using SQL Server, ensuring seamless synchronization with existing legacy system tables and data structures.\n• Developed a scalable web application using ASP.NET MVC, complying with the company’s Application Development Standards (ADS), featuring secure authentication integrated with the corporate employee database.\n• Embedded Power BI dashboards directly into the application to provide real-time visualization and monitoring of exploration operational data for stakeholders.',
-    techStack: ['ASP .Net MVC', 'Python', 'Figma', 'SQL Server', 'Power BI', 'C#'],
+    shortDescription: 'Developed ISEA, an N-tier platform that consolidates seismic, drilling, and exploration workflows.',
+    shortDescriptionId: 'Mengembangkan ISEA, platform N-tier yang menyatukan alur kerja seismik, pengeboran, dan eksplorasi.',
+    description: '• Developed ISEA (Subsurface Integrated Exploration Application), an N-tier enterprise platform consolidating seismic, drilling, and exploration workflows into one application.\n• Optimized backend processing for millions of database records using Entity Framework, deferred execution, AutoMapper DTOs, and Kendo UI.\n• Implemented enterprise security controls including Keycloak SSO, MFA, Serilog audit logging, and load-balancer IP tracking.\n• Designed a reusable Dynamic Milestone Engine with Generic Repository and Service patterns, reducing duplicated implementation across modules.\n• Deployed the application to IIS in accordance with ADS v1.6 requirements.',
+    descriptionId: '• Mengembangkan ISEA (Subsurface Integrated Exploration Application), platform enterprise N-tier yang menyatukan alur kerja seismik, pengeboran, dan eksplorasi dalam satu aplikasi.\n• Mengoptimalkan pemrosesan backend untuk jutaan rekaman basis data memakai Entity Framework, deferred execution, DTO AutoMapper, dan Kendo UI.\n• Menerapkan kontrol keamanan enterprise, termasuk SSO Keycloak, MFA, jejak audit Serilog, dan pelacakan IP load balancer.\n• Merancang Dynamic Milestone Engine yang dapat dipakai ulang dengan pola Generic Repository dan Service, mengurangi implementasi yang terduplikasi antar modul.\n• Men-deploy aplikasi ke IIS sesuai persyaratan ADS v1.6.',
+    techStack: ['ASP.NET MVC', 'C#', 'SQL Server', 'Entity Framework', 'Kendo UI', 'Keycloak', 'Serilog', 'IIS'],
     type: 'work',
-    image: '/assets/phr-momen.webp'
+    image: '/assets/phr-momen.webp',
+    logo: '/assets/logo-phr.png'
   },
   {
     id: 'brin',
     title: 'SOFTWARE ENGINEER (PROJECT-BASED PARTNER)',
+    titleId: 'SOFTWARE ENGINEER (MITRA BERBASIS PROYEK)',
     company: 'BADAN RISET DAN INOVASI NASIONAL (BRIN)',
-    companyType: 'GOVERNMENT',
+    companyType: 'RESEARCH AND DEVELOPMENT',
+    companyTypeId: 'RISET DAN INOVASI',
     period: 'Oct 2025 – Dec 2025',
     location: 'Central Jakarta, Indonesia',
-    shortDescription: 'Technical partner specifically for accelerating the finalization of the Research and Innovation Funding Monitoring System.',
-    description: '• Recruited specifically as a technical partner to accelerate the finalization and enhancement of the Research and Innovation Funding Monitoring System within a critical one-month timeline.\n• Successfully optimized the financial management modules to track research fund inflows and outflows (expenses & income), ensuring data accuracy and accountability.\n• Acted as a technical bridge between non-technical stakeholders and developers, facilitating code reviews and overseeing the deployment pipeline to production servers.',
-    techStack: ['React.js', 'PHP', 'Laravel', 'SQL', 'Postman', 'RESTful API'],
+    shortDescription: 'Joined as a technical partner to finish a research and innovation funding monitoring system within one month.',
+    shortDescriptionId: 'Bergabung sebagai mitra teknis untuk menyelesaikan sistem pemantauan pendanaan riset dan inovasi dalam satu bulan.',
+    description: '• Joined as a technical partner to complete a Research and Innovation Funding Monitoring System within a one-month delivery deadline.\n• Optimized financial modules for tracking research fund inflows and outflows, improving data accuracy and accountability.\n• Bridged business stakeholders and developers through requirements clarification, code reviews, and production deployment.',
+    descriptionId: '• Bergabung sebagai mitra teknis untuk menyelesaikan Sistem Pemantauan Pendanaan Riset dan Inovasi dalam batas waktu satu bulan.\n• Mengoptimalkan modul keuangan untuk melacak arus masuk dan keluar dana riset, meningkatkan akurasi data dan akuntabilitas.\n• Menjembatani pemangku kepentingan bisnis dan pengembang melalui klarifikasi kebutuhan, tinjauan kode, dan deployment ke produksi.',
+    techStack: ['React.js', 'JavaScript', 'PHP', 'Laravel', 'HTML', 'CSS', 'SQL', 'Postman', 'RESTful API'],
     type: 'work',
-    image: '/assets/brin-momen.webp'
+    image: '/assets/brin-momen.webp',
+    logo: '/assets/logo-brin.png'
   },
   {
     id: 'javan',
     title: 'ANGULAR DEVELOPER INTERN',
+    titleId: 'MAGANG PENGEMBANG ANGULAR',
     positionDetail: 'MSIB (Internship and Certified Independent Study)',
+    positionDetailId: 'MSIB (Magang dan Studi Independen Bersertifikat)',
     company: 'PT. JAVAN CIPTA SOLUSI',
     companyType: 'IT CONSULTANT',
+    companyTypeId: 'KONSULTAN TI',
     period: 'Jan 2025 - Jun 2025',
     location: 'Yogyakarta, Indonesia',
-    shortDescription: 'Delivered 7+ high-impact projects for prestigious institutions, including BRI, KPK, Kominfo and Kemenkeu.',
-    description: '• Delivered 7+ high-impact projects for prestigious institutions, including BRI, KPK, Kominfo and Kemenkeu, within a high-velocity consultancy environment.\n• Managed the end-to-end development cycle for diverse web applications, transitioning seamlessly between Frontend (Angular, React.js, Vue.js), Backend (Java Spring Boot), and UI/UX Design.\n• Translated high-fidelity Figma designs into responsive, component-based UIs for anti-corruption learning platforms (KPK) and practitioner systems (Digitalent).\n• Developed scalable full-stack services for educational, banking and government platforms, including authentication and inventory management systems.',
-    techStack: ['Springboot', 'React.js', 'Angular', 'Vue.js'],
+    shortDescription: 'Delivered 6 enterprise applications for 5 clients, including BRI, KPK, Kemenkeu, Kominfo, and UII.',
+    shortDescriptionId: 'Menyelesaikan 6 aplikasi enterprise untuk 5 klien, termasuk BRI, KPK, Kemenkeu, Kominfo, dan UII.',
+    description: '• Delivered 6 enterprise applications for 5 clients, including BRI, KPK, Kemenkeu, Kominfo, and UII, within Agile sprint timelines.\n• Developed responsive enterprise interfaces from Figma designs using Angular, React.js, and Vue.js.\n• Developed Spring Boot backend services for Kominfo User Access Management and UII SIMLAB, supporting access control and inventory workflows.\n• Collaborated within Agile teams across development, testing, issue resolution, and delivery.',
+    descriptionId: '• Menyelesaikan 6 aplikasi enterprise untuk 5 klien, termasuk BRI, KPK, Kemenkeu, Kominfo, dan UII, dalam timeline sprint Agile.\n• Mengembangkan antarmuka enterprise yang responsif dari desain Figma memakai Angular, React.js, dan Vue.js.\n• Mengembangkan layanan backend Spring Boot untuk Manajemen Akses Pengguna Kominfo dan SIMLAB UII, mendukung kontrol akses dan alur inventaris.\n• Berkolaborasi dalam tim Agile pada pengembangan, pengujian, penyelesaian isu, dan pengiriman.',
+    techStack: ['Spring Boot', 'Java', 'React.js', 'Angular', 'Vue.js', 'TypeScript', 'JavaScript', 'HTML', 'CSS'],
     type: 'work',
-    image: '/assets/javan.webp'
+    image: '/assets/javan.webp',
+    logo: '/assets/logo-javan.png'
   },
   {
     id: 'fif',
     title: 'FULLSTACK DEVELOPER INTERN',
+    titleId: 'MAGANG PENGEMBANG FULLSTACK',
     positionDetail: 'Individual Internship',
+    positionDetailId: 'Magang individu',
     company: 'PT. FEDERAL INTERNATIONAL FINANCE',
     companyType: 'MULTIFINANCE',
+    companyTypeId: 'MULTIFINANCE',
     period: 'Jun 2024 - Jan 2025',
     location: 'South Jakarta, Indonesia',
-    shortDescription: 'Led the end-to-end development of a Proof-of-Concept (PoC) Employee Management application.',
-    description: '• Led the end-to-end development of a Proof-of-Concept (PoC) Employee Management application, managing everything from database logic in Spring Boot to a dynamic UI in Angular 11.\n• Implemented complex backend logic for multi-role authentication and data parsing, ensuring secure and standardized API communication.\n• Standardized documentation for dozens of APIs using Swagger, enabling seamless integration between legacy systems and modern microservices.\n• Optimized application performance by building component-based UIs with TypeScript and Tailwind CSS, resulting in a cleaner and more maintainable codebase.',
-    techStack: ['Angular', 'Springboot', 'Swagger'],
+    shortDescription: 'Built an HRIS proof of concept with role-based access for 100+ employee profiles, and a Swagger portal for 100+ APIs.',
+    shortDescriptionId: 'Membangun bukti konsep HRIS dengan akses berbasis peran untuk 100+ profil karyawan, dan portal Swagger untuk 100+ API.',
+    description: '• Developed an HRIS proof of concept with role-based access control for managing 100+ employee profiles.\n• Built API Central, a Swagger-documented portal standardizing 100+ APIs and improving developer onboarding and integration.\n• Developed reusable Angular and TypeScript components and Spring Boot services for standardized data exchange with legacy systems.',
+    descriptionId: '• Mengembangkan bukti konsep HRIS dengan kontrol akses berbasis peran untuk mengelola 100+ profil karyawan.\n• Membangun API Central, portal berdokumen Swagger yang menstandarkan 100+ API dan mempercepat orientasi serta integrasi pengembang.\n• Mengembangkan komponen Angular dan TypeScript yang dapat dipakai ulang, serta layanan Spring Boot, untuk pertukaran data yang standar dengan sistem lama.',
+    techStack: ['Angular', 'TypeScript', 'HTML', 'CSS', 'Spring Boot', 'Java', 'Swagger'],
     type: 'work',
-    image: '/assets/fif.webp'
+    image: '/assets/fif.webp',
+    logo: '/assets/logo-fifgroup.png'
   },
   {
     id: 'freelance',
-    title: 'WEB DEVELOPER',
-    company: 'FREELANCE CLIENT PROJECTS',
-    companyType: 'VARIOUS INDUSTRIES',
+    title: 'SOFTWARE ENGINEER / IT CONSULTANT',
+    titleId: 'SOFTWARE ENGINEER / KONSULTAN TI',
+    company: 'FREELANCE',
+    companyType: 'IT CONSULTANT',
+    companyTypeId: 'KONSULTAN TI',
     period: 'Aug 2023 - Present',
     location: 'Remote',
-    shortDescription: 'Led 20+ end-to-end projects for diverse clients, managing full product lifecycle from consultation to development.',
-    description: '• Led 20+ end-to-end projects for diverse clients (academic organizations, MSMEs), managing the full product lifecycle from initial consultation and user research to UI design, prototyping, and final development.\n• Translated complex client requirements and high-fidelity Figma designs into 20+ pixel-perfect, component-based UIs using TypeScript, React.js, and Next.js.',
-    techStack: ['Figma', 'React.js', 'Next.js', 'Vue.js', 'TypeScript', 'JavaScript'],
+    shortDescription: 'Delivered 20+ web projects for academic organizations and MSMEs, from requirements through handover.',
+    shortDescriptionId: 'Menyelesaikan 20+ proyek web untuk organisasi akademik dan UMKM, dari kebutuhan hingga serah terima.',
+    description: '• Delivered 20+ web projects for academic organizations and MSMEs, covering requirements consultation, UI/UX design, development, testing, deployment, and handover.\n• Translated business requirements into production-ready web applications within agreed delivery timelines.\n• Worked directly with clients to clarify requirements, prioritize features, and deliver maintainable solutions.',
+    descriptionId: '• Menyelesaikan 20+ proyek web untuk organisasi akademik dan UMKM, mencakup konsultasi kebutuhan, desain UI/UX, pengembangan, pengujian, deployment, dan serah terima.\n• Menerjemahkan kebutuhan bisnis menjadi aplikasi web yang siap produksi sesuai batas waktu yang disepakati.\n• Bekerja langsung dengan klien untuk mengklarifikasi kebutuhan, menyusun prioritas fitur, dan menyerahkan solusi yang mudah dipelihara.',
+    techStack: ['Figma', 'React.js', 'Next.js', 'Vue.js', 'TypeScript', 'JavaScript', 'HTML', 'CSS'],
     type: 'work',
     image: '/assets/Profile.webp'
   }
@@ -211,7 +314,7 @@ export const individualProjects: Project[] = [
     description: 'Web-based application used for logistic company to track delivery. Developed a responsive Shipment Management SPA using Vue 3 (Composition API) and TypeScript, delivering a seamless user experience across desktop and mobile devices with a built-in Dark/Light mode via Tailwind CSS. Engineered a real-time tracking and filtering system utilizing Pinia for state management. Built a fully simulated REST API environment using Mirage.js to mimic realistic network latency, HTTP status codes, and real-time shipment route simulations with automated status transitions.',
     descriptionId: 'Aplikasi berbasis web untuk pelacakan pengiriman di perusahaan logistik. Dikembangkan sebagai SPA yang responsif menggunakan Vue 3 dan TypeScript, lengkap dengan fitur Dark/Light mode melalui Tailwind CSS. Mengimplementasikan sistem pelacakan real-time dengan Pinia dan lingkungan REST API simulasi menggunakan Mirage.js untuk mensimulasikan latensi jaringan dan transisi status otomatis.',
     image: '/assets/ShipTrack-view1.webp',
-    techStack: ['Vue 3', 'Tailwind CSS', 'TypeScript', 'Pinia', 'Mirage.js'],
+    techStack: ['Vue 3', 'TypeScript', 'HTML', 'CSS', 'Tailwind CSS', 'Pinia', 'Mirage.js'],
     links: {
       demo: 'https://transport-shipment-tracker-chi.vercel.app/',
       github: 'https://github.com/Rifqi-HaikalCh/-Transport-Shipment-Tracker'
@@ -226,7 +329,7 @@ export const individualProjects: Project[] = [
     description: 'Simplifies influencer discovery and collaboration for brands. Engineered a full-stack marketplace from scratch using a modern tech stack (Next.js 14, TypeScript, Supabase) to connect brands with influencers. Designed and implemented a pixel-perfect, responsive UI/UX with Tailwind CSS, featuring separate, optimized views for desktop and mobile to ensure a seamless user journey.',
     descriptionId: 'Menyederhanakan penemuan influencer dan kolaborasi untuk brand. Platform marketplace full-stack yang dibangun dari awal menggunakan tech stack modern untuk menghubungkan brand dengan influencer.',
     image: '/assets/marketplaceweb.webp',
-    techStack: ['Next.js 14', 'TypeScript', 'Tailwind CSS', 'Supabase', 'RBAC'],
+    techStack: ['Next.js 14', 'React.js', 'TypeScript', 'HTML', 'CSS', 'Tailwind CSS', 'Supabase', 'RBAC'],
     links: {
       demo: 'https://homepage-redesign-inky.vercel.app/'
     },
@@ -239,7 +342,7 @@ export const individualProjects: Project[] = [
     description: 'Modern hiring platform enabling administrators to manage job listings and candidates to browse/apply. Implemented secure user authentication and role-based access control (RBAC) leveraging Supabase Auth. Designed and built reusable, responsive UI components using Tailwind CSS and Headless UI, ensuring an intuitive user experience across desktop and mobile platforms.',
     descriptionId: 'Platform hiring modern yang memungkinkan administrator mengelola lowongan pekerjaan dan kandidat untuk menelusuri/melamar. Sistem otentikasi aman dengan kontrol akses berbasis peran.',
     image: '/assets/Hiring Platform web.webp',
-    techStack: ['Next.js 16', 'TypeScript', 'Tailwind CSS', 'Supabase', 'React Hook Form', 'Zustand'],
+    techStack: ['Next.js 16', 'React.js', 'TypeScript', 'HTML', 'CSS', 'Tailwind CSS', 'Supabase', 'React Hook Form', 'Zustand'],
     links: {
       demo: 'https://hiring-platform-woad.vercel.app',
       needToKnow: 'https://drive.google.com/file/d/1sDZJJzx59VfwPaw2Y7J-hss0yh88rDyj/view?usp=sharing'
@@ -253,7 +356,7 @@ export const individualProjects: Project[] = [
     description: 'A modern and intuitive todo application for task management. Built with modern web technologies for seamless user experience with features like task creation, editing, deletion, and status tracking.',
     descriptionId: 'Aplikasi todo yang modern dan intuitif untuk manajemen tugas. Dibangun dengan teknologi web modern untuk pengalaman pengguna yang mulus dengan fitur seperti pembuatan tugas, editing, penghapusan, dan pelacakan status.',
     image: '/assets/todo-app.webp',
-    techStack: ['React', 'TypeScript', 'Tailwind CSS', 'Next.js', 'Local Storage'],
+    techStack: ['React', 'Next.js', 'TypeScript', 'HTML', 'CSS', 'Tailwind CSS', 'Local Storage'],
     links: {
       demo: 'https://assessment-todo-application.vercel.app/'
     },
@@ -266,7 +369,7 @@ export const individualProjects: Project[] = [
     description: 'Collection of interactive web-based games developed with JavaScript, featuring engaging user experience.',
     descriptionId: 'Kumpulan game interaktif berbasis web yang dikembangkan dengan JavaScript, menampilkan pengalaman pengguna yang menarik.',
     image: '/assets/game.webp',
-    techStack: ['JavaScript', 'HTML5 Canvas', 'CSS3', 'DOM Manipulation', 'Event Handling'],
+    techStack: ['JavaScript', 'HTML', 'HTML5 Canvas', 'CSS3', 'DOM Manipulation', 'Event Handling'],
     links: {
       demo: 'https://games-rifqi.netlify.app/',
       github: 'https://github.com/Rifqi-HaikalCh'
@@ -280,7 +383,7 @@ export const individualProjects: Project[] = [
     description: 'Centralization and standardization of API documentation with Postman-to-Swagger converter tool.',
     descriptionId: 'Sentralisasi dan standardisasi dokumentasi API dengan alat konverter Postman-ke-Swagger.',
     image: '/assets/api-central.webp',
-    techStack: ['Angular', 'Spring Boot', 'Java', 'TypeScript', 'Tailwind CSS'],
+    techStack: ['Angular', 'TypeScript', 'Spring Boot', 'Java', 'HTML', 'CSS', 'Tailwind CSS'],
     links: {
       demo: 'https://api-central.netlify.app/',
       github: 'https://github.com/Rifqi-HaikalCh/apicentral-frontend'
@@ -294,7 +397,7 @@ export const individualProjects: Project[] = [
     description: 'Comprehensive employee management application with CRUD functionality and role-based access control.',
     descriptionId: 'Aplikasi manajemen karyawan yang komprehensif dengan fungsi CRUD dan kontrol akses berbasis peran.',
     image: '/assets/employee.webp',
-    techStack: ['Angular', 'Spring Boot', 'JWT', 'MySQL', 'Bootstrap'],
+    techStack: ['Angular', 'TypeScript', 'Spring Boot', 'Java', 'HTML', 'CSS', 'Bootstrap', 'JWT', 'MySQL'],
     links: {
       demo: 'https://employee-web.netlify.app/',
       github: 'https://github.com/Rifqi-HaikalCh/employee-frontend'
@@ -308,7 +411,7 @@ export const individualProjects: Project[] = [
     description: 'Responsive single-page note-taking application built with vanilla JavaScript and Web Components API.',
     descriptionId: 'Aplikasi pencatat responsif satu halaman yang dibangun dengan vanilla JavaScript dan Web Components API.',
     image: '/assets/notes.webp',
-    techStack: ['JavaScript', 'Web Components', 'CSS Grid', 'Flexbox', 'HTML5'],
+    techStack: ['JavaScript', 'HTML5', 'CSS', 'CSS Grid', 'Flexbox', 'Web Components'],
     links: {
       demo: 'https://notes-rifqi.netlify.app/',
       github: 'https://github.com/Rifqi-HaikalCh/notes-app'
@@ -471,7 +574,7 @@ export const groupProjects: Project[] = [
     description: 'Mobile delivery system designed to overcome logistics and transportation problems. Led a 3-person team through the entire product lifecycle, from initial concept to a fully functional mobile delivery application. Translated high-fidelity Figma UI/UX designs into 20+ polished and intuitive screens using Flutter. Built and integrated 30+ RESTful APIs with Express.js to power real-time order processing, driver matching, and route optimization.',
     descriptionId: 'Sistem Layanan Antar yang dirancang untuk mengatasi masalah logistik dan transportasi. Memimpin tim 3 orang melalui seluruh siklus produk, dari konsep awal hingga aplikasi pengiriman mobile yang berfungsi penuh.',
     image: '/assets/del-pick.webp',
-    techStack: ['Flutter', 'Express.js', 'Dart', 'JavaScript', 'C++', 'MySQL'],
+    techStack: ['Flutter', 'Dart', 'Express.js', 'Node.js', 'JavaScript', 'C++', 'MySQL'],
     links: {
       github: 'https://github.com/yeftaamir/Front-end-Del-Pick',
       needToKnow: 'https://drive.google.com/file/d/1dFmPBOM7i7SubKeOztS6FWffawnltK2p/view?usp=sharing'
@@ -485,7 +588,7 @@ export const groupProjects: Project[] = [
     description: 'Web-based information platform for IT Del student candidates built with Laravel 9 and MySQL.',
     descriptionId: 'Platform informasi berbasis web untuk calon mahasiswa IT Del yang dibangun dengan Laravel 9 dan MySQL.',
     image: '/assets/spmb.webp',
-    techStack: ['Laravel', 'PHP', 'MySQL', 'Blade', 'Bootstrap'],
+    techStack: ['Laravel', 'PHP', 'HTML', 'CSS', 'Bootstrap', 'Blade', 'MySQL'],
     links: {
       demo: 'https://semat.del.ac.id/program',
       github: 'https://github.com/gabrielhtg/project-spmb-pabwe'
@@ -499,7 +602,7 @@ export const groupProjects: Project[] = [
     description: 'Employee performance management system with work planning and evaluation features built for project management course.',
     descriptionId: 'Sistem manajemen kinerja karyawan dengan fitur perencanaan kerja dan evaluasi yang dibangun untuk mata kuliah manajemen proyek.',
     image: '/assets/frk.webp',
-    techStack: ['PHP', 'Laravel', 'MySQL', 'Bootstrap', 'Blade'],
+    techStack: ['PHP', 'Laravel', 'HTML', 'CSS', 'Bootstrap', 'Blade', 'MySQL'],
     links: {
       github: 'https://github.com/boysitorus/FrontEnd-FRK'
     },
@@ -512,7 +615,7 @@ export const groupProjects: Project[] = [
     description: 'Sistem Pakar Diagnosa Penyakit Gigi is a Python program that employs the forward chaining method for accurate assessment.',
     descriptionId: 'Sistem Pakar Diagnosa Penyakit Gigi adalah sebuah program Python yang menggunakan metode forward chaining untuk penilaian yang akurat.',
     image: '/assets/dentist.webp',
-    techStack: ['HTML', 'Python', 'Bootstrap', 'JavaScript'],
+    techStack: ['HTML', 'CSS', 'JavaScript', 'Python', 'Bootstrap'],
     links: {
       github: 'https://github.com/Rifqi-HaikalCh/SistemPakarDiagnosaPenyakitGigi'
     },
@@ -525,7 +628,7 @@ export const groupProjects: Project[] = [
     description: 'The DES (Data Encryption Standard) algorithm implemented in Python follows a series of steps to encrypt and decrypt data.',
     descriptionId: 'Algoritma DES (Standar Enkripsi Data) yang diimplementasikan dalam Python mengikuti serangkaian langkah untuk mengenkripsi dan mendekripsi data.',
     image: '/assets/des.webp',
-    techStack: ['HTML', 'Python', 'Bootstrap', 'JavaScript'],
+    techStack: ['HTML', 'CSS', 'JavaScript', 'Python', 'Bootstrap'],
     links: {
       github: 'https://github.com/Rifqi-HaikalCh/DES_Algorithm'
     },

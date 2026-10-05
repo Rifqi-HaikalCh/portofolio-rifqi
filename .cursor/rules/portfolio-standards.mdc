@@ -1,0 +1,40 @@
+---
+description: Binding visual and content boundaries for this portfolio. Prevents off-system UI and invented data.
+alwaysApply: true
+---
+
+# Portfolio standards
+
+Before any edit, read and follow `PORTFOLIO_STANDARDS.md` at the repository root. That file is the full standard. This rule is the part that must not be skipped.
+
+If a task conflicts with the standard, change only the content or bug the user asked for. Do not restyle, animate, or rewrite copy as an extra improvement.
+
+## Use only these tokens
+
+`bg-paper`, `bg-raised`, `text-ink`, `bg-ink`, `text-muted`, `border-line`, `text-accent`, `bg-accent`. They already switch in dark mode. Do not add hex colors, `dark:bg-gray-900`, or a second palette.
+
+Type: Source Sans 3 for body (`font-sans`), Fraunces for headings (`font-serif`), JetBrains Mono only for small labels (`font-jetbrains-mono`). Section titles go through `AnimatedSectionTitle`.
+
+Layout: `max-w-6xl mx-auto px-5 lg:px-8`. Sections: `py-20 md:py-28 border-b border-line`. Cards: `border border-line bg-raised`. Buttons: `btn-primary-custom` and `btn-outline-custom` only.
+
+## Never add
+
+- Glass, `backdrop-blur`, gradient text (`bg-clip-text`), `bg-gradient-to-*`, glow, `shadow-xl`
+- Pill or blob shapes: `rounded-2xl`, `rounded-3xl`, `rounded-full` on cards, buttons, inputs, or the header
+- `font-black`, `font-extrabold`, or uppercase section titles
+- Particles, gooey nav, electric borders, tilted cards, falling physics, pointer-tilt, holographic profile cards, variable-proximity text, shimmer, blob backgrounds
+- These imports: `ParticlesBackground`, `GooeyNav`, `ElectricBorder`, `TiltedCard`, `FallingSkillCards`, `GlassSkillCard`, `VariableProximity`, `ProfileCard`
+- Decorative use of Tailwind `emerald`, `blue`, `indigo`, `purple`, `violet`, `fuchsia`, `pink`
+- New fonts, dependencies, pages, sections, or stats
+
+Hover is a color or border change. Do not scale, rotate, or lift cards.
+
+## Page ground
+
+One paper background for every section. Do not add a pattern, grain, grid, frame, or accent wash that changes per section. `data-studio` only names the section being read. EQbot is a corner chat: a white circle before it is opened, with one short intro bubble, then a name tab with a “chat in progress” line after it is closed. The panel is square and bright white in light mode, `bg-raised` in dark mode, nearly full width on a small screen, and opens downward after the portrait moves into the header. It does not walk the page. The full rules are in `PORTFOLIO_STANDARDS.md`.
+
+## Data edits
+
+Edit `src/data/portfolio.ts` only. Keep both languages when the type has a pair (`title`/`titleId`, `description`/`descriptionId`, `labelEn`/`labelId`). Do not delete existing items, invent URLs, invent image paths, or change `contactInfo` unless the user supplied the new value. Image paths must already exist under `public/assets`. Do not duplicate portfolio copy into JSX.
+
+When a file you must touch still has old template classes, restyle only that surface to the tokens above. Leave unrelated sections alone.

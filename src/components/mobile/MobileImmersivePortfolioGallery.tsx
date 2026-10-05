@@ -1,12 +1,11 @@
 'use client';
 import React, { useState } from 'react';
-import Image from 'next/image';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useLanguage } from '../../context/LanguageContext';
 import { individualProjects, designProjects as portfolioDesignProjects } from '../../data/portfolio';
-import { X, ChevronLeft, ChevronRight, Eye } from 'lucide-react';
 import Carousel from '../shared/Carousel';
 import { ViewAllProjects } from './ViewAllProjects';
+import { ProjectDetailDialog } from '../shared/ProjectDetailDialog';
 
 interface DesignProject {
   id: string;
@@ -99,7 +98,6 @@ const designProjects: DesignProject[] = [
 export const MobileImmersivePortfolioGallery: React.FC = () => {
   const { language } = useLanguage();
   const [selectedProject, setSelectedProject] = useState<DesignProject | null>(null);
-  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [carouselWidth, setCarouselWidth] = useState(340);
   const [showAllProjects, setShowAllProjects] = useState(false);
 
@@ -117,29 +115,8 @@ export const MobileImmersivePortfolioGallery: React.FC = () => {
   const allPortfolioProjects = [...individualProjects, ...portfolioDesignProjects];
   const uiuxProjects = allPortfolioProjects.filter(project => project.type === 'design');
 
-  const openModal = (project: DesignProject, imageIndex: number = 0) => {
-    setSelectedProject(project);
-    setSelectedImageIndex(imageIndex);
-  };
-
   const closeModal = () => {
     setSelectedProject(null);
-  };
-
-  const nextImage = () => {
-    if (selectedProject) {
-      setSelectedImageIndex((prev) =>
-        prev === selectedProject.images.length - 1 ? 0 : prev + 1
-      );
-    }
-  };
-
-  const prevImage = () => {
-    if (selectedProject) {
-      setSelectedImageIndex((prev) =>
-        prev === 0 ? selectedProject.images.length - 1 : prev - 1
-      );
-    }
   };
 
   // Show ViewAllProjects component if toggled (with 'design' filter for UI/UX Designer role)
@@ -216,115 +193,21 @@ export const MobileImmersivePortfolioGallery: React.FC = () => {
         {language === 'en' ? 'View All Design Projects' : 'Lihat Semua Proyek Desain'}
       </motion.button>
 
-      {/* Lightbox Modal */}
-      <AnimatePresence>
-        {selectedProject && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black z-50 flex flex-col"
-          >
-            {/* Header */}
-            <div className="bg-gradient-to-b from-black/90 to-transparent p-4 flex items-center justify-between">
-              <div className="text-white">
-                <p className="text-sm font-semibold">
-                  {language === 'en' ? selectedProject.titleEn : selectedProject.titleId}
-                </p>
-                <p className="text-xs text-white/60">
-                  {selectedImageIndex + 1} / {selectedProject.images.length}
-                </p>
-              </div>
-              <button
-                onClick={closeModal}
-                className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-white active:scale-90 transition-transform"
-              >
-                <X size={20} />
-              </button>
-            </div>
-
-            {/* Image Container */}
-            <div className="flex-1 relative flex items-center justify-center p-4">
-              <motion.div
-                key={selectedImageIndex}
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.8, opacity: 0 }}
-                className="relative w-full h-full"
-              >
-                <Image
-                  src={selectedProject.images[selectedImageIndex]}
-                  alt={`${selectedProject.titleEn} - ${selectedImageIndex + 1}`}
-                  fill
-                  className="object-contain"
-                  priority
-                  sizes="100vw"
-                />
-              </motion.div>
-            </div>
-
-            {/* Navigation */}
-            <button
-              onClick={prevImage}
-              className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-white active:scale-90 transition-transform shadow-lg"
-            >
-              <ChevronLeft size={24} />
-            </button>
-            <button
-              onClick={nextImage}
-              className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-white active:scale-90 transition-transform shadow-lg"
-            >
-              <ChevronRight size={24} />
-            </button>
-
-            {/* Bottom Info */}
-            <div className="bg-gradient-to-t from-black/90 to-transparent p-4">
-              {/* Thumbnail Gallery */}
-              {selectedProject.images.length > 1 && (
-                <div className="flex space-x-2 overflow-x-auto mb-4 scrollbar-hide">
-                  {selectedProject.images.map((image, index) => (
-                    <motion.button
-                      key={index}
-                      onClick={() => setSelectedImageIndex(index)}
-                      className={`flex-shrink-0 w-12 h-12 rounded-lg overflow-hidden border-2 transition-all ${
-                        index === selectedImageIndex
-                          ? 'border-purple-500 scale-110'
-                          : 'border-white/30'
-                      }`}
-                      whileTap={{ scale: 0.95 }}
-                    >
-                      <Image
-                        src={image}
-                        alt={`Thumbnail ${index + 1}`}
-                        width={48}
-                        height={48}
-                        className="object-cover w-full h-full"
-                      />
-                    </motion.button>
-                  ))}
-                </div>
-              )}
-
-              {/* Project Details */}
-              <div className="text-white">
-                <p className="text-sm text-white/80 mb-2">
-                  {language === 'en' ? selectedProject.descriptionEn : selectedProject.descriptionId}
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  {selectedProject.tools.map((tool) => (
-                    <span
-                      key={tool}
-                      className="text-xs bg-white/20 backdrop-blur-sm text-white px-2 py-1 rounded-md"
-                    >
-                      {tool}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {selectedProject && (
+        <ProjectDetailDialog
+          key={selectedProject.id}
+          title={language === 'en' ? selectedProject.titleEn : selectedProject.titleId}
+          category={selectedProject.category}
+          description={language === 'en' ? selectedProject.descriptionEn : selectedProject.descriptionId}
+          images={selectedProject.images}
+          tools={selectedProject.tools}
+          links={[]}
+          overviewLabel={language === 'en' ? 'Overview' : 'Ringkasan'}
+          toolsLabel={language === 'en' ? 'Stack' : 'Teknologi'}
+          closeLabel={language === 'en' ? 'Close' : 'Tutup'}
+          onClose={closeModal}
+        />
+      )}
     </section>
   );
 };

@@ -69,73 +69,51 @@ export const TimedNotification: React.FC<TimedNotificationProps> = ({
         duration: 0.5
       }}
     >
-      <div className="bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl shadow-2xl rounded-2xl sm:rounded-3xl p-4 sm:p-6 border border-emerald-500/20">
-        {/* Header with EQbot */}
+      <div className="bg-raised border border-line p-5 shadow-[0_16px_40px_rgba(27,25,22,0.12)]">
         <div className="flex items-start gap-4 mb-4">
-          {/* Lottie Animation */}
-          <div className="w-12 h-12 sm:w-16 sm:h-16 flex-shrink-0 bg-gradient-to-br from-emerald-100 to-blue-100 dark:from-emerald-900/50 dark:to-blue-900/50 rounded-2xl flex items-center justify-center overflow-hidden shadow-lg">
-            <Lottie 
-              animationData={assistantAnimation} 
-              loop={true}
-              className="w-8 h-8 sm:w-12 sm:h-12"
+          <div className="w-12 h-12 flex-shrink-0 border border-line bg-paper flex items-center justify-center overflow-hidden">
+            <Lottie
+              animationData={assistantAnimation}
+              loop
+              className="w-10 h-10"
             />
-            {/* Status indicator */}
-            <div className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-r from-emerald-400 to-blue-400 rounded-full animate-pulse shadow-lg"></div>
           </div>
-          
-          <div className="flex-1">
-            {/* EQbot Header */}
-            <div className="flex items-center justify-between mb-2">
-              <h4 className="font-extrabold text-lg bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent">
-                EQbot
-              </h4>
-              
-              {/* Close Button */}
-              <button 
-                onClick={onClose} 
-                className="w-8 h-8 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-full flex items-center justify-center text-gray-400 hover:text-gray-700 dark:hover:text-white transition-all duration-200"
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center justify-between gap-3 mb-2">
+              <h4 className="font-serif text-lg text-ink">EQbot</h4>
+              <button
+                onClick={onClose}
+                aria-label="Close"
+                className="w-8 h-8 border border-line flex items-center justify-center text-muted hover:text-ink"
               >
                 <X size={16} />
               </button>
             </div>
-            
-            {/* Status dots */}
-            <div className="flex gap-1 mb-3">
-              <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
-              <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse" style={{ animationDelay: '0.3s' }}></div>
-              <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse" style={{ animationDelay: '0.6s' }}></div>
-            </div>
+            <h5 className="text-sm font-medium text-ink">
+              {t(message.titleEn, message.titleId)}
+            </h5>
           </div>
         </div>
-        
-        {/* Message Content */}
-        <div className="space-y-3">
-          <h5 className="font-bold text-gray-800 dark:text-white text-base">
-            {t(message.titleEn, message.titleId)}
-          </h5>
-          
-          <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
-            {t(message.messageEn, message.messageId)}
-          </p>
-          
-          {/* Action Button */}
-          {message.actionType && message.actionType !== 'none' && (
-            <button
-              onClick={handleActionClick}
-              className="w-full mt-4 px-4 py-2 bg-gradient-to-r from-emerald-500 to-blue-500 text-white rounded-xl text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
-            >
-              {t(message.actionTextEn || '', message.actionTextId || '')}
-            </button>
-          )}
-        </div>
-        
-        {/* Progress bar */}
-        <div className="mt-4 w-full h-1 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+
+        <p className="text-sm text-muted leading-relaxed">
+          {t(message.messageEn, message.messageId)}
+        </p>
+
+        {message.actionType && message.actionType !== 'none' && (
+          <button
+            onClick={handleActionClick}
+            className="btn-primary-custom w-full mt-4"
+          >
+            {t(message.actionTextEn || '', message.actionTextId || '')}
+          </button>
+        )}
+
+        <div className="mt-4 w-full h-px bg-line overflow-hidden">
           <motion.div
-            className="h-full bg-gradient-to-r from-emerald-500 to-blue-500"
-            initial={{ width: "100%" }}
-            animate={{ width: "0%" }}
-            transition={{ duration: 8, ease: "linear" }}
+            className="h-full bg-accent"
+            initial={{ width: '100%' }}
+            animate={{ width: '0%' }}
+            transition={{ duration: 8, ease: 'linear' }}
           />
         </div>
       </div>

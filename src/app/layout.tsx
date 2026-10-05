@@ -1,17 +1,26 @@
 import type { Metadata } from "next";
-import { Poppins, JetBrains_Mono } from "next/font/google";
+import { Fraunces, Source_Sans_3, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import "../styles/design-system.css";
 import "../styles/role-themes.css";
 import { Providers } from "../components/shared/Providers";
 
-const poppins = Poppins({
+const fraunces = Fraunces({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700", "800"],
-  variable: '--font-poppins',
-  display: 'swap',
-  preload: true, // Preload for faster LCP
-  adjustFontFallback: true, // Reduce layout shift
+  weight: ["500", "600", "700"],
+  variable: "--font-fraunces",
+  display: "swap",
+  preload: true,
+  adjustFontFallback: true,
+});
+
+const sourceSans = Source_Sans_3({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-source-sans",
+  display: "swap",
+  preload: true,
+  adjustFontFallback: true,
 });
 
 const jetbrainsMono = JetBrains_Mono({
@@ -25,8 +34,8 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: "Rifqi Haikal Chairiansyah - Portfolio",
-  description: "Passionate Full-Stack Developer and Mobile App Developer from Indonesia, currently studying Informatics at Del Institute of Technology.",
-  keywords: "Rifqi Haikal, Full-Stack Developer, Mobile Developer, Angular, React, Vue, Spring Boot, Laravel, Indonesia",
+  description: "Software developer focused on C#, ASP.NET, .NET Core, and SQL Server. Portfolio of Rifqi Haikal Chairiansyah.",
+  keywords: "Rifqi Haikal, Software Developer, .NET, C#, ASP.NET, SQL Server, Entity Framework, UI/UX, Indonesia",
   authors: [{ name: "Rifqi Haikal Chairiansyah" }],
   creator: "Rifqi Haikal Chairiansyah",
   metadataBase: new URL("https://rifqihaikalch.netlify.app"),
@@ -35,7 +44,7 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: "https://rifqihaikalch.netlify.app",
     title: "Rifqi Haikal Chairiansyah - Portfolio",
-    description: "Portfolio of a passionate Full-Stack Developer and Mobile App Developer from Indonesia",
+    description: "Software developer focused on C#, ASP.NET, .NET Core, and SQL Server. Portfolio of Rifqi Haikal Chairiansyah.",
     siteName: "Rifqi Haikal Portfolio",
   },
 };
@@ -55,7 +64,7 @@ export default function RootLayout({
         {/* DNS prefetch for faster resource loading */}
         <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
       </head>
-      <body className={`${poppins.variable} ${jetbrainsMono.variable} font-poppins`}>
+      <body className={`${fraunces.variable} ${sourceSans.variable} ${jetbrainsMono.variable} font-sans`}>
         <Providers>
           {children}
         </Providers>

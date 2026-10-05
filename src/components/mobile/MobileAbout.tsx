@@ -1,191 +1,133 @@
 'use client';
+
 import React, { useMemo } from 'react';
 import Image from 'next/image';
-import { motion } from 'framer-motion';
 import { useLanguage } from '../../context/LanguageContext';
 import { aboutHighlights, workExperience } from '../../data/portfolio';
-import { Download, ChevronRight, GraduationCap, Briefcase, Trophy, Users } from 'lucide-react';
-import { SimpleLanyard } from '../shared/SimpleLanyard';
-import PortfolioFigmaCard from '../shared/PortfolioFigmaCard';
-import { RotatingText } from '../shared/RotatingText';
 import { calculateTotalExperience } from '../../lib/experience-utils';
+import { Download, GraduationCap, Briefcase, Trophy, Users, ChevronRight } from 'lucide-react';
+import { AnimatedSectionTitle } from '../shared/AnimatedSectionTitle';
 
 const iconMap: { [key: string]: React.ReactNode } = {
-  'graduation-cap': <GraduationCap size={20} />,
-  'briefcase': <Briefcase size={20} />,
-  'trophy': <Trophy size={20} />,
-  'users': <Users size={20} />,
+  'graduation-cap': <GraduationCap size={18} />,
+  briefcase: <Briefcase size={18} />,
+  trophy: <Trophy size={18} />,
+  users: <Users size={18} />,
 };
 
 export const MobileAbout: React.FC = () => {
-  const { language } = useLanguage();
-
+  const { t, language } = useLanguage();
   const totalExp = useMemo(() => calculateTotalExperience(workExperience), []);
 
   const stats = [
     {
-      number: "30+",
-      label: language === 'en' ? "Projects Completed" : "Proyek Diselesaikan",
+      number: '30+',
+      label: t('Projects Completed', 'Proyek Diselesaikan'),
+      description: t('From concept to technology solutions', 'Dari konsep hingga solusi teknologi'),
     },
     {
       number: `${totalExp.years}+`,
-      label: language === 'en' ? "Years Experience" : "Tahun Pengalaman",
+      label: t('Years Experience', 'Tahun Pengalaman'),
+      description: t('Development and Design', 'Pengembangan dan Desain'),
     },
     {
-      number: "10+",
-      label: language === 'en' ? "Technologies Mastered" : "Teknologi Dikuasai",
-    }
+      number: '10+',
+      label: t('Technologies Mastered', 'Teknologi Dikuasai'),
+      description: t('Modern tech stack expertise', 'Keahlian teknologi modern'),
+    },
   ];
 
   return (
-    <section id="about" className="py-16 px-6 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
-      {/* Section Header */}
-      <motion.div
-        initial={{ y: 20, opacity: 0 }}
-        whileInView={{ y: 0, opacity: 1 }}
-        viewport={{ once: true }}
-        className="text-center mb-12"
-      >
-        <span className="inline-block px-4 py-2 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-full text-sm font-semibold mb-4">
-          {language === 'en' ? 'Get to Know Me' : 'Mengenal Saya'}
-        </span>
-        <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-3">
-          {language === 'en' ? 'About Me' : 'Tentang Saya'}
-        </h2>
-      </motion.div>
-
-      {/* Lanyard Animation with Profile Image */}
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.8 }}
-        className="mb-8"
-      >
-        <SimpleLanyard
-          imageUrl="/assets/removebg.webp"
-          alt="Rifqi Haikal"
+    <section id="about" data-studio="manuscript" className="py-16 border-b border-line bg-paper text-ink">
+      <div className="px-5">
+        <AnimatedSectionTitle
+          center={false}
+          badge={t('Get to Know Me', 'Mengenal Saya') as string}
+          title={t('About Me', 'Tentang Saya') as string}
+          subtitle={t(
+            'Software engineer specialized in C#, ASP.NET, and SQL Server for enterprise web and data systems',
+            'Software engineer yang berfokus pada C#, ASP.NET, dan SQL Server untuk sistem web dan data enterprise'
+          ) as string}
         />
-      </motion.div>
 
-      {/* Name and Title */}
-      <motion.div
-        initial={{ y: 20, opacity: 0 }}
-        whileInView={{ y: 0, opacity: 1 }}
-        viewport={{ once: true }}
-        className="text-center mb-6"
-      >
-        <h3 className="text-2xl font-bold bg-gradient-to-r from-emerald-600 via-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
-          Rifqi Haikal
-        </h3>
-        <div className="font-medium min-h-[24px] flex items-center justify-center">
-          <RotatingText
-            texts={
-              language === 'en'
-                ? ['UI/UX Designer', 'Web Developer', 'Software Engineer']
-                : ['Desainer UI/UX', 'Pengembang Web', 'Software Engineer']
-            }
-            interval={2500}
-            className="text-base"
-          />
-        </div>
-      </motion.div>
-
-      {/* Bio */}
-      <motion.p
-        initial={{ y: 20, opacity: 0 }}
-        whileInView={{ y: 0, opacity: 1 }}
-        viewport={{ once: true }}
-        className="text-gray-600 dark:text-gray-400 leading-relaxed mb-8 text-center"
-      >
-        {language === 'en'
-          ? "A creative Software Engineer dan UI/UX Designer passionate about building engaging digital experiences. With two years of hands-on experience, I have developed technical and creative solutions as a Freelancer and in professional roles."
-          : "Seorang Software Engineer dan UI/UX Designer kreatif yang passionate dalam membangun pengalaman digital yang menarik. Dengan dua tahun pengalaman hands-on, saya telah mengembangkan solusi teknis dan kreatif sebagai Freelancer dan dalam peran profesional."}
-      </motion.p>
-
-      {/* CTA Buttons */}
-      <motion.div
-        initial={{ y: 20, opacity: 0 }}
-        whileInView={{ y: 0, opacity: 1 }}
-        viewport={{ once: true }}
-        className="flex flex-col gap-3 mb-12"
-      >
-        <a
-          href="/assets/CV Rifqi Haikal Chairiansyah.pdf"
-          download
-          className="w-full py-4 px-6 bg-gradient-to-r from-emerald-500 to-blue-500 text-white rounded-full font-semibold shadow-lg active:scale-95 transition-transform flex items-center justify-center gap-2"
-        >
-          <Download size={18} />
-          {language === 'en' ? 'Download CV' : 'Unduh CV'}
-        </a>
-        <button
-          onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
-          className="w-full py-4 px-6 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-full font-semibold shadow-lg border border-gray-200 dark:border-gray-700 active:scale-95 transition-transform flex items-center justify-center gap-2"
-        >
-          {language === 'en' ? 'Get in Touch' : 'Hubungi Saya'}
-          <ChevronRight size={18} />
-        </button>
-      </motion.div>
-
-      {/* Stats Grid */}
-      <motion.div
-        initial={{ y: 20, opacity: 0 }}
-        whileInView={{ y: 0, opacity: 1 }}
-        viewport={{ once: true }}
-        className="grid grid-cols-3 gap-4 mb-12"
-      >
-        {stats.map((stat, index) => (
-          <div
-            key={index}
-            className="bg-white dark:bg-gray-800 rounded-2xl p-4 text-center shadow-lg"
-          >
-            <h4 className="text-2xl font-bold bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent mb-1">
-              {stat.number}
-            </h4>
-            <p className="text-xs text-gray-600 dark:text-gray-400 font-medium">
-              {stat.label}
-            </p>
-          </div>
-        ))}
-      </motion.div>
-
-      {/* Expertise Section */}
-      <motion.div
-        initial={{ y: 20, opacity: 0 }}
-        whileInView={{ y: 0, opacity: 1 }}
-        viewport={{ once: true }}
-      >
-        <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 text-center">
-          {language === 'en' ? 'My Expertise' : 'Keahlian Saya'}
-        </h3>
-
-        <div className="space-y-4">
-          {aboutHighlights.map((highlight, index) => (
-            <motion.div
-              key={index}
-              initial={{ x: -20, opacity: 0 }}
-              whileInView={{ x: 0, opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
-              className="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-lg"
-            >
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-blue-500 rounded-xl flex items-center justify-center text-white flex-shrink-0">
-                  {iconMap[highlight.icon]}
-                </div>
-                <div className="flex-1">
-                  <h4 className="font-bold text-lg text-gray-900 dark:text-white mb-2">
-                    {language === 'en' ? highlight.title : highlight.titleId}
-                  </h4>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
-                    {language === 'en' ? highlight.description : highlight.descriptionId}
-                  </p>
-                </div>
+        <figure data-eqbot="about-photo" data-eqbot-at="above">
+          <div className="border border-line bg-raised">
+            <div className="relative aspect-square overflow-hidden bg-raised">
+              <Image
+                src="/assets/me.png"
+                alt="Rifqi Haikal"
+                fill
+                sizes="90vw"
+                className="object-contain"
+              />
+            </div>
+            <figcaption className="p-4 flex items-start justify-between gap-4">
+              <div>
+                <p className="font-serif text-xl text-ink">Rifqi Haikal</p>
+                <p className="text-sm text-muted">{t('Software Developer', 'Developer Perangkat Lunak')}</p>
               </div>
-            </motion.div>
+              <span className="inline-flex items-center text-[11px] tracking-[0.14em] uppercase text-accent">
+                <span className="presence" aria-hidden="true" />
+                {t('Available for Work', 'Tersedia untuk Bekerja')}
+              </span>
+            </figcaption>
+          </div>
+        </figure>
+
+        <h3 className="mt-10 font-serif text-3xl font-medium tracking-tight text-ink">
+          {t("Hi, I'm", "Halo, Saya")}{' '}
+          <span className="italic">Rifqi Haikal</span>
+        </h3>
+        <p className="mt-4 text-base text-muted leading-relaxed">
+          {language === 'en'
+            ? 'Software Engineer with 3 years of hands-on development experience. My core work is C#, ASP.NET MVC, and .NET Core for enterprise web and data systems. I also bring additional full-stack experience with React, Angular, and Spring Boot. I have built backend services, REST APIs, monitoring dashboards, and secure applications with SQL Server, Entity Framework, RBAC, SSO, and MFA, delivered for telecommunications, oil and gas, research, and financial services. Bachelor of Informatics from Institut Teknologi Del, GPA 3.39.'
+            : 'Software Engineer dengan 3 tahun pengalaman pengembangan. Pekerjaan inti saya adalah C#, ASP.NET MVC, dan .NET Core untuk sistem web dan data enterprise. Saya juga memiliki pengalaman full-stack tambahan dengan React, Angular, dan Spring Boot. Saya membangun layanan backend, REST API, dashboard pemantauan, dan aplikasi yang aman dengan SQL Server, Entity Framework, RBAC, SSO, dan MFA, untuk telekomunikasi, minyak dan gas, riset, serta jasa keuangan. Sarjana Informatika dari Institut Teknologi Del, IPK 3,39.'}
+        </p>
+
+        <div className="mt-8 flex flex-col gap-3">
+          <a href="/assets/CV Rifqi Haikal Chairiansyah.pdf" download className="btn-primary-custom">
+            <Download size={16} />
+            {t('Download CV', 'Unduh CV')}
+          </a>
+          <button
+            type="button"
+            onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+            className="btn-outline-custom"
+          >
+            {t('Get in Touch', 'Hubungi Saya')}
+            <ChevronRight size={16} />
+          </button>
+        </div>
+
+        <dl className="mt-10 border-t border-line">
+          {stats.map((stat) => (
+            <div key={stat.label as string} className="py-5 border-b border-line">
+              <dt className="font-serif text-3xl text-ink">{stat.number}</dt>
+              <dd className="mt-1 text-sm font-medium text-ink">{stat.label}</dd>
+              <dd className="mt-1 text-sm text-muted">{stat.description}</dd>
+            </div>
+          ))}
+        </dl>
+
+        <h3 className="mt-14 font-serif text-3xl font-medium text-ink mb-6">
+          {t('My Expertise', 'Keahlian Saya')}
+        </h3>
+        <div className="border-t border-line">
+          {aboutHighlights.map((highlight) => (
+            <article key={highlight.title} className="read-row py-6 border-b border-line">
+              <div className="flex items-center gap-3 text-accent mb-3">
+                {iconMap[highlight.icon]}
+                <span className="font-jetbrains-mono text-[11px] tracking-[0.16em] uppercase">
+                  {t(highlight.title, highlight.titleId)}
+                </span>
+              </div>
+              <p className="text-ink leading-relaxed">
+                {t(highlight.description, highlight.descriptionId)}
+              </p>
+            </article>
           ))}
         </div>
-      </motion.div>
+      </div>
     </section>
   );
 };

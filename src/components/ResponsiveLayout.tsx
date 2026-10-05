@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useIsMobile } from '../hooks/useMediaQuery';
 import { AnimatedSection } from './hocs/AnimatedSection';
 import { AnimatePresence } from 'framer-motion';
@@ -9,7 +9,6 @@ import { MobileHero } from './mobile/MobileHero';
 import { MobileAbout } from './mobile/MobileAbout';
 import { MobileRoleBasedPortfolio } from './mobile/MobileRoleBasedPortfolio';
 import { MobileExperience } from './mobile/MobileExperience';
-import { MobileGallery } from './mobile/MobileGallery';
 import { MobileCertificates } from './mobile/MobileCertificates';
 import { MobileContact } from './mobile/MobileContact';
 
@@ -18,15 +17,17 @@ import Hero from './sections/Hero';
 import { About } from './sections/About';
 import { Services } from './sections/Services';
 import { Experience } from './sections/Experience';
-import MyGallery from './sections/MyGallery';
 import { Certificates } from './sections/Certificates';
 import { Contact } from './sections/Contact';
 import { ViewAllProjects } from './sections/ViewAllProjects';
+import { useSectionRise } from './shared/useLedgerRise';
 
 export const ResponsiveLayout: React.FC = () => {
   const isMobile = useIsMobile();
   const [mounted, setMounted] = useState(false);
   const [showAllProjects, setShowAllProjects] = useState(false);
+  const frameRef = useRef<HTMLDivElement>(null);
+  useSectionRise(frameRef, `${mounted}-${isMobile}-${showAllProjects}`);
 
   // Prevent hydration mismatch
   useEffect(() => {
@@ -43,7 +44,7 @@ export const ResponsiveLayout: React.FC = () => {
   }
 
   return (
-    <>
+    <div ref={frameRef}>
       <AnimatePresence mode="wait">
         {showAllProjects && !isMobile ? (
           <ViewAllProjects
@@ -59,7 +60,6 @@ export const ResponsiveLayout: React.FC = () => {
                 <MobileAbout />
                 <MobileExperience />
                 <MobileRoleBasedPortfolio />
-                <MobileGallery />
                 <MobileCertificates />
                 <MobileContact />
               </div>
@@ -67,22 +67,19 @@ export const ResponsiveLayout: React.FC = () => {
               // Desktop Layout - Optimized for hover and horizontal layouts
               <div className="desktop-layout">
                 <Hero onViewProjects={() => setShowAllProjects(true)} />
-                <AnimatedSection id="about">
+                <AnimatedSection>
                   <About />
                 </AnimatedSection>
-                <AnimatedSection id="experience">
+                <AnimatedSection>
                   <Experience />
                 </AnimatedSection>
-                <AnimatedSection id="services">
+                <AnimatedSection>
                   <Services />
                 </AnimatedSection>
-                <AnimatedSection id="gallery">
-                  <MyGallery />
-                </AnimatedSection>
-                <AnimatedSection id="certificates">
+                <AnimatedSection>
                   <Certificates />
                 </AnimatedSection>
-                <AnimatedSection id="contact">
+                <AnimatedSection>
                   <Contact />
                 </AnimatedSection>
               </div>
@@ -90,6 +87,6 @@ export const ResponsiveLayout: React.FC = () => {
           </>
         )}
       </AnimatePresence>
-    </>
+    </div>
   );
 };

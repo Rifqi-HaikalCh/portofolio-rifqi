@@ -2,180 +2,94 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
-import { Github, Linkedin, Mail, MessageCircle, ExternalLink } from 'lucide-react';
+import { Github, Linkedin, Mail, MessageCircle } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
-import { contactInfo } from '../../data/portfolio';
-import { navLinks } from '../../data/portfolio';
-import { staggerContainer, fadeInUp } from '../../lib/animations';
+import { contactInfo, navLinks } from '../../data/portfolio';
 
 export const Footer: React.FC = () => {
   const { t, language } = useLanguage();
   const currentYear = new Date().getFullYear();
 
+  const socials = [
+    { href: `mailto:${contactInfo.email}`, icon: Mail, label: 'Email' },
+    { href: contactInfo.linkedin, icon: Linkedin, label: 'LinkedIn', external: true },
+    { href: contactInfo.github, icon: Github, label: 'GitHub', external: true },
+    { href: contactInfo.whatsapp, icon: MessageCircle, label: 'WhatsApp', external: true },
+  ];
+
+  const services = [
+    { en: '.NET / C# Development', id: 'Pengembangan .NET / C#' },
+    { en: 'Enterprise Web and Data', id: 'Web dan Data Enterprise' },
+    { en: 'UI/UX Design', id: 'Desain UI/UX' },
+  ];
+
   return (
-    <footer className="bg-gradient-to-br from-white to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 text-gray-900 dark:text-white pt-16 pb-8 relative overflow-hidden">
-      {/* Enhanced background effects */}
-      <div className="absolute inset-0">
-        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-500 via-blue-500 to-emerald-600"></div>
-        <motion.div
-          className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-emerald-400/50 to-transparent"
-          animate={{
-            x: ['-100%', '100%']
-          }}
-          transition={{
-            duration: 8,
-            repeat: Infinity,
-            ease: "linear"
-          }}
-        />
-        <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500/5 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 left-0 w-72 h-72 bg-blue-500/5 rounded-full blur-3xl"></div>
-      </div>
-      
-      <div className="container mx-auto px-4 relative z-10">
-        <motion.div 
-          className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12 mb-12"
-          variants={staggerContainer}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true }}
-        >
-          {/* Enhanced About Section */}
-          <motion.div variants={fadeInUp} className="md:col-span-1">
-            <motion.h4 
-              className="text-2xl font-bold mb-6 bg-gradient-to-r from-emerald-400 via-blue-400 to-purple-400 bg-clip-text text-transparent"
-              whileHover={{ scale: 1.02 }}
-            >
+    <footer data-studio="colophon" className="bg-ink text-paper">
+      <div className="max-w-6xl mx-auto px-5 lg:px-8 pt-16 pb-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-14">
+          <div>
+            <h2 className="font-serif text-2xl font-medium tracking-tight mb-4">
               Rifqi Haikal Chairiansyah
-            </motion.h4>
-            <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-base mb-8">
+            </h2>
+            <p className="text-paper/75 leading-relaxed text-sm max-w-sm">
               {t(
-                "Passionate Full-Stack Developer and Mobile App Developer dedicated to creating innovative solutions through code. Always learning, always growing.",
-                "Pengembang Full-Stack dan Aplikasi Mobile yang passionate, berdedikasi untuk menciptakan solusi inovatif melalui kode. Selalu belajar, selalu berkembang."
+                "Software developer focused on C#, ASP.NET, .NET Core, and SQL Server for enterprise web and data systems.",
+                "Pengembang perangkat lunak yang berfokus pada C#, ASP.NET, .NET Core, dan SQL Server untuk sistem web dan data enterprise."
               )}
             </p>
-            
-            {/* Enhanced Social Links */}
-            <div className="flex gap-4">
-              {[
-                { href: `mailto:${contactInfo.email}`, icon: <Mail size={20} />, label: "Email", gradient: "from-emerald-500 to-emerald-600" },
-                { href: contactInfo.linkedin, icon: <Linkedin size={20} />, label: "LinkedIn", gradient: "from-blue-500 to-blue-600", external: true },
-                { href: contactInfo.github, icon: <Github size={20} />, label: "GitHub", gradient: "from-gray-600 to-gray-700", external: true },
-                { href: contactInfo.whatsapp, icon: <MessageCircle size={20} />, label: "WhatsApp", gradient: "from-green-500 to-green-600", external: true }
-              ].map((social, index) => (
-                <motion.div key={social.label} whileHover={{ scale: 1.1, y: -3 }} whileTap={{ scale: 0.9 }}>
-                  <Link 
-                    href={social.href} 
-                    {...(social.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                    className={`group relative w-12 h-12 bg-gradient-to-r ${social.gradient} rounded-2xl flex items-center justify-center transition-all duration-300 hover:shadow-glow overflow-hidden`}
+            <div className="flex gap-4 mt-6">
+              {socials.map((social) => {
+                const Icon = social.icon;
+                return (
+                  <Link
+                    key={social.label}
+                    href={social.href}
+                    aria-label={social.label}
+                    {...(social.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                    className="text-paper/70 hover:text-paper"
                   >
-                    {/* Shimmer effect */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
-                    <span className="relative z-10">{social.icon}</span>
+                    <Icon size={18} />
                   </Link>
-                </motion.div>
-              ))}
+                );
+              })}
             </div>
-          </motion.div>
+          </div>
 
-          {/* Enhanced Quick Links */}
-          <motion.div variants={fadeInUp} className="md:col-span-1">
-            <h4 className="text-xl font-bold mb-6 text-emerald-600 dark:text-emerald-400">
-              {t("Quick Links", "Tautan Cepat")}
-            </h4>
-            <ul className="space-y-3">
-              {navLinks.map((link, index) => (
-                <motion.li 
-                  key={link.href}
-                  whileHover={{ x: 5 }}
-                  transition={{ type: "spring", stiffness: 400 }}
-                >
-                  <Link 
-                    href={link.href}
-                    className="group inline-flex items-center gap-2 text-gray-600 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-all duration-300 font-medium"
-                  >
-                    <span className="w-1 h-1 bg-emerald-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
+          <div>
+            <h3 className="font-jetbrains-mono text-[11px] tracking-[0.2em] uppercase text-paper/50 mb-4">
+              {t('Quick Links', 'Tautan Cepat')}
+            </h3>
+            <ul className="space-y-2">
+              {navLinks.map((link) => (
+                <li key={link.href}>
+                  <Link href={link.href} className="text-sm text-paper/80 hover:text-paper">
                     {language === 'en' ? link.labelEn : link.labelId}
-                    <ExternalLink size={14} className="opacity-0 group-hover:opacity-100 transition-opacity" />
                   </Link>
-                </motion.li>
+                </li>
               ))}
             </ul>
-          </motion.div>
+          </div>
 
-          {/* Enhanced Services */}
-          <motion.div variants={fadeInUp} className="md:col-span-1">
-            <h4 className="text-xl font-bold mb-6 text-emerald-600 dark:text-emerald-400">
-              {t("Services", "Layanan")}
-            </h4>
-            <ul className="space-y-3">
-              {[
-                { en: "Web Development", id: "Pengembangan Web" },
-                { en: "Mobile Development", id: "Pengembangan Mobile" },
-                { en: "UI/UX Design", id: "Desain UI/UX" }
-              ].map((service, index) => (
-                <motion.li 
-                  key={service.en}
-                  className="group flex items-center gap-3"
-                  whileHover={{ x: 5 }}
-                  transition={{ type: "spring", stiffness: 400 }}
-                >
-                  <div className="w-2 h-2 bg-gradient-to-r from-emerald-400 to-blue-400 rounded-full group-hover:scale-125 transition-transform" />
-                  <span className="text-gray-600 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white transition-colors font-medium">
-                    {t(service.en, service.id)}
-                  </span>
-                </motion.li>
+          <div>
+            <h3 className="font-jetbrains-mono text-[11px] tracking-[0.2em] uppercase text-paper/50 mb-4">
+              {t('Services', 'Layanan')}
+            </h3>
+            <ul className="space-y-2">
+              {services.map((service) => (
+                <li key={service.en} className="text-sm text-paper/80">
+                  {t(service.en, service.id)}
+                </li>
               ))}
             </ul>
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
 
-        {/* Enhanced Bottom Bar */}
-        <motion.div 
-          className="relative"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-          viewport={{ once: true }}
-        >
-          {/* Animated divider */}
-          <div className="relative mb-8 flex items-center">
-            <motion.div 
-              className="flex-1 h-px bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent"
-              initial={{ width: 0 }}
-              whileInView={{ width: "100%" }}
-              transition={{ duration: 1.5 }}
-              viewport={{ once: true }}
-            />
-            <div className="px-4">
-              <motion.div 
-                className="w-3 h-3 bg-gradient-to-r from-emerald-400 to-blue-400 rounded-full"
-                animate={{ scale: [1, 1.2, 1] }}
-                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-              />
-            </div>
-            <motion.div 
-              className="flex-1 h-px bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent"
-              initial={{ width: 0 }}
-              whileInView={{ width: "100%" }}
-              transition={{ duration: 1.5 }}
-              viewport={{ once: true }}
-            />
-          </div>
-          
-          <div className="text-center">
-            <motion.p 
-              className="text-gray-500 dark:text-gray-400 text-sm font-medium"
-              whileHover={{ scale: 1.05 }}
-            >
-              {t(
-                `© ${currentYear} Rifqi Haikal Chairiansyah. All rights reserved.`,
-                `© ${currentYear} Rifqi Haikal Chairiansyah. Semua hak cipta dilindungi.`
-              )}
-            </motion.p>
-          </div>
-        </motion.div>
+        <div className="border-t border-white/15 pt-6 text-xs text-paper/55">
+          {t(
+            `© ${currentYear} Rifqi Haikal Chairiansyah. All rights reserved.`,
+            `© ${currentYear} Rifqi Haikal Chairiansyah. Semua hak cipta dilindungi.`
+          )}
+        </div>
       </div>
     </footer>
   );

@@ -7,7 +7,7 @@ import { useLanguage } from '../../context/LanguageContext';
 import { individualProjects, designProjects } from '../../data/portfolio';
 import { AnimatedSectionTitle } from '../shared/AnimatedSectionTitle';
 import { InteractiveButton } from '../shared/InteractiveButton';
-import StandardModal from '../shared/StandardModal';
+import { ProjectDetailDialog, projectDetailLinks } from '../shared/ProjectDetailDialog';
 import TiltedCard from '../shared/TiltedCard';
 import { ChevronLeft, ChevronRight, ExternalLink, Eye, Figma } from 'lucide-react';
 import type { Project } from '../../types';
@@ -340,54 +340,23 @@ export function ImmersivePortfolioGallery() {
         </div>
       </div>
 
-      {/* Modal for Project Details */}
-      <StandardModal isOpen={!!selectedProject} onClose={closeModal}>
-        {selectedProject && (
-          <div>
-            <div className="relative w-full h-96 mb-4 rounded-lg overflow-hidden">
-              <Image
-                src={selectedProject.image}
-                alt={selectedProject.title}
-                fill
-                sizes="(max-width: 768px) 100vw, 90vw"
-                className="object-cover"
-                priority
-              />
-            </div>
-            <h3 className="text-3xl font-bold mb-2 text-gray-900 dark:text-white">{selectedProject.title}</h3>
-            <p className="text-lg text-gray-700 dark:text-gray-300 mb-4">
-              {language === 'en' ? selectedProject.description : (selectedProject.descriptionId || selectedProject.description)}
-            </p>
-            <div className="flex flex-wrap gap-2 mb-4">
-              {selectedProject.techStack?.map(tech => (
-                <span key={tech} className="bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 text-xs font-semibold px-2.5 py-0.5 rounded-full">{tech}</span>
-              ))}
-            </div>
-            <div className="flex gap-4 flex-wrap">
-              {selectedProject.links.prototype && (
-                <a
-                  href={selectedProject.links.prototype}
-                  target="_blank"
-                  className="flex items-center gap-2 px-4 py-2 bg-purple-500 hover:bg-purple-600 text-white rounded-lg transition-colors"
-                >
-                  <Figma size={16} />
-                  {language === 'en' ? 'View Prototype' : 'Lihat Prototipe'}
-                </a>
-              )}
-              {selectedProject.links.demo && (
-                <a
-                  href={selectedProject.links.demo}
-                  target="_blank"
-                  className="flex items-center gap-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors"
-                >
-                  <ExternalLink size={16} />
-                  {language === 'en' ? 'Live Demo' : 'Demo Langsung'}
-                </a>
-              )}
-            </div>
-          </div>
-        )}
-      </StandardModal>
+      {selectedProject && (
+        <ProjectDetailDialog
+          key={selectedProject.id}
+          title={selectedProject.title}
+          category={selectedProject.type === 'design'
+            ? (language === 'en' ? 'Design' : 'Desain')
+            : (language === 'en' ? 'Project' : 'Proyek')}
+          description={language === 'en' ? selectedProject.description : (selectedProject.descriptionId || selectedProject.description)}
+          images={selectedProject.slides?.length ? selectedProject.slides : [selectedProject.image]}
+          tools={selectedProject.techStack}
+          links={projectDetailLinks(language, selectedProject.links)}
+          overviewLabel={language === 'en' ? 'Overview' : 'Ringkasan'}
+          toolsLabel={language === 'en' ? 'Stack' : 'Teknologi'}
+          closeLabel={language === 'en' ? 'Close' : 'Tutup'}
+          onClose={closeModal}
+        />
+      )}
     </>
   );
 }

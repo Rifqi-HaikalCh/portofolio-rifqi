@@ -1,49 +1,29 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { useLanguage } from '../../context/LanguageContext';
 import { AnimatedSectionTitle } from '../shared/AnimatedSectionTitle';
-import ElectricBorder from '../shared/ElectricBorder';
-import TiltedCard from '../shared/TiltedCard';
-import GlassSkillCard from '../shared/GlassSkillCard';
-import FallingSkillCards from '../shared/FallingSkillCards';
 import PortfolioFigmaCard from '../shared/PortfolioFigmaCard';
-import { 
-  Code, 
-  Palette, 
-  ChevronLeft, 
-  ChevronRight, 
-  X, 
-  ArrowRight, 
-  Sparkles, 
-  Eye, 
-  ExternalLink,
-  Monitor,
-  Layout,
-  BadgeCheck,
-  Figma,
-  FileText
-} from 'lucide-react';
-import { Projects } from './Projects';
+import { Code, Monitor } from 'lucide-react';
+import { Projects, ProjectCard } from './Projects';
 import { 
   designSkills as designSkillsData, 
   developerSkills as developerSkillsData, 
   designProjects as portfolioDesignProjects 
 } from '../../data/portfolio';
-import { Portal } from '../shared/Portal';
+import { ProjectDetailDialog, projectDetailLinks } from '../shared/ProjectDetailDialog';
+import { AdditionalSkillsCell, AdditionalSkillsDialog } from '../shared/AdditionalSkillsDialog';
+import { listedAdditionalGroups } from '../../lib/additional-skills';
 import { staggerContainer, fadeInUp } from '../../lib/animations';
 import { ViewAllProjects } from './ViewAllProjects';
-
-const MotionImage = motion.create(Image);
 
 interface Service {
   id: string;
   titleEn: string;
   titleId: string;
-  icon: string;
   descriptionEn: string;
   descriptionId: string;
   features: {
@@ -53,12 +33,11 @@ interface Service {
   gradient: string;
 }
 
-const uiuxServices: Service[] = [
+export const uiuxServices: Service[] = [
   {
     id: 'ui-design',
     titleEn: 'Full App & Website Design',
     titleId: 'Desain Aplikasi & Website Lengkap',
-    icon: '🎨',
     descriptionEn: 'Crafting complete, ready-to-code designs for mobile and desktop.',
     descriptionId: 'Merancang desain lengkap yang siap di-coding untuk mobile dan desktop.',
     features: {
@@ -71,7 +50,6 @@ const uiuxServices: Service[] = [
     id: 'prototypes',
     titleEn: 'High-Fidelity Prototypes',
     titleId: 'Prototype Fidelitas Tinggi',
-    icon: '⚡',
     descriptionEn: 'Building clickable, interactive demos you can test and feel.',
     descriptionId: 'Membangun demo interaktif yang dapat diuji dan dirasakan.',
     features: {
@@ -84,7 +62,6 @@ const uiuxServices: Service[] = [
     id: 'branding',
     titleEn: 'Branding & Identity',
     titleId: 'Branding & Identitas',
-    icon: '🎯',
     descriptionEn: 'Helping you define the look and feel of your application.',
     descriptionId: 'Membantu Anda mendefinisikan tampilan dan nuansa aplikasi Anda.',
     features: {
@@ -95,43 +72,40 @@ const uiuxServices: Service[] = [
   }
 ];
 
-const developerServices: Service[] = [
+export const developerServices: Service[] = [
   {
     id: 'design-to-code',
-    titleEn: 'Design to Live Code',
-    titleId: 'Desain ke Kode Live',
-    icon: '💻',
-    descriptionEn: 'Converting your Figma designs into a real, working interface.',
-    descriptionId: 'Mengonversi desain Figma Anda menjadi antarmuka yang berfungsi.',
+    titleEn: '.NET Application Development',
+    titleId: 'Pengembangan Aplikasi .NET',
+    descriptionEn: 'Building enterprise web applications with C#, ASP.NET MVC, and .NET Core.',
+    descriptionId: 'Membangun aplikasi web enterprise dengan C#, ASP.NET MVC, dan .NET Core.',
     features: {
-      en: ['Pixel-perfect implementation', 'Clean, maintainable code', 'Performance optimization'],
-      id: ['Implementasi pixel-perfect', 'Kode yang bersih dan maintainable', 'Optimisasi performa']
+      en: ['C# application logic', 'ASP.NET MVC and .NET Core', 'Telerik interfaces'],
+      id: ['Logika aplikasi C#', 'ASP.NET MVC dan .NET Core', 'Antarmuka Telerik']
     },
     gradient: 'from-blue-500 to-indigo-500'
   },
   {
     id: 'api-integration',
-    titleEn: 'REST API Integration',
-    titleId: 'Integrasi REST API',
-    icon: '🔌',
-    descriptionEn: 'Connecting your app to backend services for dynamic data.',
-    descriptionId: 'Menghubungkan aplikasi Anda ke layanan backend untuk data dinamis.',
+    titleEn: 'SQL Server and Data',
+    titleId: 'SQL Server dan Data',
+    descriptionEn: 'Shaping operational data with SQL Server, stored procedures, and Entity Framework.',
+    descriptionId: 'Menata data operasional dengan SQL Server, stored procedure, dan Entity Framework.',
     features: {
-      en: ['RESTful API consumption', 'Data state management', 'Error handling'],
-      id: ['Konsumsi RESTful API', 'Manajemen state data', 'Penanganan error']
+      en: ['Stored procedures and indexing', 'Entity Framework', 'Transactional processing'],
+      id: ['Stored procedure dan indexing', 'Entity Framework', 'Pemrosesan transaksional']
     },
     gradient: 'from-cyan-500 to-blue-500'
   },
   {
     id: 'fullstack-dev',
-    titleEn: 'Full-Stack Engineering',
-    titleId: 'Rekayasa Full-Stack',
-    icon: '🚀',
-    descriptionEn: 'End-to-end development using modern frameworks like Spring Boot.',
-    descriptionId: 'Pengembangan end-to-end menggunakan framework modern seperti Spring Boot.',
+    titleEn: 'Operational Dashboards',
+    titleId: 'Dashboard Operasional',
+    descriptionEn: 'Delivering internal dashboards and modular applications that operations teams use every day.',
+    descriptionId: 'Menghadirkan dashboard internal dan aplikasi modular yang dipakai tim operasional setiap hari.',
     features: {
-      en: ['Scalable Architecture', 'Secure Auth Integration', 'Database Design'],
-      id: ['Arsitektur Terukur', 'Integrasi Auth Aman', 'Desain Database']
+      en: ['Monitoring dashboards', 'Modular application structure', 'Deployment on IIS'],
+      id: ['Dashboard pemantauan', 'Struktur aplikasi modular', 'Deployment di IIS']
     },
     gradient: 'from-green-500 to-emerald-500'
   }
@@ -141,6 +115,7 @@ export function Services() {
   const { language } = useLanguage();
   const [activeTab, setActiveTab] = useState<'uiux' | 'development'>('development');
   const [showAllProjects, setShowAllProjects] = useState(false);
+  const [skillsOpen, setSkillsOpen] = useState(false);
   const { ref: sectionRef } = useInView({ threshold: 0.1, triggerOnce: true });
 
   const currentServices = activeTab === 'uiux' ? uiuxServices : developerServices;
@@ -150,26 +125,25 @@ export function Services() {
   }
 
   return (
-    <section ref={sectionRef} id="services" className="py-24 bg-white dark:bg-[#0B1120] relative overflow-hidden">
+    <section ref={sectionRef} id="services" data-studio="draft" className="py-12 md:py-16 border-b border-line">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <AnimatedSectionTitle
           badge={language === 'en' ? 'Expertise' : 'Keahlian'}
-          badgeIcon={<Sparkles className="w-5 h-5 text-emerald-500" />}
           title={language === 'en' ? 'My Services' : 'Layanan Saya'}
           subtitle={language === 'en' 
-            ? 'Specialized digital solutions combining design creativity with technical expertise'
-            : 'Solusi digital khusus yang menggabungkan kreativitas desain dengan keahlian teknis'
+            ? 'Enterprise web and data systems in C# and .NET, with interface design for the same products.'
+            : 'Sistem web dan data enterprise dengan C# dan .NET, serta desain antarmuka untuk produk yang sama.'
           }
         />
 
-        <div className="flex justify-center mb-20">
-          <div className="bg-gray-50/50 dark:bg-gray-800/30 backdrop-blur-2xl p-1.5 rounded-[1.5rem] border border-gray-200/50 dark:border-gray-700/50 shadow-xl flex gap-2">
+        <div className="flex justify-center mb-16">
+          <div data-eqbot="services-tabs" data-eqbot-at="above" className="inline-flex border border-line" role="tablist">
             <button
               onClick={() => setActiveTab('development')}
-              className={`flex items-center gap-2 px-8 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all duration-700 ${
+              className={`flex items-center gap-2 px-5 py-3 text-sm ${
                 activeTab === 'development'
-                  ? 'bg-white dark:bg-gray-700 text-emerald-500 shadow-lg'
-                  : 'text-gray-400 hover:text-emerald-500'
+                  ? 'bg-ink text-paper'
+                  : 'bg-paper text-muted hover:text-ink'
               }`}
             >
               <Code size={16} />
@@ -177,10 +151,10 @@ export function Services() {
             </button>
             <button
               onClick={() => setActiveTab('uiux')}
-              className={`flex items-center gap-2 px-8 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all duration-700 ${
+              className={`flex items-center gap-2 px-5 py-3 text-sm border-l border-line ${
                 activeTab === 'uiux'
-                  ? 'bg-white dark:bg-gray-700 text-emerald-500 shadow-lg'
-                  : 'text-gray-400 hover:text-emerald-500'
+                  ? 'bg-ink text-paper'
+                  : 'bg-paper text-muted hover:text-ink'
               }`}
             >
               <Monitor size={16} />
@@ -199,71 +173,112 @@ export function Services() {
             className="space-y-24"
           >
             {/* Services Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 border-t border-l border-line">
               {currentServices.map((service) => (
-                <motion.div key={`${activeTab}-${service.id}`} variants={fadeInUp}>
-                  <TiltedCard scaleOnHover={1.05} rotateAmplitude={10} containerHeight="100%" containerWidth="100%">
-                    <ElectricBorder color="#10b981" speed={1} thickness={2} className="h-full rounded-3xl">
-                      <div className="group relative h-full bg-white dark:bg-gray-800 p-8 rounded-3xl border border-white/10 flex flex-col">
-                        <div className="text-4xl mb-6">{service.icon}</div>
-                        <h3 className="text-2xl font-black text-gray-900 dark:text-white mb-4">
-                          {language === 'en' ? service.titleEn : service.titleId}
-                        </h3>
-                        <p className="text-base text-gray-600 dark:text-gray-400 mb-6 leading-relaxed flex-grow">
-                          {language === 'en' ? service.descriptionEn : service.descriptionId}
-                        </p>
-                        <div className="space-y-3">
-                          {(language === 'en' ? service.features.en : service.features.id).map((f, i) => (
-                            <div key={i} className="flex items-center gap-2 text-xs font-bold text-gray-600 dark:text-gray-300">
-                              <div className="w-2 h-2 bg-emerald-500 rounded-full" />
-                              {f}
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </ElectricBorder>
-                  </TiltedCard>
-                </motion.div>
+                <motion.article key={`${activeTab}-${service.id}`} variants={fadeInUp} className="read-row p-7 md:p-8 border-b border-r border-line flex flex-col bg-paper">
+                  <h3 className="font-serif text-2xl font-medium text-ink mb-3">
+                    {language === 'en' ? service.titleEn : service.titleId}
+                  </h3>
+                  <p className="text-muted leading-relaxed mb-6 flex-grow">
+                    {language === 'en' ? service.descriptionEn : service.descriptionId}
+                  </p>
+                  <ul className="space-y-2">
+                    {(language === 'en' ? service.features.en : service.features.id).map((feature) => (
+                      <li key={feature} className="flex gap-3 text-sm text-ink">
+                        <span className="mt-2 h-1 w-1 shrink-0 bg-accent" />
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
+                </motion.article>
               ))}
             </div>
 
             {/* Skills Animation */}
-            <div className="space-y-12">
-              <div className="text-center">
-                <h3 className="text-xl font-black text-gray-900 dark:text-white uppercase tracking-widest">Technological Stack</h3>
-                <div className="w-12 h-1 bg-emerald-500 mx-auto mt-4 rounded-full" />
-              </div>
-              <div className="hidden md:block">
-                <FallingSkillCards
-                  skills={activeTab === 'development' ? developerSkillsData : designSkillsData}
-                  trigger="scroll"
-                  gravity={0.8}
-                />
-              </div>
-              <div className="md:hidden grid grid-cols-3 gap-4 px-4">
-                {(activeTab === 'development' ? developerSkillsData : designSkillsData).map((skill) => (
-                  <GlassSkillCard key={skill.name} name={skill.name} image={skill.image} />
-                ))}
-              </div>
+            <div className="space-y-8">
+              <h3 className="font-serif text-3xl font-medium text-ink">
+                {language === 'en' ? 'Technological Stack' : 'Tumpukan Teknologi'}
+              </h3>
+              {activeTab === 'development' ? (
+                <div className="space-y-10">
+                  <div>
+                    <p className="font-jetbrains-mono text-[11px] tracking-[0.16em] uppercase text-accent mb-4">
+                      {language === 'en' ? 'Core · Enterprise web and data' : 'Inti · Web dan data enterprise'}
+                    </p>
+                    <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 border-t border-l border-line">
+                      {developerSkillsData.filter((skill) => skill.focus === 'core').map((skill) => (
+                        <li key={skill.name} className="read-row flex flex-col items-center gap-3 p-5 border-b border-r border-line bg-paper text-center">
+                          <Image src={skill.image} alt="" width={120} height={40} className="h-10 w-auto max-w-full object-contain" />
+                          <span className="text-sm text-ink">{skill.name}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div className="space-y-8">
+                    {listedAdditionalGroups.map((group) => (
+                      <div key={group.labelEn}>
+                        <p className="font-jetbrains-mono text-[11px] tracking-[0.16em] uppercase text-accent mb-4">
+                          {language === 'en' ? group.labelEn : group.labelId}
+                        </p>
+                        <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 border-t border-l border-line">
+                          {group.skills.map((skill) => (
+                            <li key={skill.name} className="read-row flex flex-col items-center gap-2 p-5 border-b border-r border-line bg-paper text-center">
+                              {skill.image && (
+                                'imageDark' in skill && skill.imageDark ? (
+                                  <>
+                                    <Image src={skill.image} alt="" width={72} height={40} className="h-10 w-auto max-w-[4.5rem] object-contain dark:hidden" />
+                                    <Image src={skill.imageDark} alt="" width={72} height={40} className="hidden h-10 w-auto max-w-[4.5rem] object-contain dark:block" />
+                                  </>
+                                ) : (
+                                  <Image src={skill.image} alt="" width={40} height={40} className="h-10 w-10 object-contain" />
+                                )
+                              )}
+                              <span className="text-sm text-ink">{skill.name}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    ))}
+                  </div>
+                  <div>
+                    <p className="font-jetbrains-mono text-[11px] tracking-[0.16em] uppercase text-accent mb-4">
+                      {language === 'en' ? 'Nice to Have' : 'Baik untuk Dimiliki'}
+                    </p>
+                    <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 border-t border-l border-line">
+                      <li className="flex border-b border-r border-line bg-paper">
+                        <AdditionalSkillsCell language={language} onOpen={() => setSkillsOpen(true)} />
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              ) : (
+                <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 border-t border-l border-line">
+                  {designSkillsData.map((skill) => (
+                    <li key={skill.name} className="read-row flex flex-col items-center gap-3 p-5 border-b border-r border-line bg-paper text-center">
+                      <Image src={skill.image} alt="" width={40} height={40} className="h-10 w-10 object-contain" />
+                      <span className="text-sm text-ink">{skill.name}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
 
             {/* Showcase */}
-            <div className="space-y-12">
-              <div className="text-center">
-                <h3 className="text-xl font-black text-gray-900 dark:text-white uppercase tracking-widest">
-                  {activeTab === 'uiux' ? 'Design Showcase' : 'Project Portfolio'}
-                </h3>
-                <div className="w-12 h-1 bg-emerald-500 mx-auto mt-4 rounded-full" />
-              </div>
+            <div className="space-y-8">
+              <h3 className="font-serif text-3xl font-medium text-ink">
+                {activeTab === 'uiux'
+                  ? (language === 'en' ? 'Design Showcase' : 'Pameran Desain')
+                  : (language === 'en' ? 'Project Portfolio' : 'Portofolio Projek')}
+              </h3>
               {activeTab === 'uiux' ? (
                 <>
                   <DesignShowcase onShowAll={() => setShowAllProjects(true)} />
-                  <div className="pt-24 border-t border-gray-100 dark:border-gray-800/50">
-                    <div className="text-center mb-16">
-                      <h3 className="text-3xl font-black text-gray-900 dark:text-white tracking-tighter uppercase">
+                  <div className="pt-16 border-t border-line">
+                    <div className="mb-8">
+                      <h3 className="font-serif text-3xl font-medium text-ink">
                         {language === 'en' ? 'My Creative Workspace' : 'Lihat Meja Kerja Saya'}
                       </h3>
-                      <p className="text-gray-500 dark:text-gray-400 mt-4 text-sm font-bold uppercase tracking-widest italic">
+                      <p className="text-muted mt-3 max-w-xl">
                         {language === 'en' ? 'A deeper look into my design process and tools' : 'Melihat lebih dekat proses desain dan alat saya'}
                       </p>
                     </div>
@@ -279,6 +294,9 @@ export function Services() {
           </motion.div>
         </AnimatePresence>
       </div>
+      {skillsOpen && (
+        <AdditionalSkillsDialog language={language} onClose={() => setSkillsOpen(false)} />
+      )}
     </section>
   );
 }
@@ -286,164 +304,58 @@ export function Services() {
 const DesignShowcase = ({ onShowAll }: { onShowAll: () => void }) => {
   const { language } = useLanguage();
   const [selectedProject, setSelectedProject] = useState<any>(null);
-  const [imgIndex, setImgIndex] = useState(0);
-
-  const designProjectsTransformed = portfolioDesignProjects.map(project => ({
-    id: project.id,
-    title: project.title,
-    description: project.description,
-    image: project.image,
-    images: project.slides || [project.image],
-    tools: project.techStack,
-    category: project.id.includes('mobile') ? 'Mobile Design' : 'Web Design',
-    links: { figma: project.links.prototype, demo: project.links.demo, needToKnow: project.links.needToKnow }
-  }));
 
   return (
     <>
-      <div className="flex space-x-6 overflow-x-auto pb-8 scrollbar-hide px-4 sm:px-0">
-        {designProjectsTransformed.map((project) => (
-          <div key={project.id} className="w-80 md:w-96 flex-shrink-0">
-            <TiltedCard scaleOnHover={1.05} rotateAmplitude={5}>
-              <div 
-                onClick={() => setSelectedProject(project)}
-                className="group relative bg-white dark:bg-gray-800 rounded-3xl overflow-hidden shadow-xl border border-gray-100 dark:border-gray-700 cursor-pointer"
-              >
-                <div className="relative h-56">
-                  <Image src={project.image} alt={project.title} fill className="object-cover transition-transform duration-700 group-hover:scale-110" />
-                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                    <div className="bg-white/20 backdrop-blur-md p-3 rounded-full border border-white/30 text-white">
-                      <Eye size={24} />
-                    </div>
-                  </div>
-                </div>
-                <div className="p-6">
-                  <h4 className="font-bold text-gray-900 dark:text-white mb-2">{project.title}</h4>
-                  <p className="text-xs text-gray-500 line-clamp-2">{project.category}</p>
-                </div>
-              </div>
-            </TiltedCard>
+      <div className="flex items-stretch gap-6 overflow-x-auto pb-8 scrollbar-hide px-4 sm:px-0">
+        {portfolioDesignProjects.map((project) => (
+          <div key={project.id} className="flex w-80 shrink-0 md:w-96">
+            <ProjectCard
+              project={project}
+              label={project.id.includes('mobile')
+                ? (language === 'en' ? 'Mobile Design' : 'Desain Mobile')
+                : (language === 'en' ? 'Web Design' : 'Desain Web')}
+              onClick={() => setSelectedProject({
+                id: project.id,
+                title: project.title,
+                description: language === 'en' ? project.description : (project.descriptionId || project.description),
+                images: project.slides?.length ? project.slides : [project.image],
+                tools: project.techStack,
+                category: project.id.includes('mobile')
+                  ? (language === 'en' ? 'Mobile Design' : 'Desain Mobile')
+                  : (language === 'en' ? 'Web Design' : 'Desain Web'),
+                links: project.links
+              })}
+            />
           </div>
         ))}
       </div>
 
       <div className="mt-12 text-center">
-        <motion.button
+        <button
+          type="button"
           onClick={onShowAll}
-          className="px-8 py-4 bg-gradient-to-r from-emerald-500 to-blue-500 text-white font-bold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 uppercase text-xs tracking-widest"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
+          className="btn-primary-custom"
         >
           {language === 'en' ? 'View All Projects' : 'Lihat Semua Projek'}
-        </motion.button>
+        </button>
       </div>
 
-      <Portal>
-        <AnimatePresence>
-          {selectedProject && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/20 backdrop-blur-sm z-[999999] flex items-center justify-center p-4 sm:p-8"
-              onClick={() => setSelectedProject(null)}
-            >
-              <motion.div
-                initial={{ scale: 0.9, opacity: 0, y: 30 }}
-                animate={{ scale: 1, opacity: 1, y: 0 }}
-                exit={{ scale: 0.9, opacity: 0, y: 30 }}
-                className="bg-white dark:bg-gray-900 rounded-[2.5rem] max-w-5xl w-full max-h-[95vh] overflow-hidden shadow-2xl relative border border-gray-100 dark:border-gray-800 flex flex-col"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <div className="absolute top-6 right-6 z-50">
-                  <button 
-                    onClick={() => setSelectedProject(null)} 
-                    className="w-12 h-12 rounded-full bg-white/40 dark:bg-black/40 backdrop-blur-md border border-white/30 text-white hover:bg-emerald-500 transition-all flex items-center justify-center shadow-xl"
-                  >
-                    <X size={24} />
-                  </button>
-                </div>
-
-                <div className="overflow-y-auto custom-scrollbar flex-1">
-                  <div className="relative w-full aspect-video sm:aspect-[21/9] overflow-hidden bg-gray-100 dark:bg-gray-800">
-                    <Image src={selectedProject.images[imgIndex]} alt="Project Large Preview" fill className="object-contain" priority />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
-                    <div className="absolute inset-x-0 bottom-0 p-6 flex justify-center">
-                      <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
-                        {selectedProject.images.map((img: string, i: number) => (
-                          <button key={i} onClick={() => setImgIndex(i)} className={`relative w-20 h-14 shrink-0 rounded-xl overflow-hidden border-2 transition-all ${imgIndex === i ? 'border-emerald-500' : 'border-white/30'}`}>
-                            <Image src={img} alt="Thumb" fill className="object-cover" />
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="p-8 sm:p-12">
-                    <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-12 border-b border-gray-100 dark:border-gray-800 pb-12">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-4">
-                          <span className="px-4 py-1.5 bg-emerald-500/10 text-emerald-500 rounded-full text-[10px] font-black uppercase tracking-[0.2em]">
-                            {selectedProject.category}
-                          </span>
-                        </div>
-                        <h3 className="text-4xl sm:text-5xl font-black text-gray-900 dark:text-white tracking-tighter uppercase leading-none">
-                          {selectedProject.title}
-                        </h3>
-                      </div>
-
-                      <div className="flex flex-wrap gap-4 shrink-0">
-                        {selectedProject.links?.figma && (
-                          <a href={selectedProject.links.figma} target="_blank" className="flex items-center gap-3 px-8 py-4 bg-emerald-500 text-white rounded-2xl font-black text-xs shadow-xl shadow-emerald-500/20 hover:bg-emerald-600 hover:-translate-y-1 transition-all uppercase tracking-widest">
-                            <Figma size={18} /> FIGMA
-                          </a>
-                        )}
-                        {selectedProject.links?.demo && (
-                          <a href={selectedProject.links.demo} target="_blank" className="flex items-center gap-3 px-8 py-4 bg-blue-500 text-white rounded-2xl font-black text-xs shadow-xl shadow-blue-500/20 hover:bg-blue-600 hover:-translate-y-1 transition-all uppercase tracking-widest">
-                            <ExternalLink size={18} /> PREVIEW
-                          </a>
-                        )}
-                        {selectedProject.links?.needToKnow && (
-                          <a href={selectedProject.links.needToKnow} target="_blank" className="flex items-center gap-3 px-8 py-4 bg-orange-500 text-white rounded-2xl font-black text-xs shadow-xl shadow-orange-500/20 hover:bg-orange-600 hover:-translate-y-1 transition-all uppercase tracking-widest">
-                            <FileText size={18} /> DOCUMENTATION
-                          </a>
-                        )}
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-                      <div className="lg:col-span-2">
-                        <h4 className="text-xs font-black uppercase tracking-[0.3em] text-emerald-500 mb-6 flex items-center gap-4">
-                          Project Overview
-                          <span className="flex-1 h-px bg-emerald-500/10"></span>
-                        </h4>
-                        <p className="text-xl text-gray-600 dark:text-gray-300 leading-[1.8] font-medium">
-                          {selectedProject.description}
-                        </p>
-                      </div>
-
-                      <div className="space-y-10">
-                        <div>
-                          <h4 className="text-xs font-black uppercase tracking-[0.3em] text-emerald-500 mb-6 flex items-center gap-4">
-                            Stack & Tools
-                          </h4>
-                          <div className="flex flex-wrap gap-3">
-                            {selectedProject.tools.map((t: string) => (
-                              <span key={t} className="px-4 py-2 bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-200 text-[10px] font-black rounded-xl border border-gray-100 dark:border-gray-700">
-                                {t}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </Portal>
+      {selectedProject && (
+        <ProjectDetailDialog
+          key={selectedProject.id}
+          title={selectedProject.title}
+          category={selectedProject.category}
+          description={selectedProject.description}
+          images={selectedProject.images}
+          tools={selectedProject.tools}
+          links={projectDetailLinks(language, selectedProject.links)}
+          overviewLabel={language === 'en' ? 'Overview' : 'Ringkasan'}
+          toolsLabel={language === 'en' ? 'Stack' : 'Teknologi'}
+          closeLabel={language === 'en' ? 'Close' : 'Tutup'}
+          onClose={() => setSelectedProject(null)}
+        />
+      )}
     </>
   );
 };

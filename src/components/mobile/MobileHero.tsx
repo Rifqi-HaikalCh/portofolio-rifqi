@@ -1,147 +1,88 @@
 'use client';
+
 import React from 'react';
-import Image from 'next/image';
-import { motion } from 'framer-motion';
+import { TypeAnimation } from 'react-type-animation';
+import { Mail, Linkedin, Github } from 'lucide-react';
+import { FaWhatsapp } from 'react-icons/fa';
 import { useLanguage } from '../../context/LanguageContext';
-import { Github, Linkedin, Mail, Download, ChevronDown } from 'lucide-react';
-import { RotatingText } from '../shared/RotatingText';
+import { typingTexts, contactInfo } from '../../data/portfolio';
 
 export const MobileHero: React.FC = () => {
-  const { language } = useLanguage();
+  const { language, t } = useLanguage();
 
-  const scrollToSection = (id: string) => {
-    const element = document.getElementById(id);
-    element?.scrollIntoView({ behavior: 'smooth' });
-  };
+  const socialIcons = [
+    { href: `mailto:${contactInfo.email}`, icon: Mail, label: 'Email' },
+    { href: contactInfo.linkedin, icon: Linkedin, label: 'LinkedIn' },
+    { href: contactInfo.github, icon: Github, label: 'GitHub' },
+    { href: contactInfo.whatsapp, icon: FaWhatsapp, label: 'WhatsApp' },
+  ];
 
   return (
-    <section className="relative min-h-screen flex flex-col justify-center items-center px-6 py-20 overflow-hidden">
-      {/* Animated Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-emerald-50 via-blue-50 to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900" />
-
-      {/* Floating Shapes */}
-      <motion.div
-        className="absolute top-20 right-10 w-20 h-20 bg-emerald-400/20 rounded-full blur-xl"
-        animate={{
-          y: [0, -20, 0],
-          scale: [1, 1.1, 1]
-        }}
-        transition={{
-          duration: 4,
-          repeat: Infinity,
-          ease: "easeInOut"
-        }}
-      />
-      <motion.div
-        className="absolute bottom-40 left-10 w-32 h-32 bg-purple-400/20 rounded-full blur-2xl"
-        animate={{
-          y: [0, 20, 0],
-          scale: [1, 1.2, 1]
-        }}
-        transition={{
-          duration: 5,
-          repeat: Infinity,
-          ease: "easeInOut"
-        }}
-      />
-
-      {/* Content */}
-      <div className="relative z-10 flex flex-col items-center text-center space-y-6">
-        {/* Profile Picture */}
-        <motion.div
-          initial={{ scale: 0, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.5, type: "spring" }}
-          className="relative"
-        >
-          <div className="relative w-32 h-32 rounded-full overflow-hidden ring-4 ring-emerald-500/50 shadow-2xl">
-            <Image
-              src="/assets/Profile.webp"
-              alt="Rifqi Haikal"
-              fill
-              sizes="128px"
-              className="object-cover"
-              priority
-            />
-          </div>
-          {/* Status Indicator */}
-          <motion.div
-            className="absolute bottom-2 right-2 w-6 h-6 bg-emerald-500 rounded-full border-4 border-white dark:border-gray-900"
-            animate={{
-              scale: [1, 1.2, 1],
-              opacity: [1, 0.8, 1]
-            }}
-            transition={{
-              duration: 2,
-              repeat: Infinity
-            }}
+    <section id="home" data-studio="folio" className="border-b border-line bg-paper text-ink">
+      <div className="px-5 pt-24 pb-10">
+        <p className="font-jetbrains-mono text-[11px] tracking-[0.22em] uppercase text-accent mb-5">
+          {t('Web · Mobile · Interface', 'Web · Mobile · Antarmuka')}
+        </p>
+        <p className="text-sm text-muted mb-3">{t("Hi, I'm", 'Halo, Saya')}</p>
+        <h1 className="font-serif text-6xl font-medium tracking-tight leading-[0.9] text-ink">
+          Rifqi
+          <span className="block">
+            Haikal
+            <span data-eqbot="home-name" data-eqbot-at="end" className="inline-block w-px h-px" aria-hidden="true" />
+          </span>
+        </h1>
+        <p data-eqbot="home-role" data-eqbot-at="end" className="mt-6 text-lg text-muted max-w-sm">
+          <span>{t("I'm", 'Saya')} </span>
+          <TypeAnimation
+            sequence={
+              language === 'en'
+                ? typingTexts.en.flatMap((text) => [text, 2000])
+                : typingTexts.id.flatMap((text) => [text, 2000])
+            }
+            wrapper="span"
+            speed={55}
+            className="text-ink font-serif italic"
+            repeat={Infinity}
+            cursor
+            preRenderFirstString
           />
-        </motion.div>
-
-        {/* Name */}
-        <motion.div
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.2 }}
-          className="space-y-2"
-        >
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-emerald-600 via-blue-600 to-purple-600 bg-clip-text text-transparent">
-            Rifqi Haikal
-          </h1>
-          <div className="text-lg font-medium min-h-[28px] flex items-center justify-center">
-            <RotatingText
-              texts={
-                language === 'en'
-                  ? ['UI/UX Designer', 'Web Developer', 'Mobile Developer']
-                  : ['Desainer UI/UX', 'Pengembang Web', 'Pengembang Mobile']
-              }
-              interval={2500}
-              className="text-lg"
-            />
-          </div>
-        </motion.div>
-
-        {/* Bio */}
-        <motion.p
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.3 }}
-          className="text-gray-600 dark:text-gray-400 max-w-md leading-relaxed"
-        >
-          {language === 'en'
-            ? 'Passionate about creating beautiful, functional, and user-friendly digital experiences.'
-            : 'Bersemangat menciptakan pengalaman digital yang indah, fungsional, dan ramah pengguna.'
-          }
-        </motion.p>
-
-        {/* Social Links */}
-        <motion.div
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.4 }}
-          className="flex gap-4"
-        >
-          <a
-            href="https://github.com/Rifqi-HaikalCh"
-            target="_blank"
-            className="w-12 h-12 rounded-full bg-gray-800 dark:bg-gray-700 text-white flex items-center justify-center hover:scale-110 active:scale-95 transition-transform shadow-lg"
-          >
-            <Github size={20} />
+        </p>
+        <div className="mt-8 flex flex-col gap-3">
+          <a href="#contact" className="btn-primary-custom">
+            {t('Get In Touch', 'Hubungi Saya')}
           </a>
-          <a
-            href="https://www.linkedin.com/in/rifqhaikall"
-            target="_blank"
-            className="w-12 h-12 rounded-full bg-blue-600 text-white flex items-center justify-center hover:scale-110 active:scale-95 transition-transform shadow-lg"
-          >
-            <Linkedin size={20} />
+          <a href="#services" className="btn-outline-custom">
+            {t('View Projects', 'Lihat Projek')}
           </a>
-          <a
-            href="mailto:r.haikal1610@gmail.com"
-            className="w-12 h-12 rounded-full bg-emerald-500 text-white flex items-center justify-center hover:scale-110 active:scale-95 transition-transform shadow-lg"
-          >
-            <Mail size={20} />
-          </a>
-        </motion.div>
+        </div>
+      </div>
+
+      <div className="border-t border-line px-5 py-5">
+        <p data-eqbot="home-available" data-eqbot-at="end" className="font-jetbrains-mono text-[11px] tracking-[0.16em] uppercase">
+          <span className="inline-flex items-center text-accent">
+            <span className="presence" aria-hidden="true" />
+            {t('Available for work', 'Tersedia untuk bekerja')}
+          </span>
+          <span className="text-muted"> · {contactInfo.location}</span>
+        </p>
+        <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2">
+          {socialIcons.map((social) => {
+            const IconComponent = social.icon;
+            return (
+              <a
+                key={social.label}
+                href={social.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={social.label}
+                className="link-mark inline-flex items-center gap-2 text-sm text-muted"
+              >
+                <IconComponent size={16} />
+                {social.label}
+              </a>
+            );
+          })}
+        </div>
       </div>
     </section>
   );

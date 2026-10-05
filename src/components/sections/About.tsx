@@ -1,344 +1,138 @@
-"use client";
+'use client';
 
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import Image from 'next/image';
-import { motion } from 'framer-motion';
 import { useLanguage } from '../../context/LanguageContext';
 import { aboutHighlights, workExperience } from '../../data/portfolio';
-import ProfileCard from '../shared/ProfileCard';
-import PortfolioFigmaCard from '../shared/PortfolioFigmaCard';
-import VariableProximity from '../shared/VariableProximity';
 import { calculateTotalExperience } from '../../lib/experience-utils';
-import {
-  premiumStagger,
-  optimizedFadeIn,
-  sectionEntrance,
-  cardReveal,
-  premiumHover,
-  glowPulse
-} from '../../lib/optimized-animations';
-import {
-  Download,
-  GraduationCap,
-  Briefcase,
-  Trophy,
-  Users,
-  Code,
-  Sparkles,
-  ChevronRight,
-  ExternalLink
-} from 'lucide-react';
+import { Download, GraduationCap, Briefcase, Trophy, Users, ChevronRight } from 'lucide-react';
 import { AnimatedSectionTitle } from '../shared/AnimatedSectionTitle';
 
 const iconMap: { [key: string]: React.ReactNode } = {
-  'graduation-cap': <GraduationCap size={20} />,
-  'briefcase': <Briefcase size={20} />,
-  'trophy': <Trophy size={20} />,
-  'users': <Users size={20} />,
+  'graduation-cap': <GraduationCap size={18} />,
+  briefcase: <Briefcase size={18} />,
+  trophy: <Trophy size={18} />,
+  users: <Users size={18} />,
 };
 
 export const About: React.FC = () => {
   const { t, language } = useLanguage();
-  const [activeCard, setActiveCard] = useState<number | null>(null);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const totalImages = 11;
-  const descriptionContainerRef = useRef<HTMLDivElement>(null);
-
-  // Auto-slide carousel every 10 seconds
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentImageIndex((prev) => (prev + 1) % totalImages);
-    }, 10000);
-
-    return () => clearInterval(interval);
-  }, []);
-
   const totalExp = useMemo(() => calculateTotalExperience(workExperience), []);
 
   const stats = [
-    { 
-      number: "30+", 
-      label: t("Projects Completed", "Proyek Diselesaikan"),
-      description: t("From concept to technology solutions", "Dari konsep hingga solusi teknologi")
+    {
+      number: '30+',
+      label: t('Projects Completed', 'Proyek Diselesaikan'),
+      description: t('From concept to technology solutions', 'Dari konsep hingga solusi teknologi'),
     },
-    { 
-      number: `${totalExp.years}+`, 
-      label: t("Years Experience", "Tahun Pengalaman"),
-      description: t("Development and Design", "Pengembangan dan Desain")
+    {
+      number: `${totalExp.years}+`,
+      label: t('Years Experience', 'Tahun Pengalaman'),
+      description: t('Development and Design', 'Pengembangan dan Desain'),
     },
-    { 
-      number: "10+", 
-      label: t("Technologies Mastered", "Teknologi Dikuasai"),
-      description: t("Modern tech stack expertise", "Keahlian teknologi modern")
-    }
+    {
+      number: '10+',
+      label: t('Technologies Mastered', 'Teknologi Dikuasai'),
+      description: t('Modern tech stack expertise', 'Keahlian teknologi modern'),
+    },
   ];
 
   return (
-    <section 
-      id="about" 
-      className="py-20 bg-gradient-to-b from-bg-primary to-bg-tertiary relative overflow-hidden"
-    >
-      {/* Sophisticated Background Elements */}
-      <div className="absolute inset-0">
-        <motion.div
-          className="absolute top-20 left-10 w-72 h-72 bg-accent-500/8 rounded-full blur-3xl"
-          animate={{
-            x: [0, 100, 0],
-            y: [0, -50, 0],
-            scale: [1, 1.1, 1]
-          }}
-          transition={{
-            duration: 20,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-        />
-        <motion.div
-          className="absolute bottom-20 right-10 w-96 h-96 bg-primary-500/6 rounded-full blur-3xl"
-          animate={{
-            x: [0, -80, 0],
-            y: [0, 60, 0],
-            scale: [1.1, 1, 1.1]
-          }}
-          transition={{
-            duration: 25,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-        />
-        {/* Geometric accent */}
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-px h-32 bg-gradient-to-b from-accent-500/20 via-accent-500/40 to-transparent"></div>
-      </div>
-      
-      <div className="container mx-auto px-4 relative z-10">
+    <section id="about" data-studio="manuscript" className="py-12 md:py-16 border-b border-line">
+      <div className="max-w-6xl mx-auto px-5 lg:px-8">
         <AnimatedSectionTitle
-          badge={t("Get to Know Me", "Mengenal Saya") as string}
-          badgeIcon={<Sparkles className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />}
-          title={t("About Me", "Tentang Saya") as string}
+          center={false}
+          badge={t('Get to Know Me', 'Mengenal Saya') as string}
+          title={t('About Me', 'Tentang Saya') as string}
           subtitle={t(
-            "A creative developer who translates complex logic into beautiful and intuitive digital experiences",
-            "Seorang developer kreatif yang mengubah logika kompleks menjadi pengalaman digital yang indah dan intuitif."
+            'Software engineer specialized in C#, ASP.NET, and SQL Server for enterprise web and data systems',
+            'Software engineer yang berfokus pada C#, ASP.NET, dan SQL Server untuk sistem web dan data enterprise'
           ) as string}
         />
 
-        <motion.div 
-          className="mt-20 space-y-32"
-          variants={premiumStagger}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.2 }}
-        >
-          {/* Hero Section - Profile + Stats */}
-          <motion.div
-            className="grid grid-cols-12 gap-12 items-center"
-            variants={sectionEntrance}
-          >
-            {/* Profile Card - React Bits Animated Card */}
-            <div className="col-span-5 flex justify-center">
-              <ProfileCard
-                avatarUrl="/assets/removebg.webp"
-                miniAvatarUrl="/assets/removebg.webp"
-                name="Rifqi Haikal"
-                title={t("Software Engineer", "Software Engineer") as string}
-                handle="rifqihaikal"
-                status={t("Available for Work", "Tersedia untuk Bekerja") as string}
-                contactText={t("Contact Me", "Hubungi Saya") as string}
-                showUserInfo={true}
-                enableTilt={true}
-                showBehindGradient={true}
-                behindGradient="radial-gradient(farthest-side circle at var(--pointer-x) var(--pointer-y),hsla(160,100%,90%,var(--card-opacity)) 4%,hsla(160,50%,80%,calc(var(--card-opacity)*0.75)) 10%,hsla(160,25%,70%,calc(var(--card-opacity)*0.5)) 50%,hsla(160,0%,60%,0) 100%),radial-gradient(35% 52% at 55% 20%,#10b981c4 0%,#073aff00 100%),radial-gradient(100% 100% at 50% 50%,#3b82f6ff 1%,#073aff00 76%),conic-gradient(from 124deg at 50% 50%,#8b5cf6ff 0%,#06b6d4ff 40%,#06b6d4ff 60%,#8b5cf6ff 100%)"
-                innerGradient="linear-gradient(145deg,#1f2937cc 0%,#059669aa 100%)"
-                onContactClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
-              />
-            </div>
-
-            {/* Profile Content */}
-            <div className="col-span-7 space-y-8">
-              <motion.div
-                variants={optimizedFadeIn}
-                className="space-y-6"
-              >
-                <div className="space-y-4">
-                  <motion.h2
-                    className="text-5xl font-bold text-gray-900 dark:text-white leading-tight"
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, delay: 0.2 }}
-                    viewport={{ once: true }}
-                  >
-                    Hi, I'm{' '}
-                    <span className="bg-gradient-to-r from-emerald-600 via-blue-600 to-purple-600 bg-clip-text text-transparent">
-                      Rifqi Haikal
-                    </span>
-                  </motion.h2>
-                  
-                  <motion.div
-                    ref={descriptionContainerRef}
-                    className="text-xl text-gray-600 dark:text-gray-300 leading-relaxed max-w-3xl"
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, delay: 0.4 }}
-                    viewport={{ once: true }}
-                    style={{ position: 'relative' }}
-                  >
-                    <VariableProximity
-                      label={
-                        language === 'en'
-                          ? "A Software Engineer passionate about building engaging digital experiences. With two years of hands-on experience, I have developed technical and creative solutions as a Freelancer and in professional roles at a leading Oil & Gas Industry, IT consultant, Multi-finance, and Government company. As a Bachelor of Informatics from Institut Teknologi Del, I am constantly exploring new technologies and am eager to apply my skills in a dynamic team."
-                          : "Seorang UI/UX Designer dan Web Developer kreatif yang passionate dalam membangun pengalaman digital yang menarik. Dengan dua tahun pengalaman hands-on, saya telah mengembangkan solusi teknis dan kreatif sebagai Freelancer dan dalam peran profesional di konsultan IT terkemuka dan perusahaan Multi-finance. Sebagai Sarjana Informatika dari Institut Teknologi Del, saya terus mengeksplorasi teknologi baru dan bersemangat untuk menerapkan keterampilan saya di persimpangan desain dan pengembangan dalam tim yang dinamis."
-                      }
-                      fromFontVariationSettings="'wght' 400, 'opsz' 9"
-                      toFontVariationSettings="'wght' 800, 'opsz' 36"
-                      containerRef={descriptionContainerRef}
-                      radius={120}
-                      falloff="exponential"
-                      className="variable-proximity-about"
-                      style={{ fontSize: '1.25rem', lineHeight: '1.8' }}
-                    />
-                  </motion.div>
+        <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+          <figure data-eqbot="about-photo" data-eqbot-at="above" className="lg:col-span-5">
+            <div className="border border-line bg-raised">
+              <div className="relative aspect-square overflow-hidden bg-raised">
+                <Image
+                  src="/assets/me.png"
+                  alt="Rifqi Haikal"
+                  fill
+                  sizes="(min-width: 1024px) 420px, 90vw"
+                  className="object-contain"
+                />
+              </div>
+              <figcaption className="p-4 flex items-start justify-between gap-4">
+                <div>
+                  <p className="font-serif text-xl text-ink">Rifqi Haikal</p>
+                  <p className="text-sm text-muted">{t('Software Developer', 'Developer Perangkat Lunak')}</p>
                 </div>
+                <span className="inline-flex items-center text-[11px] tracking-[0.14em] uppercase text-accent">
+                  <span className="presence" aria-hidden="true" />
+                  {t('Available for Work', 'Tersedia untuk Bekerja')}
+                </span>
+              </figcaption>
+            </div>
+          </figure>
 
-                {/* CTA Buttons */}
-                <motion.div 
-                  className="flex flex-wrap gap-4"
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.6 }}
-                  viewport={{ once: true }}
-                >
-                  <motion.a
-                    href="/assets/CV Rifqi Haikal Chairiansyah.pdf"
-                    download
-                    className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-emerald-500 to-blue-500 text-white rounded-2xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
-                    whileHover={premiumHover}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <Download size={18} />
-                    {t("Download CV", "Unduh CV")}
-                  </motion.a>
-                  
-                  <motion.button
-                    onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
-                    className="inline-flex items-center gap-2 px-6 py-3 bg-white dark:bg-gray-800 text-gray-900 dark:text-white border-2 border-gray-200 dark:border-gray-600 rounded-2xl font-semibold hover:border-emerald-500 dark:hover:border-emerald-400 transition-all duration-300"
-                    whileHover={{ scale: 1.02, y: -2 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    {t("Get in Touch", "Hubungi Saya")}
-                    <ChevronRight size={18} />
-                  </motion.button>
-                </motion.div>
-              </motion.div>
+          <div className="lg:col-span-7">
+            <h3 className="font-serif text-3xl md:text-4xl font-medium tracking-tight text-ink mb-5">
+              {t("Hi, I'm", "Halo, Saya")}{' '}
+              <span className="italic">Rifqi Haikal</span>
+            </h3>
+            <p className="text-base md:text-lg text-muted leading-relaxed">
+              {language === 'en'
+                ? 'Software Engineer with 3 years of hands-on development experience. My core work is C#, ASP.NET MVC, and .NET Core for enterprise web and data systems. I also bring additional full-stack experience with React, Angular, and Spring Boot. I have built backend services, REST APIs, monitoring dashboards, and secure applications with SQL Server, Entity Framework, RBAC, SSO, and MFA, delivered for telecommunications, oil and gas, research, and financial services.'
+                : 'Software Engineer dengan 3 tahun pengalaman pengembangan. Pekerjaan inti saya adalah C#, ASP.NET MVC, dan .NET Core untuk sistem web dan data enterprise. Saya juga memiliki pengalaman full-stack tambahan dengan React, Angular, dan Spring Boot. Saya membangun layanan backend, REST API, dashboard pemantauan, dan aplikasi yang aman dengan SQL Server, Entity Framework, RBAC, SSO, dan MFA, untuk telekomunikasi, minyak dan gas, riset, serta jasa keuangan.'}
+            </p>
 
-              {/* Stats Grid */}
-              <motion.div 
-                className="grid grid-cols-3 gap-6 pt-8 border-t border-gray-200 dark:border-gray-700"
-                variants={premiumStagger}
+            <div className="mt-8 flex flex-wrap gap-3">
+              <a href="/assets/CV Rifqi Haikal Chairiansyah.pdf" download className="btn-primary-custom">
+                <Download size={16} />
+                {t('Download CV', 'Unduh CV')}
+              </a>
+              <button
+                type="button"
+                onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+                className="btn-outline-custom"
               >
-                {stats.map((stat, index) => (
-                  <motion.div
-                    key={index}
-                    variants={cardReveal}
-                    className="text-center space-y-2"
-                    whileHover={{ scale: 1.05, y: -5 }}
-                  >
-                    <motion.h3
-                      className="text-3xl font-bold bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent"
-                      animate={glowPulse}
-                    >
-                      {stat.number}
-                    </motion.h3>
-                    <p className="font-semibold text-gray-900 dark:text-white text-base">
-                      {stat.label}
-                    </p>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
-                      {stat.description}
-                    </p>
-                  </motion.div>
-                ))}
-              </motion.div>
+                {t('Get in Touch', 'Hubungi Saya')}
+                <ChevronRight size={16} />
+              </button>
             </div>
-          </motion.div>
 
-          {/* Expertise Cards */}
-          <motion.div 
-            className="space-y-8"
-            variants={sectionEntrance}
-          >
-            <motion.h3 
-              className="text-3xl font-bold text-center text-gray-900 dark:text-white mb-12"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              viewport={{ once: true }}
-            >
-              {t("My Expertise", "Keahlian Saya")}
-            </motion.h3>
-
-            <div className="grid grid-cols-2 gap-6">
-              {aboutHighlights.map((highlight, index) => (
-                <motion.div
-                  key={index}
-                  variants={cardReveal}
-                  className="group relative bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-3xl p-8 shadow-lg border border-gray-200/50 dark:border-gray-700/50 hover:shadow-2xl transition-all duration-500 cursor-pointer"
-                  onHoverStart={() => setActiveCard(index)}
-                  onHoverEnd={() => setActiveCard(null)}
-                  whileHover={{ scale: 1.02, y: -8 }}
-                  style={{ 
-                    willChange: 'transform', 
-                    backfaceVisibility: 'hidden' 
-                  }}
-                >
-                  {/* Background gradient on hover */}
-                  <div className={`absolute inset-0 bg-gradient-to-br from-emerald-500/5 via-blue-500/5 to-purple-500/5 rounded-3xl transition-opacity duration-500 ${activeCard === index ? 'opacity-100' : 'opacity-0'}`} />
-                  
-                  <div className="relative z-10 flex items-start gap-6">
-                    {/* Icon */}
-                    <motion.div 
-                      className="w-14 h-14 bg-gradient-to-br from-emerald-500 to-blue-500 rounded-2xl flex items-center justify-center text-white shadow-lg flex-shrink-0"
-                      whileHover={{ scale: 1.1, rotate: [0, -5, 5, 0] }}
-                    >
-                      {iconMap[highlight.icon]}
-                    </motion.div>
-                    
-                    <div className="flex-1 space-y-3">
-                      <h4 className="font-bold text-xl text-gray-900 dark:text-white">
-                        {t(highlight.title, highlight.titleId)}
-                      </h4>
-                      <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-                        {t(highlight.description, highlight.descriptionId)}
-                      </p>
-                      
-                      {/* Progress bar */}
-                      <div className="pt-2">
-                        <div className="w-full h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                          <motion.div
-                            className="h-full bg-gradient-to-r from-emerald-500 to-blue-500"
-                            initial={{ width: 0 }}
-                            whileInView={{ width: "100%" }}
-                            transition={{ 
-                              duration: 1.5, 
-                              delay: index * 0.2 + 0.5,
-                              ease: "easeOut"
-                            }}
-                            viewport={{ once: true }}
-                          />
-                        </div>
-                      </div>
-                    </div>
-
-                    <motion.div
-                      className="text-emerald-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                      animate={{ x: activeCard === index ? [0, 5, 0] : 0 }}
-                      transition={{ duration: 1, repeat: Infinity }}
-                    >
-                      <ExternalLink size={16} />
-                    </motion.div>
-                  </div>
-                </motion.div>
+            <dl data-eqbot="about-counts" data-eqbot-at="above" className="mt-10 grid grid-cols-1 sm:grid-cols-3 border-t border-line">
+              {stats.map((stat) => (
+                <div key={stat.label as string} className="py-5 sm:pr-6 border-b sm:border-b-0 border-line">
+                  <dt className="font-serif text-3xl text-ink">{stat.number}</dt>
+                  <dd className="mt-1 text-sm font-medium text-ink">{stat.label}</dd>
+                  <dd className="mt-1 text-sm text-muted">{stat.description}</dd>
+                </div>
               ))}
-            </div>
-          </motion.div>
-        </motion.div>
+            </dl>
+          </div>
+        </div>
+
+        <div className="mt-20">
+          <h3 className="font-serif text-3xl font-medium text-ink mb-8">
+            {t('My Expertise', 'Keahlian Saya')}
+          </h3>
+          <div className="grid md:grid-cols-2 border-t border-l border-line">
+            {aboutHighlights.map((highlight) => (
+              <article key={highlight.title} className="read-row p-6 md:p-8 border-b border-r border-line bg-paper">
+                <div className="flex items-center gap-3 text-accent mb-4">
+                  {iconMap[highlight.icon]}
+                  <span className="font-jetbrains-mono text-[11px] tracking-[0.16em] uppercase">
+                    {t(highlight.title, highlight.titleId)}
+                  </span>
+                </div>
+                <p className="text-ink leading-relaxed">
+                  {t(highlight.description, highlight.descriptionId)}
+                </p>
+              </article>
+            ))}
+          </div>
+        </div>
       </div>
     </section>
   );

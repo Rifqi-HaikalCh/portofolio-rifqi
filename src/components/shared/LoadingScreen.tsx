@@ -133,7 +133,7 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
           <>
             {/* Top Curtain */}
             <motion.div
-              className="fixed top-0 left-0 w-full h-1/2 bg-gradient-to-b from-gray-900 via-gray-800 to-gray-700 z-[99999]"
+              className="fixed top-0 left-0 w-full h-1/2 bg-ink z-[99999]"
               initial={{ y: 0 }}
               animate={{ y: '-100%' }}
               transition={{
@@ -143,7 +143,7 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
             />
             {/* Bottom Curtain */}
             <motion.div
-              className="fixed bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-gray-900 via-gray-800 to-gray-700 z-[99999]"
+              className="fixed bottom-0 left-0 w-full h-1/2 bg-ink z-[99999]"
               initial={{ y: 0 }}
               animate={{ y: '100%' }}
               transition={{
@@ -157,12 +157,12 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
 
       {/* Main Loading Screen */}
       <motion.div
-        className="fixed inset-0 flex items-center justify-center bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 z-[99998] overflow-hidden"
+        className="fixed inset-0 flex items-center justify-center bg-paper text-ink z-[99998] overflow-hidden"
         initial={{ opacity: 1 }}
         animate={{ 
           y: isExiting && !isSkipping ? "-100%" : 0,
           opacity: isExiting && !isSkipping ? 0 : 1,
-          scale: isSkipping ? 1.1 : 1 
+          scale: 1
       }}
       transition={{ 
         duration: 1.5, 
@@ -170,47 +170,16 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
         delay: isExiting ? 0 : 0
       }}
     >
-      {/* Premium Background Elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <motion.div
-          className="absolute -top-40 -right-40 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl"
-          animate={{
-            scale: [1, 1.2, 1],
-            rotate: [0, 180, 360]
-          }}
-          transition={{
-            duration: 20,
-            repeat: Infinity,
-            ease: "linear"
-          }}
-        />
-        <motion.div
-          className="absolute -bottom-40 -left-40 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl"
-          animate={{
-            scale: [1.2, 1, 1.2],
-            rotate: [360, 180, 0]
-          }}
-          transition={{
-            duration: 25,
-            repeat: Infinity,
-            ease: "linear"
-          }}
-        />
-      </div>
-
         {/* Skip Button */}
         <AnimatePresence>
           {showSkipButton && !isExiting && (
             <motion.button
               onClick={handleSkip}
-              className="absolute top-8 right-8 z-10 px-6 py-3 bg-emerald-500 hover:bg-emerald-600 text-white rounded-2xl font-semibold shadow-2xl flex items-center gap-2 backdrop-blur-sm border border-emerald-400/30 group"
+              className="absolute top-8 right-8 z-10 px-4 py-2 border border-line bg-paper text-ink text-sm flex items-center gap-2"
               initial={{ opacity: 0, scale: 0.8, x: 100 }}
               animate={{ opacity: 1, scale: 1, x: 0 }}
               exit={{ opacity: 0, scale: 0.8, x: 100 }}
-              whileHover={{ 
-                scale: 1.05,
-                boxShadow: "0 20px 40px rgba(16, 185, 129, 0.4)"
-              }}
+              whileHover={{ opacity: 0.8 }}
               whileTap={{ scale: 0.95 }}
               transition={{
                 type: "spring",
@@ -237,7 +206,7 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
             animate={{ 
               scale: isExiting ? 0 : 1, 
               rotate: isExiting ? 180 : 0,
-              filter: isSkipping ? 'blur(10px)' : 'blur(0px)' 
+              filter: 'none'
           }}
             transition={{ 
               duration: isSkipping ? 0.3 : 0.8, 
@@ -303,9 +272,9 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
           <AnimatePresence mode="wait">
             <motion.div
               key={currentStep}
-              initial={{ opacity: 0, y: 30, filter: "blur(10px)" }}
-              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-              exit={{ opacity: 0, y: -30, filter: "blur(10px)" }}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12 }}
               transition={{ duration: 0.6, ease: "easeOut" }}
               className="text-2xl md:text-4xl lg:text-5xl font-bold leading-tight"
             >
@@ -314,7 +283,7 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
                 wrapper="span"
                 speed={60}
                 cursor={true}
-                className="bg-gradient-to-r from-emerald-600 via-blue-600 to-purple-600 bg-clip-text text-transparent drop-shadow-2xl"
+                className="font-serif text-ink"
               />
             </motion.div>
           </AnimatePresence>
@@ -329,12 +298,12 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
             {steps.map((_, index) => (
               <motion.div
                 key={index}
-                className={`h-2 rounded-full transition-all duration-500 ${
+                className={`h-1 transition-all duration-500 ${
                   index === currentStep 
-                    ? 'w-8 bg-gradient-to-r from-emerald-500 to-blue-500' 
-                    : index < currentStep 
-                    ? 'w-6 bg-emerald-400' 
-                    : 'w-2 bg-gray-300 dark:bg-gray-600'
+                    ? 'w-8 bg-accent'
+                    : index < currentStep
+                    ? 'w-6 bg-ink'
+                    : 'w-2 bg-line'
                 }`}
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
@@ -342,37 +311,9 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
               />
             ))}
           </motion.div>
-          
-          {/* Elegant Floating Particles */}
-          <div className="absolute inset-0 pointer-events-none">
-            {[...Array(6)].map((_, i) => (
-              <motion.div
-                key={i}
-                className="absolute w-2 h-2 bg-gradient-to-r from-emerald-400 to-blue-400 rounded-full opacity-20"
-                style={{
-                  left: `${20 + i * 15}%`,
-                  top: `${30 + (i % 2) * 40}%`,
-                }}
-                animate={{
-                  y: [0, -20, 0],
-                  opacity: [0.2, 0.6, 0.2],
-                  scale: [1, 1.5, 1],
-                }}
-                transition={{
-                  duration: 3 + i,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                  delay: i * 0.5,
-                }}
-              />
-            ))}
-          </div>
-          </motion.div>
-        </div>
-        
-        {/* Premium Gradient Overlay for Depth */}
-        <div className="absolute inset-0 bg-gradient-to-t from-transparent via-transparent to-white/10 dark:to-black/10 pointer-events-none" />
-      </motion.div>
+        </motion.div>
+      </div>
+    </motion.div>
     </>
   );
 };

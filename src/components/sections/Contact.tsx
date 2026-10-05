@@ -1,17 +1,14 @@
-'use client';
+﻿'use client';
 import React, { useState, useRef } from 'react';
-import { motion } from 'framer-motion';
-import emailjs from '@emailjs/browser';
 import { useLanguage } from '../../context/LanguageContext';
 import { contactInfo } from '../../data/portfolio';
-import { Mail, Phone, MapPin, Send, MessageSquare, CheckCircle, AlertCircle, Loader } from 'lucide-react';
+import { submitContact } from '../../lib/submit-contact';
+import { Mail, Phone, MapPin, Send, CheckCircle, AlertCircle, Loader } from 'lucide-react';
 import { AnimatedSectionTitle } from '../shared/AnimatedSectionTitle';
-import { staggerContainer, fadeInUp } from '../../lib/animations';
 
 export const Contact: React.FC = () => {
   const { t } = useLanguage();
   const form = useRef<HTMLFormElement>(null);
-  const [focusedField, setFocusedField] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [statusMessage, setStatusMessage] = useState('');
@@ -26,67 +23,20 @@ export const Contact: React.FC = () => {
     setStatusMessage('');
 
     try {
-      // Primary: Environment variables
-      let serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID;
-      let templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID;
-      let autoReplyTemplateId = process.env.NEXT_PUBLIC_EMAILJS_AUTO_REPLY_TEMPLATE_ID;
-      let publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY;
-
-      // Fallback: Hardcoded values (if env vars not loaded)
-      if (!serviceId || !templateId || !publicKey) {
-        serviceId = 'service_r4ez1t9';
-        templateId = 'template_lgl8zbc';
-        autoReplyTemplateId = 'template_wexjx9n';
-        publicKey = 'it9csNm7MMiMayM7z';
-        console.log('Using fallback EmailJS configuration');
-      }
-
-      console.log('EmailJS Config:', { 
-        serviceId, 
-        templateId, 
-        autoReplyTemplateId, 
-        publicKey: publicKey ? '***' : 'missing' 
+      const data = new FormData(form.current);
+      await submitContact({
+        name: String(data.get('name') ?? ''),
+        email: String(data.get('email') ?? ''),
+        subject: String(data.get('subject') ?? ''),
+        message: String(data.get('message') ?? ''),
       });
-
-      if (!serviceId || !templateId || !publicKey) {
-        console.error('Missing EmailJS configuration:', { 
-          serviceId: !!serviceId, 
-          templateId: !!templateId, 
-          publicKey: !!publicKey 
-        });
-        throw new Error('EmailJS configuration is missing');
-      }
-
-      // Send email to you (main template)
-      console.log('Sending email to owner...');
-      const ownerEmailResult = await emailjs.sendForm(
-        serviceId,
-        templateId,
-        form.current,
-        publicKey
-      );
-
-      console.log('Owner email sent successfully:', ownerEmailResult.text);
-
-      // Send auto-reply to visitor (if auto-reply template is configured)
-      if (autoReplyTemplateId) {
-        console.log('Sending auto-reply to visitor...');
-        const autoReplyResult = await emailjs.sendForm(
-          serviceId,
-          autoReplyTemplateId,
-          form.current,
-          publicKey
-        );
-        console.log('Auto-reply sent successfully:', autoReplyResult.text);
-      }
 
       setStatus('success');
       setStatusMessage(t(
-        'Your message has been sent successfully! You will receive a confirmation email shortly.',
-        'Pesan Anda berhasil dikirim! Anda akan menerima email konfirmasi segera.'
+        'Your message has been sent. A reply will go to the email address you entered.',
+        'Pesan Anda sudah terkirim. Balasan akan dikirim ke email yang Anda masukkan.'
       ) as string);
       form.current.reset();
-      setFocusedField(null);
     } catch (error) {
       console.error('Failed to send email:', error);
       setStatus('error');
@@ -97,49 +47,10 @@ export const Contact: React.FC = () => {
   };
 
   return (
-    <section id="contact" className="py-20 bg-gradient-to-br from-gray-50 to-white dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 relative overflow-hidden">
-      {/* Enhanced dark background with shimmer */}
-      <div className="absolute inset-0">
-        <motion.div
-          className="absolute inset-0 bg-gradient-to-r from-transparent via-emerald-500/5 to-transparent"
-          animate={{
-            x: ['-100%', '100%']
-          }}
-          transition={{
-            duration: 15,
-            repeat: Infinity,
-            ease: "linear"
-          }}
-        />
-        <motion.div
-          className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-emerald-500/30 to-transparent"
-          animate={{
-            opacity: [0.3, 0.8, 0.3]
-          }}
-          transition={{
-            duration: 4,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-        />
-        <motion.div
-          className="absolute bottom-0 right-0 w-96 h-96 bg-gradient-to-tl from-blue-500/10 to-transparent rounded-full blur-3xl"
-          animate={{
-            scale: [1, 1.1, 1],
-            opacity: [0.5, 0.3, 0.5]
-          }}
-          transition={{
-            duration: 8,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-        />
-      </div>
-      
-      <div className="container mx-auto px-4 relative z-10">
+    <section id="contact" data-studio="letter" className="py-12 md:py-16 bg-paper border-b border-line">
+      <div className="max-w-6xl mx-auto px-5 lg:px-8">
         <AnimatedSectionTitle
           badge="Let's Connect"
-          badgeIcon={<MessageSquare className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />}
           title={t("Get In Touch", "Hubungi Saya") as string}
           subtitle={t(
             "Have a project in mind? Let's discuss how we can work together to bring your ideas to life",
@@ -148,280 +59,97 @@ export const Contact: React.FC = () => {
         />
 
         <div className="max-w-4xl mx-auto">
-          {/* Enhanced Glassmorphism Form */}
-          <motion.form 
+          <form
             ref={form}
-            onSubmit={handleSubmit} 
-            className="bg-white/10 dark:bg-white/5 backdrop-blur-lg rounded-3xl p-8 shadow-2xl border border-white/20 dark:border-white/10 relative overflow-hidden"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
+            data-eqbot="contact-title"
+            data-eqbot-at="above"
+            onSubmit={handleSubmit}
+            className="border border-line bg-raised p-6 md:p-10"
           >
-            {/* Form background glow */}
-            <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 via-blue-500/5 to-purple-500/5 opacity-50" />
-
-            <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-              {/* Enhanced Name Field */}
-              <motion.div
-                whileHover={{ scale: 1.02 }}
-                transition={{ type: "spring", stiffness: 300 }}
-              >
-                <motion.label 
-                  className={`block font-semibold mb-3 transition-all duration-300 ${
-                    focusedField === 'name' 
-                      ? 'text-emerald-400 dark:text-emerald-400 text-lg' 
-                      : 'text-gray-700 dark:text-white/80 text-base'
-                  }`}
-                  animate={{ 
-                    y: focusedField === 'name' ? -5 : 0,
-                    scale: focusedField === 'name' ? 1.05 : 1
-                  }}
-                >
-                  {t("Full Name", "Nama Lengkap")}
-                </motion.label>
-                <motion.input
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <label className="block text-sm text-ink">
+                {t("Full Name", "Nama Lengkap")}
+                <input
                   type="text"
                   name="name"
                   required
-                  className={`w-full px-6 py-4 rounded-2xl bg-white/80 dark:bg-white/10 backdrop-blur-sm border-2 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-white/50 focus:outline-none transition-all duration-300 ${
-                    focusedField === 'name'
-                      ? 'border-emerald-500 bg-white/90 dark:bg-white/20 shadow-glow'
-                      : 'border-gray-300 dark:border-white/20 hover:border-gray-400 dark:hover:border-white/30'
-                  }`}
+                  className="field mt-2 w-full px-4 py-3 bg-paper border border-line text-ink placeholder:text-muted focus:outline-none"
                   placeholder={t("Enter your full name", "Masukkan nama lengkap") as string}
-                  onFocus={() => setFocusedField('name')}
-                  onBlur={() => setFocusedField(null)}
-                  whileFocus={{ scale: 1.02 }}
                 />
-              </motion.div>
-              
-              {/* Enhanced Email Field */}
-              <motion.div
-                whileHover={{ scale: 1.02 }}
-                transition={{ type: "spring", stiffness: 300 }}
-              >
-                <motion.label 
-                  className={`block font-semibold mb-3 transition-all duration-300 ${
-                    focusedField === 'email' 
-                      ? 'text-emerald-400 dark:text-emerald-400 text-lg' 
-                      : 'text-gray-700 dark:text-white/80 text-base'
-                  }`}
-                  animate={{ 
-                    y: focusedField === 'email' ? -5 : 0,
-                    scale: focusedField === 'email' ? 1.05 : 1
-                  }}
-                >
-                  Email
-                </motion.label>
-                <motion.input
+              </label>
+              <label className="block text-sm text-ink">
+                Email
+                <input
                   type="email"
                   name="email"
                   required
-                  className={`w-full px-6 py-4 rounded-2xl bg-white/80 dark:bg-white/10 backdrop-blur-sm border-2 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-white/50 focus:outline-none transition-all duration-300 ${
-                    focusedField === 'email'
-                      ? 'border-emerald-500 bg-white/90 dark:bg-white/20 shadow-glow'
-                      : 'border-gray-300 dark:border-white/20 hover:border-gray-400 dark:hover:border-white/30'
-                  }`}
+                  className="field mt-2 w-full px-4 py-3 bg-paper border border-line text-ink placeholder:text-muted focus:outline-none"
                   placeholder={t("Enter your email address", "Masukkan alamat email") as string}
-                  onFocus={() => setFocusedField('email')}
-                  onBlur={() => setFocusedField(null)}
-                  whileFocus={{ scale: 1.02 }}
                 />
-              </motion.div>
+              </label>
             </div>
-
-            {/* Enhanced Subject Field */}
-            <motion.div 
-              className="mb-6 relative z-10"
-              whileHover={{ scale: 1.02 }}
-              transition={{ type: "spring", stiffness: 300 }}
-            >
-              <motion.label 
-                className={`block font-semibold mb-3 transition-all duration-300 ${
-                  focusedField === 'subject' 
-                    ? 'text-emerald-400 dark:text-emerald-400 text-lg' 
-                    : 'text-gray-700 dark:text-white/80 text-base'
-                }`}
-                animate={{ 
-                  y: focusedField === 'subject' ? -5 : 0,
-                  scale: focusedField === 'subject' ? 1.05 : 1
-                }}
-              >
-                {t("Subject", "Subjek")}
-              </motion.label>
-              <motion.input
+            <label className="mt-6 block text-sm text-ink">
+              {t("Subject", "Subjek")}
+              <input
                 type="text"
                 name="subject"
                 required
-                className={`w-full px-6 py-4 rounded-2xl bg-white/80 dark:bg-white/10 backdrop-blur-sm border-2 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-white/50 focus:outline-none transition-all duration-300 ${
-                  focusedField === 'subject'
-                    ? 'border-emerald-500 bg-white/90 dark:bg-white/20 shadow-glow'
-                    : 'border-gray-300 dark:border-white/20 hover:border-gray-400 dark:hover:border-white/30'
-                }`}
+                className="field mt-2 w-full px-4 py-3 bg-paper border border-line text-ink placeholder:text-muted focus:outline-none"
                 placeholder={t("What's this about?", "Tentang apa ini?") as string}
-                onFocus={() => setFocusedField('subject')}
-                onBlur={() => setFocusedField(null)}
-                whileFocus={{ scale: 1.02 }}
               />
-            </motion.div>
-
-            {/* Enhanced Message Field */}
-            <motion.div 
-              className="mb-8 relative z-10"
-              whileHover={{ scale: 1.02 }}
-              transition={{ type: "spring", stiffness: 300 }}
-            >
-              <motion.label 
-                className={`block font-semibold mb-3 transition-all duration-300 ${
-                  focusedField === 'message' 
-                    ? 'text-emerald-400 dark:text-emerald-400 text-lg' 
-                    : 'text-gray-700 dark:text-white/80 text-base'
-                }`}
-                animate={{ 
-                  y: focusedField === 'message' ? -5 : 0,
-                  scale: focusedField === 'message' ? 1.05 : 1
-                }}
-              >
-                {t("Message", "Pesan")}
-              </motion.label>
-              <motion.textarea
+            </label>
+            <label className="mt-6 block text-sm text-ink">
+              {t("Message", "Pesan")}
+              <textarea
                 name="message"
                 rows={5}
                 required
-                className={`w-full px-6 py-4 rounded-2xl bg-white/80 dark:bg-white/10 backdrop-blur-sm border-2 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-white/50 focus:outline-none transition-all duration-300 resize-none ${
-                  focusedField === 'message'
-                    ? 'border-emerald-500 bg-white/90 dark:bg-white/20 shadow-glow'
-                    : 'border-gray-300 dark:border-white/20 hover:border-gray-400 dark:hover:border-white/30'
-                }`}
+                className="field mt-2 w-full px-4 py-3 bg-paper border border-line text-ink placeholder:text-muted focus:outline-none resize-none"
                 placeholder={t("Tell me about your project or idea...", "Ceritakan tentang proyek atau ide Anda...") as string}
-                onFocus={() => setFocusedField('message')}
-                onBlur={() => setFocusedField(null)}
-                whileFocus={{ scale: 1.02 }}
               />
-            </motion.div>
-
-            {/* Status Message */}
+            </label>
             {status !== 'idle' && statusMessage && (
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className={`mb-6 p-4 rounded-2xl border-2 relative z-10 flex items-center gap-3 ${
-                  status === 'success' 
-                    ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-600 dark:text-emerald-400' 
-                    : 'bg-red-500/10 border-red-500/30 text-red-600 dark:text-red-400'
-                }`}
-              >
-                {status === 'success' ? (
-                  <CheckCircle size={20} />
-                ) : (
-                  <AlertCircle size={20} />
-                )}
-                <span className="font-medium">{statusMessage}</span>
-              </motion.div>
+              <p className={`mt-6 border px-4 py-3 text-sm ${status === 'success' ? 'border-line text-ink' : 'border-accent text-accent'}`}>
+                {status === 'success' ? <CheckCircle size={16} className="inline mr-2" /> : <AlertCircle size={16} className="inline mr-2" />}
+                {statusMessage}
+              </p>
             )}
-
-            {/* Enhanced Submit Button */}
-            <div className="text-center relative z-10">
-              <motion.button
-                type="submit"
-                disabled={isSubmitting}
-                className={`px-12 py-5 bg-gradient-to-r from-emerald-500 via-blue-500 to-emerald-600 text-white rounded-full font-bold text-lg tracking-wide transition-all duration-500 inline-flex items-center justify-center gap-3 shadow-2xl hover:shadow-glow ${
-                  isSubmitting ? 'opacity-70 cursor-not-allowed' : 'hover:scale-105'
-                }`}
-                whileHover={!isSubmitting ? { 
-                  y: -5,
-                  scale: 1.05,
-                  boxShadow: "0 20px 40px rgba(16, 185, 129, 0.3)"
-                } : {}}
-                whileTap={!isSubmitting ? { scale: 0.95 } : {}}
-              >
-                <motion.div
-                  animate={isSubmitting ? {
-                    rotate: 360,
-                    transition: { duration: 1, repeat: Infinity, ease: "linear" }
-                  } : {}}
-                >
-                  {isSubmitting ? <Loader size={20} /> : <Send size={20} />}
-                </motion.div>
-                {isSubmitting 
-                  ? t("Sending...", "Mengirim...")
-                  : t("Send Message", "Kirim Pesan")
-                }
-                
-                {/* Button shimmer effect */}
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 rounded-full" />
-              </motion.button>
-            </div>
-          </motion.form>
-
-          {/* Enhanced Contact Info Cards */}
-          <motion.div 
-            className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-16"
-            variants={staggerContainer}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true }}
-          >
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className={`btn-primary-custom mt-8 ${isSubmitting ? 'opacity-70 cursor-not-allowed' : ''}`}
+            >
+              {isSubmitting ? <Loader size={16} className="animate-spin" /> : <Send size={16} />}
+              {isSubmitting ? t("Sending...", "Mengirim...") : t("Send Message", "Kirim Pesan")}
+            </button>
+          </form>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-16">
             {[
-              {
-                icon: <Mail size={32} />,
-                title: t("Email Me", "Email Saya"),
-                info: contactInfo.email,
-                gradient: "from-emerald-500 to-blue-500",
-                delay: 0
-              },
-              {
-                icon: <Phone size={32} />,
-                title: t("Call Me", "Telepon Saya"),
-                info: contactInfo.phone,
-                gradient: "from-blue-500 to-purple-500",
-                delay: 0.1
-              },
-              {
-                icon: <MapPin size={32} />,
-                title: t("Location", "Lokasi"),
-                info: contactInfo.location,
-                gradient: "from-purple-500 to-emerald-500",
-                delay: 0.2
+              { icon: <Mail size={18} />, title: t("Email Me", "Email Saya"), info: contactInfo.email, href: `mailto:${contactInfo.email}` },
+              { icon: <Phone size={18} />, title: t("Call Me", "Telepon Saya"), info: contactInfo.phone, href: `tel:${contactInfo.phone}` },
+              { icon: <MapPin size={18} />, title: t("Location", "Lokasi"), info: contactInfo.location, href: '' },
+            ].map((item) => {
+              const body = (
+                <>
+                  <div className="text-accent mb-4">{item.icon}</div>
+                  <h5 className="card-hover-title font-serif text-xl text-ink mb-2">{item.title}</h5>
+                  <p className="text-muted">{item.info}</p>
+                </>
+              );
+              if (!item.href) {
+                return (
+                  <div key={item.info} className="border border-line bg-raised p-6">
+                    {body}
+                  </div>
+                );
               }
-            ].map((item, index) => (
-              <motion.div
-                key={index}
-                variants={fadeInUp}
-                className="group bg-white/10 backdrop-blur-lg rounded-3xl p-8 text-center border border-white/20 hover:border-white/30 transition-all duration-500 relative overflow-hidden"
-                whileHover={{ 
-                  scale: 1.05, 
-                  y: -10,
-                  transition: { type: "spring", stiffness: 300, damping: 20 }
-                }}
-              >
-                {/* Card glow effect */}
-                <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 to-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                
-                {/* Icon with gradient background */}
-                <motion.div 
-                  className={`w-20 h-20 bg-gradient-to-r ${item.gradient} rounded-2xl flex items-center justify-center text-white mx-auto mb-6 shadow-xl group-hover:shadow-glow`}
-                  whileHover={{ 
-                    scale: 1.1, 
-                    rotate: [0, -5, 5, 0],
-                    transition: { duration: 0.3 }
-                  }}
-                >
-                  {item.icon}
-                </motion.div>
-                
-                <div className="relative z-10">
-                  <h5 className="font-bold text-gray-900 dark:text-white text-xl mb-3 group-hover:text-emerald-600 dark:group-hover:text-emerald-300 transition-colors">
-                    {item.title}
-                  </h5>
-                  <p className="text-gray-700 dark:text-white/70 group-hover:text-gray-800 dark:group-hover:text-white/90 transition-colors text-lg">
-                    {item.info}
-                  </p>
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
+              return (
+                <a key={item.info} href={item.href} className="card-hover border border-line bg-raised p-6">
+                  {body}
+                </a>
+              );
+            })}
+          </div>
         </div>
       </div>
     </section>

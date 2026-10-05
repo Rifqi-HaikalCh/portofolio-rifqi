@@ -19,6 +19,7 @@ export interface Experience {
   titleId?: string;
   company: string;
   companyType?: string;
+  companyTypeId?: string;
   period: string;
   location?: string;
   description: string;
@@ -26,9 +27,11 @@ export interface Experience {
   shortDescription: string;
   shortDescriptionId?: string;
   positionDetail?: string;
+  positionDetailId?: string;
   techStack?: string[];
   type: 'work' | 'organization';
   image?: string;
+  logo?: string;
 }
 
 export interface Project {
