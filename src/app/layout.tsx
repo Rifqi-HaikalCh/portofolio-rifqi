@@ -32,20 +32,40 @@ const jetbrainsMono = JetBrains_Mono({
   adjustFontFallback: true,
 });
 
+const siteUrl = "https://portofolio-rifqi-snowy.vercel.app";
+
 export const metadata: Metadata = {
   title: "Rifqi Haikal Chairiansyah - Portfolio",
   description: "Software developer focused on C#, ASP.NET, .NET Core, and SQL Server. Portfolio of Rifqi Haikal Chairiansyah.",
   keywords: "Rifqi Haikal, Software Developer, .NET, C#, ASP.NET, SQL Server, Entity Framework, UI/UX, Indonesia",
   authors: [{ name: "Rifqi Haikal Chairiansyah" }],
   creator: "Rifqi Haikal Chairiansyah",
-  metadataBase: new URL("https://rifqihaikalch.netlify.app"),
+  metadataBase: new URL(siteUrl),
+  alternates: {
+    canonical: siteUrl,
+  },
   openGraph: {
     type: "website",
+    url: siteUrl,
+    siteName: "Rifqi Haikal Portfolio",
     locale: "en_US",
-    url: "https://rifqihaikalch.netlify.app",
+    alternateLocale: "id_ID",
     title: "Rifqi Haikal Chairiansyah - Portfolio",
     description: "Software developer focused on C#, ASP.NET, .NET Core, and SQL Server. Portfolio of Rifqi Haikal Chairiansyah.",
-    siteName: "Rifqi Haikal Portfolio",
+    images: [
+      {
+        url: "/opengraph-image",
+        width: 1200,
+        height: 630,
+        alt: "Rifqi Haikal",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Rifqi Haikal Chairiansyah - Portfolio",
+    description: "Software developer focused on C#, ASP.NET, .NET Core, and SQL Server. Portfolio of Rifqi Haikal Chairiansyah.",
+    images: ["/opengraph-image"],
   },
 };
 
