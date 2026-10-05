@@ -5,7 +5,7 @@ export function useLedgerRise(listRef: RefObject<HTMLOListElement | null>, reset
     const list = listRef.current;
     if (!list) return;
 
-    const items = [...list.querySelectorAll<HTMLElement>(':scope > li')];
+    const items = Array.from(list.querySelectorAll<HTMLElement>(':scope > li'));
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduce || !('IntersectionObserver' in window)) {
       items.forEach((item) => item.classList.remove('is-waiting', 'is-settled'));
@@ -48,7 +48,7 @@ export function useSectionRise(rootRef: RefObject<HTMLElement | null>, resetKey:
     const root = rootRef.current;
     if (!root) return;
 
-    const items = [...root.querySelectorAll<HTMLElement>('section[data-studio]')];
+    const items = Array.from(root.querySelectorAll<HTMLElement>('section[data-studio]'));
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduce || !('IntersectionObserver' in window)) {
       items.forEach((item) => item.classList.remove('is-waiting', 'is-settled', 'section-rise'));

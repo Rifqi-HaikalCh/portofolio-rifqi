@@ -41,7 +41,7 @@ function aliasesFor(name: string): string[] {
   const lower = name.toLowerCase();
   const aliases = new Set<string>([lower]);
   if (lower.endsWith('.js')) aliases.add(lower.slice(0, -3));
-  return [...aliases];
+  return Array.from(aliases);
 }
 
 export const additionalCatalog: CatalogSkill[] = catalogGroups.flatMap((group) =>
@@ -61,7 +61,7 @@ function tokensOf(raw: string): string[] {
   const lower = raw.toLowerCase().trim();
   const stripped = lower.replace(/\s+v?\d+(\.\d+)*$/, '');
   const parts = lower.split(/[^a-z0-9.+#]+/).filter((part) => part.length > 1);
-  return [...new Set([lower, stripped, ...parts])];
+  return Array.from(new Set([lower, stripped, ...parts]));
 }
 
 function tokenMatches(token: string, alias: string): boolean {
@@ -170,7 +170,7 @@ export function additionalSkillTiers(cards: AdditionalCard[]): SkillTierRow[] {
     });
   });
 
-  const ranked = [...counts.values()].sort(
+  const ranked = Array.from(counts.values()).sort(
     (a, b) => b.count - a.count || a.skill.name.localeCompare(b.skill.name)
   );
   const max = ranked[0]?.count ?? 0;
