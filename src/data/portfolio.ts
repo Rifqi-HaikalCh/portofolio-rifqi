@@ -830,5 +830,5 @@ export const contactInfo: ContactInfo = {
   location: 'Jakarta, Indonesia',
   linkedin: 'https://www.linkedin.com/in/rifqhaikall',
   github: 'https://github.com/Rifqi-HaikalCh',
-  whatsapp: 'https://wa.me/085362784585'
+  whatsapp: 'https://wa.me/6285362784585'
 };

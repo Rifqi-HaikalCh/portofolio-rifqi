@@ -32,7 +32,7 @@ export const MobileAbout: React.FC = () => {
     },
     {
       number: '10+',
-      label: t('Technologies Mastered', 'Teknologi Dikuasai'),
+      label: t('Technologies Used', 'Teknologi yang Digunakan'),
       description: t('Modern tech stack expertise', 'Keahlian teknologi modern'),
     },
   ];
