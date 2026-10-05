@@ -288,20 +288,26 @@ export const organizationExperience: Experience[] = [
   {
     id: 'gdsc',
     title: 'Public Relations - Core Team',
+    titleId: 'Hubungan Masyarakat - Tim Inti',
     shortDescription: 'Played a key role in executing strategic public relations plans and serving as Master of Ceremonies.',
+    shortDescriptionId: 'Berperan menjalankan rencana hubungan masyarakat dan bertugas sebagai pembawa acara.',
     company: 'Google Developer Student Club IT Del',
     period: 'Oct 2023 - Dec 2024',
     description: 'Played a key role in executing strategic public relations plans and served as Master of Ceremonies during key club events.',
+    descriptionId: 'Berperan menjalankan rencana hubungan masyarakat dan bertugas sebagai pembawa acara pada acara utama klub.',
     type: 'organization',
     image: '/assets/gdsc.webp'
   },
   {
     id: 'bem',
     title: 'Head of Social Division',
+    titleId: 'Kepala Divisi Sosial',
     shortDescription: 'Managed off-campus activities and social media management for the student executive board.',
+    shortDescriptionId: 'Mengelola kegiatan luar kampus dan media sosial badan eksekutif mahasiswa.',
     company: 'Student Executive Board - IT Del',
     period: 'Aug 2023 - Sep 2024',
     description: 'Successfully managed various off-campus activities and drove division\'s public relations efforts through strategic social media management.',
+    descriptionId: 'Mengelola berbagai kegiatan luar kampus dan mengarahkan hubungan masyarakat divisi melalui pengelolaan media sosial.',
     type: 'organization',
     image: '/assets/dhpm.webp'
   }
@@ -312,7 +318,7 @@ export const individualProjects: Project[] = [
     id: 'shipment-tracker',
     title: 'Shipment – Transport Tracker',
     description: 'Web-based application used for logistic company to track delivery. Developed a responsive Shipment Management SPA using Vue 3 (Composition API) and TypeScript, delivering a seamless user experience across desktop and mobile devices with a built-in Dark/Light mode via Tailwind CSS. Engineered a real-time tracking and filtering system utilizing Pinia for state management. Built a fully simulated REST API environment using Mirage.js to mimic realistic network latency, HTTP status codes, and real-time shipment route simulations with automated status transitions.',
-    descriptionId: 'Aplikasi berbasis web untuk pelacakan pengiriman di perusahaan logistik. Dikembangkan sebagai SPA yang responsif menggunakan Vue 3 dan TypeScript, lengkap dengan fitur Dark/Light mode melalui Tailwind CSS. Mengimplementasikan sistem pelacakan real-time dengan Pinia dan lingkungan REST API simulasi menggunakan Mirage.js untuk mensimulasikan latensi jaringan dan transisi status otomatis.',
+    descriptionId: 'Aplikasi berbasis web yang dipakai perusahaan logistik untuk melacak pengiriman. Dikembangkan sebagai SPA manajemen pengiriman yang responsif memakai Vue 3 (Composition API) dan TypeScript, dengan pengalaman yang mulus di desktop dan ponsel serta mode gelap/terang lewat Tailwind CSS. Sistem pelacakan dan penyaringan waktu nyata memakai Pinia untuk state. Lingkungan REST API yang disimulasikan penuh memakai Mirage.js meniru latensi jaringan, kode status HTTP, dan simulasi rute pengiriman waktu nyata dengan transisi status otomatis.',
     image: '/assets/ShipTrack-view1.webp',
     techStack: ['Vue 3', 'TypeScript', 'HTML', 'CSS', 'Tailwind CSS', 'Pinia', 'Mirage.js'],
     links: {
@@ -327,7 +333,7 @@ export const individualProjects: Project[] = [
     id: 'marketplace-influencer',
     title: 'Marketplace Influencer Platform',
     description: 'Simplifies influencer discovery and collaboration for brands. Engineered a full-stack marketplace from scratch using a modern tech stack (Next.js 14, TypeScript, Supabase) to connect brands with influencers. Designed and implemented a pixel-perfect, responsive UI/UX with Tailwind CSS, featuring separate, optimized views for desktop and mobile to ensure a seamless user journey.',
-    descriptionId: 'Menyederhanakan penemuan influencer dan kolaborasi untuk brand. Platform marketplace full-stack yang dibangun dari awal menggunakan tech stack modern untuk menghubungkan brand dengan influencer.',
+    descriptionId: 'Menyederhanakan pencarian influencer dan kolaborasi untuk merek. Marketplace full-stack dibangun dari awal memakai Next.js 14, TypeScript, dan Supabase untuk menghubungkan merek dengan influencer. Antarmuka responsif dengan Tailwind CSS memiliki tampilan terpisah yang dioptimalkan untuk desktop dan ponsel.',
     image: '/assets/marketplaceweb.webp',
     techStack: ['Next.js 14', 'React.js', 'TypeScript', 'HTML', 'CSS', 'Tailwind CSS', 'Supabase', 'RBAC'],
     links: {
@@ -340,7 +346,7 @@ export const individualProjects: Project[] = [
     id: 'hiring-platform',
     title: 'Hiring Platform for Jobseeker',
     description: 'Modern hiring platform enabling administrators to manage job listings and candidates to browse/apply. Implemented secure user authentication and role-based access control (RBAC) leveraging Supabase Auth. Designed and built reusable, responsive UI components using Tailwind CSS and Headless UI, ensuring an intuitive user experience across desktop and mobile platforms.',
-    descriptionId: 'Platform hiring modern yang memungkinkan administrator mengelola lowongan pekerjaan dan kandidat untuk menelusuri/melamar. Sistem otentikasi aman dengan kontrol akses berbasis peran.',
+    descriptionId: 'Platform perekrutan yang memungkinkan administrator mengelola lowongan dan kandidat menelusuri serta melamar. Otentikasi pengguna dan kontrol akses berbasis peran memakai Supabase Auth. Komponen antarmuka yang dapat dipakai ulang dan responsif memakai Tailwind CSS dan Headless UI, untuk desktop dan ponsel.',
     image: '/assets/Hiring Platform web.webp',
     techStack: ['Next.js 16', 'React.js', 'TypeScript', 'HTML', 'CSS', 'Tailwind CSS', 'Supabase', 'React Hook Form', 'Zustand'],
     links: {
@@ -440,7 +446,7 @@ export const designProjects: Project[] = [
     id: 'sportainment-app',
     title: 'Sportainment App',
     description: 'A platform for sports enthusiasts to easily find activities, events, and track their progress. Complete with features for booking sports facilities, joining community events, and monitoring personal fitness achievements.',
-    descriptionId: 'Platform buat yang hobi olahraga, biar gampang cari aktivitas, event, dan tracking progres. Lengkap dengan fitur booking fasilitas olahraga, join event komunitas, dan monitoring pencapaian fitness pribadi.',
+    descriptionId: 'Platform bagi penggemar olahraga untuk menemukan aktivitas, acara, dan memantau progres. Dilengkapi pemesanan fasilitas olahraga, keikutsertaan pada acara komunitas, dan pemantauan pencapaian kebugaran pribadi.',
     image: '/assets/Sportainment-web.webp',
     techStack: ['Figma', 'UI/UX Design', 'Prototyping', 'User Research'],
     links: {
@@ -497,7 +503,7 @@ export const designProjects: Project[] = [
     description: 'A comprehensive web design system for asset management platform with focus on user experience and data visualization. Features advanced dashboard analytics and intuitive navigation.',
     descriptionId: 'Sistem desain web komprehensif untuk platform manajemen aset dengan fokus pada pengalaman pengguna dan visualisasi data. Menampilkan analitik dashboard canggih dan navigasi intuitif.',
     image: '/assets/Assets Manajemen Web Design-01.webp',
-    techStack: ['Figma', 'Adobe Photoshop', 'Principle'],
+    techStack: ['Figma', 'Adobe Photoshop'],
     links: {
       prototype: 'https://www.figma.com/proto/N2eNg8UcsUg3Z4oIpwPn4g/Aplikasi-Manajemen-Aset?page-id=0%3A1&node-id=9-356&p=f&viewport=338%2C243%2C0.06&t=RcXQkGz3wJYNThcT-1&scaling=contain&content-scaling=fixed'
     },
@@ -522,7 +528,7 @@ export const designProjects: Project[] = [
     description: 'Modern and accessible campus website design focusing on student experience and information architecture.',
     descriptionId: 'Desain website kampus modern dan accessible yang berfokus pada pengalaman mahasiswa dan arsitektur informasi.',
     image: '/assets/Campuss Website Design-1.webp',
-    techStack: ['Figma', 'Sketch', 'InVision'],
+    techStack: ['Figma'],
     links: {
       prototype: 'https://www.figma.com/proto/rileM7AuecCrGEnA0soMd1/RE-DESIGN-WEBSITE-DEL?page-id=0%3A1&node-id=447-121&p=f&viewport=845%2C151%2C0.13&t=gbfdy7gE7yozEW3C-1&scaling=scale-down-width&content-scaling=fixed'
     },
@@ -546,7 +552,7 @@ export const designProjects: Project[] = [
     description: 'Luxury home decor e-commerce platform with emphasis on visual appeal and conversion optimization.',
     descriptionId: 'Platform e-commerce dekorasi rumah mewah dengan penekanan pada daya tarik visual dan optimasi konversi.',
     image: '/assets/Gordenaise Website Design-01.webp',
-    techStack: ['Figma', 'Adobe XD', 'Photoshop'],
+    techStack: ['Figma', 'Photoshop'],
     links: {
       prototype: 'https://www.figma.com/proto/m63t9o0EJ7aBvG5I09yWVf/Gordenaise?page-id=0%3A1&node-id=34-373&p=f&viewport=89%2C310%2C0.07&t=LJSZaTROUnCZIqfH-1&scaling=scale-down-width&content-scaling=fixed'
     },
@@ -716,8 +722,8 @@ export const certificateCategories: CertificateCategory[] = [
         id: 'ai-cert',
         title: 'AI Certificate',
         titleId: 'Sertifikat AI',
-        description: 'Certification in artificial intelligence fundamentals and applications in modern technology.',
-        descriptionId: 'Sertifikasi dalam dasar-dasar kecerdasan buatan dan aplikasinya dalam teknologi modern.',
+        description: 'Certificate of completion in artificial intelligence.',
+        descriptionId: 'Sertifikat penyelesaian kecerdasan buatan.',
         link: '/assets/sertifikat AI.pdf',
         category: 'kegiatan'
       },
@@ -725,8 +731,8 @@ export const certificateCategories: CertificateCategory[] = [
         id: 'cyber-cert',
         title: 'Cyber Security Training',
         titleId: 'Pelatihan Keamanan Siber',
-        description: 'Comprehensive training in cybersecurity principles, threats, and protection strategies.',
-        descriptionId: 'Pelatihan komprehensif dalam prinsip keamanan siber, ancaman, dan strategi perlindungan.',
+        description: 'Certificate of completion in cybersecurity.',
+        descriptionId: 'Sertifikat penyelesaian keamanan siber.',
         link: '/assets/Sertifikat Cyber Kulum.webp',
         category: 'kegiatan'
       },
@@ -734,8 +740,8 @@ export const certificateCategories: CertificateCategory[] = [
         id: 'pca-cert',
         title: 'PCA Certificate',
         titleId: 'Sertifikat PCA',
-        description: 'Professional certification in Principal Component Analysis and data dimensionality reduction techniques.',
-        descriptionId: 'Sertifikasi profesional dalam Principal Component Analysis dan teknik reduksi dimensionalitas data.',
+        description: 'Certificate of completion in Principal Component Analysis.',
+        descriptionId: 'Sertifikat penyelesaian Principal Component Analysis.',
         link: '/assets/SERTIFIKAT PCA RIFQI.pdf',
         category: 'kegiatan'
       },
@@ -755,17 +761,8 @@ export const certificateCategories: CertificateCategory[] = [
     title: 'ORGANIZATION Leadership',
     titleId: 'Kepemimpinan ORGANISASI',
     icon: 'users',
-    count: 3,
+    count: 2,
     certificates: [
-      {
-        id: 'bem-member',
-        title: 'BEM Member Certificate',
-        titleId: 'Sertifikat Anggota BEM',
-        description: 'Official membership certificate for participation in the Student Executive Board (BEM) activities.',
-        descriptionId: 'Sertifikat keanggotaan resmi untuk partisipasi dalam kegiatan Badan Eksekutif Mahasiswa (BEM).',
-        link: '/assets/Sertifikat BEM - Anggota.webp',
-        category: 'organisasi'
-      },
       {
         id: 'bem-leader',
         title: 'BEM Leadership Certificate',
@@ -791,7 +788,7 @@ export const certificateCategories: CertificateCategory[] = [
     title: 'INTERNSHIP Certificates',
     titleId: 'Sertifikat MAGANG',
     icon: 'briefcase',
-    count: 3,
+    count: 2,
     certificates: [
       {
         id: 'msib-cert',
@@ -800,15 +797,6 @@ export const certificateCategories: CertificateCategory[] = [
         description: 'Official certificate for completing the MSIB (Magang dan Studi Independen Bersertifikat) Batch 7 program.',
         descriptionId: 'Sertifikat resmi untuk menyelesaikan program MSIB (Magang dan Studi Independen Bersertifikat) Angkatan 7.',
         link: '/assets/Sertifikat-MSIB 7 Rifqi Haikal Chairiansyah.pdf',
-        category: 'magang'
-      },
-      {
-        id: 'internship-letter',
-        title: 'Internship Completion Letter',
-        titleId: 'Surat Keterangan Magang',
-        description: 'Official internship completion letter documenting successful completion of programming internship program.',
-        descriptionId: 'Surat keterangan magang resmi yang mendokumentasikan penyelesaian program magang programming dengan sukses.',
-        link: '/assets/Surat Keterangan Magang Rifqi Haikal.pdf',
         category: 'magang'
       },
       {

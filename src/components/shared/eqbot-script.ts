@@ -737,8 +737,8 @@ export const eqbotNodes: Record<string, EqbotNode> = {
   certificates: {
     section: true,
     say: {
-      en: 'The certificates follow the same path as the work. Four Dicoding papers laid the front-end foundation, from JavaScript through beginner front-end. Campus life then left five more: IT Del Festival 2023, where he worked in public relations and documentation, plus an AI certificate, cyber security training, a PCA paper on principal component analysis, and a PKM competition paper. Organization papers record BEM membership, leadership of BEM’s social division, and the GDSC core team. The internship folder closes the set with MSIB batch 7, a completion letter, and the Angular certificate from his half year at Javan.',
-      idn: 'Sertifikatnya mengikuti jalur yang sama dengan pekerjaannya. Empat berkas Dicoding meletakkan dasar front-end, dari JavaScript sampai front-end pemula. Kehidupan kampus lalu meninggalkan lima berkas lagi: IT Del Festival 2023, tempat dia bekerja di hubungan masyarakat dan dokumentasi, ditambah sertifikat AI, pelatihan keamanan siber, berkas PCA tentang principal component analysis, dan berkas kompetisi PKM. Berkas organisasi mencatat keanggotaan BEM, kepemimpinan divisi sosial BEM, dan tim inti GDSC. Map magang menutup rangkaian itu dengan MSIB angkatan 7, surat keterangan, dan sertifikat Angular dari setengah tahunnya di Javan.',
+      en: 'The certificates follow the same path as the work. Four Dicoding papers laid the front-end foundation, from JavaScript through beginner front-end. Campus life then left five more: IT Del Festival 2023, where he worked in public relations and documentation, plus an AI certificate, cyber security training, a PCA paper on principal component analysis, and a PKM competition paper. Organization papers record leadership of BEM’s social division and the GDSC core team. The internship folder closes the set with MSIB batch 7 and the Angular certificate from his half year at Javan.',
+      idn: 'Sertifikatnya mengikuti jalur yang sama dengan pekerjaannya. Empat berkas Dicoding meletakkan dasar front-end, dari JavaScript sampai front-end pemula. Kehidupan kampus lalu meninggalkan lima berkas lagi: IT Del Festival 2023, tempat dia bekerja di hubungan masyarakat dan dokumentasi, ditambah sertifikat AI, pelatihan keamanan siber, berkas PCA tentang principal component analysis, dan berkas kompetisi PKM. Berkas organisasi mencatat kepemimpinan divisi sosial BEM dan tim inti GDSC. Map magang menutup rangkaian itu dengan MSIB angkatan 7 dan sertifikat Angular dari setengah tahunnya di Javan.',
     },
     again: {
       en: 'The certificates follow four parts of the path: front-end study at Dicoding, campus activities, organization, and the internship.',
@@ -777,8 +777,8 @@ export const eqbotNodes: Record<string, EqbotNode> = {
   ),
   'cert-org': reply(
     {
-      en: 'The organization papers are BEM membership, leadership of BEM’s social division, and the GDSC core team. They match the roles already told: head of that social division from August 2023 to September 2024, and GDSC public relations from October 2023 to December 2024.',
-      idn: 'Berkas organisasinya adalah keanggotaan BEM, kepemimpinan divisi sosial BEM, dan tim inti GDSC. Semuanya cocok dengan peran yang sudah diceritakan: kepala divisi sosial itu dari Agustus 2023 sampai September 2024, dan hubungan masyarakat GDSC dari Oktober 2023 sampai Desember 2024.',
+      en: 'The organization papers are leadership of BEM’s social division and the GDSC core team. They match the roles already told: head of that social division from August 2023 to September 2024, and GDSC public relations from October 2023 to December 2024.',
+      idn: 'Berkas organisasinya adalah kepemimpinan divisi sosial BEM dan tim inti GDSC. Semuanya cocok dengan peran yang sudah diceritakan: kepala divisi sosial itu dari Agustus 2023 sampai September 2024, dan hubungan masyarakat GDSC dari Oktober 2023 sampai Desember 2024.',
     },
     { en: 'BEM and GDSC. Experience tells the same story in sentences.', idn: 'BEM dan GDSC. Pengalaman menceritakan hal yang sama dalam kalimat.' },
     'certificates',
@@ -786,12 +786,12 @@ export const eqbotNodes: Record<string, EqbotNode> = {
   ),
   'cert-intern': reply(
     {
-      en: 'The internship papers are MSIB batch 7, a completion letter, and the Javan Angular certificate. They match the Javan internship from January to June 2025, when he delivered 6 applications for 5 clients.',
-      idn: 'Berkas magangnya adalah MSIB angkatan 7, surat keterangan magang, dan sertifikat Angular di Javan. Semuanya cocok dengan magang Javan dari Januari sampai Juni 2025, saat dia menyelesaikan 6 aplikasi untuk 5 klien.',
+      en: 'The internship papers are MSIB batch 7 and the Javan Angular certificate. They match the Javan internship from January to June 2025, when he delivered 6 applications for 5 clients.',
+      idn: 'Berkas magangnya adalah MSIB angkatan 7 dan sertifikat Angular di Javan. Semuanya cocok dengan magang Javan dari Januari sampai Juni 2025, saat dia menyelesaikan 6 aplikasi untuk 5 klien.',
     },
     {
-      en: 'The internship folder holds MSIB, a completion letter, and the Javan certificate.',
-      idn: 'Map magang menyimpan MSIB, surat keterangan, dan sertifikat Javan.',
+      en: 'The internship folder holds MSIB and the Javan certificate.',
+      idn: 'Map magang menyimpan MSIB dan sertifikat Javan.',
     },
     'certificates',
     'certificates',
