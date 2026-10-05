@@ -1,6 +1,5 @@
 import type { 
   NavLink, 
-  Skill, 
   Experience, 
   Project, 
   CertificateCategory, 
@@ -51,32 +50,6 @@ export const aboutHighlights: AboutHighlight[] = [
     description: 'More than 3 years delivering web projects for organizations and MSMEs',
     descriptionId: 'Lebih dari 3 tahun mengerjakan proyek web untuk organisasi dan UMKM'
   }
-];
-
-export const hardSkills: Skill[] = [
-  { name: 'HTML5', icon: 'html5', color: '#E34F26', category: 'hard' },
-  { name: 'CSS3', icon: 'css3-alt', color: '#1572B6', category: 'hard' },
-  { name: 'JavaScript', icon: 'js-square', color: '#F7DF1E', category: 'hard' },
-  { name: 'TypeScript', icon: 'js-square', color: '#3178C6', category: 'hard' },
-  { name: 'Java', icon: 'java', color: '#007396', category: 'hard' },
-  { name: 'PHP', icon: 'php', color: '#777BB4', category: 'hard' },
-  { name: 'Angular', icon: 'angular', color: '#DD0031', category: 'hard' },
-  { name: 'React.js', icon: 'react', color: '#61DAFB', category: 'hard' },
-  { name: 'Vue.js', icon: 'vuejs', color: '#4FC08D', category: 'hard' },
-  { name: 'Spring Boot', icon: 'leaf', color: '#6DB33F', category: 'hard' },
-  { name: 'Laravel', icon: 'laravel', color: '#FF2D20', category: 'hard' },
-  { name: 'Git', icon: 'git-alt', color: '#F05032', category: 'hard' },
-];
-
-export const softSkills: Skill[] = [
-  { name: 'Problem Solving', icon: 'puzzle-piece', color: '#10B981', category: 'soft' },
-  { name: 'Critical Thinking', icon: 'lightbulb', color: '#F59E0B', category: 'soft' },
-  { name: 'Team Work', icon: 'users', color: '#3B82F6', category: 'soft' },
-  { name: 'Communication', icon: 'comments', color: '#8B5CF6', category: 'soft' },
-  { name: 'Leadership', icon: 'user-tie', color: '#EF4444', category: 'soft' },
-  { name: 'Time Management', icon: 'clock', color: '#06B6D4', category: 'soft' },
-  { name: 'Creativity', icon: 'palette', color: '#EC4899', category: 'soft' },
-  { name: 'Adaptability', icon: 'sync-alt', color: '#84CC16', category: 'soft' },
 ];
 
 // Developer Skills for GlassSkillCard

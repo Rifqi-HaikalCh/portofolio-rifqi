@@ -1,46 +1,62 @@
-# Portfolio Next.js - Rifqi Haikal Chairiansyah
+A bilingual personal portfolio for Rifqi Haikal Chairiansyah, built with Next.js 14, TypeScript, and Tailwind CSS.
 
-Portfolio profesional yang dibangun dengan Next.js 14, TypeScript, dan Tailwind CSS. Menampilkan desain modern, responsif, dengan fitur dark mode dan multi-bahasa.
+Portofolio pribadi Rifqi Haikal Chairiansyah. Situs ini menampilkan pengalaman kerja, proyek, dan sertifikat dalam bahasa Indonesia dan Inggris, dengan tampilan gelap dan terang.
 
-## 🛠️ Instalasi
+Demo: https://portofolio-rifqi-snowy.vercel.app
 
-### Prerequisites
-- Node.js 18+ 
-- npm atau yarn
+## Fitur
 
-### Setup Langkah demi Langkah
+- Dua bahasa, Indonesia dan Inggris
+- Mode gelap dan terang
+- Chatbot EQbot berskrip, tanpa model AI
+- Modal detail untuk pengalaman, proyek, dan sertifikat
+- Form kontak
 
-1. **Clone atau buat proyek baru:**
-```bash
-npx create-next-app@latest portfolio-nextjs --typescript --tailwind --eslint --app --src-dir --import-alias "@/*"
+## Stack
+
+Yang terpasang di `package.json`:
+
+- Next.js 14, React 18, TypeScript
+- Tailwind CSS, PostCSS, Autoprefixer
+- next-themes, framer-motion, motion
+- lottie-react, lucide-react, react-icons, react-type-animation
+- resend
+- three, @react-three/fiber, @react-three/drei, @react-three/rapier, matter-js
+
+## Struktur folder
+
+```
+src/
+  app/            layout, halaman utama, ikon, dan API form kontak
+  components/     bagian halaman (desktop dan mobile) serta komponen bersama
+  context/        bahasa dan peran
+  data/           portfolio.ts, satu sumber konten
+  hooks/
+  lib/
+  styles/
+  types/
+public/assets/    gambar dan berkas sertifikat
 ```
 
-**Install dependencies:**
+## Menjalankan
+
+Perlu Node.js 18 atau lebih baru.
+
 ```bash
-cd portfolio-nextjs
-npm install framer-motion aos react-type-animation next-themes lucide-react
-npm install --save-dev @types/aos
-```
-
-## 🚀 Deployment
-
-### Deploy ke Vercel (Recommended)
-```bash
-# Install Vercel CLI
-npm i -g vercel
-
-# Deploy
-vercel
-```
-
-### Build untuk Production
-```bash
+npm install
+npm run dev
 npm run build
-npm run start
+npm run lint
 ```
 
-## 📞 Support
+`npm run dev` membuka server pengembangan. `npm run build` menyusun situs untuk produksi. `npm run start` menjalankan hasil build.
 
-Jika ada pertanyaan atau masalah:
-- Email: r.haikal1610@gmail.com
-- GitHub: https://github.com/Rifqi-HaikalCh
+## Mengubah konten
+
+Semua salinan situs ada di `src/data/portfolio.ts`. Pasangan bahasa wajib terisi (`title`/`titleId`, `description`/`descriptionId`, `labelEn`/`labelId`, dan padanan sejenis). Jangan mengarang tautan atau path gambar; path gambar harus sudah ada di `public/assets`.
+
+Aturan visual ada di [PORTFOLIO_STANDARDS.md](PORTFOLIO_STANDARDS.md).
+
+## Deployment
+
+Situs di-deploy ke Vercel. Untuk form kontak, set environment variable `RESEND_API_KEY` di proyek Vercel. Jangan menyimpan nilai kunci itu di repositori.
