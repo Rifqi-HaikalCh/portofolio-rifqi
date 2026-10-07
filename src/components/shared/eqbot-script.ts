@@ -169,6 +169,7 @@ export const eqbotNodes: Record<string, EqbotNode> = {
       { id: 'home-city', en: 'Where is he?', idn: 'Dia di mana?', to: 'home-city' },
       { id: 'home-links', en: 'What are the links?', idn: 'Tautan itu apa?', to: 'home-links' },
       { id: 'home-mark', en: 'What is the small label?', idn: 'Label kecil itu apa?', to: 'home-mark' },
+      { id: 'home-counts', en: 'What are the four numbers?', idn: 'Empat angka itu apa?', to: 'home-counts' },
       { id: 'home-buttons', en: 'What do the two buttons do?', idn: 'Dua tombol itu untuk apa?', to: 'home-buttons' },
       { id: 'home-cv', en: 'Can I take the CV?', idn: 'Boleh ambil CV-nya?', to: 'home-cv' },
     ],
@@ -264,15 +265,14 @@ export const eqbotNodes: Record<string, EqbotNode> = {
   about: {
     section: true,
     say: {
-      en: 'Rifqi Haikal studied Informatics at Institut Teknologi Del and finished with a GPA of 3.39 out of 4.00. Since then he has worked in telecommunications, oil and gas, research, IT consulting, and multifinance, with more than three years of web work for organizations and MSMEs. What he builds is C#, ASP.NET MVC, .NET Core, and SQL Server, with React, Angular, and Spring Boot alongside. The counts beside his photograph are 30 or more projects and 10 or more technologies.',
-      idn: 'Rifqi Haikal menempuh Informatika di Institut Teknologi Del dan lulus dengan IPK 3,39 dari 4,00. Sejak itu dia bekerja di telekomunikasi, minyak dan gas, riset, konsultan TI, dan multifinance, dengan lebih dari tiga tahun kerja web untuk organisasi dan UMKM. Yang dia bangun adalah C#, ASP.NET MVC, .NET Core, dan SQL Server, dengan React, Angular, dan Spring Boot di sampingnya. Angka di samping fotonya adalah 30 proyek atau lebih dan 10 teknologi atau lebih.',
+      en: 'Rifqi Haikal studied Informatics at Institut Teknologi Del and finished with a GPA of 3.39 out of 4.00. Since then he has worked in telecommunications, oil and gas, research, IT consulting, and multifinance, with more than three years of web work for organizations and MSMEs. What he builds is C#, ASP.NET MVC, .NET Core, and SQL Server, with React, Angular, and Spring Boot alongside.',
+      idn: 'Rifqi Haikal menempuh Informatika di Institut Teknologi Del dan lulus dengan IPK 3,39 dari 4,00. Sejak itu dia bekerja di telekomunikasi, minyak dan gas, riset, konsultan TI, dan multifinance, dengan lebih dari tiga tahun kerja web untuk organisasi dan UMKM. Yang dia bangun adalah C#, ASP.NET MVC, .NET Core, dan SQL Server, dengan React, Angular, dan Spring Boot di sampingnya.',
     },
     again: {
-      en: 'He studied Informatics at IT Del with a GPA of 3.39, then worked across five industries. The page counts 30 or more projects, and the stack he is known for starts with C#, ASP.NET, and SQL Server.',
-      idn: 'Dia menempuh Informatika di IT Del dengan IPK 3,39, lalu bekerja di lima industri. Halaman ini menghitung 30 proyek atau lebih, dan tumpukan yang paling dikenalnya dimulai dari C#, ASP.NET, dan SQL Server.',
+      en: 'He studied Informatics at IT Del with a GPA of 3.39, then worked across five industries. The stack he is known for starts with C#, ASP.NET, and SQL Server.',
+      idn: 'Dia menempuh Informatika di IT Del dengan IPK 3,39, lalu bekerja di lima industri. Tumpukan yang paling dikenalnya dimulai dari C#, ASP.NET, dan SQL Server.',
     },
     choices: [
-      { id: 'about-counts', en: 'What are the three numbers?', idn: 'Tiga angka itu apa?', to: 'about-counts' },
       { id: 'about-photo', en: 'Is that his photograph?', idn: 'Itu fotonya?', to: 'about-photo' },
       { id: 'about-school', en: 'Where did he study?', idn: 'Dia kuliah di mana?', to: 'about-school' },
       { id: 'about-industries', en: 'Which industries?', idn: 'Industri yang mana?', to: 'about-industries' },
@@ -282,18 +282,6 @@ export const eqbotNodes: Record<string, EqbotNode> = {
       { id: 'about-stack', en: 'What does he actually build?', idn: 'Dia sebenarnya membangun apa?', to: 'about-stack' },
     ],
   },
-  'about-counts': reply(
-    {
-      en: 'Three numbers sit beside the photograph: 30 or more projects, the years of work counted from the work entries, and 10 or more technologies.',
-      idn: 'Tiga angka ada di samping foto: 30 proyek atau lebih, tahun kerja yang dihitung dari catatan kerja, dan 10 teknologi atau lebih.',
-    },
-    {
-      en: 'The three numbers are projects, years of work, and technologies.',
-      idn: 'Tiga angkanya adalah proyek, tahun kerja, dan teknologi.',
-    },
-    'about',
-    'about',
-  ),
   'about-photo': reply(
     {
       en: 'Yes. The photograph is Rifqi Haikal, and the line under it calls him an ASP.NET software engineer.',
@@ -983,12 +971,24 @@ export const eqbotNodes: Record<string, EqbotNode> = {
     'home',
     'home',
   ),
+  'home-counts': reply(
+    {
+      en: 'The four numbers under his name are 5 industries served, 100 or more standardized APIs, 3 or more years of development, and 30 or more web projects.',
+      idn: 'Empat angka di bawah namanya adalah 5 industri yang dilayani, 100 API terstandar atau lebih, 3 tahun pengembangan atau lebih, dan 30 proyek web atau lebih.',
+    },
+    {
+      en: 'Industries, APIs, years, and web projects.',
+      idn: 'Industri, API, tahun, dan proyek web.',
+    },
+    'home',
+    'home',
+  ),
   'about-years': reply(
     {
-      en: 'His paragraph says three years of hands-on development. The number beside the photograph is counted from the work rows only, so organization time is not included.',
-      idn: 'Paragrafnya menyebut tiga tahun pengembangan langsung. Angka di samping foto dihitung hanya dari baris kerja, jadi waktu organisasi tidak masuk.',
+      en: 'His paragraph says three years of hands-on development, the same 3 or more years counted on the first screen.',
+      idn: 'Paragrafnya menyebut tiga tahun pengembangan langsung, sama dengan 3 tahun atau lebih yang dihitung di layar pertama.',
     },
-    { en: 'Three years in the paragraph. The count uses the work rows.', idn: 'Tiga tahun di paragraf. Angkanya memakai baris kerja.' },
+    { en: 'Three years, in the paragraph and on the first screen.', idn: 'Tiga tahun, di paragraf dan di layar pertama.' },
     'about',
     'about',
   ),

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Github, Linkedin, Mail, MessageCircle } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
 import { contactInfo, navLinks } from '../../data/portfolio';
+import { BrandLockup } from '../shared/BrandLockup';
 
 export const Footer: React.FC = () => {
   const { t, language } = useLanguage();
@@ -26,11 +27,16 @@ export const Footer: React.FC = () => {
   return (
     <footer data-studio="colophon" className="bg-ink text-paper">
       <div className="rise-item max-w-6xl mx-auto px-5 lg:px-8 pt-16 pb-8">
+        <h2 className="mb-12">
+          <BrandLockup
+            variant="horizontal"
+            surface="ink"
+            className="h-auto w-full max-w-xl"
+          />
+        </h2>
+
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-14">
           <div>
-            <h2 className="font-serif text-2xl font-medium tracking-tight mb-4">
-              Rifqi Haikal Chairiansyah
-            </h2>
             <p className="text-paper/75 leading-relaxed text-sm max-w-sm">
               {t(
                 "Software developer focused on C#, ASP.NET, .NET Core, and SQL Server for enterprise web and data systems.",

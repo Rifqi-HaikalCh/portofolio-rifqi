@@ -7,6 +7,7 @@ import { useLanguage } from '../../context/LanguageContext';
 import { navLinks } from '../../data/portfolio';
 import { Menu, X, Sun, Moon } from 'lucide-react';
 import { useStudio } from '../shared/StudioProvider';
+import { BrandLockup } from '../shared/BrandLockup';
 
 const Navbar: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -37,9 +38,10 @@ const Navbar: React.FC = () => {
         <Link
           href="#home"
           onClick={(e) => handleNavClick(e, '#home')}
-          className="relative z-10 font-serif text-lg leading-none text-ink"
+          aria-label="Rifqi Haikal"
+          className="relative z-10 inline-flex items-center"
         >
-          Rifqi Haikal
+          <BrandLockup variant="mark" label="" className="h-8 w-auto sm:h-9" />
         </Link>
 
         <nav

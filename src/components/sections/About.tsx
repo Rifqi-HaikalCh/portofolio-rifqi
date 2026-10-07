@@ -1,12 +1,12 @@
 'use client';
 
-import React, { useMemo } from 'react';
+import React from 'react';
 import Image from 'next/image';
 import { useLanguage } from '../../context/LanguageContext';
-import { aboutHighlights, workExperience } from '../../data/portfolio';
-import { calculateTotalExperience } from '../../lib/experience-utils';
+import { aboutHighlights } from '../../data/portfolio';
 import { Download, GraduationCap, Briefcase, Trophy, Users, ChevronRight } from 'lucide-react';
 import { AnimatedSectionTitle } from '../shared/AnimatedSectionTitle';
+import { BrandLockup } from '../shared/BrandLockup';
 
 const iconMap: { [key: string]: React.ReactNode } = {
   'graduation-cap': <GraduationCap size={18} />,
@@ -17,25 +17,6 @@ const iconMap: { [key: string]: React.ReactNode } = {
 
 export const About: React.FC = () => {
   const { t, language } = useLanguage();
-  const totalExp = useMemo(() => calculateTotalExperience(workExperience), []);
-
-  const stats = [
-    {
-      number: '30+',
-      label: t('Projects Completed', 'Proyek Diselesaikan'),
-      description: t('From concept to technology solutions', 'Dari konsep hingga solusi teknologi'),
-    },
-    {
-      number: `${totalExp.years}+`,
-      label: t('Years Experience', 'Tahun Pengalaman'),
-      description: t('Development and Design', 'Pengembangan dan Desain'),
-    },
-    {
-      number: '10+',
-      label: t('Technologies Used', 'Teknologi yang Digunakan'),
-      description: t('Modern tech stack expertise', 'Keahlian teknologi modern'),
-    },
-  ];
 
   return (
     <section id="about" data-studio="manuscript" className="py-12 md:py-16 border-b border-line">
@@ -51,7 +32,7 @@ export const About: React.FC = () => {
         />
 
         <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-start">
-          <figure data-eqbot="about-photo" data-eqbot-at="above" className="rise-item lg:col-span-5">
+          <figure data-eqbot="about-photo" data-eqbot-at="above" className="rise-item lg:col-span-5 lg:sticky lg:top-24">
             <div className="border border-line bg-raised">
               <div className="relative aspect-square overflow-hidden bg-raised">
                 <Image
@@ -62,15 +43,16 @@ export const About: React.FC = () => {
                   className="object-contain"
                 />
               </div>
-              <figcaption className="p-4 flex items-start justify-between gap-4">
-                <div>
+              <figcaption className="p-4 flex items-center gap-4">
+                <BrandLockup variant="badge" label="" className="h-20 w-20 shrink-0" />
+                <div className="min-w-0">
                   <p className="font-serif text-xl text-ink">Rifqi Haikal</p>
                   <p className="text-sm text-muted">{t('Software Developer', 'Developer Perangkat Lunak')}</p>
+                  <p className="mt-2 inline-flex items-center text-[11px] tracking-[0.14em] uppercase text-accent">
+                    <span className="presence" aria-hidden="true" />
+                    {t('Available for Work', 'Tersedia untuk Bekerja')}
+                  </p>
                 </div>
-                <span className="inline-flex items-center text-[11px] tracking-[0.14em] uppercase text-accent">
-                  <span className="presence" aria-hidden="true" />
-                  {t('Available for Work', 'Tersedia untuk Bekerja')}
-                </span>
               </figcaption>
             </div>
           </figure>
@@ -86,6 +68,27 @@ export const About: React.FC = () => {
                 : 'Software Engineer dengan 3 tahun pengalaman pengembangan. Pekerjaan inti saya adalah C#, ASP.NET MVC, dan .NET Core untuk sistem web dan data enterprise. Saya juga memiliki pengalaman full-stack tambahan dengan React, Angular, dan Spring Boot. Saya membangun layanan backend, REST API, dashboard pemantauan, dan aplikasi yang aman dengan SQL Server, Entity Framework, RBAC, SSO, dan MFA, untuk telekomunikasi, minyak dan gas, riset, serta jasa keuangan.'}
             </p>
 
+            <div className="mt-10">
+              <p className="font-jetbrains-mono text-[11px] tracking-[0.22em] uppercase text-accent mb-4">
+                {t('At a Glance', 'Sekilas')}
+              </p>
+              <dl className="grid sm:grid-cols-2 auto-rows-fr border-t border-l border-line">
+                {aboutHighlights.map((highlight) => (
+                  <div key={highlight.title} className="read-row flex flex-col p-5 border-b border-r border-line">
+                    <dt className="flex items-center gap-2.5">
+                      <span className="shrink-0 text-accent">{iconMap[highlight.icon]}</span>
+                      <span className="font-jetbrains-mono text-[11px] tracking-[0.14em] uppercase text-ink">
+                        {t(highlight.title, highlight.titleId)}
+                      </span>
+                    </dt>
+                    <dd className="mt-3 text-[15px] leading-relaxed text-muted">
+                      {t(highlight.description, highlight.descriptionId)}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
+
             <div className="mt-8 flex flex-wrap gap-3">
               <a href="/assets/CV Rifqi Haikal Chairiansyah.pdf" download className="btn-primary-custom">
                 <Download size={16} />
@@ -100,37 +103,6 @@ export const About: React.FC = () => {
                 <ChevronRight size={16} />
               </button>
             </div>
-
-            <dl data-eqbot="about-counts" data-eqbot-at="above" className="mt-10 grid grid-cols-1 sm:grid-cols-3 border-t border-line">
-              {stats.map((stat) => (
-                <div key={stat.label as string} className="py-5 sm:pr-6 border-b sm:border-b-0 border-line">
-                  <dt className="font-serif text-3xl text-ink">{stat.number}</dt>
-                  <dd className="mt-1 text-sm font-medium text-ink">{stat.label}</dd>
-                  <dd className="mt-1 text-sm text-muted">{stat.description}</dd>
-                </div>
-              ))}
-            </dl>
-          </div>
-        </div>
-
-        <div className="mt-20">
-          <h3 className="rise-item font-serif text-3xl font-medium text-ink mb-8">
-            {t('My Expertise', 'Keahlian Saya')}
-          </h3>
-          <div className="grid md:grid-cols-2 border-t border-l border-line">
-            {aboutHighlights.map((highlight) => (
-              <article key={highlight.title} className="rise-item read-row p-6 md:p-8 border-b border-r border-line bg-paper">
-                <div className="flex items-center gap-3 text-accent mb-4">
-                  {iconMap[highlight.icon]}
-                  <span className="font-jetbrains-mono text-[11px] tracking-[0.16em] uppercase">
-                    {t(highlight.title, highlight.titleId)}
-                  </span>
-                </div>
-                <p className="text-ink leading-relaxed">
-                  {t(highlight.description, highlight.descriptionId)}
-                </p>
-              </article>
-            ))}
           </div>
         </div>
       </div>

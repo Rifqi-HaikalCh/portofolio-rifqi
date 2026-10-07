@@ -23,24 +23,24 @@ export const typingTexts = {
 
 export const heroHighlights = [
   {
-    value: '8',
-    label: 'standalone apps from one monolith',
-    labelId: 'aplikasi mandiri dari satu monolit',
+    value: '5',
+    label: 'Industries served',
+    labelId: 'Industri dilayani',
   },
   {
     value: '100+',
-    label: 'standardized APIs',
+    label: 'Standardized APIs',
     labelId: 'API terstandar',
   },
   {
-    value: '5',
-    label: 'enterprise clients',
-    labelId: 'klien enterprise',
+    value: '3+',
+    label: 'Years of development',
+    labelId: 'Tahun pengembangan',
   },
   {
-    value: '20+',
-    label: 'web projects',
-    labelId: 'proyek web',
+    value: '30+',
+    label: 'Web projects',
+    labelId: 'Proyek web',
   },
 ];
 

@@ -1,12 +1,12 @@
 'use client';
 
-import React, { useMemo } from 'react';
+import React from 'react';
 import Image from 'next/image';
 import { useLanguage } from '../../context/LanguageContext';
-import { aboutHighlights, workExperience } from '../../data/portfolio';
-import { calculateTotalExperience } from '../../lib/experience-utils';
+import { aboutHighlights } from '../../data/portfolio';
 import { Download, GraduationCap, Briefcase, Trophy, Users, ChevronRight } from 'lucide-react';
 import { AnimatedSectionTitle } from '../shared/AnimatedSectionTitle';
+import { BrandLockup } from '../shared/BrandLockup';
 
 const iconMap: { [key: string]: React.ReactNode } = {
   'graduation-cap': <GraduationCap size={18} />,
@@ -17,25 +17,6 @@ const iconMap: { [key: string]: React.ReactNode } = {
 
 export const MobileAbout: React.FC = () => {
   const { t, language } = useLanguage();
-  const totalExp = useMemo(() => calculateTotalExperience(workExperience), []);
-
-  const stats = [
-    {
-      number: '30+',
-      label: t('Projects Completed', 'Proyek Diselesaikan'),
-      description: t('From concept to technology solutions', 'Dari konsep hingga solusi teknologi'),
-    },
-    {
-      number: `${totalExp.years}+`,
-      label: t('Years Experience', 'Tahun Pengalaman'),
-      description: t('Development and Design', 'Pengembangan dan Desain'),
-    },
-    {
-      number: '10+',
-      label: t('Technologies Used', 'Teknologi yang Digunakan'),
-      description: t('Modern tech stack expertise', 'Keahlian teknologi modern'),
-    },
-  ];
 
   return (
     <section id="about" data-studio="manuscript" className="py-16 border-b border-line bg-paper text-ink">
@@ -61,15 +42,16 @@ export const MobileAbout: React.FC = () => {
                 className="object-contain"
               />
             </div>
-            <figcaption className="p-4 flex items-start justify-between gap-4">
-              <div>
+            <figcaption className="p-4 flex items-center gap-4">
+              <BrandLockup variant="badge" label="" className="h-16 w-16 shrink-0" />
+              <div className="min-w-0">
                 <p className="font-serif text-xl text-ink">Rifqi Haikal</p>
                 <p className="text-sm text-muted">{t('Software Developer', 'Developer Perangkat Lunak')}</p>
+                <p className="mt-2 inline-flex items-center text-[11px] tracking-[0.14em] uppercase text-accent">
+                  <span className="presence" aria-hidden="true" />
+                  {t('Available for Work', 'Tersedia untuk Bekerja')}
+                </p>
               </div>
-              <span className="inline-flex items-center text-[11px] tracking-[0.14em] uppercase text-accent">
-                <span className="presence" aria-hidden="true" />
-                {t('Available for Work', 'Tersedia untuk Bekerja')}
-              </span>
             </figcaption>
           </div>
         </figure>
@@ -99,20 +81,10 @@ export const MobileAbout: React.FC = () => {
             <ChevronRight size={16} />
           </button>
         </div>
-
-        <dl className="mt-10 border-t border-line">
-          {stats.map((stat) => (
-            <div key={stat.label as string} className="py-5 border-b border-line">
-              <dt className="font-serif text-3xl text-ink">{stat.number}</dt>
-              <dd className="mt-1 text-sm font-medium text-ink">{stat.label}</dd>
-              <dd className="mt-1 text-sm text-muted">{stat.description}</dd>
-            </div>
-          ))}
-        </dl>
         </div>
 
         <h3 className="rise-item mt-14 font-serif text-3xl font-medium text-ink mb-6">
-          {t('My Expertise', 'Keahlian Saya')}
+          {t('At a Glance', 'Sekilas')}
         </h3>
         <div className="border-t border-line">
           {aboutHighlights.map((highlight) => (
