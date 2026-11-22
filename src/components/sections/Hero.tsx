@@ -1,103 +1,69 @@
 'use client';
 
-import React from 'react';
-import { Mail } from 'lucide-react';
-import { GithubIcon, LinkedinIcon, WhatsappIcon } from '../icons/BrandIcons';
 import { useLanguage } from '../../context/LanguageContext';
-import { typingTexts, contactInfo, heroHighlights } from '../../data/portfolio';
+import { cvFile, heroHighlights, heroIntro, workExperience } from '../../data/portfolio';
+import { displayCase } from '../../lib/display-case';
+import { PaperDeskStage } from '../scene/PaperDeskStage';
 
-interface HeroProps {
-  onViewProjects?: () => void;
-}
+/*
+  `01` #home — front-desk diorama and open laptop (DesignRules.md §4).
+  One component for every width: text first, then the stage (or, under 768 px,
+  the compact laptop card). Sticky on tall desktops so the About sheet slides over.
+*/
 
-const Hero: React.FC<HeroProps> = ({ onViewProjects }) => {
+const current = workExperience[0];
+
+export default function Hero({ onViewProjects }: { onViewProjects?: () => void }) {
   const { language, t } = useLanguage();
 
-  const socialIcons = [
-    { href: `mailto:${contactInfo.email}`, icon: Mail, label: 'Email' },
-    { href: contactInfo.linkedin, icon: LinkedinIcon, label: 'LinkedIn' },
-    { href: contactInfo.github, icon: GithubIcon, label: 'GitHub' },
-    { href: contactInfo.whatsapp, icon: WhatsappIcon, label: 'WhatsApp' },
-  ];
-
   return (
-    <section id="home" data-studio="folio" className="bg-paper border-b border-line">
-      <div className="rise-item w-full max-w-6xl mx-auto px-5 lg:px-8 pt-28 pb-12">
-          <p className="font-mono text-[11px] tracking-[0.22em] uppercase text-accent mb-6">
-            {t("Web · Mobile · Interface", "Web · Mobile · Antarmuka")}
+    <section id="home" data-studio="folio" className="hero-sticky border-b border-line bg-paper">
+      <div className="mx-auto grid max-w-7xl gap-10 px-5 pt-24 pb-12 lg:px-8 xl:min-h-svh xl:grid-cols-12 xl:items-center xl:gap-12 xl:pt-24">
+        <div className="xl:col-span-5">
+          <p className="mb-5 font-mono text-[11px] uppercase tracking-[0.22em] text-accent">
+            01 — Software Engineer
           </p>
-          <p className="text-sm text-muted mb-3">
-            {t("Hi, I'm", "Halo, Saya")}
-          </p>
-          <h1 className="font-serif text-6xl sm:text-7xl lg:text-8xl font-medium tracking-tight leading-[0.9] text-ink max-w-4xl">
+          <h1 className="font-serif text-6xl font-medium leading-[0.92] tracking-tight text-ink sm:text-7xl">
             Rifqi
             <span className="block">
               Haikal
-              <span data-eqbot="home-name" data-eqbot-at="end" className="inline-block w-px h-px" aria-hidden="true" />
+              <span data-eqbot="home-name" data-eqbot-at="end" className="inline-block h-px w-px" aria-hidden="true" />
             </span>
           </h1>
 
-          <div className="mt-10 flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
-            <p data-eqbot="home-role" data-eqbot-at="end" className="text-lg md:text-xl text-muted max-w-md">
-              <span>{t("I'm", "Saya")} </span>
-              <span className="text-ink font-serif italic">
-            {language === 'en' ? typingTexts.en[0] : typingTexts.id[0]}
-          </span>
-          <span className="caret" aria-hidden="true" />
-            </p>
-            <div className="flex flex-col sm:flex-row gap-3">
-              <a href="#contact" className="btn-primary-custom">
-                {t("Get In Touch", "Hubungi Saya")}
-              </a>
-              <button type="button" onClick={onViewProjects} className="btn-outline-custom">
-                {t("View Projects", "Lihat Projek")}
-              </button>
-            </div>
-          </div>
-      </div>
-
-      <div className="rise-item max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-4 border-t border-l border-line">
-        {heroHighlights.map((item) => (
-          <div key={item.label} className="border-b border-r border-line px-5 lg:px-8 py-5">
-            <p className="font-serif text-3xl leading-none text-ink">{item.value}</p>
-            <p className="mt-2 font-mono text-[11px] tracking-[0.12em] uppercase text-muted">
-              {t(item.label, item.labelId)}
-            </p>
-          </div>
-        ))}
-      </div>
-
-      <div className="rise-item border-t border-line">
-        <div className="max-w-6xl mx-auto px-5 lg:px-8 py-5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <p data-eqbot="home-available" data-eqbot-at="end" className="font-mono text-[11px] tracking-[0.16em] uppercase">
-            <span className="inline-flex items-center text-accent">
-              <span className="presence" aria-hidden="true" />
-              {t("Available for work", "Tersedia untuk bekerja")}
-            </span>
-            <span className="text-muted"> · {contactInfo.location}</span>
+          <p data-eqbot="home-role" data-eqbot-at="end" className="mt-6 font-serif text-xl italic text-ink">
+            {displayCase(language === 'en' ? current.title : current.titleId)}
+            <span className="caret" aria-hidden="true" />
           </p>
-          <div className="flex flex-wrap gap-x-5 gap-y-2">
-            {socialIcons.map((social) => {
-              const IconComponent = social.icon;
-              return (
-                <a
-                  key={social.label}
-                  href={social.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={social.label}
-                  className="link-mark inline-flex items-center gap-2 text-sm text-muted"
-                >
-                  <IconComponent size={16} />
-                  {social.label}
-                </a>
-              );
-            })}
+          <p className="mt-3 max-w-md text-muted">{language === 'en' ? heroIntro.en : heroIntro.id}</p>
+
+          <ul className="mt-7 grid max-w-md grid-cols-2 gap-2">
+            {heroHighlights.map((item) => (
+              <li key={item.label} className="ticket border border-line bg-raised px-5 py-3">
+                <p className="font-serif text-2xl leading-none text-ink">{item.value}</p>
+                <p className="mt-1.5 font-mono text-[11px] uppercase tracking-[0.1em] text-muted">
+                  {t(item.label, item.labelId)}
+                </p>
+              </li>
+            ))}
+          </ul>
+
+          <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+            <button type="button" onClick={onViewProjects} className="btn-primary-custom min-h-11">
+              {t('View projects', 'Lihat projek')}
+            </button>
+            {cvFile && (
+              <a href={cvFile} download className="btn-outline-custom min-h-11">
+                {t('Download CV', 'Unduh CV')}
+              </a>
+            )}
           </div>
+        </div>
+
+        <div className="xl:col-span-7">
+          <PaperDeskStage onOpenProjects={onViewProjects} />
         </div>
       </div>
     </section>
   );
-};
-
-export default Hero;
+}

@@ -2,8 +2,7 @@
 import React, { useState } from 'react';
 import { useHydrated } from '../../hooks/useHydrated';
 import Link from 'next/link';
-import { useTheme } from 'next-themes';
-import { useThemeAnimation } from '../shared/Providers';
+import { useThemeToggle } from '../shared/Providers';
 import { useLanguage } from '../../context/LanguageContext';
 import { navLinks } from '../../data/portfolio';
 import { Menu, X, Sun, Moon } from 'lucide-react';
@@ -12,8 +11,7 @@ import { BrandLockup } from '../shared/BrandLockup';
 
 const Navbar: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { theme } = useTheme();
-  const { toggleTheme } = useThemeAnimation();
+  const { isDark, toggleTheme } = useThemeToggle();
   const { language, toggleLanguage } = useLanguage();
   const { activeId } = useStudio();
   const mounted = useHydrated();
@@ -65,10 +63,10 @@ const Navbar: React.FC = () => {
             <button
               type="button"
               onClick={toggleTheme}
-              aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+              aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
               className="inline-flex h-9 w-9 items-center justify-center border-r border-line text-ink hover:bg-ink hover:text-paper"
             >
-              {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+              {isDark ? <Sun size={16} /> : <Moon size={16} />}
             </button>
             <button
               type="button"
@@ -113,7 +111,7 @@ const Navbar: React.FC = () => {
                 onClick={toggleTheme}
                 className="flex-1 h-10 border border-line text-sm text-ink"
               >
-                {theme === 'dark' ? 'Light' : 'Dark'}
+                {isDark ? 'Light' : 'Dark'}
               </button>
               <button
                 type="button"

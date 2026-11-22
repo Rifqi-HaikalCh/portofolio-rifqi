@@ -1,11 +1,8 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { WallLayer } from '../../components/scene/layers/WallLayer';
-import { DeskLayer } from '../../components/scene/layers/DeskLayer';
-import { FrontLayer } from '../../components/scene/layers/FrontLayer';
-import { LampArt } from '../../components/scene/LampArt';
 import { RifqiFigurine } from '../../components/scene/RifqiFigurine';
-import { FIGURINE, SCREEN, stageBox } from '../../components/scene/stage-geometry';
+import { FigurineSlot } from '../../components/scene/FigurineSlot';
+import { PaperDeskStage } from '../../components/scene/PaperDeskStage';
 import { ThemeSwitch } from './ThemeSwitch';
 
 /*
@@ -18,8 +15,6 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-const layer = 'absolute inset-0 h-full w-full pointer-events-none';
-
 function Label({ children }: { children: React.ReactNode }) {
   return <p className="mb-3 font-mono text-[11px] uppercase tracking-[0.2em] text-accent">{children}</p>;
 }
@@ -31,7 +26,7 @@ export default function PapercraftPage() {
     <main id="main" className="mx-auto max-w-6xl px-5 py-12 lg:px-8">
       <header className="mb-10 flex flex-wrap items-end justify-between gap-4 border-b border-line pb-6">
         <div>
-          <Label>Phase 2 · asset review</Label>
+          <Label>Phase 2–3 · asset review</Label>
           <h1 className="font-serif text-4xl font-medium tracking-tight text-ink">The Architect&apos;s Paper Desk</h1>
           <p className="mt-2 max-w-xl text-muted">
             Every layer shares one 1600×1000 stage. Switch the theme to move the light from the window to the lamp.
@@ -41,30 +36,23 @@ export default function PapercraftPage() {
       </header>
 
       <section aria-label="Assembled stage" className="mb-14">
-        <Label>Assembled stage · L1 wall → L2 desk, laptop, figurine, lamp → L3 props</Label>
-        <div className="relative aspect-[16/10] w-full overflow-hidden border border-line">
-          <WallLayer className={layer} />
-          <DeskLayer className={layer} />
-          <div className="absolute" style={stageBox(FIGURINE)}>
-            <RifqiFigurine className="h-full w-full" />
-          </div>
-          <LampArt className={layer} />
-          <FrontLayer className={layer} />
-          {/* Where LaptopScreenUI will render real HTML in Phase 3. */}
-          <div
-            className="absolute grid place-items-center border border-dashed border-blueprint/60 font-mono text-[11px] uppercase tracking-[0.14em] text-blueprint"
-            style={stageBox(SCREEN)}
-          >
-            screen · semantic HTML (Phase 3)
-          </div>
-        </div>
+        <Label>Assembled stage · L1 wall → L2 desk, laptop, figurine, lamp → L3 props · move the pointer for parallax</Label>
+        <PaperDeskStage />
       </section>
 
-      <section aria-label="Individual assets" className="grid gap-8 md:grid-cols-3">
+      <section aria-label="Individual assets" className="grid gap-8 md:grid-cols-2">
         <div>
           <Label>Figurine poster</Label>
           <div className="grid place-items-center border border-line bg-raised p-6">
-            <RifqiFigurine className="h-80 w-auto" title="Paper figurine of Rifqi Haikal" />
+            <RifqiFigurine className="h-[600px] w-auto" title="Paper figurine of Rifqi Haikal" />
+          </div>
+        </div>
+        <div>
+          <Label>Figurine 3D · same framing, add ?webgl=off for the fallback</Label>
+          <div className="grid place-items-center border border-line bg-raised p-6">
+            <div className="h-[600px] w-[261px]">
+              <FigurineSlot title="3D paper figurine of Rifqi" />
+            </div>
           </div>
         </div>
         <div>
@@ -88,7 +76,7 @@ export default function PapercraftPage() {
             <li>L1 WallLayer · inline SVG</li>
             <li>L2 DeskLayer + LampArt · inline SVG</li>
             <li>L3 FrontLayer · inline SVG</li>
-            <li>Figurine · inline SVG, GLB in Phase 3</li>
+            <li>Figurine · SVG poster first, procedural R3F mesh after idle (no GLB download)</li>
             <li>Fills: tokens only (§5.2)</li>
           </ul>
         </div>

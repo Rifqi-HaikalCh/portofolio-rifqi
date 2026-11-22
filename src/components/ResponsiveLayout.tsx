@@ -4,8 +4,7 @@ import { useHydrated } from '../hooks/useHydrated';
 import { useIsMobile } from '../hooks/useMediaQuery';
 import { AnimatedSection } from './hocs/AnimatedSection';
 
-// Mobile Components
-import { MobileHero } from './mobile/MobileHero';
+// Mobile Components (merged into the responsive sections in Phase 4, DesignRules §8)
 import { MobileAbout } from './mobile/MobileAbout';
 import { MobileRoleBasedPortfolio } from './mobile/MobileRoleBasedPortfolio';
 import { MobileExperience } from './mobile/MobileExperience';
@@ -26,59 +25,53 @@ export const ResponsiveLayout: React.FC = () => {
   const mounted = useHydrated();
   const [showAllProjects, setShowAllProjects] = useState(false);
 
-  // Show loading placeholder during SSR to prevent hydration mismatch
-  if (!mounted) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-pulse text-muted">Loading...</div>
-      </div>
-    );
+  // Decided at click time, so the hero needs no device check to render.
+  const viewProjects = () => {
+    if (window.matchMedia('(max-width: 768px)').matches) {
+      document.getElementById('services')?.scrollIntoView();
+    } else {
+      setShowAllProjects(true);
+    }
+  };
+
+  if (showAllProjects && !isMobile) {
+    return <ViewAllProjects onBack={() => setShowAllProjects(false)} projectType="all" />;
   }
 
   return (
     <div>
-      <>
-        {showAllProjects && !isMobile ? (
-          <ViewAllProjects
-            onBack={() => setShowAllProjects(false)}
-            projectType="all"
-          />
+      {/* The hero is one responsive component and is in the server HTML: it is the LCP. */}
+      <Hero onViewProjects={viewProjects} />
+
+      {/* The remaining sections still switch trees after mount until Phase 4. */}
+      {mounted &&
+        (isMobile ? (
+          <div className="mobile-layout">
+            <MobileAbout />
+            <MobileExperience />
+            <MobileRoleBasedPortfolio />
+            <MobileCertificates />
+            <MobileContact />
+          </div>
         ) : (
-          <>
-            {isMobile ? (
-              // Mobile Layout - Optimized for touch and vertical scrolling
-              <div className="mobile-layout">
-                <MobileHero />
-                <MobileAbout />
-                <MobileExperience />
-                <MobileRoleBasedPortfolio />
-                <MobileCertificates />
-                <MobileContact />
-              </div>
-            ) : (
-              // Desktop Layout - Optimized for hover and horizontal layouts
-              <div className="desktop-layout">
-                <Hero onViewProjects={() => setShowAllProjects(true)} />
-                <AnimatedSection>
-                  <About />
-                </AnimatedSection>
-                <AnimatedSection>
-                  <Experience />
-                </AnimatedSection>
-                <AnimatedSection>
-                  <Services />
-                </AnimatedSection>
-                <AnimatedSection>
-                  <Certificates />
-                </AnimatedSection>
-                <AnimatedSection>
-                  <Contact />
-                </AnimatedSection>
-              </div>
-            )}
-          </>
-        )}
-      </>
+          <div className="desktop-layout">
+            <AnimatedSection>
+              <About />
+            </AnimatedSection>
+            <AnimatedSection>
+              <Experience />
+            </AnimatedSection>
+            <AnimatedSection>
+              <Services />
+            </AnimatedSection>
+            <AnimatedSection>
+              <Certificates />
+            </AnimatedSection>
+            <AnimatedSection>
+              <Contact />
+            </AnimatedSection>
+          </div>
+        ))}
     </div>
   );
 };

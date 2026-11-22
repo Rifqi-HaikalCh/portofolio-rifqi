@@ -73,6 +73,8 @@ export interface CertificateCategory {
 
 export interface ContactInfo {
   email: string;
+  /** Shown on the laptop screen only when set by the owner (DesignRules §4 `01`). */
+  availability?: { en: string; id: string };
   phone: string;
   location: string;
   linkedin: string;

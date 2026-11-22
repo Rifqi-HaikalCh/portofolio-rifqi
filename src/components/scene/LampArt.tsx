@@ -27,7 +27,7 @@ export function LampArt({ className = '' }: { className?: string }) {
       </defs>
 
       {/* Lamp light: cone and pool, dark theme only. */}
-      <g style={{ opacity: 'var(--glow-opacity)' }}>
+      <g className="lamp-glow" style={{ opacity: 'var(--glow-opacity)' }}>
         <polygon points="1138,334 1226,374 1080,652 560,652" fill="var(--ill-lamp-light)" />
         <ellipse cx="860" cy="652" rx="380" ry="46" fill="url(#lamp-pool)" />
       </g>
@@ -39,12 +39,15 @@ export function LampArt({ className = '' }: { className?: string }) {
         <line x1="1322" y1="420" x2="1214" y2="300" stroke="var(--ill-lamp)" strokeWidth="14" />
         <circle cx="1322" cy="420" r="15" fill="var(--ill-lamp)" {...cut} />
         <circle cx="1214" cy="300" r="12" fill="var(--ill-lamp)" {...cut} />
-        <polygon points="1190,256 1252,288 1232,378 1132,330" fill="var(--ill-lamp)" {...cut} />
       </g>
-      {/* Folded side of the shade: the half turned away from the light. */}
-      <polygon points="1252,288 1232,378 1196,360 1222,272" fill="var(--paper-fold)" />
-      {/* Bulb rim: muted when off, warm when the lamp is on. */}
-      <polygon points="1136,332 1230,376 1220,386 1130,344" fill="var(--ill-bulb)" />
+      {/* Head: tilts 6° toward the desk when the lamp is on (.lamp-head in scene.css). */}
+      <g className="lamp-head">
+        <polygon points="1190,256 1252,288 1232,378 1132,330" fill="var(--ill-lamp)" style={drop} {...cut} />
+        {/* Folded side of the shade: the half turned away from the light. */}
+        <polygon points="1252,288 1232,378 1196,360 1222,272" fill="var(--paper-fold)" />
+        {/* Bulb rim: muted when off, warm when the lamp is on. */}
+        <polygon points="1136,332 1230,376 1220,386 1130,344" fill="var(--ill-bulb)" />
+      </g>
       {/* Switch on the base */}
       <rect x="1404" y="634" width="18" height="8" fill="var(--ill-bulb)" />
     </svg>

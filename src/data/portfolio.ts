@@ -16,10 +16,14 @@ export const navLinks: NavLink[] = [
   { href: '#contact', labelEn: 'Contact', labelId: 'Kontak' },
 ];
 
-export const typingTexts = {
-  en: ['A Software Developer', 'A Fullstack Developer', 'A Frontend Developer', 'A .Net/C# Developer'],
-  id: ['Seorang Pengembang Perangkat Lunak', 'Seorang Pengembang Fullstack', 'Seorang Pengembang Frontend', 'Seorang Pengembang .Net/C#']
+/** Hero value proposition: two lines at most (DesignRules §4 `01`). */
+export const heroIntro = {
+  en: 'I build enterprise .NET and SQL Server systems, and the web interfaces people use on top of them.',
+  id: 'Saya membangun sistem enterprise .NET dan SQL Server, beserta antarmuka web yang dipakai di atasnya.',
 };
+
+/** Rendered as a download link only because this file exists in public/. */
+export const cvFile = '/assets/CV Rifqi Haikal Chairiansyah.pdf';
 
 export const heroHighlights = [
   {
@@ -810,6 +814,7 @@ export const certificateCategories: CertificateCategory[] = [
 
 export const contactInfo: ContactInfo = {
   email: 'r.haikal1610@gmail.com',
+  availability: { en: 'Available for work', id: 'Tersedia untuk bekerja' },
   phone: '+62 853-6278-4585',
   location: 'Jakarta, Indonesia',
   linkedin: 'https://www.linkedin.com/in/rifqhaikall',

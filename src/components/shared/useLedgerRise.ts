@@ -57,6 +57,8 @@ export function useLedgerRise(listRef: RefObject<HTMLOListElement | null>, reset
 const riseSelector = '.rise-item, section[data-studio], footer[data-studio]';
 
 function isRiseTarget(item: HTMLElement) {
+  // The hero paints on first load: it is the LCP and never waits for a reveal (DesignRules §10.2).
+  if (item.closest('#home')) return false;
   if (item.classList.contains('rise-item')) return true;
   if (!item.matches('section[data-studio], footer[data-studio]')) return false;
   return item.querySelector('.rise-item') === null;

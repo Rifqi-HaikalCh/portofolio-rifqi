@@ -1,0 +1,131 @@
+/*
+  Hero stage (DesignRules.md §9). One 16/10 stage; layers align through the
+  shared viewBox. Pointer parallax reads --px / --py (written by
+  useParallaxStage); scroll depth uses scroll-driven animations where supported.
+  Only transform, translate and opacity move.
+*/
+
+.paper-stage {
+  --px: 0;
+  --py: 0;
+}
+
+.stage-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  transition: transform var(--dur-ui) var(--ease-paper);
+}
+
+/* L1 wall ±4 px, L2 desk/laptop/lamp anchored, figurine ±2 px, L3 props ±10 px. */
+.stage-l1 { transform: translate3d(calc(var(--px) * -4px), calc(var(--py) * -4px), 0); }
+.stage-fig { transform: translate3d(calc(var(--px) * -2px), calc(var(--py) * -2px), 0); }
+.stage-l3 { transform: translate3d(calc(var(--px) * -10px), calc(var(--py) * -10px), 0); }
+
+/* Scroll depth: the wall drifts up and the front props drop away as the About
+   sheet arrives. The wall's lower edge stays hidden behind the desk band. */
+@supports (animation-timeline: scroll()) {
+  @media (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
+    .stage-l1,
+    .stage-l3 {
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: scroll(root);
+      animation-range: 0 100vh;
+    }
+    .stage-l1 { animation-name: stage-depth-far; }
+    .stage-l3 { animation-name: stage-depth-near; }
+  }
+}
+
+@keyframes stage-depth-far {
+  to { translate: 0 -6vh; }
+}
+
+@keyframes stage-depth-near {
+  to { translate: 0 12vh; }
+}
+
+/* Registration marks at the four stage corners (§2.3). */
+.stage-marks > i {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border: 0 solid var(--color-line);
+  pointer-events: none;
+}
+.stage-marks > i:nth-child(1) { top: -6px; left: -6px; border-top-width: 1px; border-left-width: 1px; }
+.stage-marks > i:nth-child(2) { top: -6px; right: -6px; border-top-width: 1px; border-right-width: 1px; }
+.stage-marks > i:nth-child(3) { bottom: -6px; left: -6px; border-bottom-width: 1px; border-left-width: 1px; }
+.stage-marks > i:nth-child(4) { bottom: -6px; right: -6px; border-bottom-width: 1px; border-right-width: 1px; }
+
+/* Desk lamp: the head tilts and the light pool fades when the lamp turns on. */
+.lamp-head {
+  transform-box: view-box;
+  transform-origin: 1214px 300px;
+  transition: transform var(--dur-ui) var(--ease-paper);
+}
+.dark .lamp-head { transform: rotate(-6deg); }
+.lamp-glow { transition: opacity var(--dur-ui) var(--ease-paper); }
+
+.desk-lamp:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: -2px;
+}
+
+/* Laptop screen: sizes follow the glass, never below 11 px mono / 13 px body. */
+.laptop-screen {
+  container-type: inline-size;
+}
+
+@container (max-width: 300px) {
+  .screen-company { display: none; }
+}
+
+/* Under 768 px the screen is a compact paper laptop card instead of the stage. */
+@media (max-width: 767px) {
+  .laptop-screen {
+    padding: 10px 10px 0;
+    background: var(--ill-bezel);
+    border: 1px solid var(--color-line);
+  }
+  .laptop-screen::after {
+    content: "";
+    display: block;
+    height: 12px;
+    margin: 10px -11px 0;
+    background: var(--ill-laptop);
+    border: 1px solid var(--color-line);
+    box-shadow: var(--paper-edge-cut);
+  }
+}
+
+/* Cut-out metric ticket: two punched notches on the long sides. */
+.ticket {
+  --notch: 6px;
+  -webkit-mask:
+    radial-gradient(circle var(--notch) at 0 50%, transparent 98%, black) left / 51% 100% no-repeat,
+    radial-gradient(circle var(--notch) at 100% 50%, transparent 98%, black) right / 51% 100% no-repeat;
+  mask:
+    radial-gradient(circle var(--notch) at 0 50%, transparent 98%, black) left / 51% 100% no-repeat,
+    radial-gradient(circle var(--notch) at 100% 50%, transparent 98%, black) right / 51% 100% no-repeat;
+}
+
+.status-dot {
+  display: inline-block;
+  width: 0.45em;
+  height: 0.45em;
+  margin-right: 0.45em;
+  background: rgb(var(--rgb-accent));
+  vertical-align: 0.08em;
+}
+
+/* The hero stays put while the About sheet slides over it (§4 `01`). */
+@media (min-width: 1280px) and (min-height: 800px) {
+  #home.hero-sticky {
+    position: sticky;
+    top: 0;
+  }
+}

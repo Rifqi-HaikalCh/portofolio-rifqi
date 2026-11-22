@@ -6,6 +6,7 @@ import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
 import { RifqiFigurine } from '../scene/RifqiFigurine';
+import { EQBOT_OPEN_EVENT } from '../scene/scene-events';
 import { scrollToStudioSection, useStudio } from './StudioProvider';
 import {
   eqbotCopy,
@@ -196,6 +197,15 @@ export function EqbotCompanion() {
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   }, [phase]);
+
+  // Other parts of the page (the laptop screen's "Ask EQbot") open the sheet with this event.
+  const onOpenRequest = useEffectEvent(() => openChat());
+
+  useEffect(() => {
+    const onOpen = () => onOpenRequest();
+    window.addEventListener(EQBOT_OPEN_EVENT, onOpen);
+    return () => window.removeEventListener(EQBOT_OPEN_EVENT, onOpen);
+  }, []);
 
   const choose = (choice: EqbotChoice) => {
     if (waiting || phase !== 'open') return;

@@ -3,6 +3,7 @@
 @import "../styles/z-index.css";
 @import "../styles/motion.css";
 @import "../styles/design-system.css";
+@import "../styles/scene.css";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -76,16 +77,6 @@
     transition-property: background-color, border-color, color;
     transition-duration: var(--dur-micro);
     transition-timing-function: ease;
-  }
-
-  #theme-transition-overlay {
-    position: fixed;
-    inset: 0;
-    z-index: var(--z-overlay);
-    pointer-events: none;
-    clip-path: circle(0% at 0px 0px);
-    transition: clip-path 0.45s ease;
-    background-color: var(--color-paper);
   }
 }
 

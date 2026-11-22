@@ -36,10 +36,12 @@ function coil(cx: number, cy: number, r: number) {
 export function RifqiFigurine({
   crop = 'full',
   className = '',
+  style,
   title,
 }: {
   crop?: Crop;
   className?: string;
+  style?: React.CSSProperties;
   /** Provide only where the figurine carries meaning; otherwise it is decorative. */
   title?: string;
 }) {
@@ -48,6 +50,7 @@ export function RifqiFigurine({
     <svg
       viewBox={VIEWBOX[crop]}
       className={className}
+      style={style}
       role={decorative ? undefined : 'img'}
       aria-hidden={decorative ? 'true' : undefined}
       aria-label={title}
