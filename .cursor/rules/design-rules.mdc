@@ -1,0 +1,6 @@
+---
+description: Binding design, UX and engineering contract for the 3D Paper Craft portfolio.
+alwaysApply: true
+---
+
+Before any edit, read and follow `DesignRules.md` at the repository root. It is the single source of truth. Report any conflict with it before writing code.

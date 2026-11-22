@@ -1,4 +1,4 @@
-A bilingual personal portfolio for Rifqi Haikal Chairiansyah, built with Next.js 14, TypeScript, and Tailwind CSS.
+A bilingual personal portfolio for Rifqi Haikal Chairiansyah, currently built with Next.js 14, TypeScript, and Tailwind CSS, and being redesigned as a 3D paper craft desk (see DesignRules.md).
 
 Portofolio pribadi Rifqi Haikal Chairiansyah. Situs ini menampilkan pengalaman kerja, proyek, dan sertifikat dalam bahasa Indonesia dan Inggris, dengan tampilan gelap dan terang.
 
@@ -14,14 +14,15 @@ Demo: https://portofolio-rifqi-snowy.vercel.app
 
 ## Stack
 
-Yang terpasang di `package.json`:
+Yang terpasang saat ini di `package.json`:
 
 - Next.js 14, React 18, TypeScript
 - Tailwind CSS, PostCSS, Autoprefixer
-- next-themes, framer-motion, motion
+- next-themes, framer-motion
 - lottie-react, lucide-react, react-icons, react-type-animation
 - resend
-- three, @react-three/fiber, @react-three/drei, @react-three/rapier, matter-js
+
+Stack target redesign (Next.js 16, React 19, Tailwind CSS 4, React Three Fiber 9, motion) ada di [DesignRules.md](DesignRules.md) bagian 11.
 
 ## Struktur folder
 
@@ -55,7 +56,7 @@ npm run lint
 
 Semua salinan situs ada di `src/data/portfolio.ts`. Pasangan bahasa wajib terisi (`title`/`titleId`, `description`/`descriptionId`, `labelEn`/`labelId`, dan padanan sejenis). Jangan mengarang tautan atau path gambar; path gambar harus sudah ada di `public/assets`.
 
-Aturan visual ada di [PORTFOLIO_STANDARDS.md](PORTFOLIO_STANDARDS.md).
+Aturan desain, UX, dan teknis ada di [DesignRules.md](DesignRules.md).
 
 ## Deployment
 
