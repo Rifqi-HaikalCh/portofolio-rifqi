@@ -1,115 +1,144 @@
-'use client';
-
-import React, { useMemo, useRef, useState } from 'react';
-import { useLanguage } from '../../context/LanguageContext';
+import Image from 'next/image';
+import { Plus } from 'lucide-react';
 import { workExperience, organizationExperience } from '../../data/portfolio';
-import { AnimatedSectionTitle } from '../shared/AnimatedSectionTitle';
-import type { Experience as ExperienceType } from '../../types';
-import { ExperienceDetailDialog } from '../shared/ProjectDetailDialog';
+import type { Experience as ExperienceEntry } from '../../types';
 import { calculateTotalExperience } from '../../lib/experience-utils';
-import { useLedgerRise } from '../shared/useLedgerRise';
+import { displayCase } from '../../lib/display-case';
+import { SectionTitle } from '../ui/SectionTitle';
+import { TabbedPanels } from '../ui/TabbedPanels';
+import { Tag } from '../ui/Tag';
+import { T } from '../ui/T';
 
-export const Experience: React.FC = () => {
-  const { language } = useLanguage();
-  const [selectedExp, setSelectedExp] = useState<ExperienceType | null>(null);
-  const [activeTab, setActiveTab] = useState<'work' | 'organization'>('work');
+const bullets = (text?: string) =>
+  (text ?? '')
+    .split('\n')
+    .map((line) => line.replace(/^[•\-\s]+/, '').trim())
+    .filter(Boolean);
 
-  const experiences = activeTab === 'work' ? workExperience : organizationExperience;
-  const totalExp = useMemo(() => calculateTotalExperience(workExperience), []);
-  const t = (en: string, id: string) => (language === 'en' ? en : id);
-  const listRef = useRef<HTMLOListElement>(null);
-  useLedgerRise(listRef, activeTab);
+/* One ledger row: a <details> unfolds in place (native aria-expanded, no JS). */
+function LedgerRow({ entry, index }: { entry: ExperienceEntry; index: number }) {
+  const en = bullets(entry.description);
+  const id = bullets(entry.descriptionId);
+  return (
+    <li className="border-b border-line">
+      <details className="folio group">
+        <summary className="grid min-h-11 grid-cols-[2.5rem_1fr_auto] items-start gap-x-4 gap-y-1 py-6 md:grid-cols-[3rem_1fr_14rem_2rem] md:gap-x-8">
+          <span className="stamp pt-1 text-xs" aria-hidden="true">
+            {String(index + 1).padStart(2, '0')}
+          </span>
+          <span className="min-w-0">
+            <span className="block font-serif text-xl font-medium leading-snug text-ink md:text-2xl">
+              <T en={displayCase(entry.title)} id={displayCase(entry.titleId ?? entry.title)} />
+            </span>
+            <span className="mt-1 block text-ink">{displayCase(entry.company)}</span>
+            <span className="mt-2 block max-w-[62ch] text-[15px] leading-relaxed text-muted">
+              <T en={entry.shortDescription} id={entry.shortDescriptionId} />
+            </span>
+          </span>
+          <span className="col-start-2 font-mono text-[11px] uppercase tracking-[0.12em] text-muted md:col-start-3 md:row-start-1 md:text-right">
+            <span className="block text-accent">{entry.period}</span>
+            {entry.location && <span className="mt-1 block normal-case tracking-normal">{entry.location}</span>}
+            {entry.logo && (
+              <Image
+                src={entry.logo}
+                alt=""
+                width={128}
+                height={28}
+                className="mt-3 h-7 w-auto max-w-32 object-contain object-left md:ml-auto md:object-right"
+              />
+            )}
+          </span>
+          <span
+            className="folio-mark col-start-3 row-start-1 inline-flex h-8 w-8 items-center justify-center border border-line text-ink md:col-start-4"
+            aria-hidden="true"
+          >
+            <Plus size={14} />
+          </span>
+        </summary>
+        <div className="folio-body grid gap-6 pb-8 pl-14 md:grid-cols-[1fr_14rem] md:gap-8 md:pl-20">
+          {en.length > 0 && (
+            <ul className="max-w-[68ch] space-y-2 text-[15px] leading-relaxed text-ink">
+              {en.map((line, i) => (
+                <li key={line} className="grid grid-cols-[1rem_1fr]">
+                  <span className="text-accent" aria-hidden="true">—</span>
+                  <span>
+                    <T en={line} id={id[i]} />
+                  </span>
+                </li>
+              ))}
+            </ul>
+          )}
+          {entry.techStack && entry.techStack.length > 0 && (
+            <ul aria-label="Stack" className="flex flex-wrap content-start gap-1.5 md:justify-end">
+              {entry.techStack.map((tech) => (
+                <Tag key={tech}>{tech}</Tag>
+              ))}
+            </ul>
+          )}
+        </div>
+      </details>
+    </li>
+  );
+}
+
+const Ledger = ({ entries }: { entries: ExperienceEntry[] }) => (
+  <ol className="border-t border-line bg-raised px-4 sm:px-6">
+    {entries.map((entry, index) => (
+      <LedgerRow key={entry.id} entry={entry} index={index} />
+    ))}
+  </ol>
+);
+
+/*
+  03 Experience — a ledger in folder tabs (DesignRules.md §4 `03`).
+  Total experience is worked out on the server; the page revalidates daily.
+*/
+export function Experience() {
+  const total = calculateTotalExperience(workExperience);
 
   return (
-    <section id="experience" data-studio="ledger" className="py-12 md:py-16 border-b border-line bg-paper">
-      <div className="max-w-6xl mx-auto px-5 lg:px-8">
-        <AnimatedSectionTitle
-          badge={t('Professional Journey', 'Perjalanan Profesional')}
-          title={t('My Experience', 'Pengalaman Saya')}
-          subtitle={t(
-            'A chronological journey through my professional milestones and technical impact.',
-            'Perjalanan kronologis melalui pencapaian profesional dan dampak teknis saya.'
-          )}
+    <section id="experience" data-studio="ledger" aria-labelledby="experience-title" className="py-16 md:py-24">
+      <div className="mx-auto max-w-6xl px-5 lg:px-8">
+        <SectionTitle
+          index="03"
+          eyebrow={<T en="Ledger" id="Buku besar" />}
+          title={<T en="Experience" id="Pengalaman" />}
+          titleId="experience-title"
+          lede={
+            <T
+              en="Where I've worked, newest first. Open a row for what I shipped there."
+              id="Tempat saya bekerja, dari yang terbaru. Buka baris untuk melihat apa yang saya kerjakan."
+            />
+          }
+          aside={
+            <p data-eqbot="experience-total" data-eqbot-at="above" className="shrink-0 border-l-2 border-accent pl-4">
+              <span className="block font-mono text-[11px] uppercase tracking-[0.18em] text-muted">
+                <T en="Total work experience" id="Total pengalaman kerja" />
+              </span>
+              <span className="mt-1 block font-serif text-3xl text-ink">
+                {total.years} <T en={total.years === 1 ? 'year' : 'years'} id="tahun" /> {total.months}{' '}
+                <T en={total.months === 1 ? 'month' : 'months'} id="bulan" />
+              </span>
+            </p>
+          }
         />
 
-        <p data-eqbot="experience-total" data-eqbot-at="above" className="rise-item text-center mb-10">
-          <span className="font-mono text-[11px] tracking-[0.18em] uppercase text-accent">
-            {t('Total Work Experience', 'Total Pengalaman Kerja')}
-          </span>
-          <span className="mt-2 block font-serif text-3xl text-ink">
-            {totalExp.years} {t('Years', 'Tahun')} {totalExp.months} {t('Months', 'Bulan')}
-          </span>
-        </p>
-
-        <div className="rise-item flex justify-center mb-12">
-          <div data-eqbot="experience-tabs" data-eqbot-at="above" className="inline-flex border border-line" role="tablist">
-            <button
-              type="button"
-              role="tab"
-              aria-selected={activeTab === 'work'}
-              onClick={() => setActiveTab('work')}
-              className={`px-5 py-3 text-sm ${activeTab === 'work' ? 'bg-ink text-paper' : 'text-muted hover:text-ink'}`}
-            >
-              {t('Work', 'Kerja')}
-            </button>
-            <button
-              type="button"
-              role="tab"
-              aria-selected={activeTab === 'organization'}
-              onClick={() => setActiveTab('organization')}
-              className={`px-5 py-3 text-sm border-l border-line ${activeTab === 'organization' ? 'bg-ink text-paper' : 'text-muted hover:text-ink'}`}
-            >
-              {t('Organizations', 'Organisasi')}
-            </button>
-          </div>
-        </div>
-
-        <ol ref={listRef} className="border-t border-line">
-          {experiences.map((exp) => (
-            <li key={exp.id} className="ledger-item border-b border-line">
-              <article
-                tabIndex={0}
-                onClick={() => setSelectedExp(exp)}
-                onKeyDown={(event) => {
-                  if (event.key === 'Enter' || event.key === ' ') {
-                    event.preventDefault();
-                    setSelectedExp(exp);
-                  }
-                }}
-                className="row-open grid w-full cursor-pointer md:grid-cols-12 gap-4 md:gap-8 py-8"
-              >
-                <div className="md:col-span-3">
-                  <p className="font-mono text-[11px] tracking-[0.14em] uppercase text-accent">{exp.period}</p>
-                  {exp.location && <p className="mt-2 text-sm text-muted">{exp.location}</p>}
-                  {exp.logo && (
-                    <img src={exp.logo} alt="" className="mt-4 h-8 w-auto max-w-full object-contain object-left" />
-                  )}
-                </div>
-                <div className="md:col-span-6">
-                  {exp.companyType && (
-                    <p className="font-mono text-[11px] tracking-[0.16em] uppercase text-muted mb-2">
-                      {t(exp.companyType, exp.companyTypeId || exp.companyType)}
-                    </p>
-                  )}
-                  <h3 className="row-open-title font-serif text-2xl font-medium text-ink leading-snug">{t(exp.title, exp.titleId || exp.title)}</h3>
-                  <p className="mt-1 text-ink">{exp.company}</p>
-                  {exp.positionDetail && <p className="mt-1 text-sm text-muted">{t(exp.positionDetail, exp.positionDetailId || exp.positionDetail)}</p>}
-                  <p className="mt-3 text-muted leading-relaxed">{t(exp.shortDescription, exp.shortDescriptionId || exp.shortDescription)}</p>
-                </div>
-                <div className="md:col-span-3 md:text-right">
-                  <span className="btn-outline-custom row-open-action">
-                    {t('Explore details', 'Lihat detail')}
-                  </span>
-                </div>
-              </article>
-            </li>
-          ))}
-        </ol>
+        <TabbedPanels
+          idBase="experience"
+          eqbot="experience-tabs"
+          label={{ en: 'Experience type', id: 'Jenis pengalaman' }}
+          tabs={[
+            { id: 'work', en: 'Work', idn: 'Kerja', count: workExperience.length, panel: <Ledger entries={workExperience} /> },
+            {
+              id: 'organization',
+              en: 'Organizations',
+              idn: 'Organisasi',
+              count: organizationExperience.length,
+              panel: <Ledger entries={organizationExperience} />,
+            },
+          ]}
+        />
       </div>
-
-      {selectedExp && (
-        <ExperienceDetailDialog exp={selectedExp} language={language} onClose={() => setSelectedExp(null)} />
-      )}
     </section>
   );
-};
+}

@@ -4,6 +4,7 @@
 @import "../styles/motion.css";
 @import "../styles/design-system.css";
 @import "../styles/scene.css";
+@import "../styles/paper.css";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -64,6 +65,12 @@
     text-wrap: pretty;
   }
 
+  /* <T>: show only the copy that matches <html lang>. */
+  :root:not([lang="id"]) .t-lang[lang="id"],
+  :root[lang="id"] .t-lang[lang="en"] {
+    display: none;
+  }
+
   ::selection {
     background: rgb(var(--rgb-accent) / 0.22);
     color: var(--color-ink);
@@ -95,14 +102,14 @@
   }
 
   .btn-primary-custom {
-    @apply inline-flex items-center justify-center gap-2 border border-ink bg-ink px-5 py-3 text-sm font-medium tracking-wide text-paper;
+    @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-[2px] border border-ink bg-ink px-5 py-3 text-sm font-medium tracking-wide text-paper disabled:cursor-not-allowed disabled:opacity-60;
   }
   .btn-primary-custom:hover {
     @apply border-accent bg-accent text-paper;
   }
 
   .btn-outline-custom {
-    @apply inline-flex items-center justify-center gap-2 border border-ink bg-transparent px-5 py-3 text-sm font-medium tracking-wide text-ink;
+    @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-[2px] border border-ink bg-transparent px-5 py-3 text-sm font-medium tracking-wide text-ink;
   }
   .btn-outline-custom:hover {
     @apply bg-ink text-paper;

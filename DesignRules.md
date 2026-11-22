@@ -2,7 +2,7 @@
 
 # Design System, UX Blueprint & Engineering Guardrails — 3D Paper Craft Developer Portfolio
 
-> **Status:** Single Source of Truth. Replaces `PORTFOLIO_STANDARDS.md` and `.cursor/rules/portfolio-standards.mdc` (both deleted 2026-11-22).
+> **Status:** Single Source of Truth (v1.4). Replaces `PORTFOLIO_STANDARDS.md` and `.cursor/rules/portfolio-standards.mdc` (both deleted 2026-11-22).
 > **Owner:** Rifqi Haikal Chairiansyah (`portofolio-rifqi`)
 > **Approved Concept:** *The Architect's Paper Desk — Lamp & Sheet edition* (final score 91.5 / 100, see §1)
 > **Rendering Strategy:** Hybrid 2D + 3D — tokenized SVG paper layers for 80%+ of the scene, one lazy React Three Fiber figurine on capable desktops
@@ -400,15 +400,18 @@ Every component is a token consumer. Names are fixed; do not create look-alikes.
 
 | Component | File | Element | States | Notes |
 | --- | --- | --- | --- | --- |
-| `PaperSheet` | `ui/PaperSheet.tsx` | `div`/`article` | — | `bg-raised`, `--paper-edge-cut`, optional `fold="tr"` |
-| `PaperCard` | `ui/PaperCard.tsx` | `article` with one inner link/button | rest, hover (edge → accent, `translateY(-2px)`), focus-visible | Whole card clickable via stretched link, one tab stop |
-| `PaperButton` | `ui/PaperButton.tsx` | `button` / `a` | primary (ink fill), secondary (outline), quiet (text), disabled, busy | Min 44×44 px, `rounded-[2px]` |
-| `FolderTabs` | `ui/FolderTabs.tsx` | ARIA `tablist` | active (raised, connects to panel), inactive (recess) | Arrow-key roving focus |
+| `PaperSheet` | `.paper-sheet` + `.fold-tr` (`styles/paper.css`) | `div`/`article` | — | `bg-raised`, `--paper-edge-cut`, at most one fold per sheet. Never put `.fold-tr` on a `<dialog>` (it overrides `position: fixed`); fold the dialog's inner sheet |
+| `PaperCard` | `.paper-card` + `.stretched` (`ProjectShelf.tsx`) | `article` with one inner link/button | rest, hover (edge → accent, `translateY(-2px)`), focus-visible | Whole card clickable via stretched link, one tab stop |
+| `PaperButton` | `.btn-primary-custom` / `.btn-outline-custom` | `button` / `a` | primary (ink fill), secondary (outline), quiet (text), disabled, busy | Min 44×44 px, `rounded-[2px]` |
+| `FolderTabs` | `ui/FolderTabs.tsx` | ARIA `tablist` | active (raised, connects to panel), inactive (recess) | Arrow-key roving focus; panel id `${idBase}-panel-${tab}` |
+| `TabbedPanels` | `ui/TabbedPanels.tsx` | `FolderTabs` + `tabpanel`s | — | Client leaf over **server-rendered** panels; inactive panels stay in the HTML with `hidden` |
+| `T` | `ui/T.tsx` | inline | — | Bilingual text in Server Components (§13) |
 | `PaperDialog` | `ui/PaperDialog.tsx` | native `<dialog>` | open, closing | `showModal()`, `Escape` closes, focus restored to the trigger, `::backdrop` = ink at 40% |
-| `Stamp` | `ui/Stamp.tsx` | `span` | — | Stamped index / postmark |
+| `Stamp` | `.stamp`, `.postmark` | `span` | — | Stamped index / postmark |
 | `Tag` | `ui/Tag.tsx` | `li` | — | Mono 12 px, `border-line`, square |
 | `SectionTitle` | `ui/SectionTitle.tsx` | `header` with `h2` | — | Eyebrow + title + optional lede |
-| `Field` | `ui/Field.tsx` | `label` + `input`/`textarea` | rest, focus, invalid, disabled | Error text linked via `aria-describedby` |
+| `Field` | inside `sections/ContactForm.tsx` | `label` + `input`/`textarea` | rest, focus, invalid, disabled | Error text linked via `aria-describedby`; first invalid field takes focus |
+| `Folio` | `.folio` on `<details>` | `details`/`summary` | closed, open | Ledger rows and certificate folders: native expanded state, no JS |
 | `PaperDeskStage` | `scene/PaperDeskStage.tsx` | `div` | static, parallax | SVG layers + one `LaptopScreenUI`; under 768 px only the screen card renders |
 | `LaptopScreenUI` | `scene/LaptopScreenUI.tsx` | `section aria-label` | — | Client leaf; positioned by `--screen-*` |
 | `DeskLamp` | `scene/DeskLamp.tsx` | `button` | on / off | Theme switch over `LampArt` |
@@ -557,25 +560,33 @@ Naming: lowercase kebab-case with a domain prefix in `public/assets/papercraft/`
 src/
   app/
     layout.tsx            fonts, ThemeProvider, LanguageProvider, skip link
-    page.tsx              Server Component: composes sections, no loading gate
+    page.tsx              Server Component: composes sections, revalidate = 1 day, no loading gate
     not-found.tsx         Empty Drawer
-    actions/contact.ts    Server Action (zod + Resend + honeypot)
+    actions/contact.ts    Server Action (zod + Resend + honeypot + minimum fill time)
+    papercraft/           dev-only asset review sheet (404 in production)
     opengraph-image.tsx, robots.ts, sitemap.ts, icon.svg, apple-icon.png
   components/
-    scene/                PaperDeskStage, LaptopScreenUI, DeskLamp, PaperDeskCanvas, PaperScenePoster, layers/*.tsx
-    sections/             Navbar, Hero, About, Experience, Services, ProjectArchive, Certificates, Contact, Footer
-    ui/                   PaperSheet, PaperCard, PaperButton, FolderTabs, PaperDialog, Stamp, Tag, SectionTitle, Field
-    shared/               StudioRail, EqbotCompanion, eqbot-script.ts, ProjectDetailDialog, AdditionalSkillsDialog, BrandLockup
+    scene/                PaperDeskStage, LaptopScreenUI, DeskLamp, FigurineSlot, PaperDeskCanvas, figurine-*, layers/*.tsx
+    sections/             Navbar, Hero, About, Experience, Services, Certificates, Contact, Footer (server)
+                          + client leaves: ProjectShelf (cards, archive drawer), CaseStudy, ContactForm,
+                            CopyEmail, AdditionalSkillsLauncher, FooterControls
+    ui/                   T, SectionTitle, Tag, FolderTabs, TabbedPanels, PaperDialog
+    shared/               Providers, StudioProvider, StudioRail, EqbotLoader, EqbotCompanion, eqbot-script.ts,
+                          AdditionalSkillsDialog (lazy), BrandLockup
     icons/                local brand glyph SVGs
   context/                LanguageContext
-  data/portfolio.ts       the only content source
-  hooks/                  useParallaxStage, useReducedMotion, useInView, useCapabilityGate
-  lib/                    experience-utils, additional-skills, validation schemas
-  styles/                 tokens.css, z-index.css, motion.css, globals.css
+  data/portfolio.ts       the only content source (server-side only)
+  data/sections.ts        section order and labels, safe for client imports
+  hooks/                  useParallaxStage, useCapabilityGate, useHydrated
+  lib/                    experience-utils, additional-skills, display-case, hero-screen
+  styles/                 tokens.css, z-index.css, design-system.css, scene.css, paper.css
   types/index.ts
 ```
 
-- `"use client"` only at interactive leaves (LaptopScreenUI, DeskLamp, FolderTabs, dialogs, Contact form, EQbot, Navbar menu). Sections stay Server Components where possible.
+- `"use client"` only at interactive leaves (stage, tabs, dialogs, contact form, EQbot, Navbar). Every section is a Server Component.
+- **Client leaves never import `data/portfolio.ts`.** The server section shapes the data and passes it as props (`heroScreen()`, `ShelfProject`). The one exception is `AdditionalSkillsDialog`, which loads with `next/dynamic` on first open.
+- EQbot loads after hydration through `EqbotLoader` (`next/dynamic`, `ssr: false`).
+- First-load JS budget for `/`: **≤ 220 KB gzip** of module scripts (the `nomodule` polyfill is excluded). Measured 160.6 KB after P4.
 - No component file over ~250 lines; split by responsibility.
 - TypeScript `strict`, zero `any`, zero `@ts-ignore`.
 
@@ -584,7 +595,8 @@ src/
 ## 13. Data Integrity & Bilingual Standards
 
 - All facts live in `src/data/portfolio.ts` and conform to `src/types/index.ts`.
-- **Bilingual parity:** every visible string has EN and ID (`title`/`titleId`, `description`/`descriptionId`, `labelEn`/`labelId`) rendered through `useLanguage().t(en, id)`. `<html lang>` follows the active language.
+- **Bilingual parity:** every visible string has EN and ID (`title`/`titleId`, `description`/`descriptionId`, `labelEn`/`labelId`) rendered through `<T en id />`, which prints both spans and lets CSS show the one matching `<html lang>`, so Server Components stay bilingual without client state. Client attributes (`aria-label`, `placeholder`) use `useLanguage().say(en, id)`. `LanguageProvider` sets `<html lang>`.
+- Job titles, companies and category names stored in capitals render through `displayCase()`.
 - **Zero fabricated facts:** no invented employers, metrics, outcomes, URLs, availability statuses, or skills. Keep the verified figures (`5`, `100+`, `3+`, `30+`) and `calculateTotalExperience`.
 - **Optional fields render conditionally.** If a project has no repo link, there is no repo button. Never "Coming soon" or `#` links.
 - Stable lowercase kebab-case `id`s. Every `image`, `logo`, `slides`, and certificate `link` points to an existing file in `public/assets/` (checked in CI).
@@ -646,7 +658,7 @@ All checks run in GitHub Actions on every pull request.
 | **P1 — Foundation** ✅ | Upgrade to Next 16 / React 19 / Tailwind 4; `tokens.css`, `z-index.css`, `motion.css`; remove `LoadingScreen`; package swaps (§11.2); `check-design-rules.mjs`; CI workflow | Page renders with new tokens, no loading gate, all guardrails green |
 | **P2 — Assets** ✅ (pending owner approval of the figurine) | SVG wall, desk, laptop, lamp, props (light/dark via tokens); SVG figurine poster; EQbot avatar; brand icons; global paper grain; dev-only review sheet at `/papercraft` (404 in production) | Budgets in §9.5 met; owner approves the figurine against the turnaround |
 | **P3 — Hero stage** ✅ | Procedural 3D figurine matching the SVG poster; `PaperDeskStage`, `LaptopScreenUI`, `DeskLamp`, `useParallaxStage`, `PaperDeskCanvas` with capability gate and fallback; hero moved out of the mount gate and the section reveal | LCP ≤ 2.5 s (measured 1.0–1.7 s at 4× CPU, slow 4G), WebGL-off test passes |
-| **P4 — Sections** | Replace `ResponsiveLayout` and `mobile/*` with one responsive component per section (§8); About, Experience, Services + case-study dialog, Project Archive, Certificates, Contact (Server Action), Footer, Navbar, StudioRail, EQbot reskin, 404; fix `navLinks` order; About sheet lifted top edge; bring first-load JS for `/` under 220 KB gzip (244 KB after P3: every section and `portfolio.ts` ship as client code, so move sections to Server Components with client leaves) | Every section meets §4 and passes the authenticity tests (§3.3) |
+| **P4 — Sections** ✅ | Replace `ResponsiveLayout` and `mobile/*` with one responsive component per section (§8); About, Experience, Services + case-study dialog, Project Archive, Certificates, Contact (Server Action), Footer, Navbar, StudioRail, EQbot reskin, 404; fix `navLinks` order; About sheet lifted top edge; bring first-load JS for `/` under 220 KB gzip (244 KB after P3: every section and `portfolio.ts` ship as client code, so move sections to Server Components with client leaves) | Every section meets §4 and passes the authenticity tests (§3.3). Measured: 160.6 KB gzip, no horizontal overflow at 390/768/1280/1440, keyboard tabs, dialogs and focus return verified |
 | **P5 — QA & launch** | Playwright/axe suite, Lighthouse CI, copy review EN/ID, Vercel preview review by owner | DoD (§17.3) fully checked |
 
 ---
@@ -698,3 +710,4 @@ All checks run in GitHub Actions on every pull request.
 | 2026-11-22 | v1.1 — Phase 1. Next 16.4, React 19.3, Tailwind CSS 4.3 (CSS-first `@theme` in `tokens.css`; `tailwind.config.ts` deleted), ESLint 9 flat config, TypeScript 5.9. Swapped out `framer-motion`, `lottie-react`, `react-icons`, `react-type-animation`, `autoprefixer`; added `motion`, `zod`. Loading gate removed; skip link added; default theme follows the system. Brand glyphs are local SVGs (lucide 1.x dropped them; LinkedIn is a drawn monogram because Simple Icons removed it). `RoleContext` and role CSS deleted (dead). React 19 hook-rule errors fixed with `useSyncExternalStore` (`useHydrated`, `useMediaQuery`) and `useEffectEvent`. `scripts/check-design-rules.mjs` (`npm run check:design`) and GitHub Actions CI added; all checks green. The `ResponsiveLayout` / `mobile/*` merge moves to P4 because those sections are rebuilt there. |
 | 2026-11-22 | v1.2 — Phase 2. Hand-drawn, token-only inline SVG assets in `src/components/scene/`: `WallLayer` (window with day beam / night moon, shelf with `.NET` / `SQL` / `C#` binders), `DeskLayer` (desk, drawer pedestal labelled `01`–`03`, mat, laptop with an empty glass area at `SCREEN`), `LampArt` (dark-mode light cone), `FrontLayer` (mug, notebook with sticky note, paper plant), `RifqiFigurine` (quilled curls, taper fade, charcoal tee, two-tone denim, unbranded sneakers). Shared geometry in `stage-geometry.ts`. Paper depth tokens and the scene palette added. EQbot avatar now uses the figurine head crop. Global paper grain on `body::before`. The figurine poster became inline SVG instead of a raster render, so one file serves both themes; the GLB moves to Phase 3. |
 | 2026-11-22 | v1.3 — Phase 3. Hero rebuilt as one responsive `Hero` (`MobileHero` deleted) around `PaperDeskStage`: SVG layers, `LaptopScreenUI` as real HTML on the glass (compact laptop card under 768 px), `DeskLamp` theme switch with 6° head tilt, `useParallaxStage` (pointer, rAF, CSS variables) and scroll-driven depth in `scene.css`. 3D figurine: `FigurineSlot` → capability gate → lazy `PaperDeskCanvas` with a procedural low-poly model (Blender is not available in this toolchain, and a procedural mesh needs no download); poster stays on any failure. Theme flip unified in `useThemeToggle` (fixes the toggle reading `theme` instead of `resolvedTheme` under `system`). New data: `heroIntro`, `cvFile`, `contactInfo.availability`; `typingTexts` removed. Hero excluded from the section reveal and rendered outside the `mounted` gate, which moved LCP from the EQbot notice (3.2–4.0 s) to the hero text (1.0–1.7 s). Rule changes: 5/7 grid and sticky from 1280 px, tablet keeps the full static stage, figurine stands left of the laptop. |
+| 2026-11-22 | v1.4 — Phase 4. `ResponsiveLayout`, `mobile/*`, `hocs/`, `AnimatedSectionTitle`, `Projects`, `ViewAllProjects`, `PortfolioFigmaCard`, `ProjectDetailDialog`, `Portal`, `FloatingNavigation`, `useLedgerRise`, `useMediaQuery`, `api/contact` and `lib/submit-contact` deleted; `public/assets/me.png` deleted (About now uses the figurine head crop with a paper clip, per §2.6). `page.tsx` and every section are Server Components; bilingual copy via `<T>` + CSS on `<html lang>`. Section order lives in `data/sections.ts` (`navLinks` removed). Experience is a folder-tab ledger of `<details>` rows; Certificates are `<details>` folios; Services is a blueprint board plus a Selected work shelf (`#projects`) whose case study and archive drawer are native dialogs with filters, labelled search and a live count. Contact posts to a Server Action (zod, honeypot, 3 s minimum fill) and shows the postmark only after Resend accepts. StudioRail/Provider use one IntersectionObserver and a CSS scroll-driven progress rule; the JS section reveal was replaced by a CSS `view()` timeline. Navbar and BrandLockup render on the server (theme swap via `dark:`). EQbot and the additional-skills dialog load lazily. First-load JS for `/`: 244 → 160.6 KB gzip. |

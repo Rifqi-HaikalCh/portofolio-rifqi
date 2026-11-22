@@ -38,60 +38,13 @@ footer[data-studio="colophon"]::after {
   box-shadow: inset 0 -1px 0 rgb(var(--rgb-accent));
 }
 
-/*
-  One response for the whole page: color and rule, 180ms.
-  No lift, no scale, no second palette.
-*/
-
-.card-hover {
-  transition: border-color 180ms ease;
-}
-
-.card-hover:hover {
-  border-color: rgb(var(--rgb-accent));
-}
-
-.card-hover:hover .card-hover-title {
-  color: rgb(var(--rgb-accent));
-}
-
-.card-hover-media {
-  position: relative;
-}
-
-.card-hover-media::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: rgb(var(--rgb-accent) / 0);
-  transition: background-color 180ms ease;
-  pointer-events: none;
-}
-
-.card-hover:hover .card-hover-media::after {
-  background: rgb(var(--rgb-accent) / 0.14);
-}
-
 .read-row {
-  transition: background-color 180ms ease, box-shadow 180ms ease;
+  transition: background-color var(--dur-micro) var(--ease-paper), box-shadow var(--dur-micro) var(--ease-paper);
 }
 
 .read-row:hover {
   background-color: rgb(var(--rgb-raised));
   box-shadow: inset 2px 0 0 rgb(var(--rgb-accent));
-}
-
-.cell-open {
-  background: transparent;
-  transition: background-color 180ms ease;
-}
-
-.cell-open:hover {
-  background: rgb(var(--rgb-raised));
-}
-
-.cell-open:hover .cell-open-title {
-  color: rgb(var(--rgb-accent));
 }
 
 .tier-rule {
@@ -105,66 +58,24 @@ footer[data-studio="colophon"]::after {
   background: rgb(var(--rgb-accent));
 }
 
-.row-open {
-  background: transparent;
+/*
+  Sections settle into place as they enter the viewport: a scroll-driven
+  animation, no observers and no JS. The hero is the LCP and never waits.
+*/
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    main > section[data-studio]:not(#home) > div {
+      animation: section-settle linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 35%;
+    }
+  }
 }
 
-.row-open:focus-visible {
-  outline: 2px solid rgb(var(--rgb-accent));
-  outline-offset: 4px;
-}
-
-.row-open:hover .row-open-title,
-.row-open:focus-visible .row-open-title {
-  color: rgb(var(--rgb-accent));
-}
-
-.row-open:hover .row-open-action,
-.row-open:focus-visible .row-open-action {
-  background: rgb(var(--rgb-ink));
-  color: rgb(var(--rgb-paper));
-  border-color: rgb(var(--rgb-ink));
-}
-
-.ledger-item.is-waiting,
-.section-rise.is-waiting {
-  opacity: 0;
-  transform: translateY(14px);
-}
-
-.ledger-item.is-shown,
-.section-rise.is-shown {
-  opacity: 1;
-  transform: none;
-  animation: none;
-}
-
-.ledger-item.is-settled,
-.section-rise.is-settled {
-  animation: ledger-rise 1600ms cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-@keyframes ledger-rise {
+@keyframes section-settle {
   from {
     opacity: 0;
-    transform: translateY(14px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .ledger-item.is-waiting,
-  .ledger-item.is-settled,
-  .ledger-item.is-shown,
-  .section-rise.is-waiting,
-  .section-rise.is-settled,
-  .section-rise.is-shown {
-    opacity: 1 !important;
-    transform: none !important;
-    animation: none !important;
+    transform: translateY(16px);
   }
 }
 
@@ -173,27 +84,11 @@ footer[data-studio="colophon"]::after {
   outline: none;
 }
 
-.mark-current {
-  box-shadow: inset 2px 0 0 rgb(var(--rgb-accent));
-}
-
 .link-mark:hover {
   color: rgb(var(--rgb-ink));
   box-shadow: inset 0 -1px 0 rgb(var(--rgb-accent));
 }
 
-.presence {
-  display: inline-block;
-  width: 0.42rem;
-  height: 0.42rem;
-  margin-right: 0.5rem;
-  border-radius: 50%;
-  background: rgb(var(--rgb-accent));
-  vertical-align: 0.05em;
-  flex: none;
-}
-
-.presence,
 .eqbot-presence {
   animation: presence-pulse 2.4s ease-out infinite;
 }
@@ -204,14 +99,6 @@ footer[data-studio="colophon"]::after {
   100% { box-shadow: 0 0 0 0 rgb(var(--rgb-accent) / 0); }
 }
 
-@keyframes frame-swap {
-  from { opacity: 0.4; }
-  to { opacity: 1; }
-}
-
-.frame-swap {
-  animation: frame-swap 220ms ease;
-}
 
 .studio-rail {
   display: none;
@@ -251,7 +138,24 @@ footer[data-studio="colophon"]::after {
 .studio-rail-track > span {
   display: block;
   width: 1px;
+  height: 100%;
   background: rgb(var(--rgb-accent));
+  transform-origin: top;
+  transform: scaleY(0);
+}
+
+/* Reading progress without JS: a scroll-driven scaleY on the hairline. */
+@supports (animation-timeline: scroll()) {
+  .studio-rail-track > span {
+    animation: rail-progress linear both;
+    animation-timeline: scroll(root block);
+  }
+}
+
+@keyframes rail-progress {
+  to {
+    transform: scaleY(1);
+  }
 }
 
 .eqbot-dock {

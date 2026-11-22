@@ -1,103 +1,69 @@
-'use client';
-
-import React from 'react';
-import Link from 'next/link';
-import { Mail, MessageCircle } from 'lucide-react';
-import { GithubIcon, LinkedinIcon } from '../icons/BrandIcons';
-import { useLanguage } from '../../context/LanguageContext';
-import { contactInfo, navLinks } from '../../data/portfolio';
+import { pageSections } from '../../data/sections';
 import { BrandLockup } from '../shared/BrandLockup';
+import { T } from '../ui/T';
+import { FooterControls } from './FooterControls';
 
-export const Footer: React.FC = () => {
-  const { t, language } = useLanguage();
-  const currentYear = new Date().getFullYear();
-
-  const socials = [
-    { href: `mailto:${contactInfo.email}`, icon: Mail, label: 'Email' },
-    { href: contactInfo.linkedin, icon: LinkedinIcon, label: 'LinkedIn', external: true },
-    { href: contactInfo.github, icon: GithubIcon, label: 'GitHub', external: true },
-    { href: contactInfo.whatsapp, icon: MessageCircle, label: 'WhatsApp', external: true },
-  ];
-
-  const services = [
-    { en: '.NET / C# Development', id: 'Pengembangan .NET / C#' },
-    { en: 'Enterprise Web and Data', id: 'Web dan Data Enterprise' },
-    { en: 'UI/UX Design', id: 'Desain UI/UX' },
-  ];
+/*
+  Colophon in ink (DesignRules.md §4 Footer). Server component: the year is
+  rendered at build/revalidate time, and the stack line names what this page
+  is actually built with.
+*/
+export function Footer() {
+  const year = new Date().getFullYear();
 
   return (
     <footer data-studio="colophon" className="bg-ink text-paper">
-      <div className="rise-item max-w-6xl mx-auto px-5 lg:px-8 pt-16 pb-8">
-        <h2 className="mb-12">
-          <BrandLockup
-            variant="horizontal"
-            surface="ink"
-            className="h-auto w-full max-w-xl"
-          />
-        </h2>
+      <div className="mx-auto max-w-6xl px-5 pb-8 pt-16 lg:px-8">
+        <p className="mb-12">
+          <BrandLockup variant="horizontal" surface="ink" className="h-auto w-full max-w-md" label="Rifqi Haikal" />
+        </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-14">
+        <div className="grid gap-12 md:grid-cols-[1.2fr_1fr_1fr]">
           <div>
-            <p className="text-paper/75 leading-relaxed text-sm max-w-sm">
-              {t(
-                "Software developer focused on C#, ASP.NET, .NET Core, and SQL Server for enterprise web and data systems.",
-                "Pengembang perangkat lunak yang berfokus pada C#, ASP.NET, .NET Core, dan SQL Server untuk sistem web dan data enterprise."
-              )}
+            <p className="max-w-sm text-sm leading-relaxed text-paper/75">
+              <T
+                en="Software engineer in Jakarta, building enterprise .NET and SQL Server systems and the web interfaces on top of them."
+                id="Software engineer di Jakarta, membangun sistem enterprise .NET dan SQL Server beserta antarmuka web di atasnya."
+              />
             </p>
-            <div className="flex gap-4 mt-6">
-              {socials.map((social) => {
-                const Icon = social.icon;
-                return (
-                  <Link
-                    key={social.label}
-                    href={social.href}
-                    aria-label={social.label}
-                    {...(social.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-                    className="text-paper/70 hover:text-paper"
-                  >
-                    <Icon size={18} />
-                  </Link>
-                );
-              })}
+            <div className="mt-6">
+              <FooterControls />
             </div>
           </div>
 
-          <div>
-            <h3 className="font-mono text-[11px] tracking-[0.2em] uppercase text-paper/50 mb-4">
-              {t('Quick Links', 'Tautan Cepat')}
-            </h3>
-            <ul className="space-y-2">
-              {navLinks.map((link) => (
-                <li key={link.href}>
-                  <Link href={link.href} className="text-sm text-paper/80 hover:text-paper">
-                    {language === 'en' ? link.labelEn : link.labelId}
-                  </Link>
+          <nav aria-labelledby="footer-index">
+            <h2 id="footer-index" className="mb-4 font-mono text-[11px] uppercase tracking-[0.2em] text-paper/60">
+              <T en="Index" id="Indeks" />
+            </h2>
+            <ol className="grid gap-1">
+              {pageSections.map((section) => (
+                <li key={section.id}>
+                  <a href={`#${section.id}`} className="inline-flex min-h-11 items-center gap-3 text-sm text-paper/85 hover:text-paper">
+                    <span className="font-mono text-[11px] text-paper/50">{section.index}</span>
+                    <T en={section.en} id={section.idn} />
+                  </a>
                 </li>
               ))}
-            </ul>
-          </div>
+            </ol>
+          </nav>
 
           <div>
-            <h3 className="font-mono text-[11px] tracking-[0.2em] uppercase text-paper/50 mb-4">
-              {t('Services', 'Layanan')}
-            </h3>
-            <ul className="space-y-2">
-              {services.map((service) => (
-                <li key={service.en} className="text-sm text-paper/80">
-                  {t(service.en, service.id)}
-                </li>
-              ))}
-            </ul>
+            <h2 className="mb-4 font-mono text-[11px] uppercase tracking-[0.2em] text-paper/60">
+              <T en="Colophon" id="Kolofon" />
+            </h2>
+            <p className="text-sm leading-relaxed text-paper/80">
+              <T
+                en="Built with Next.js, React and Tailwind CSS. The figurine is drawn in SVG and turned in three.js. Set in Fraunces, Source Sans 3 and JetBrains Mono."
+                id="Dibangun dengan Next.js, React, dan Tailwind CSS. Figurin digambar dalam SVG dan diputar dengan three.js. Memakai huruf Fraunces, Source Sans 3, dan JetBrains Mono."
+              />
+            </p>
           </div>
         </div>
 
-        <div className="border-t border-paper/15 pt-6 text-xs text-paper/55">
-          {t(
-            `© ${currentYear} Rifqi Haikal Chairiansyah. All rights reserved.`,
-            `© ${currentYear} Rifqi Haikal Chairiansyah. Semua hak cipta dilindungi.`
-          )}
-        </div>
+        <p className="mt-14 border-t border-paper/15 pt-6 text-xs text-paper/60">
+          © {year} Rifqi Haikal Chairiansyah
+        </p>
       </div>
     </footer>
   );
-};
+}

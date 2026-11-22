@@ -42,10 +42,7 @@ function downloadCv() {
 }
 
 function openPlace(place: EqbotPlace) {
-  if (place === 'projects' && !document.getElementById('projects')) {
-    scrollToStudioSection('services');
-    return;
-  }
+  // 'projects' is the Selected work shelf inside #services.
   scrollToStudioSection(place);
 }
 

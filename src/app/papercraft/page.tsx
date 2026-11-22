@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { RifqiFigurine } from '../../components/scene/RifqiFigurine';
 import { FigurineSlot } from '../../components/scene/FigurineSlot';
 import { PaperDeskStage } from '../../components/scene/PaperDeskStage';
+import { heroScreen } from '../../lib/hero-screen';
 import { ThemeSwitch } from './ThemeSwitch';
 
 /*
@@ -37,7 +38,7 @@ export default function PapercraftPage() {
 
       <section aria-label="Assembled stage" className="mb-14">
         <Label>Assembled stage · L1 wall → L2 desk, laptop, figurine, lamp → L3 props · move the pointer for parallax</Label>
-        <PaperDeskStage />
+        <PaperDeskStage screen={heroScreen()} />
       </section>
 
       <section aria-label="Individual assets" className="grid gap-8 md:grid-cols-2">

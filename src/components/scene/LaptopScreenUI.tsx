@@ -1,30 +1,27 @@
 'use client';
 
 import { useLanguage } from '../../context/LanguageContext';
-import { contactInfo, developerSkills, workExperience } from '../../data/portfolio';
-import { displayCase } from '../../lib/display-case';
 import { EQBOT_OPEN_EVENT, FIGURINE_LOOK_EVENT, emit } from './scene-events';
 
 /*
   The laptop screen as real HTML (DesignRules.md §4 `01`, §9.1).
   On ≥ 768 px it sits exactly on the drawn glass (positioned by the parent with
   --screen-* variables); below that it is a compact paper laptop card.
-  All copy comes from portfolio.ts; the status line renders only if set.
+  Copy arrives as props from the server (built from portfolio.ts there), so
+  this client leaf never ships the content file. The status renders only if set.
 */
 
-const current = workExperience[0];
-const coreStack = developerSkills.filter((skill) => skill.focus === 'core').map((skill) => skill.name);
+export interface ScreenData {
+  role: { en: string; id: string };
+  company: string;
+  location: string;
+  status?: { en: string; id: string };
+  stack: string[];
+}
 
-export function LaptopScreenUI({
-  className = '',
-  onOpenProjects,
-}: {
-  className?: string;
-  onOpenProjects?: () => void;
-}) {
-  const { language, t } = useLanguage();
-  const say = (en: string, id: string) => (language === 'en' ? en : id);
-  const status = contactInfo.availability;
+export function LaptopScreenUI({ className = '', screen }: { className?: string; screen: ScreenData }) {
+  const { language, t, say } = useLanguage();
+  const status = screen.status;
   const look = () => emit(FIGURINE_LOOK_EVENT);
 
   return (
@@ -46,17 +43,17 @@ export function LaptopScreenUI({
               <p data-eqbot="home-available" data-eqbot-at="end" className="font-mono text-[11px] uppercase tracking-[0.12em] text-accent">
                 <span className="status-dot" aria-hidden="true" />
                 {language === 'en' ? status.en : status.id}
-                <span className="text-muted"> · {contactInfo.location.split(',')[0]}</span>
+                <span className="text-muted"> · {screen.location}</span>
               </p>
             )}
             <p className="font-serif text-[clamp(13px,5.4cqw,19px)] leading-tight text-ink">
-              {displayCase(language === 'en' ? current.title : current.titleId)}
+              {language === 'en' ? screen.role.en : screen.role.id}
             </p>
-            <p className="screen-company font-mono text-[11px] leading-snug text-muted">{displayCase(current.company)}</p>
+            <p className="screen-company font-mono text-[11px] leading-snug text-muted">{screen.company}</p>
           </div>
 
           <ul aria-label={say('Core stack', 'Stack utama')} className="flex max-h-[17px] flex-wrap gap-1 overflow-hidden">
-            {coreStack.map((name) => (
+            {screen.stack.map((name) => (
               <li key={name} className="border border-line px-1.5 py-0.5 font-mono text-[11px] leading-none text-muted">
                 {name}
               </li>
@@ -64,13 +61,12 @@ export function LaptopScreenUI({
           </ul>
 
           <div className="flex gap-2">
-            <button
-              type="button"
-              onClick={onOpenProjects}
-              className="min-h-7 flex-1 border border-ink bg-ink px-2 text-[13px] font-medium text-paper hover:border-accent hover:bg-accent"
+            <a
+              href="#projects"
+              className="inline-flex min-h-7 flex-1 items-center justify-center border border-ink bg-ink px-2 text-[13px] font-medium text-paper hover:border-accent hover:bg-accent"
             >
               {t('Open projects', 'Buka projek')}
-            </button>
+            </a>
             <button
               type="button"
               onClick={() => emit(EQBOT_OPEN_EVENT)}

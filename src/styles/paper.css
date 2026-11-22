@@ -1,0 +1,243 @@
+/*
+  Paper primitives for the flat-lay sections (DesignRules.md §2.3, §5.4, §7).
+  Every surface is a token consumer; motion follows §10.
+*/
+
+/* Raised sheet: 1 px cut edge plus an offset recess edge that follows --light-x. */
+.paper-sheet {
+  background: var(--color-raised);
+  box-shadow: var(--paper-edge-cut);
+}
+
+/* One fold crease in the top-right corner (max one per card). */
+.fold-tr {
+  position: relative;
+}
+.fold-tr::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 28px;
+  height: 28px;
+  background: linear-gradient(225deg, var(--color-paper) 0 50%, var(--color-recess) 50% 100%);
+  box-shadow: calc(-1px * var(--light-x)) 1px 0 var(--color-line);
+}
+
+/* About arrives over the sticky hero with its top edge lifted (§4 `02`). */
+.sheet-arrival {
+  box-shadow:
+    0 -1px 0 var(--color-line),
+    0 -14px 28px rgb(var(--rgb-scrim) / 0.12);
+}
+
+/* Die-cut index card: hover tints the cut edge (§4 `02`). */
+.index-card {
+  background: var(--color-raised);
+  box-shadow: var(--paper-edge-cut);
+  transition: box-shadow var(--dur-micro) var(--ease-paper);
+}
+.index-card:hover {
+  box-shadow:
+    0 0 0 1px var(--color-accent),
+    calc(2px * var(--light-x)) 2px 0 var(--color-recess);
+}
+
+/* Project card: whole card is one link target via a stretched button (§7 PaperCard). */
+.paper-card {
+  position: relative;
+  background: var(--color-raised);
+  box-shadow: var(--paper-edge-cut);
+  transition:
+    transform var(--dur-micro) var(--ease-paper),
+    box-shadow var(--dur-micro) var(--ease-paper);
+}
+.paper-card:hover,
+.paper-card:focus-within {
+  transform: translateY(-2px);
+  box-shadow:
+    0 0 0 1px var(--color-accent),
+    calc(4px * var(--light-x)) 4px 0 var(--color-recess);
+}
+.stretched::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+.stretched:focus-visible {
+  outline: none;
+}
+.paper-card:has(.stretched:focus-visible) {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* Paper tape holding a screenshot: one per card, slight rotation. */
+.tape {
+  position: absolute;
+  top: -9px;
+  left: 50%;
+  width: 72px;
+  height: 18px;
+  translate: -50% 0;
+  rotate: var(--tape-rotate, -2deg);
+  background: rgb(var(--rgb-recess) / 0.85);
+  box-shadow: 0 0 0 1px rgb(var(--rgb-line) / 0.6);
+}
+
+/* Blueprint board: grid at ≤ 8 % alpha and crop marks (#services only). */
+.blueprint {
+  position: relative;
+  background-color: var(--color-raised);
+  background-image:
+    linear-gradient(rgb(var(--rgb-blueprint) / 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(var(--rgb-blueprint) / 0.08) 1px, transparent 1px);
+  background-size: 24px 24px;
+  box-shadow: 0 0 0 1px var(--color-line);
+}
+.crop-marks > i {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border: 0 solid var(--color-line);
+  pointer-events: none;
+}
+.crop-marks > i:nth-child(1) { top: -6px; left: -6px; border-top-width: 1px; border-left-width: 1px; }
+.crop-marks > i:nth-child(2) { top: -6px; right: -6px; border-top-width: 1px; border-right-width: 1px; }
+.crop-marks > i:nth-child(3) { bottom: -6px; left: -6px; border-bottom-width: 1px; border-left-width: 1px; }
+.crop-marks > i:nth-child(4) { bottom: -6px; right: -6px; border-bottom-width: 1px; border-right-width: 1px; }
+
+/* Die-cut folder tab: trapezoid, the active one joins the panel below. */
+.folder-tab {
+  position: relative;
+  padding: 0.7rem 1.4rem 0.6rem;
+  clip-path: polygon(10px 0, calc(100% - 10px) 0, 100% 100%, 0 100%);
+  background: var(--color-recess);
+  color: var(--color-muted);
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+}
+.folder-tab:hover {
+  color: var(--color-ink);
+}
+.folder-tab[aria-selected="true"] {
+  background: var(--color-raised);
+  color: var(--color-ink);
+  box-shadow: inset 0 2px 0 var(--color-accent);
+}
+.folder-tab:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: -4px;
+}
+
+/* Ledger row: the detail panel's content fades and rises 8 px in 200 ms. */
+.ledger-panel > * {
+  animation: ledger-unfold var(--dur-ui) var(--ease-paper) both;
+}
+@keyframes ledger-unfold {
+  from { opacity: 0; transform: translateY(8px); }
+}
+
+/* Native <dialog> as a folded sheet (§7 PaperDialog). */
+.paper-dialog {
+  margin: auto;
+  padding: 0;
+  max-width: min(64rem, calc(100vw - 2rem));
+  max-height: calc(100dvh - 2rem);
+  border: 1px solid var(--color-line);
+  background: var(--color-raised);
+  color: var(--color-ink);
+  box-shadow: var(--paper-edge-lifted);
+}
+.paper-dialog::backdrop {
+  background: rgb(var(--rgb-scrim) / 0.4);
+}
+.paper-dialog[open] {
+  animation: sheet-in var(--dur-sheet) var(--ease-paper);
+}
+.paper-dialog.is-drawer {
+  width: 100vw;
+  max-width: 100vw;
+  height: 100dvh;
+  max-height: 100dvh;
+  margin: 0;
+  border: 0;
+  background: var(--color-paper);
+}
+@keyframes sheet-in {
+  from { opacity: 0; transform: translateY(12px); }
+}
+
+/* Letterpress: name pressed into the card with an inset highlight/shadow pair. */
+.letterpress {
+  color: var(--color-ink);
+  text-shadow:
+    0 1px 0 rgb(var(--rgb-raised) / 0.9),
+    0 -1px 0 rgb(var(--rgb-scrim) / 0.25);
+}
+
+/* Postmark: appears once, only after a real 2xx delivery (§2.3). */
+.postmark {
+  display: inline-grid;
+  place-items: center;
+  width: 92px;
+  height: 92px;
+  border: 2px double var(--color-accent);
+  border-radius: 50%;
+  color: var(--color-accent);
+  rotate: -8deg;
+  animation: postmark-in var(--dur-ui) var(--ease-paper) both;
+}
+@keyframes postmark-in {
+  from { opacity: 0; scale: 1.25; }
+}
+
+/* Certificate folders use <details>: rotate the marker, keep the summary a row. */
+.folio > summary {
+  list-style: none;
+  cursor: pointer;
+}
+.folio > summary::-webkit-details-marker {
+  display: none;
+}
+.folio > summary:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+.folio[open] > summary .folio-mark > svg {
+  rotate: 45deg;
+}
+.folio-mark > svg {
+  transition: rotate var(--dur-ui) var(--ease-paper);
+}
+.folio[open] > .folio-body {
+  animation: ledger-unfold var(--dur-ui) var(--ease-paper) both;
+}
+
+/* Stamped index used by section eyebrows and the rail (§2.3). */
+.stamp {
+  font-family: var(--font-mono);
+  color: var(--color-accent);
+  letter-spacing: 0.14em;
+}
+
+/* Paper clip over the About head crop: two nested wire loops in line ink. */
+.paper-clip {
+  position: absolute;
+  z-index: var(--z-scene-front);
+  top: -14px;
+  left: 28px;
+  width: 18px;
+  height: 52px;
+  border: 2px solid var(--color-muted);
+  border-radius: 9px 9px 9px 9px / 9px 9px 9px 9px;
+  rotate: -6deg;
+}
+.paper-clip::after {
+  content: "";
+  position: absolute;
+  inset: 6px 3px 10px;
+  border: 2px solid var(--color-muted);
+  border-bottom: 0;
+  border-radius: 6px 6px 0 0;
+}

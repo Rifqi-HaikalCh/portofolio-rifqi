@@ -1,20 +1,10 @@
 import type { 
-  NavLink, 
   Experience, 
   Project, 
   CertificateCategory, 
   ContactInfo,
   AboutHighlight 
 } from '../types';
-
-export const navLinks: NavLink[] = [
-  { href: '#home', labelEn: 'Home', labelId: 'Beranda' },
-  { href: '#about', labelEn: 'About', labelId: 'Tentang' },
-  { href: '#services', labelEn: 'Services', labelId: 'Layanan' },
-  { href: '#experience', labelEn: 'Experience', labelId: 'Pengalaman' },
-  { href: '#certificates', labelEn: 'Certificates', labelId: 'Sertifikat' },
-  { href: '#contact', labelEn: 'Contact', labelId: 'Kontak' },
-];
 
 /** Hero value proposition: two lines at most (DesignRules §4 `01`). */
 export const heroIntro = {

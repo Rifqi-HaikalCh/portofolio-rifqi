@@ -6,7 +6,7 @@ import { useParallaxStage } from '../../hooks/useParallaxStage';
 import { DeskLamp } from './DeskLamp';
 import { FigurineSlot } from './FigurineSlot';
 import { LampArt } from './LampArt';
-import { LaptopScreenUI } from './LaptopScreenUI';
+import { LaptopScreenUI, type ScreenData } from './LaptopScreenUI';
 import { DeskLayer } from './layers/DeskLayer';
 import { FrontLayer } from './layers/FrontLayer';
 import { WallLayer } from './layers/WallLayer';
@@ -28,7 +28,7 @@ const screenVars = {
   '--screen-h': pct(SCREEN.h, STAGE.height),
 } as CSSProperties;
 
-export function PaperDeskStage({ onOpenProjects }: { onOpenProjects?: () => void }) {
+export function PaperDeskStage({ screen }: { screen: ScreenData }) {
   const stageRef = useRef<HTMLDivElement>(null);
   const { language } = useLanguage();
   useParallaxStage(stageRef);
@@ -54,7 +54,7 @@ export function PaperDeskStage({ onOpenProjects }: { onOpenProjects?: () => void
       </div>
 
       <LaptopScreenUI
-        onOpenProjects={onOpenProjects}
+        screen={screen}
         className="relative z-scene-mid md:absolute md:top-(--screen-y) md:left-(--screen-x) md:h-(--screen-h) md:w-(--screen-w)"
       />
     </div>
