@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useLayoutEffect, useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 import { Portal } from './Portal';
@@ -74,7 +74,9 @@ export function ProjectDetailDialog({
   const metaUnderMedia = metaUnderImage && Boolean(current);
   const onCloseRef = useRef(onClose);
   const dialogRef = useRef<HTMLDivElement>(null);
-  onCloseRef.current = onClose;
+  useLayoutEffect(() => {
+    onCloseRef.current = onClose;
+  });
 
   useEffect(() => {
     dialogRef.current?.focus();
@@ -96,7 +98,7 @@ export function ProjectDetailDialog({
     <dl className={`grid grid-cols-2 border-t border-l border-line ${metaUnderMedia ? '' : 'mb-8'}`}>
       {facts.map((fact) => (
         <div key={fact.label} className="p-4 border-b border-r border-line">
-          <dt className="font-jetbrains-mono text-[11px] tracking-[0.14em] uppercase text-accent">
+          <dt className="font-mono text-[11px] tracking-[0.14em] uppercase text-accent">
             {fact.label}
           </dt>
           <dd className="mt-1 text-sm text-ink">{fact.value}</dd>
@@ -107,7 +109,7 @@ export function ProjectDetailDialog({
 
   const toolsBlock = tools.length > 0 ? (
     <>
-      <h4 className={`${metaUnderMedia ? '' : 'mt-8'} font-jetbrains-mono text-[11px] tracking-[0.16em] uppercase text-accent mb-3`}>
+      <h4 className={`${metaUnderMedia ? '' : 'mt-8'} font-mono text-[11px] tracking-[0.16em] uppercase text-accent mb-3`}>
         {toolsLabel}
       </h4>
       <ul className="flex flex-wrap gap-2">
@@ -129,7 +131,7 @@ export function ProjectDetailDialog({
   return (
     <Portal>
     <div
-      className="fixed inset-0 z-[99999] overflow-y-auto overscroll-contain bg-ink/45 dark:bg-paper/80 flex p-4 sm:p-8"
+      className="fixed inset-0 z-overlay overflow-y-auto overscroll-contain bg-scrim/60 flex p-4 sm:p-8"
       onClick={onClose}
     >
       <div
@@ -138,13 +140,13 @@ export function ProjectDetailDialog({
         aria-modal="true"
         aria-labelledby="project-detail-title"
         tabIndex={-1}
-        className="bg-raised text-ink border border-line w-full max-w-5xl m-auto outline-none"
+        className="bg-raised text-ink border border-line w-full max-w-5xl m-auto outline-hidden"
         onClick={(event) => event.stopPropagation()}
       >
         <div className="flex items-start justify-between gap-6 p-6 md:p-8 border-b border-line">
           <div>
             {category && (
-              <p className="font-jetbrains-mono text-[11px] tracking-[0.16em] uppercase text-accent mb-2">
+              <p className="font-mono text-[11px] tracking-[0.16em] uppercase text-accent mb-2">
                 {category}
               </p>
             )}
@@ -189,7 +191,7 @@ export function ProjectDetailDialog({
                     >
                       <ChevronLeft size={18} />
                     </button>
-                    <p className="font-jetbrains-mono text-[11px] tracking-[0.14em] text-muted">
+                    <p className="font-mono text-[11px] tracking-[0.14em] text-muted">
                       {String(index + 1).padStart(2, '0')} / {String(frames.length).padStart(2, '0')}
                     </p>
                     <button
@@ -230,14 +232,14 @@ export function ProjectDetailDialog({
           <div className={`${current ? 'md:col-span-5' : 'md:col-span-12'} p-6 md:p-8`}>
             {!metaUnderMedia && factsBlock}
 
-            <h4 className="font-jetbrains-mono text-[11px] tracking-[0.16em] uppercase text-accent mb-3">
+            <h4 className="font-mono text-[11px] tracking-[0.16em] uppercase text-accent mb-3">
               {overviewLabel}
             </h4>
             <p className="text-muted leading-relaxed">{description}</p>
 
             {points.length > 0 && (
               <>
-                <h4 className="mt-8 font-jetbrains-mono text-[11px] tracking-[0.16em] uppercase text-accent mb-3">
+                <h4 className="mt-8 font-mono text-[11px] tracking-[0.16em] uppercase text-accent mb-3">
                   {pointsLabel}
                 </h4>
                 <ul className="space-y-3">

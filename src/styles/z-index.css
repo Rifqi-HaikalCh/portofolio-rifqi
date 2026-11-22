@@ -1,55 +1,37 @@
-/* Z-Index Hierarchy untuk Portfolio */
+/*
+  Layer stacking contract (DesignRules.md §5.5).
+  Use these tokens or the z-* utilities below. No arbitrary z-[…] values.
+  Native <dialog> modals live in the browser top layer and need no z-index.
+*/
 
-/* Level 1: Background elements */
-.z-background {
-  z-index: 1;
+:root {
+  --z-plane-base: 0;
+  --z-scene-back: 10;
+  --z-scene-mid: 20;
+  --z-scene-front: 30;
+  --z-content-ui: 40;
+  --z-chrome: 50;
+  --z-overlay: 60;
 }
 
-/* Level 2: Content sections */
-.z-content {
-  z-index: 10;
-}
+@utility z-plane-base { z-index: var(--z-plane-base); }
+@utility z-scene-back { z-index: var(--z-scene-back); }
+@utility z-scene-mid { z-index: var(--z-scene-mid); }
+@utility z-scene-front { z-index: var(--z-scene-front); }
+@utility z-content-ui { z-index: var(--z-content-ui); }
+@utility z-chrome { z-index: var(--z-chrome); }
+@utility z-overlay { z-index: var(--z-overlay); }
 
-/* Level 3: Floating elements */
-.z-floating {
-  z-index: 100;
-}
-
-/* Level 4: Navigation */
-.z-navigation {
-  z-index: 1000;
-}
-
-/* Level 5: Modals and overlays */
-.z-modal {
-  z-index: 5000;
-}
-
-/* Level 6: Notifications */
-.z-notification {
-  z-index: 9999;
-}
-
-/* Level 7: Loading screen and critical overlays */
-.z-loading {
-  z-index: 99999;
-}
-
-/* Ensure no stacking context conflicts */
 section {
   position: relative;
-  z-index: 10;
+  z-index: var(--z-content-ui);
 }
 
-/* Header carries its own fixed position. Do not fix every nav. */
-
-/* Hero section specific */
+/* The hero sits under the sections so the About sheet can slide over it (§4, 01). */
 #home {
-  z-index: 1;
+  z-index: var(--z-scene-back);
 }
 
-/* Other sections */
-#about, #skills, #experience, #services, #projects, #certificates, #contact {
-  z-index: 10;
+#about, #experience, #services, #projects, #certificates, #contact {
   isolation: isolate;
 }

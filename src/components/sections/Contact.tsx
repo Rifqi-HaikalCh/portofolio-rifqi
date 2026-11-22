@@ -73,7 +73,7 @@ export const Contact: React.FC = () => {
                   type="text"
                   name="name"
                   required
-                  className="field mt-2 w-full px-4 py-3 bg-paper border border-line text-ink placeholder:text-muted focus:outline-none"
+                  className="field mt-2 w-full px-4 py-3 bg-paper border border-line text-ink placeholder:text-muted focus:outline-hidden"
                   placeholder={t("Enter your full name", "Masukkan nama lengkap") as string}
                 />
               </label>
@@ -83,7 +83,7 @@ export const Contact: React.FC = () => {
                   type="email"
                   name="email"
                   required
-                  className="field mt-2 w-full px-4 py-3 bg-paper border border-line text-ink placeholder:text-muted focus:outline-none"
+                  className="field mt-2 w-full px-4 py-3 bg-paper border border-line text-ink placeholder:text-muted focus:outline-hidden"
                   placeholder={t("Enter your email address", "Masukkan alamat email") as string}
                 />
               </label>
@@ -94,7 +94,7 @@ export const Contact: React.FC = () => {
                 type="text"
                 name="subject"
                 required
-                className="field mt-2 w-full px-4 py-3 bg-paper border border-line text-ink placeholder:text-muted focus:outline-none"
+                className="field mt-2 w-full px-4 py-3 bg-paper border border-line text-ink placeholder:text-muted focus:outline-hidden"
                 placeholder={t("What's this about?", "Tentang apa ini?") as string}
               />
             </label>
@@ -104,7 +104,7 @@ export const Contact: React.FC = () => {
                 name="message"
                 rows={5}
                 required
-                className="field mt-2 w-full px-4 py-3 bg-paper border border-line text-ink placeholder:text-muted focus:outline-none resize-none"
+                className="field mt-2 w-full px-4 py-3 bg-paper border border-line text-ink placeholder:text-muted focus:outline-hidden resize-none"
                 placeholder={t("Tell me about your project or idea...", "Ceritakan tentang proyek atau ide Anda...") as string}
               />
             </label>

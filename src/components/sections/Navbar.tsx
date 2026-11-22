@@ -1,5 +1,6 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { useHydrated } from '../../hooks/useHydrated';
 import Link from 'next/link';
 import { useTheme } from 'next-themes';
 import { useThemeAnimation } from '../shared/Providers';
@@ -15,11 +16,7 @@ const Navbar: React.FC = () => {
   const { toggleTheme } = useThemeAnimation();
   const { language, toggleLanguage } = useLanguage();
   const { activeId } = useStudio();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useHydrated();
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
@@ -33,13 +30,13 @@ const Navbar: React.FC = () => {
   if (!mounted) return null;
 
   return (
-    <header className="fixed top-0 inset-x-0 z-navigation bg-paper border-b border-line">
+    <header className="fixed top-0 inset-x-0 z-chrome bg-paper border-b border-line">
       <div className="relative max-w-6xl mx-auto px-5 lg:px-8 h-16 flex items-center">
         <Link
           href="#home"
           onClick={(e) => handleNavClick(e, '#home')}
           aria-label="Rifqi Haikal"
-          className="relative z-10 inline-flex items-center"
+          className="relative z-content-ui inline-flex items-center"
         >
           <BrandLockup variant="mark" label="" className="h-8 w-auto sm:h-9" />
         </Link>
@@ -63,7 +60,7 @@ const Navbar: React.FC = () => {
           ))}
         </nav>
 
-        <div className="relative z-10 ml-auto flex items-center gap-2">
+        <div className="relative z-content-ui ml-auto flex items-center gap-2">
           <div className="hidden sm:flex items-stretch border border-line">
             <button
               type="button"
@@ -77,7 +74,7 @@ const Navbar: React.FC = () => {
               type="button"
               onClick={toggleLanguage}
               aria-label="Switch language"
-              className="inline-flex h-9 min-w-9 px-2.5 items-center justify-center font-jetbrains-mono text-[11px] tracking-[0.14em] text-ink hover:bg-ink hover:text-paper"
+              className="inline-flex h-9 min-w-9 px-2.5 items-center justify-center font-mono text-[11px] tracking-[0.14em] text-ink hover:bg-ink hover:text-paper"
             >
               {language === 'en' ? 'ID' : 'EN'}
             </button>

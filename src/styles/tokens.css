@@ -1,0 +1,164 @@
+/*
+  Paper Desk tokens (DesignRules.md §5).
+  Raw values are RGB triplets so CSS can write rgb(var(--rgb-x) / alpha).
+  Tailwind utilities (bg-paper, text-ink, …) come from the @theme block below.
+  Light = Daylight Desk (window, upper-left). Dark = Lamp-On Desk (lamp, upper-right).
+*/
+
+:root {
+  --rgb-paper: 244 240 232;
+  --rgb-raised: 251 248 242;
+  --rgb-recess: 234 227 213;
+  --rgb-ink: 27 25 22;
+  --rgb-muted: 106 99 91;
+  --rgb-line: 221 212 198;
+  --rgb-accent: 140 58 47;
+  --rgb-wood: 138 98 69;
+  --rgb-wood-dark: 92 64 48;
+  --rgb-blueprint: 78 106 125;
+  --rgb-sage: 107 125 101;
+  --rgb-scrim: 27 25 22;
+
+  /* Illustration palette: SVG scene, figurine, props only (§5.2). */
+  --ill-skin: #c4916f;
+  --ill-skin-shade: #a87658;
+  --ill-hair: #211d1b;
+  --ill-shirt: #2b2927;
+  --ill-denim: #466080;
+  --ill-denim-fade: #6884a0;
+  --ill-sneaker: #969694;
+  --ill-sole: #e8e5de;
+  --ill-window: #e6eef2;
+  --ill-lamp-light: transparent;
+  --ill-hair-hi: #4a403b;
+  --ill-wall: #e7dfd1;
+  --ill-wall-shade: #d8cdbb;
+  --ill-frame: #f7f2e9;
+  --ill-mat: #3c4347;
+  --ill-laptop: #d3cfc8;
+  --ill-laptop-shade: #b3aea6;
+  --ill-bezel: #2a2826;
+  --ill-screen: #1d2125;
+  --ill-lamp: #34424a;
+  --ill-bulb: #4a5a63;
+  --ill-mug: #4e6a7d;
+  --ill-coffee: #4a3125;
+  --ill-pot: #a4553f;
+  --ill-pot-rim: #8a4532;
+  --ill-leaf: #6b7d65;
+  --ill-leaf-fold: #56684f;
+  --ill-note: #e9d99f;
+  --ill-notebook: #8c3a2f;
+  --ill-page: #fbf8f2;
+  --ill-beam: rgb(255 252 240 / 0.38);
+
+  /* Day/night scene switches (opacity only, never display). */
+  --beam-opacity: 1;
+  --night-opacity: 0;
+  --glow-opacity: 0;
+
+  /* Light direction: shadows fall to +x in daylight, -x under the lamp (§2.2). */
+  --light-x: 1;
+
+  /* Paper depth for SVG pieces: a hard offset shadow plus a pale cut edge. */
+  --paper-shadow: rgb(27 25 22 / 0.18);
+  --paper-cut: rgb(255 255 255 / 0.55);
+  --paper-fold: rgb(27 25 22 / 0.12);
+  --paper-drop-sm: drop-shadow(calc(2px * var(--light-x)) 2px 0 var(--paper-shadow));
+  --paper-drop: drop-shadow(calc(4px * var(--light-x)) 4px 0 var(--paper-shadow));
+
+  --paper-edge-flat: 0 0 0 1px rgb(var(--rgb-line));
+  --paper-edge-cut:
+    0 0 0 1px rgb(var(--rgb-line)),
+    calc(2px * var(--light-x)) 2px 0 rgb(var(--rgb-recess));
+  --paper-edge-lifted:
+    0 0 0 1px rgb(var(--rgb-line)),
+    calc(4px * var(--light-x)) 4px 0 rgb(var(--rgb-recess)),
+    calc(10px * var(--light-x)) 14px 24px rgb(27 25 22 / 0.08);
+
+  color-scheme: light;
+}
+
+.dark {
+  --rgb-paper: 19 18 17;
+  --rgb-raised: 28 26 23;
+  --rgb-recess: 36 33 29;
+  --rgb-ink: 243 238 230;
+  --rgb-muted: 167 158 147;
+  --rgb-line: 50 46 41;
+  --rgb-accent: 212 120 104;
+  --rgb-wood: 107 75 52;
+  --rgb-wood-dark: 61 42 31;
+  --rgb-blueprint: 127 161 184;
+  --rgb-sage: 142 163 135;
+  --rgb-scrim: 8 7 6;
+
+  --ill-skin: #96694f;
+  --ill-skin-shade: #78533e;
+  --ill-hair: #161413;
+  --ill-shirt: #34312e;
+  --ill-denim: #344862;
+  --ill-denim-fade: #4e647e;
+  --ill-sneaker: #70706e;
+  --ill-sole: #aaa6a0;
+  --ill-window: #1e2a36;
+  --ill-lamp-light: rgb(255 214 150 / 0.18);
+  --ill-hair-hi: #2e2825;
+  --ill-wall: #1b1917;
+  --ill-wall-shade: #141210;
+  --ill-frame: #2c2924;
+  --ill-mat: #212528;
+  --ill-laptop: #56524d;
+  --ill-laptop-shade: #403d39;
+  --ill-bezel: #0f0e0d;
+  --ill-screen: #121518;
+  --ill-lamp: #3f4d55;
+  --ill-bulb: #ffd696;
+  --ill-mug: #55728a;
+  --ill-coffee: #2c1d16;
+  --ill-pot: #7e3f2f;
+  --ill-pot-rim: #66321f;
+  --ill-leaf: #56684f;
+  --ill-leaf-fold: #44543f;
+  --ill-note: #7d7148;
+  --ill-notebook: #6e3027;
+  --ill-page: #3a3631;
+  --ill-beam: transparent;
+
+  --beam-opacity: 0;
+  --night-opacity: 1;
+  --glow-opacity: 1;
+
+  --light-x: -1;
+
+  --paper-shadow: rgb(0 0 0 / 0.5);
+  --paper-cut: rgb(255 255 255 / 0.13);
+  --paper-fold: rgb(0 0 0 / 0.22);
+
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-paper: rgb(var(--rgb-paper));
+  --color-raised: rgb(var(--rgb-raised));
+  --color-recess: rgb(var(--rgb-recess));
+  --color-ink: rgb(var(--rgb-ink));
+  --color-muted: rgb(var(--rgb-muted));
+  --color-line: rgb(var(--rgb-line));
+  --color-accent: rgb(var(--rgb-accent));
+  --color-wood: rgb(var(--rgb-wood));
+  --color-wood-dark: rgb(var(--rgb-wood-dark));
+  --color-blueprint: rgb(var(--rgb-blueprint));
+  --color-sage: rgb(var(--rgb-sage));
+  --color-scrim: rgb(var(--rgb-scrim));
+
+  --font-sans: var(--font-source-sans), "Source Sans 3", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-fraunces), "Fraunces", Georgia, serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
+
+  --shadow-paper-flat: var(--paper-edge-flat);
+  --shadow-paper-cut: var(--paper-edge-cut);
+  --shadow-paper-lifted: var(--paper-edge-lifted);
+
+  --breakpoint-rail: 1440px;
+}

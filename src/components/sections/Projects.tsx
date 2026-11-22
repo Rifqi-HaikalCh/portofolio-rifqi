@@ -20,7 +20,7 @@ export function Projects({ onShowAll }: { onShowAll: () => void }) {
     <div id="projects-container" className="bg-transparent">
       {/* INDIVIDUAL PROJECTS */}
       <div className="rise-item mb-16">
-        <p className="font-jetbrains-mono text-[11px] tracking-[0.16em] uppercase text-accent mb-4">
+        <p className="font-mono text-[11px] tracking-[0.16em] uppercase text-accent mb-4">
           {language === 'en' ? 'Individual Projects' : 'Proyek Individu'}
         </p>
         
@@ -37,7 +37,7 @@ export function Projects({ onShowAll }: { onShowAll: () => void }) {
 
       {/* GROUP PROJECTS */}
       <div className="rise-item">
-        <p className="font-jetbrains-mono text-[11px] tracking-[0.16em] uppercase text-accent mb-4">
+        <p className="font-mono text-[11px] tracking-[0.16em] uppercase text-accent mb-4">
           {language === 'en' ? 'Group Projects' : 'Proyek Kelompok'}
         </p>
         
@@ -81,7 +81,7 @@ export const ProjectCard = ({ project, onClick, label }: { project: Project, onC
     >
       <div className="card-hover-media relative h-52 w-full shrink-0 overflow-hidden">
         <Image src={project.image} alt={project.title} fill className="object-cover" />
-        <span className="absolute top-4 left-4 z-10 border border-line bg-paper px-2 py-1 text-[11px] uppercase tracking-[0.14em] text-ink">
+        <span className="absolute top-4 left-4 z-scene-front border border-line bg-paper px-2 py-1 text-[11px] uppercase tracking-[0.14em] text-ink">
           {label || project.category}
         </span>
       </div>

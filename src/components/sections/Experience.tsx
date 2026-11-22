@@ -33,7 +33,7 @@ export const Experience: React.FC = () => {
         />
 
         <p data-eqbot="experience-total" data-eqbot-at="above" className="rise-item text-center mb-10">
-          <span className="font-jetbrains-mono text-[11px] tracking-[0.18em] uppercase text-accent">
+          <span className="font-mono text-[11px] tracking-[0.18em] uppercase text-accent">
             {t('Total Work Experience', 'Total Pengalaman Kerja')}
           </span>
           <span className="mt-2 block font-serif text-3xl text-ink">
@@ -79,7 +79,7 @@ export const Experience: React.FC = () => {
                 className="row-open grid w-full cursor-pointer md:grid-cols-12 gap-4 md:gap-8 py-8"
               >
                 <div className="md:col-span-3">
-                  <p className="font-jetbrains-mono text-[11px] tracking-[0.14em] uppercase text-accent">{exp.period}</p>
+                  <p className="font-mono text-[11px] tracking-[0.14em] uppercase text-accent">{exp.period}</p>
                   {exp.location && <p className="mt-2 text-sm text-muted">{exp.location}</p>}
                   {exp.logo && (
                     <img src={exp.logo} alt="" className="mt-4 h-8 w-auto max-w-full object-contain object-left" />
@@ -87,7 +87,7 @@ export const Experience: React.FC = () => {
                 </div>
                 <div className="md:col-span-6">
                   {exp.companyType && (
-                    <p className="font-jetbrains-mono text-[11px] tracking-[0.16em] uppercase text-muted mb-2">
+                    <p className="font-mono text-[11px] tracking-[0.16em] uppercase text-muted mb-2">
                       {t(exp.companyType, exp.companyTypeId || exp.companyType)}
                     </p>
                   )}

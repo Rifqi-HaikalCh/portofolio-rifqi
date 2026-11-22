@@ -39,7 +39,7 @@ export const Certificates: React.FC = () => {
                       }`}
                     >
                       <span className="flex items-baseline gap-3 min-w-0">
-                        <span className="font-jetbrains-mono text-[11px] tracking-[0.16em] text-accent">
+                        <span className="font-mono text-[11px] tracking-[0.16em] text-accent">
                           {String(index + 1).padStart(2, '0')}
                         </span>
                         <span className={`text-base ${selected ? 'font-medium' : ''}`}>

@@ -22,7 +22,7 @@ export function StudioRail() {
                 type="button"
                 onClick={() => scrollToStudioSection(section.id)}
                 aria-current={currentSection ? 'true' : undefined}
-                className={`font-jetbrains-mono text-[11px] tracking-[0.14em] ${
+                className={`font-mono text-[11px] tracking-[0.14em] ${
                   currentSection ? 'text-accent' : 'text-muted hover:text-ink'
                 }`}
               >

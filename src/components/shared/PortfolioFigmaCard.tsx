@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { FiArrowUpRight } from 'react-icons/fi';
+import { ArrowUpRight } from 'lucide-react';
 
 const figmaLink = 'https://www.figma.com/proto/tfuZv6wJ89rcjMHj62C8px/Portfolio?page-id=0%3A1&node-id=1-2&p=f&viewport=412%2C255%2C0.04&t=6zl8vTjnEZzdUhRC-1&scaling=contain&content-scaling=fixed&starting-point-node-id=1%3A2';
 
@@ -23,7 +23,7 @@ const PortfolioFigmaCard = () => {
       </span>
       <span className="card-hover-title flex items-center justify-between gap-4 border-t border-line px-4 py-3 text-sm text-ink">
         Lihat meja kerja
-        <FiArrowUpRight size={16} />
+        <ArrowUpRight size={16} strokeWidth={1.5} aria-hidden="true" />
       </span>
     </a>
   );

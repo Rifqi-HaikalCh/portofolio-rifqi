@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useLayoutEffect, useEffect, useMemo, useRef, useState } from 'react';
 import Image from 'next/image';
 import { X } from 'lucide-react';
 import { Portal } from './Portal';
@@ -34,7 +34,7 @@ export function AdditionalSkillsCell({
       aria-haspopup="dialog"
       className="cell-open flex h-full w-full flex-1 flex-col items-center justify-center gap-2 p-4 text-center"
     >
-      <span className="font-jetbrains-mono text-[11px] tracking-[0.16em] uppercase text-accent">
+      <span className="font-mono text-[11px] tracking-[0.16em] uppercase text-accent">
         {id ? 'Language · Framework' : 'Bahasa · Framework'}
       </span>
       <span className="cell-open-title font-serif text-lg leading-snug text-ink">
@@ -60,7 +60,9 @@ export function AdditionalSkillsDialog({
   const [focus, setFocus] = useState<string | null>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
   const onCloseRef = useRef(onClose);
-  onCloseRef.current = onClose;
+  useLayoutEffect(() => {
+    onCloseRef.current = onClose;
+  });
 
   useEffect(() => {
     dialogRef.current?.focus();
@@ -86,7 +88,7 @@ export function AdditionalSkillsDialog({
   return (
     <Portal>
       <div
-        className="fixed inset-0 z-[99999] overflow-y-auto overscroll-contain bg-ink/45 dark:bg-paper/80 flex p-4 sm:p-8"
+        className="fixed inset-0 z-overlay overflow-y-auto overscroll-contain bg-scrim/60 flex p-4 sm:p-8"
         onClick={onClose}
       >
         <div
@@ -95,12 +97,12 @@ export function AdditionalSkillsDialog({
           aria-modal="true"
           aria-labelledby="additional-skills-title"
           tabIndex={-1}
-          className="bg-raised text-ink border border-line w-full max-w-5xl m-auto outline-none flex flex-col max-h-[90vh]"
+          className="bg-raised text-ink border border-line w-full max-w-5xl m-auto outline-hidden flex flex-col max-h-[90vh]"
           onClick={(event) => event.stopPropagation()}
         >
           <div className="flex items-start justify-between gap-6 p-6 md:p-8 border-b border-line">
             <div>
-              <p className="font-jetbrains-mono text-[11px] tracking-[0.16em] uppercase text-accent mb-2">
+              <p className="font-mono text-[11px] tracking-[0.16em] uppercase text-accent mb-2">
                 {text('Outside the enterprise core', 'Di luar inti enterprise')}
               </p>
               <h3 id="additional-skills-title" className="font-serif text-3xl md:text-4xl font-medium leading-tight">
@@ -168,7 +170,7 @@ export function AdditionalSkillsDialog({
                         <Image src={card.image} alt="" fill sizes="360px" className="object-contain" />
                       </div>
                       <div className="p-5">
-                        <p className="font-jetbrains-mono text-[11px] tracking-[0.16em] uppercase text-accent">
+                        <p className="font-mono text-[11px] tracking-[0.16em] uppercase text-accent">
                           {card.source === 'work' ? text('Work', 'Kerja') : text('Project', 'Projek')}
                         </p>
                         <h4 className="mt-2 font-serif text-xl font-medium leading-snug text-ink">
@@ -199,7 +201,7 @@ export function AdditionalSkillsDialog({
                   if (!rows.length) return null;
                   return (
                     <section key={tier} className="mt-8">
-                      <h4 className="font-jetbrains-mono text-[11px] tracking-[0.16em] uppercase text-accent mb-3">
+                      <h4 className="font-mono text-[11px] tracking-[0.16em] uppercase text-accent mb-3">
                         {idn ? tierCopy[tier].id : tierCopy[tier].en}
                       </h4>
                       <ul className="border-t border-line">
@@ -262,7 +264,7 @@ function SkillRow({
 }) {
   return (
     <div>
-      <p className="font-jetbrains-mono text-[11px] tracking-[0.14em] uppercase text-muted mb-2">{label}</p>
+      <p className="font-mono text-[11px] tracking-[0.14em] uppercase text-muted mb-2">{label}</p>
       <ul className="flex flex-wrap gap-2">
         {skills.map((skill) => (
           <li key={skill.name}>
@@ -301,7 +303,7 @@ function TierRow({
   return (
     <button type="button" onClick={() => onPick(row.skill.name)} className="read-row w-full px-1 py-4 text-left cursor-pointer">
       <span className="flex items-center gap-4">
-        <span className="font-jetbrains-mono text-[11px] tracking-[0.14em] text-accent w-6">
+        <span className="font-mono text-[11px] tracking-[0.14em] text-accent w-6">
           {String(row.rank).padStart(2, '0')}
         </span>
         <Image src={row.skill.image} alt="" width={28} height={28} className="h-7 w-7 object-contain" />

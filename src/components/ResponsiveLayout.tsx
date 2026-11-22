@@ -1,8 +1,8 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
+import { useHydrated } from '../hooks/useHydrated';
 import { useIsMobile } from '../hooks/useMediaQuery';
 import { AnimatedSection } from './hocs/AnimatedSection';
-import { AnimatePresence } from 'framer-motion';
 
 // Mobile Components
 import { MobileHero } from './mobile/MobileHero';
@@ -23,26 +23,21 @@ import { ViewAllProjects } from './sections/ViewAllProjects';
 
 export const ResponsiveLayout: React.FC = () => {
   const isMobile = useIsMobile();
-  const [mounted, setMounted] = useState(false);
+  const mounted = useHydrated();
   const [showAllProjects, setShowAllProjects] = useState(false);
-
-  // Prevent hydration mismatch
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   // Show loading placeholder during SSR to prevent hydration mismatch
   if (!mounted) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-pulse text-gray-400">Loading...</div>
+        <div className="animate-pulse text-muted">Loading...</div>
       </div>
     );
   }
 
   return (
     <div>
-      <AnimatePresence mode="wait">
+      <>
         {showAllProjects && !isMobile ? (
           <ViewAllProjects
             onBack={() => setShowAllProjects(false)}
@@ -83,7 +78,7 @@ export const ResponsiveLayout: React.FC = () => {
             )}
           </>
         )}
-      </AnimatePresence>
+      </>
     </div>
   );
 };

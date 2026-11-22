@@ -91,7 +91,7 @@ export const MobileAbout: React.FC = () => {
             <article key={highlight.title} className="rise-item read-row py-6 border-b border-line">
               <div className="flex items-center gap-3 text-accent mb-3">
                 {iconMap[highlight.icon]}
-                <span className="font-jetbrains-mono text-[11px] tracking-[0.16em] uppercase">
+                <span className="font-mono text-[11px] tracking-[0.16em] uppercase">
                   {t(highlight.title, highlight.titleId)}
                 </span>
               </div>

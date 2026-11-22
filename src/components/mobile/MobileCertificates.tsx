@@ -14,7 +14,7 @@ export const MobileCertificates: React.FC = () => {
   return (
     <section id="certificates" data-studio="archive" className="py-16 px-5 border-b border-line bg-paper">
       <header className="rise-item mb-12">
-        <p className="font-jetbrains-mono text-[11px] tracking-[0.22em] uppercase text-accent mb-3">
+        <p className="font-mono text-[11px] tracking-[0.22em] uppercase text-accent mb-3">
           {label('Professional Growth', 'Pertumbuhan Profesional')}
         </p>
         <h2 className="font-serif text-4xl font-medium tracking-tight text-ink">
@@ -42,7 +42,7 @@ export const MobileCertificates: React.FC = () => {
                 }`}
               >
                 <span className="flex items-baseline gap-3 min-w-0">
-                  <span className="font-jetbrains-mono text-[11px] text-accent">
+                  <span className="font-mono text-[11px] text-accent">
                     {String(index + 1).padStart(2, '0')}
                   </span>
                   <span className={selected ? 'font-medium' : ''}>

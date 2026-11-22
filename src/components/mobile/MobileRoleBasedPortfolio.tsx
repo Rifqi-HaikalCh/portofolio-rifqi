@@ -96,7 +96,7 @@ export const MobileRoleBasedPortfolio: React.FC = () => {
         {activeTab === 'development' ? (
           <div className="mt-6 space-y-8">
             <div className="rise-item">
-              <p className="font-jetbrains-mono text-[11px] tracking-[0.16em] uppercase text-accent mb-4">
+              <p className="font-mono text-[11px] tracking-[0.16em] uppercase text-accent mb-4">
                 {language === 'en' ? 'Core · Enterprise web and data' : 'Inti · Web dan data enterprise'}
               </p>
               <ul className="grid grid-cols-3 border-t border-l border-line">
@@ -111,7 +111,7 @@ export const MobileRoleBasedPortfolio: React.FC = () => {
             <div className="space-y-8">
               {listedAdditionalGroups.map((group) => (
                 <div key={group.labelEn} className="rise-item">
-                  <p className="font-jetbrains-mono text-[11px] tracking-[0.16em] uppercase text-accent mb-4">
+                  <p className="font-mono text-[11px] tracking-[0.16em] uppercase text-accent mb-4">
                     {language === 'en' ? group.labelEn : group.labelId}
                   </p>
                   <ul className="grid grid-cols-3 border-t border-l border-line">
@@ -135,7 +135,7 @@ export const MobileRoleBasedPortfolio: React.FC = () => {
               ))}
             </div>
             <div className="rise-item">
-              <p className="font-jetbrains-mono text-[11px] tracking-[0.16em] uppercase text-accent mb-4">
+              <p className="font-mono text-[11px] tracking-[0.16em] uppercase text-accent mb-4">
                 {language === 'en' ? 'Nice to Have' : 'Baik untuk Dimiliki'}
               </p>
               <ul className="grid grid-cols-3 border-t border-l border-line">
@@ -258,7 +258,7 @@ function ProjectRow({
 }) {
   return (
     <div className="rise-item">
-      <p className="font-jetbrains-mono text-[11px] tracking-[0.16em] uppercase text-accent mb-4">{title}</p>
+      <p className="font-mono text-[11px] tracking-[0.16em] uppercase text-accent mb-4">{title}</p>
       <div className="flex items-stretch gap-4 overflow-x-auto pb-2 snap-x snap-mandatory">
         {projects.map((project) => (
           <div key={project.id} className="flex w-[82%] shrink-0 snap-start">

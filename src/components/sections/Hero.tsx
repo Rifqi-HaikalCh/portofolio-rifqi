@@ -1,9 +1,8 @@
 'use client';
 
 import React from 'react';
-import { TypeAnimation } from 'react-type-animation';
-import { Mail, Linkedin, Github } from 'lucide-react';
-import { FaWhatsapp } from 'react-icons/fa';
+import { Mail } from 'lucide-react';
+import { GithubIcon, LinkedinIcon, WhatsappIcon } from '../icons/BrandIcons';
 import { useLanguage } from '../../context/LanguageContext';
 import { typingTexts, contactInfo, heroHighlights } from '../../data/portfolio';
 
@@ -16,15 +15,15 @@ const Hero: React.FC<HeroProps> = ({ onViewProjects }) => {
 
   const socialIcons = [
     { href: `mailto:${contactInfo.email}`, icon: Mail, label: 'Email' },
-    { href: contactInfo.linkedin, icon: Linkedin, label: 'LinkedIn' },
-    { href: contactInfo.github, icon: Github, label: 'GitHub' },
-    { href: contactInfo.whatsapp, icon: FaWhatsapp, label: 'WhatsApp' },
+    { href: contactInfo.linkedin, icon: LinkedinIcon, label: 'LinkedIn' },
+    { href: contactInfo.github, icon: GithubIcon, label: 'GitHub' },
+    { href: contactInfo.whatsapp, icon: WhatsappIcon, label: 'WhatsApp' },
   ];
 
   return (
     <section id="home" data-studio="folio" className="bg-paper border-b border-line">
       <div className="rise-item w-full max-w-6xl mx-auto px-5 lg:px-8 pt-28 pb-12">
-          <p className="font-jetbrains-mono text-[11px] tracking-[0.22em] uppercase text-accent mb-6">
+          <p className="font-mono text-[11px] tracking-[0.22em] uppercase text-accent mb-6">
             {t("Web · Mobile · Interface", "Web · Mobile · Antarmuka")}
           </p>
           <p className="text-sm text-muted mb-3">
@@ -41,19 +40,10 @@ const Hero: React.FC<HeroProps> = ({ onViewProjects }) => {
           <div className="mt-10 flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
             <p data-eqbot="home-role" data-eqbot-at="end" className="text-lg md:text-xl text-muted max-w-md">
               <span>{t("I'm", "Saya")} </span>
-              <TypeAnimation
-                sequence={
-                  language === 'en'
-                    ? typingTexts.en.flatMap((text) => [text, 2000])
-                    : typingTexts.id.flatMap((text) => [text, 2000])
-                }
-                wrapper="span"
-                speed={55}
-                className="text-ink font-serif italic"
-                repeat={Infinity}
-                cursor
-                preRenderFirstString
-              />
+              <span className="text-ink font-serif italic">
+            {language === 'en' ? typingTexts.en[0] : typingTexts.id[0]}
+          </span>
+          <span className="caret" aria-hidden="true" />
             </p>
             <div className="flex flex-col sm:flex-row gap-3">
               <a href="#contact" className="btn-primary-custom">
@@ -70,7 +60,7 @@ const Hero: React.FC<HeroProps> = ({ onViewProjects }) => {
         {heroHighlights.map((item) => (
           <div key={item.label} className="border-b border-r border-line px-5 lg:px-8 py-5">
             <p className="font-serif text-3xl leading-none text-ink">{item.value}</p>
-            <p className="mt-2 font-jetbrains-mono text-[11px] tracking-[0.12em] uppercase text-muted">
+            <p className="mt-2 font-mono text-[11px] tracking-[0.12em] uppercase text-muted">
               {t(item.label, item.labelId)}
             </p>
           </div>
@@ -79,7 +69,7 @@ const Hero: React.FC<HeroProps> = ({ onViewProjects }) => {
 
       <div className="rise-item border-t border-line">
         <div className="max-w-6xl mx-auto px-5 lg:px-8 py-5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <p data-eqbot="home-available" data-eqbot-at="end" className="font-jetbrains-mono text-[11px] tracking-[0.16em] uppercase">
+          <p data-eqbot="home-available" data-eqbot-at="end" className="font-mono text-[11px] tracking-[0.16em] uppercase">
             <span className="inline-flex items-center text-accent">
               <span className="presence" aria-hidden="true" />
               {t("Available for work", "Tersedia untuk bekerja")}

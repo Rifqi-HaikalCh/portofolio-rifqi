@@ -21,7 +21,7 @@ export const MobileExperience: React.FC = () => {
   return (
     <section id="experience" data-studio="ledger" className="py-16 px-5 border-b border-line bg-paper">
       <header className="rise-item mb-12">
-        <p className="font-jetbrains-mono text-[11px] tracking-[0.22em] uppercase text-accent mb-3">
+        <p className="font-mono text-[11px] tracking-[0.22em] uppercase text-accent mb-3">
           {t('Professional Journey', 'Perjalanan Profesional')}
         </p>
         <h2 className="font-serif text-4xl font-medium tracking-tight text-ink">
@@ -30,7 +30,7 @@ export const MobileExperience: React.FC = () => {
       </header>
 
       <p data-eqbot="experience-total" data-eqbot-at="above" className="rise-item mb-8">
-        <span className="font-jetbrains-mono text-[11px] tracking-[0.16em] uppercase text-accent">
+        <span className="font-mono text-[11px] tracking-[0.16em] uppercase text-accent">
           {t('Total Work Experience', 'Total Pengalaman Kerja')}
         </span>
         <span className="mt-1 block font-serif text-2xl text-ink">
@@ -73,13 +73,13 @@ export const MobileExperience: React.FC = () => {
               }}
               className="row-open w-full cursor-pointer py-6"
             >
-              <p className="font-jetbrains-mono text-[11px] tracking-[0.14em] uppercase text-accent">{exp.period}</p>
+              <p className="font-mono text-[11px] tracking-[0.14em] uppercase text-accent">{exp.period}</p>
               {exp.location && <p className="mt-2 text-sm text-muted">{exp.location}</p>}
               {exp.logo && (
                 <img src={exp.logo} alt="" className="mt-4 h-8 w-auto max-w-full object-contain object-left" />
               )}
               {exp.companyType && (
-                <p className="mt-3 font-jetbrains-mono text-[11px] tracking-[0.14em] uppercase text-muted">
+                <p className="mt-3 font-mono text-[11px] tracking-[0.14em] uppercase text-muted">
                   {t(exp.companyType, exp.companyTypeId || exp.companyType)}
                 </p>
               )}

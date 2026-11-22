@@ -1,9 +1,8 @@
 'use client';
 
 import React from 'react';
-import { TypeAnimation } from 'react-type-animation';
-import { Mail, Linkedin, Github } from 'lucide-react';
-import { FaWhatsapp } from 'react-icons/fa';
+import { Mail } from 'lucide-react';
+import { GithubIcon, LinkedinIcon, WhatsappIcon } from '../icons/BrandIcons';
 import { useLanguage } from '../../context/LanguageContext';
 import { typingTexts, contactInfo, heroHighlights } from '../../data/portfolio';
 
@@ -12,15 +11,15 @@ export const MobileHero: React.FC = () => {
 
   const socialIcons = [
     { href: `mailto:${contactInfo.email}`, icon: Mail, label: 'Email' },
-    { href: contactInfo.linkedin, icon: Linkedin, label: 'LinkedIn' },
-    { href: contactInfo.github, icon: Github, label: 'GitHub' },
-    { href: contactInfo.whatsapp, icon: FaWhatsapp, label: 'WhatsApp' },
+    { href: contactInfo.linkedin, icon: LinkedinIcon, label: 'LinkedIn' },
+    { href: contactInfo.github, icon: GithubIcon, label: 'GitHub' },
+    { href: contactInfo.whatsapp, icon: WhatsappIcon, label: 'WhatsApp' },
   ];
 
   return (
     <section id="home" data-studio="folio" className="border-b border-line bg-paper text-ink">
       <div className="rise-item px-5 pt-24 pb-10">
-        <p className="font-jetbrains-mono text-[11px] tracking-[0.22em] uppercase text-accent mb-5">
+        <p className="font-mono text-[11px] tracking-[0.22em] uppercase text-accent mb-5">
           {t('Web · Mobile · Interface', 'Web · Mobile · Antarmuka')}
         </p>
         <p className="text-sm text-muted mb-3">{t("Hi, I'm", 'Halo, Saya')}</p>
@@ -33,19 +32,10 @@ export const MobileHero: React.FC = () => {
         </h1>
         <p data-eqbot="home-role" data-eqbot-at="end" className="mt-6 text-lg text-muted max-w-sm">
           <span>{t("I'm", 'Saya')} </span>
-          <TypeAnimation
-            sequence={
-              language === 'en'
-                ? typingTexts.en.flatMap((text) => [text, 2000])
-                : typingTexts.id.flatMap((text) => [text, 2000])
-            }
-            wrapper="span"
-            speed={55}
-            className="text-ink font-serif italic"
-            repeat={Infinity}
-            cursor
-            preRenderFirstString
-          />
+          <span className="text-ink font-serif italic">
+            {language === 'en' ? typingTexts.en[0] : typingTexts.id[0]}
+          </span>
+          <span className="caret" aria-hidden="true" />
         </p>
         <div className="mt-8 flex flex-col gap-3">
           <a href="#contact" className="btn-primary-custom">
@@ -61,7 +51,7 @@ export const MobileHero: React.FC = () => {
         {heroHighlights.map((item) => (
           <div key={item.label} className="border-b border-r border-line px-5 py-4">
             <p className="font-serif text-3xl leading-none text-ink">{item.value}</p>
-            <p className="mt-2 font-jetbrains-mono text-[11px] tracking-[0.12em] uppercase text-muted">
+            <p className="mt-2 font-mono text-[11px] tracking-[0.12em] uppercase text-muted">
               {t(item.label, item.labelId)}
             </p>
           </div>
@@ -69,7 +59,7 @@ export const MobileHero: React.FC = () => {
       </div>
 
       <div className="rise-item border-t border-line px-5 py-5">
-        <p data-eqbot="home-available" data-eqbot-at="end" className="font-jetbrains-mono text-[11px] tracking-[0.16em] uppercase">
+        <p data-eqbot="home-available" data-eqbot-at="end" className="font-mono text-[11px] tracking-[0.16em] uppercase">
           <span className="inline-flex items-center text-accent">
             <span className="presence" aria-hidden="true" />
             {t('Available for work', 'Tersedia untuk bekerja')}

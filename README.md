@@ -1,4 +1,4 @@
-A bilingual personal portfolio for Rifqi Haikal Chairiansyah, currently built with Next.js 14, TypeScript, and Tailwind CSS, and being redesigned as a 3D paper craft desk (see DesignRules.md).
+A bilingual personal portfolio for Rifqi Haikal Chairiansyah, built with Next.js 16, React 19, TypeScript, and Tailwind CSS 4, and being redesigned as a 3D paper craft desk (see DesignRules.md).
 
 Portofolio pribadi Rifqi Haikal Chairiansyah. Situs ini menampilkan pengalaman kerja, proyek, dan sertifikat dalam bahasa Indonesia dan Inggris, dengan tampilan gelap dan terang.
 
@@ -16,13 +16,12 @@ Demo: https://portofolio-rifqi-snowy.vercel.app
 
 Yang terpasang saat ini di `package.json`:
 
-- Next.js 14, React 18, TypeScript
-- Tailwind CSS, PostCSS, Autoprefixer
-- next-themes, framer-motion
-- lottie-react, lucide-react, react-icons, react-type-animation
-- resend
+- Next.js 16, React 19, TypeScript 5.9
+- Tailwind CSS 4 (token di `src/styles/tokens.css`)
+- next-themes, motion, lucide-react, zod, resend
+- ESLint 9 (flat config)
 
-Stack target redesign (Next.js 16, React 19, Tailwind CSS 4, React Three Fiber 9, motion) ada di [DesignRules.md](DesignRules.md) bagian 11.
+React Three Fiber untuk figurin 3D ditambahkan di Phase 3. Alasan setiap pilihan ada di [DesignRules.md](DesignRules.md) bagian 11.
 
 ## Struktur folder
 
@@ -30,7 +29,7 @@ Stack target redesign (Next.js 16, React 19, Tailwind CSS 4, React Three Fiber 9
 src/
   app/            layout, halaman utama, ikon, dan API form kontak
   components/     bagian halaman (desktop dan mobile) serta komponen bersama
-  context/        bahasa dan peran
+  context/        bahasa
   data/           portfolio.ts, satu sumber konten
   hooks/
   lib/
@@ -41,13 +40,15 @@ public/assets/    gambar dan berkas sertifikat
 
 ## Menjalankan
 
-Perlu Node.js 18 atau lebih baru.
+Perlu Node.js 20.9 atau lebih baru.
 
 ```bash
 npm install
 npm run dev
 npm run build
 npm run lint
+npm run typecheck
+npm run check:design
 ```
 
 `npm run dev` membuka server pengembangan. `npm run build` menyusun situs untuk produksi. `npm run start` menjalankan hasil build.

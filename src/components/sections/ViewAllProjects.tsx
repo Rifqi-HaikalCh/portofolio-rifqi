@@ -79,7 +79,7 @@ export function ViewAllProjects({ onBack, projectType = 'all' }: ViewAllProjects
               value={searchTerm}
               onChange={(event) => setSearchTerm(event.target.value)}
               placeholder={language === 'en' ? 'Search projects' : 'Cari projek'}
-              className="field w-full border border-line bg-paper py-3 pl-10 pr-3 text-sm text-ink placeholder:text-muted focus:outline-none"
+              className="field w-full border border-line bg-paper py-3 pl-10 pr-3 text-sm text-ink placeholder:text-muted focus:outline-hidden"
             />
           </label>
         </div>

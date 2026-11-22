@@ -329,12 +329,15 @@ All visual values live in `src/styles/tokens.css` as a Tailwind 4 `@theme` block
 | `--ill-sneaker` / `--ill-sole` | `#969694` / `#E8E5DE` | `#70706E` / `#AAA6A0` | Shoes |
 | `--ill-window` | `#E6EEF2` | `#1E2A36` | Window pane (day / night) |
 | `--ill-lamp-light` | — (lamp off) | `#FFD696` at 18% | Lamp light pool, dark only |
+| Scene set (`--ill-wall`, `--ill-frame`, `--ill-mat`, `--ill-laptop*`, `--ill-bezel`, `--ill-screen`, `--ill-lamp`, `--ill-bulb`, `--ill-mug`, `--ill-coffee`, `--ill-pot*`, `--ill-leaf*`, `--ill-note`, `--ill-notebook`, `--ill-page`, `--ill-beam`, `--ill-hair-hi`) | see `tokens.css` | see `tokens.css` | Hero scene pieces only |
+
+**Paper depth for SVG pieces** (also in `tokens.css`): `--paper-drop` / `--paper-drop-sm` are hard offset `drop-shadow` filters driven by `--light-x`; `--paper-cut` is the pale cut-edge stroke; `--paper-fold` is the shaded facet. Facets that must face away from the light sit in a group with `transform: scaleX(var(--light-x))`, so they mirror when the theme changes. `--beam-opacity`, `--night-opacity`, and `--glow-opacity` switch day and night scene parts.
 
 ### 5.3 Color Rules
 
 - No `#000` / `#FFF` as surfaces.
-- Dark mode switches variables inside `.dark` only. **No `dark:` utility classes** except `dark:` swaps of SVG layer visibility in the hero (window day/night, lamp light), which are listed here and nowhere else.
-- `RoleContext` MUST NOT alter the palette. Roles change copy order or emphasis only.
+- Dark mode switches variables inside `.dark` only. **No `dark:` utility classes**, except visibility swaps between a light and a dark asset (`dark:hidden`, `dark:block`, `dark:inline`, `dark:inline-block`), such as logo files and the hero window/lamp layers.
+- There is no role-based theming. `RoleContext` was removed in Phase 1 because nothing set a role and every role mapped to the same palette.
 - Sage and oxide states are reserved for real form outcomes and status, never decoration.
 - **Gradients:** forbidden except (a) hard-stop two-color fold creases and (b) the single radial lamp light pool in the dark hero.
 - Contrast: body ≥ 4.5:1, large text and UI glyphs ≥ 3:1, verified in both themes. `blueprint` text only at ≥ 14 px.
@@ -460,8 +463,8 @@ One component per section, made responsive with Tailwind breakpoints. **No separ
 | --- | --- | --- | --- |
 | Scene layers, props, laptop, lamp | Figma or Inkscape, hand-drawn | Inline SVG React components | SVGO (`multipass`, keep `viewBox`), fills replaced with tokens |
 | Figurine | Blender 4.x: low-poly hand-modeled from the turnaround, quilled curls as curve meshes, flat paper materials, baked AO | `rifqi-figurine-paper.glb` | `gltf-transform optimize --compress meshopt --texture-compress webp --texture-size 1024` |
-| Figurine poster | Same Blender scene and camera as the R3F view | `rifqi-figurine-poster.avif` + `.webp`, light and dark | `sharp`, ≤ 80 KB each |
-| EQbot avatar | Head crop of the poster | `eqbot-avatar.webp` 128 px | ≤ 12 KB |
+| Figurine poster | Hand-drawn inline SVG, `RifqiFigurine` (front view, tokenized, light/dark from the same file) | `src/components/scene/RifqiFigurine.tsx` | ≤ 8 KB source. The GLB view (Phase 3) must match its framing in `FIGURINE` |
+| EQbot avatar | Same component, `crop="head"` (a different viewBox, not a second drawing) | — | — |
 | Project screenshots | Real captures | `.webp` | ≤ 150 KB, explicit width/height |
 
 ### 9.5 Asset Budgets
@@ -558,7 +561,7 @@ src/
     ui/                   PaperSheet, PaperCard, PaperButton, FolderTabs, PaperDialog, Stamp, Tag, SectionTitle, Field
     shared/               StudioRail, EqbotCompanion, eqbot-script.ts, ProjectDetailDialog, AdditionalSkillsDialog, BrandLockup
     icons/                local brand glyph SVGs
-  context/                LanguageContext, RoleContext
+  context/                LanguageContext
   data/portfolio.ts       the only content source
   hooks/                  useParallaxStage, useReducedMotion, useInView, useCapabilityGate
   lib/                    experience-utils, additional-skills, validation schemas
@@ -634,10 +637,10 @@ All checks run in GitHub Actions on every pull request.
 | Phase | Scope | Exit criteria |
 | --- | --- | --- |
 | **P0 — Rules & cleanup** ✅ | This document; delete old rules, dead components, orphan assets, unused packages | Lint, types, build pass |
-| **P1 — Foundation** | Upgrade to Next 16 / React 19 / Tailwind 4; `tokens.css`, `z-index.css`, `motion.css`; remove `LoadingScreen`, `ResponsiveLayout`, `mobile/*`; package swaps (§11.2); `check-design-rules.mjs`; CI workflow | Page renders with new tokens, no loading gate, all guardrails green |
-| **P2 — Assets** | SVG wall, desk, laptop, lamp, props (light/dark via tokens); figurine in Blender → GLB + posters; EQbot avatar; brand icons | Budgets in §9.5 met; owner approves the figurine against the turnaround |
-| **P3 — Hero stage** | `PaperDeskStage`, `LaptopScreenUI`, `DeskLamp`, `useParallaxStage`, `PaperDeskCanvas` with capability gate and fallback | LCP ≤ 2.5 s, WebGL-off test passes |
-| **P4 — Sections** | About, Experience, Services + case-study dialog, Project Archive, Certificates, Contact (Server Action), Footer, Navbar, StudioRail, EQbot reskin, 404; fix `navLinks` order | Every section meets §4 and passes the authenticity tests (§3.3) |
+| **P1 — Foundation** ✅ | Upgrade to Next 16 / React 19 / Tailwind 4; `tokens.css`, `z-index.css`, `motion.css`; remove `LoadingScreen`; package swaps (§11.2); `check-design-rules.mjs`; CI workflow | Page renders with new tokens, no loading gate, all guardrails green |
+| **P2 — Assets** ✅ (pending owner approval of the figurine) | SVG wall, desk, laptop, lamp, props (light/dark via tokens); SVG figurine poster; EQbot avatar; brand icons; global paper grain; dev-only review sheet at `/papercraft` (404 in production) | Budgets in §9.5 met; owner approves the figurine against the turnaround |
+| **P3 — Hero stage** | Figurine GLB (Blender, low-poly, matching the SVG poster); `PaperDeskStage`, `LaptopScreenUI`, `DeskLamp`, `useParallaxStage`, `PaperDeskCanvas` with capability gate and fallback | LCP ≤ 2.5 s, WebGL-off test passes |
+| **P4 — Sections** | Replace `ResponsiveLayout` and `mobile/*` with one responsive component per section (§8); About, Experience, Services + case-study dialog, Project Archive, Certificates, Contact (Server Action), Footer, Navbar, StudioRail, EQbot reskin, 404; fix `navLinks` order | Every section meets §4 and passes the authenticity tests (§3.3) |
 | **P5 — QA & launch** | Playwright/axe suite, Lighthouse CI, copy review EN/ID, Vercel preview review by owner | DoD (§17.3) fully checked |
 
 ---
@@ -686,3 +689,5 @@ All checks run in GitHub Actions on every pull request.
 | Date | Change |
 | --- | --- |
 | 2026-11-22 | v1.0. Concept selected through three scored rounds (§1). Replaced `PORTFOLIO_STANDARDS.md` and the Cursor rule. Added the light story, anti-slop standard, character spec, component inventory, stack decision (Next 16 / React 19 / Tailwind 4 / R3F 9 / `motion`), native dialogs, Server Action contact form, automated guardrails, and roadmap. Deleted 37 dead source files, 49 orphan assets, and 7 unused packages. Baseline after cleanup (`next build`, Next 14): route `/` first-load JS 393 kB. `npm run lint` has no ESLint config yet (set up in P1). |
+| 2026-11-22 | v1.1 — Phase 1. Next 16.4, React 19.3, Tailwind CSS 4.3 (CSS-first `@theme` in `tokens.css`; `tailwind.config.ts` deleted), ESLint 9 flat config, TypeScript 5.9. Swapped out `framer-motion`, `lottie-react`, `react-icons`, `react-type-animation`, `autoprefixer`; added `motion`, `zod`. Loading gate removed; skip link added; default theme follows the system. Brand glyphs are local SVGs (lucide 1.x dropped them; LinkedIn is a drawn monogram because Simple Icons removed it). `RoleContext` and role CSS deleted (dead). React 19 hook-rule errors fixed with `useSyncExternalStore` (`useHydrated`, `useMediaQuery`) and `useEffectEvent`. `scripts/check-design-rules.mjs` (`npm run check:design`) and GitHub Actions CI added; all checks green. The `ResponsiveLayout` / `mobile/*` merge moves to P4 because those sections are rebuilt there. |
+| 2026-11-22 | v1.2 — Phase 2. Hand-drawn, token-only inline SVG assets in `src/components/scene/`: `WallLayer` (window with day beam / night moon, shelf with `.NET` / `SQL` / `C#` binders), `DeskLayer` (desk, drawer pedestal labelled `01`–`03`, mat, laptop with an empty glass area at `SCREEN`), `LampArt` (dark-mode light cone), `FrontLayer` (mug, notebook with sticky note, paper plant), `RifqiFigurine` (quilled curls, taper fade, charcoal tee, two-tone denim, unbranded sneakers). Shared geometry in `stage-geometry.ts`. Paper depth tokens and the scene palette added. EQbot avatar now uses the figurine head crop. Global paper grain on `body::before`. The figurine poster became inline SVG instead of a raster render, so one file serves both themes; the GLB moves to Phase 3. |

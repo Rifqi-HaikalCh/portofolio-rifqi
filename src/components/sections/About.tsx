@@ -69,7 +69,7 @@ export const About: React.FC = () => {
             </p>
 
             <div className="mt-10">
-              <p className="font-jetbrains-mono text-[11px] tracking-[0.22em] uppercase text-accent mb-4">
+              <p className="font-mono text-[11px] tracking-[0.22em] uppercase text-accent mb-4">
                 {t('At a Glance', 'Sekilas')}
               </p>
               <dl className="grid sm:grid-cols-2 auto-rows-fr border-t border-l border-line">
@@ -77,7 +77,7 @@ export const About: React.FC = () => {
                   <div key={highlight.title} className="read-row flex flex-col p-5 border-b border-r border-line">
                     <dt className="flex items-center gap-2.5">
                       <span className="shrink-0 text-accent">{iconMap[highlight.icon]}</span>
-                      <span className="font-jetbrains-mono text-[11px] tracking-[0.14em] uppercase text-ink">
+                      <span className="font-mono text-[11px] tracking-[0.14em] uppercase text-ink">
                         {t(highlight.title, highlight.titleId)}
                       </span>
                     </dt>

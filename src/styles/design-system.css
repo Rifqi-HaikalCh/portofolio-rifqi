@@ -1,128 +1,12 @@
-/* Studio Paper
-   Editorial portfolio system.
-   One warm paper ground, one ink, one oxide accent.
-   No glass, no neon gradients, no glow. */
+/* Paper Desk component styles. Tokens live in tokens.css (DesignRules.md §5). */
 
-:root {
-  --color-paper: 244 240 232;
-  --color-raised: 251 248 242;
-  --color-ink: 27 25 22;
-  --color-muted: 106 99 91;
-  --color-line: 221 212 198;
-  --color-accent: 140 58 47;
-
-  --bg-primary: rgb(var(--color-paper));
-  --bg-secondary: rgb(var(--color-raised));
-  --bg-tertiary: rgb(var(--color-paper));
-  --bg-quaternary: rgb(var(--color-line));
-
-  --surface-primary: rgb(var(--color-raised));
-  --surface-secondary: rgb(var(--color-paper));
-  --surface-elevated: rgb(var(--color-raised));
-  --surface-overlay: rgb(var(--color-paper));
-
-  --text-primary: rgb(var(--color-ink));
-  --text-secondary: rgb(var(--color-muted));
-  --text-tertiary: rgb(var(--color-muted));
-  --text-quaternary: rgb(var(--color-muted));
-  --text-inverse: rgb(var(--color-paper));
-
-  --border-primary: rgb(var(--color-line));
-  --border-secondary: rgb(var(--color-line));
-  --border-focus: rgb(var(--color-ink));
-  --border-accent: rgb(var(--color-accent));
-
-  --shadow-xs: 0 1px 0 rgba(27, 25, 22, 0.04);
-  --shadow-sm: 0 1px 2px rgba(27, 25, 22, 0.05);
-  --shadow-md: 0 8px 24px rgba(27, 25, 22, 0.06);
-  --shadow-lg: 0 12px 32px rgba(27, 25, 22, 0.08);
-  --shadow-xl: 0 16px 40px rgba(27, 25, 22, 0.1);
-  --shadow-2xl: 0 24px 48px rgba(27, 25, 22, 0.12);
-
-  --primary-500: rgb(var(--color-accent));
-  --accent-500: rgb(var(--color-accent));
-  --secondary-500: rgb(var(--color-ink));
-}
-
-.dark {
-  --color-paper: 19 18 17;
-  --color-raised: 28 26 23;
-  --color-ink: 243 238 230;
-  --color-muted: 167 158 147;
-  --color-line: 50 46 41;
-  --color-accent: 212 120 104;
-
-  --bg-primary: rgb(var(--color-paper));
-  --bg-secondary: rgb(var(--color-raised));
-  --bg-tertiary: rgb(var(--color-paper));
-  --bg-quaternary: rgb(var(--color-line));
-
-  --surface-primary: rgb(var(--color-raised));
-  --surface-secondary: rgb(var(--color-paper));
-  --surface-elevated: rgb(var(--color-raised));
-  --surface-overlay: rgb(var(--color-raised));
-
-  --text-primary: rgb(var(--color-ink));
-  --text-secondary: rgb(var(--color-muted));
-  --text-tertiary: rgb(var(--color-muted));
-  --text-quaternary: rgb(var(--color-muted));
-  --text-inverse: rgb(var(--color-paper));
-
-  --border-primary: rgb(var(--color-line));
-  --border-secondary: rgb(var(--color-line));
-  --border-focus: rgb(var(--color-ink));
-  --border-accent: rgb(var(--color-accent));
-}
-
-/* Leftover glass / gradient helpers render as solid paper surfaces. */
-.glass-card,
-.glass-card-subtle,
-.glass-card-strong,
-.floating-element,
-.modern-card {
-  background: rgb(var(--color-raised));
-  border: 1px solid rgb(var(--color-line));
-  border-radius: 2px;
-  box-shadow: none;
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-}
-
-.modern-card:hover {
-  border-color: rgb(var(--color-ink));
-  transform: none;
-  box-shadow: none;
-}
-
-.gradient-bg-primary,
-.gradient-bg-secondary,
-.gradient-bg-tertiary {
-  background: rgb(var(--color-ink));
-}
-
-.gradient-text-primary,
-.gradient-text-secondary {
-  background: none;
-  -webkit-text-fill-color: rgb(var(--color-accent));
-  color: rgb(var(--color-accent));
-}
 
 .focus-visible:focus-visible,
 :focus-visible {
-  outline: 2px solid rgb(var(--color-accent));
+  outline: 2px solid rgb(var(--rgb-accent));
   outline-offset: 3px;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
-}
 
 /*
   One continuous paper ground. Sections do not carry their own pattern,
@@ -150,8 +34,8 @@ footer[data-studio="colophon"]::after {
 }
 
 .nav-current {
-  color: rgb(var(--color-ink));
-  box-shadow: inset 0 -1px 0 rgb(var(--color-accent));
+  color: rgb(var(--rgb-ink));
+  box-shadow: inset 0 -1px 0 rgb(var(--rgb-accent));
 }
 
 /*
@@ -164,11 +48,11 @@ footer[data-studio="colophon"]::after {
 }
 
 .card-hover:hover {
-  border-color: rgb(var(--color-accent));
+  border-color: rgb(var(--rgb-accent));
 }
 
 .card-hover:hover .card-hover-title {
-  color: rgb(var(--color-accent));
+  color: rgb(var(--rgb-accent));
 }
 
 .card-hover-media {
@@ -179,13 +63,13 @@ footer[data-studio="colophon"]::after {
   content: "";
   position: absolute;
   inset: 0;
-  background: rgb(var(--color-accent) / 0);
+  background: rgb(var(--rgb-accent) / 0);
   transition: background-color 180ms ease;
   pointer-events: none;
 }
 
 .card-hover:hover .card-hover-media::after {
-  background: rgb(var(--color-accent) / 0.14);
+  background: rgb(var(--rgb-accent) / 0.14);
 }
 
 .read-row {
@@ -193,8 +77,8 @@ footer[data-studio="colophon"]::after {
 }
 
 .read-row:hover {
-  background-color: rgb(var(--color-raised));
-  box-shadow: inset 2px 0 0 rgb(var(--color-accent));
+  background-color: rgb(var(--rgb-raised));
+  box-shadow: inset 2px 0 0 rgb(var(--rgb-accent));
 }
 
 .cell-open {
@@ -203,22 +87,22 @@ footer[data-studio="colophon"]::after {
 }
 
 .cell-open:hover {
-  background: rgb(var(--color-raised));
+  background: rgb(var(--rgb-raised));
 }
 
 .cell-open:hover .cell-open-title {
-  color: rgb(var(--color-accent));
+  color: rgb(var(--rgb-accent));
 }
 
 .tier-rule {
   height: 2px;
-  background: rgb(var(--color-line));
+  background: rgb(var(--rgb-line));
 }
 
 .tier-rule > span {
   display: block;
   height: 2px;
-  background: rgb(var(--color-accent));
+  background: rgb(var(--rgb-accent));
 }
 
 .row-open {
@@ -226,20 +110,20 @@ footer[data-studio="colophon"]::after {
 }
 
 .row-open:focus-visible {
-  outline: 2px solid rgb(var(--color-accent));
+  outline: 2px solid rgb(var(--rgb-accent));
   outline-offset: 4px;
 }
 
 .row-open:hover .row-open-title,
 .row-open:focus-visible .row-open-title {
-  color: rgb(var(--color-accent));
+  color: rgb(var(--rgb-accent));
 }
 
 .row-open:hover .row-open-action,
 .row-open:focus-visible .row-open-action {
-  background: rgb(var(--color-ink));
-  color: rgb(var(--color-paper));
-  border-color: rgb(var(--color-ink));
+  background: rgb(var(--rgb-ink));
+  color: rgb(var(--rgb-paper));
+  border-color: rgb(var(--rgb-ink));
 }
 
 .ledger-item.is-waiting,
@@ -285,17 +169,17 @@ footer[data-studio="colophon"]::after {
 }
 
 .field:focus {
-  border-color: rgb(var(--color-accent));
+  border-color: rgb(var(--rgb-accent));
   outline: none;
 }
 
 .mark-current {
-  box-shadow: inset 2px 0 0 rgb(var(--color-accent));
+  box-shadow: inset 2px 0 0 rgb(var(--rgb-accent));
 }
 
 .link-mark:hover {
-  color: rgb(var(--color-ink));
-  box-shadow: inset 0 -1px 0 rgb(var(--color-accent));
+  color: rgb(var(--rgb-ink));
+  box-shadow: inset 0 -1px 0 rgb(var(--rgb-accent));
 }
 
 .presence {
@@ -304,7 +188,7 @@ footer[data-studio="colophon"]::after {
   height: 0.42rem;
   margin-right: 0.5rem;
   border-radius: 50%;
-  background: rgb(var(--color-accent));
+  background: rgb(var(--rgb-accent));
   vertical-align: 0.05em;
   flex: none;
 }
@@ -315,9 +199,9 @@ footer[data-studio="colophon"]::after {
 }
 
 @keyframes presence-pulse {
-  0% { box-shadow: 0 0 0 0 rgb(var(--color-accent) / 0.55); }
-  70% { box-shadow: 0 0 0 6px rgb(var(--color-accent) / 0); }
-  100% { box-shadow: 0 0 0 0 rgb(var(--color-accent) / 0); }
+  0% { box-shadow: 0 0 0 0 rgb(var(--rgb-accent) / 0.55); }
+  70% { box-shadow: 0 0 0 6px rgb(var(--rgb-accent) / 0); }
+  100% { box-shadow: 0 0 0 0 rgb(var(--rgb-accent) / 0); }
 }
 
 @keyframes frame-swap {
@@ -336,7 +220,7 @@ footer[data-studio="colophon"]::after {
 @media (min-width: 1440px) {
   .studio-rail {
     position: fixed;
-    z-index: 100;
+    z-index: var(--z-chrome);
     left: 22px;
     top: 50%;
     display: flex;
@@ -354,35 +238,35 @@ footer[data-studio="colophon"]::after {
   font-size: 11px;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: rgb(var(--color-muted));
+  color: rgb(var(--rgb-muted));
 }
 
 .studio-rail-track {
   width: 1px;
   height: 72px;
   margin-left: 5px;
-  background: rgb(var(--color-line));
+  background: rgb(var(--rgb-line));
 }
 
 .studio-rail-track > span {
   display: block;
   width: 1px;
-  background: rgb(var(--color-accent));
+  background: rgb(var(--rgb-accent));
 }
 
 .eqbot-dock {
   position: fixed;
   right: 20px;
   bottom: 20px;
-  z-index: 1200;
+  z-index: var(--z-chrome);
 }
 
 .eqbot-launcher,
 .eqbot-avatar,
 .eqbot-flyer {
-  border: 1px solid rgb(var(--color-line));
+  border: 1px solid rgb(var(--rgb-line));
   border-radius: 50%;
-  background: rgb(var(--color-paper));
+  background: rgb(var(--rgb-paper));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -406,7 +290,7 @@ footer[data-studio="colophon"]::after {
 .eqbot-launcher,
 .eqbot-flyer,
 .eqbot-tab .eqbot-avatar {
-  background: white;
+  background: rgb(var(--rgb-raised));
 }
 
 .eqbot-launcher {
@@ -423,9 +307,9 @@ footer[data-studio="colophon"]::after {
   bottom: 6px;
   width: min(16rem, calc(100vw - 108px));
   padding: 10px 12px;
-  border: 1px solid rgb(var(--color-line));
-  background: rgb(var(--color-raised));
-  color: rgb(var(--color-ink));
+  border: 1px solid rgb(var(--rgb-line));
+  background: rgb(var(--rgb-raised));
+  color: rgb(var(--rgb-ink));
   font: inherit;
   font-size: 14px;
   line-height: 1.45;
@@ -435,7 +319,7 @@ footer[data-studio="colophon"]::after {
 
 .eqbot-launcher:hover,
 .eqbot-tab:hover {
-  border-color: rgb(var(--color-ink));
+  border-color: rgb(var(--rgb-ink));
 }
 
 .eqbot-launcher.is-hidden,
@@ -449,8 +333,8 @@ footer[data-studio="colophon"]::after {
   height: 56px;
   max-width: calc(100vw - 32px);
   padding: 0 4px 0 6px;
-  border: 1px solid rgb(var(--color-line));
-  background: white;
+  border: 1px solid rgb(var(--rgb-line));
+  background: rgb(var(--rgb-raised));
 }
 
 .eqbot-tab-open,
@@ -468,7 +352,7 @@ footer[data-studio="colophon"]::after {
   height: 100%;
   min-width: 0;
   padding: 0 8px 0 2px;
-  color: rgb(var(--color-ink));
+  color: rgb(var(--rgb-ink));
   text-align: left;
 }
 
@@ -479,12 +363,12 @@ footer[data-studio="colophon"]::after {
   width: 32px;
   height: 32px;
   flex: none;
-  color: rgb(var(--color-muted));
+  color: rgb(var(--rgb-muted));
 }
 
 .eqbot-tab-x:hover,
 .eqbot-panel-bar button:hover {
-  color: rgb(var(--color-ink));
+  color: rgb(var(--rgb-ink));
 }
 
 .eqbot-panel {
@@ -498,10 +382,10 @@ footer[data-studio="colophon"]::after {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  border: 1px solid rgb(var(--color-line));
-  background: white;
-  color: rgb(var(--color-ink));
-  z-index: 1200;
+  border: 1px solid rgb(var(--rgb-line));
+  background: rgb(var(--rgb-raised));
+  color: rgb(var(--rgb-ink));
+  z-index: var(--z-chrome);
   transition: height 0.42s cubic-bezier(0.22, 0.7, 0.2, 1);
 }
 
@@ -516,7 +400,7 @@ footer[data-studio="colophon"]::after {
   flex: none;
   height: 4.25rem;
   padding: 0 12px 0 14px;
-  border-bottom: 1px solid rgb(var(--color-line));
+  border-bottom: 1px solid rgb(var(--rgb-line));
 }
 
 .eqbot-id {
@@ -540,15 +424,15 @@ footer[data-studio="colophon"]::after {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: rgb(var(--color-accent));
-  border: 1px solid rgb(var(--color-paper));
+  background: rgb(var(--rgb-accent));
+  border: 1px solid rgb(var(--rgb-paper));
 }
 
 .eqbot-name {
   display: block;
   font-size: 15px;
   line-height: 1.2;
-  color: rgb(var(--color-ink));
+  color: rgb(var(--rgb-ink));
 }
 
 .eqbot-status {
@@ -556,12 +440,12 @@ footer[data-studio="colophon"]::after {
   margin-top: 2px;
   font-size: 12px;
   line-height: 1.2;
-  color: rgb(var(--color-muted));
+  color: rgb(var(--rgb-muted));
 }
 
 .eqbot-flyer {
   position: fixed;
-  z-index: 1210;
+  z-index: calc(var(--z-chrome) + 1);
   pointer-events: none;
   transition: top 0.46s cubic-bezier(0.22, 0.7, 0.2, 1), left 0.46s cubic-bezier(0.22, 0.7, 0.2, 1), width 0.46s cubic-bezier(0.22, 0.7, 0.2, 1), height 0.46s cubic-bezier(0.22, 0.7, 0.2, 1);
 }
@@ -583,11 +467,11 @@ footer[data-studio="colophon"]::after {
   padding: 10px 12px;
   font-size: 14px;
   line-height: 1.45;
-  color: rgb(var(--color-ink));
+  color: rgb(var(--rgb-ink));
 }
 
 .eqbot-bot {
-  border: 1px solid rgb(var(--color-line));
+  border: 1px solid rgb(var(--rgb-line));
   white-space: pre-line;
 }
 
@@ -596,24 +480,24 @@ footer[data-studio="colophon"]::after {
   text-align: left;
   background: transparent;
   cursor: pointer;
-  color: rgb(var(--color-accent));
+  color: rgb(var(--rgb-accent));
 }
 
 .eqbot-jump:hover {
-  border-color: rgb(var(--color-ink));
+  border-color: rgb(var(--rgb-ink));
 }
 
 .eqbot-you {
   margin-left: auto;
-  background: rgb(var(--color-paper));
-  border: 1px solid rgb(var(--color-line));
+  background: rgb(var(--rgb-paper));
+  border: 1px solid rgb(var(--rgb-line));
 }
 
 .eqbot-options {
   max-height: 40%;
   overflow-y: auto;
   padding: 8px 12px 12px;
-  border-top: 1px solid rgb(var(--color-line));
+  border-top: 1px solid rgb(var(--rgb-line));
 }
 
 .eqbot-choice {
@@ -622,25 +506,25 @@ footer[data-studio="colophon"]::after {
   margin-top: 6px;
   padding: 8px 10px;
   text-align: left;
-  border: 1px solid rgb(var(--color-line));
+  border: 1px solid rgb(var(--rgb-line));
   background: transparent;
-  color: rgb(var(--color-ink));
+  color: rgb(var(--rgb-ink));
   font-size: 14px;
 }
 
 .eqbot-choice:hover:not(:disabled) {
-  border-color: rgb(var(--color-ink));
+  border-color: rgb(var(--rgb-ink));
 }
 
 .eqbot-choice:disabled {
-  color: rgb(var(--color-muted));
+  color: rgb(var(--rgb-muted));
 }
 
 .eqbot-hint {
   margin-top: 8px;
   font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
   font-size: 11px;
-  color: rgb(var(--color-muted));
+  color: rgb(var(--rgb-muted));
 }
 
 .eqbot-tab-copy {
@@ -670,7 +554,7 @@ footer[data-studio="colophon"]::after {
 .dark .eqbot-panel,
 .dark .eqbot-tab,
 .dark .eqbot-notice {
-  background: rgb(var(--color-raised));
+  background: rgb(var(--rgb-raised));
 }
 
 @media (max-width: 640px) {
@@ -702,7 +586,7 @@ footer[data-studio="colophon"]::after {
 .eqbot-typing span {
   width: 5px;
   height: 5px;
-  background: rgb(var(--color-muted));
+  background: rgb(var(--rgb-muted));
   animation: eqbot-wave 0.9s ease-in-out infinite;
 }
 

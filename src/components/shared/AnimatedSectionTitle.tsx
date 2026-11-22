@@ -22,7 +22,7 @@ export const AnimatedSectionTitle: React.FC<AnimatedSectionTitleProps> = ({
   return (
     <header className={`rise-item mb-12 md:mb-16 max-w-3xl ${center ? 'mx-auto text-center' : ''} ${className}`}>
       {badge && (
-        <p className="font-jetbrains-mono text-[11px] tracking-[0.22em] uppercase text-accent mb-4">
+        <p className="font-mono text-[11px] tracking-[0.22em] uppercase text-accent mb-4">
           {badge}
         </p>
       )}

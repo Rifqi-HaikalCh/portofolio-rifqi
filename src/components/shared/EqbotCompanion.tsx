@@ -1,11 +1,11 @@
 'use client';
 
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { useEffect, useEffectEvent, useLayoutEffect, useRef, useState } from 'react';
+import { useHydrated } from '../../hooks/useHydrated';
 import { createPortal } from 'react-dom';
-import Lottie from 'lottie-react';
 import { X } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
-import assistantAnimation from '../../../public/assets/assistant.json';
+import { RifqiFigurine } from '../scene/RifqiFigurine';
 import { scrollToStudioSection, useStudio } from './StudioProvider';
 import {
   eqbotCopy,
@@ -27,7 +27,8 @@ function reducedMotion() {
 }
 
 function EqbotFace() {
-  return <Lottie animationData={assistantAnimation} loop className="h-9 w-9" />;
+  // Head crop of the same paper figurine as the hero (DesignRules §2.6).
+  return <RifqiFigurine crop="head" className="h-full w-full" />;
 }
 
 function downloadCv() {
@@ -54,7 +55,7 @@ export function EqbotCompanion() {
     return typeof value === 'string' ? value : en;
   };
   const { activeId } = useStudio();
-  const [ready, setReady] = useState(false);
+  const ready = useHydrated();
   const [phase, setPhase] = useState<Phase>('shut');
   const [rest, setRest] = useState<Rest>('logo');
   const [flyer, setFlyer] = useState<Flyer | null>(null);
@@ -78,7 +79,6 @@ export function EqbotCompanion() {
   const avatarRef = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
-    setReady(true);
     const show = window.setTimeout(() => setNotice(true), 600);
     const hide = window.setTimeout(() => setNotice(false), 8600);
     return () => {
@@ -94,14 +94,6 @@ export function EqbotCompanion() {
     node.scrollTop = node.scrollHeight;
   }, [log, waiting, phase]);
 
-  useEffect(() => {
-    if (phase === 'shut') return undefined;
-    const onKey = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') closeToTab();
-    };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [phase]);
 
   useLayoutEffect(() => {
     if (phase !== 'fly') return undefined;
@@ -192,6 +184,18 @@ export function EqbotCompanion() {
     setRest('tab');
     setPhase(reducedMotion() ? 'shut' : 'shrink');
   };
+
+  // Escape closes to the tab. useEffectEvent reads the latest closeToTab without re-subscribing.
+  const onEscape = useEffectEvent(() => closeToTab());
+
+  useEffect(() => {
+    if (phase === 'shut') return undefined;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') onEscape();
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [phase]);
 
   const choose = (choice: EqbotChoice) => {
     if (waiting || phase !== 'open') return;

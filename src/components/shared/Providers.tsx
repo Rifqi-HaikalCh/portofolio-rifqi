@@ -2,9 +2,7 @@
 
 import { ThemeProvider, useTheme } from 'next-themes';
 import { LanguageProvider } from '../../context/LanguageContext';
-import { RoleProvider } from '../../context/RoleContext';
-import { RoleThemeProvider } from './RoleThemeProvider';
-import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
+import React, { createContext, useContext, useCallback, useEffect } from 'react';
 
 interface ThemeAnimationContextType {
   toggleTheme: (event: React.MouseEvent) => void;
@@ -72,14 +70,10 @@ const ThemeAnimationProvider = ({ children }: { children: React.ReactNode }) => 
 
 export function Providers({ children }: ProvidersProps) {
   return (
-    <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
+    <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
       <ThemeAnimationProvider>
         <LanguageProvider>
-          <RoleProvider>
-            <RoleThemeProvider>
-              {children}
-            </RoleThemeProvider>
-          </RoleProvider>
+          {children}
         </LanguageProvider>
       </ThemeAnimationProvider>
     </ThemeProvider>

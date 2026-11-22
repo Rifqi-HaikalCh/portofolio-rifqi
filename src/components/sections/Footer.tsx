@@ -2,7 +2,8 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Github, Linkedin, Mail, MessageCircle } from 'lucide-react';
+import { Mail, MessageCircle } from 'lucide-react';
+import { GithubIcon, LinkedinIcon } from '../icons/BrandIcons';
 import { useLanguage } from '../../context/LanguageContext';
 import { contactInfo, navLinks } from '../../data/portfolio';
 import { BrandLockup } from '../shared/BrandLockup';
@@ -13,8 +14,8 @@ export const Footer: React.FC = () => {
 
   const socials = [
     { href: `mailto:${contactInfo.email}`, icon: Mail, label: 'Email' },
-    { href: contactInfo.linkedin, icon: Linkedin, label: 'LinkedIn', external: true },
-    { href: contactInfo.github, icon: Github, label: 'GitHub', external: true },
+    { href: contactInfo.linkedin, icon: LinkedinIcon, label: 'LinkedIn', external: true },
+    { href: contactInfo.github, icon: GithubIcon, label: 'GitHub', external: true },
     { href: contactInfo.whatsapp, icon: MessageCircle, label: 'WhatsApp', external: true },
   ];
 
@@ -62,7 +63,7 @@ export const Footer: React.FC = () => {
           </div>
 
           <div>
-            <h3 className="font-jetbrains-mono text-[11px] tracking-[0.2em] uppercase text-paper/50 mb-4">
+            <h3 className="font-mono text-[11px] tracking-[0.2em] uppercase text-paper/50 mb-4">
               {t('Quick Links', 'Tautan Cepat')}
             </h3>
             <ul className="space-y-2">
@@ -77,7 +78,7 @@ export const Footer: React.FC = () => {
           </div>
 
           <div>
-            <h3 className="font-jetbrains-mono text-[11px] tracking-[0.2em] uppercase text-paper/50 mb-4">
+            <h3 className="font-mono text-[11px] tracking-[0.2em] uppercase text-paper/50 mb-4">
               {t('Services', 'Layanan')}
             </h3>
             <ul className="space-y-2">
@@ -90,7 +91,7 @@ export const Footer: React.FC = () => {
           </div>
         </div>
 
-        <div className="border-t border-white/15 pt-6 text-xs text-paper/55">
+        <div className="border-t border-paper/15 pt-6 text-xs text-paper/55">
           {t(
             `© ${currentYear} Rifqi Haikal Chairiansyah. All rights reserved.`,
             `© ${currentYear} Rifqi Haikal Chairiansyah. Semua hak cipta dilindungi.`

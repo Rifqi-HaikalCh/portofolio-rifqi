@@ -1,5 +1,6 @@
 'use client';
-import { useEffect, useState, ReactNode } from 'react';
+import type { ReactNode } from 'react';
+import { useHydrated } from '../../hooks/useHydrated';
 import { createPortal } from 'react-dom';
 
 interface PortalProps {
@@ -7,12 +8,7 @@ interface PortalProps {
 }
 
 export const Portal = ({ children }: PortalProps) => {
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-    return () => setMounted(false);
-  }, []);
+  const mounted = useHydrated();
 
   return mounted ? createPortal(children, document.body) : null;
 };

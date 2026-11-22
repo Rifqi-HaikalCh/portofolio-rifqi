@@ -27,7 +27,6 @@ interface Service {
     en: string[];
     id: string[];
   };
-  gradient: string;
 }
 
 export const uiuxServices: Service[] = [
@@ -41,7 +40,6 @@ export const uiuxServices: Service[] = [
       en: ['Complete UI design systems', 'Mobile-first responsive design', 'Design handoff documentation'],
       id: ['Sistem desain UI yang lengkap', 'Desain responsif mobile-first', 'Dokumentasi handoff desain']
     },
-    gradient: 'from-purple-500 to-pink-500'
   },
   {
     id: 'prototypes',
@@ -53,7 +51,6 @@ export const uiuxServices: Service[] = [
       en: ['Interactive prototypes', 'Animation & micro-interactions', 'User testing ready'],
       id: ['Prototype interaktif', 'Animasi & micro-interactions', 'Siap untuk user testing']
     },
-    gradient: 'from-emerald-500 to-teal-500'
   },
   {
     id: 'branding',
@@ -65,7 +62,6 @@ export const uiuxServices: Service[] = [
       en: ['Brand identity design', 'Color palette creation', 'Logo and iconography'],
       id: ['Desain identitas brand', 'Pembuatan palet warna', 'Logo dan ikonografi']
     },
-    gradient: 'from-orange-500 to-red-500'
   }
 ];
 
@@ -80,7 +76,6 @@ export const developerServices: Service[] = [
       en: ['C# application logic', 'ASP.NET MVC and .NET Core', 'Telerik interfaces'],
       id: ['Logika aplikasi C#', 'ASP.NET MVC dan .NET Core', 'Antarmuka Telerik']
     },
-    gradient: 'from-blue-500 to-indigo-500'
   },
   {
     id: 'api-integration',
@@ -92,7 +87,6 @@ export const developerServices: Service[] = [
       en: ['Stored procedures and indexing', 'Entity Framework', 'Transactional processing'],
       id: ['Stored procedure dan indexing', 'Entity Framework', 'Pemrosesan transaksional']
     },
-    gradient: 'from-cyan-500 to-blue-500'
   },
   {
     id: 'fullstack-dev',
@@ -104,7 +98,6 @@ export const developerServices: Service[] = [
       en: ['Monitoring dashboards', 'Modular application structure', 'Deployment on IIS'],
       id: ['Dashboard pemantauan', 'Struktur aplikasi modular', 'Deployment di IIS']
     },
-    gradient: 'from-green-500 to-emerald-500'
   }
 ];
 
@@ -167,7 +160,7 @@ export function Services() {
                   <h3 className="font-serif text-2xl font-medium text-ink mb-3">
                     {language === 'en' ? service.titleEn : service.titleId}
                   </h3>
-                  <p className="text-muted leading-relaxed mb-6 flex-grow">
+                  <p className="text-muted leading-relaxed mb-6 grow">
                     {language === 'en' ? service.descriptionEn : service.descriptionId}
                   </p>
                   <ul className="space-y-2">
@@ -190,7 +183,7 @@ export function Services() {
               {activeTab === 'development' ? (
                 <div className="space-y-10">
                   <div className="rise-item">
-                    <p className="font-jetbrains-mono text-[11px] tracking-[0.16em] uppercase text-accent mb-4">
+                    <p className="font-mono text-[11px] tracking-[0.16em] uppercase text-accent mb-4">
                       {language === 'en' ? 'Core · Enterprise web and data' : 'Inti · Web dan data enterprise'}
                     </p>
                     <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 border-t border-l border-line">
@@ -205,7 +198,7 @@ export function Services() {
                   <div className="space-y-8">
                     {listedAdditionalGroups.map((group) => (
                       <div key={group.labelEn} className="rise-item">
-                        <p className="font-jetbrains-mono text-[11px] tracking-[0.16em] uppercase text-accent mb-4">
+                        <p className="font-mono text-[11px] tracking-[0.16em] uppercase text-accent mb-4">
                           {language === 'en' ? group.labelEn : group.labelId}
                         </p>
                         <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 border-t border-l border-line">
@@ -229,7 +222,7 @@ export function Services() {
                     ))}
                   </div>
                   <div className="rise-item">
-                    <p className="font-jetbrains-mono text-[11px] tracking-[0.16em] uppercase text-accent mb-4">
+                    <p className="font-mono text-[11px] tracking-[0.16em] uppercase text-accent mb-4">
                       {language === 'en' ? 'Nice to Have' : 'Baik untuk Dimiliki'}
                     </p>
                     <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 border-t border-l border-line">
@@ -288,9 +281,19 @@ export function Services() {
   );
 }
 
+type DesignSelection = {
+  id: string;
+  title: string;
+  description: string;
+  images: string[];
+  tools: string[];
+  category: string;
+  links: Parameters<typeof projectDetailLinks>[1];
+};
+
 const DesignShowcase = ({ onShowAll }: { onShowAll: () => void }) => {
   const { language } = useLanguage();
-  const [selectedProject, setSelectedProject] = useState<any>(null);
+  const [selectedProject, setSelectedProject] = useState<DesignSelection | null>(null);
 
   return (
     <>

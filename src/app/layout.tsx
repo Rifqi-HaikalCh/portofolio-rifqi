@@ -1,13 +1,11 @@
 import type { Metadata } from "next";
 import { Fraunces, Source_Sans_3, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
-import "../styles/design-system.css";
-import "../styles/role-themes.css";
 import { Providers } from "../components/shared/Providers";
 
 const fraunces = Fraunces({
   subsets: ["latin"],
-  weight: ["500", "600", "700"],
+  axes: ["SOFT", "opsz"],
   variable: "--font-fraunces",
   display: "swap",
   preload: true,
@@ -76,15 +74,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head>
-        {/* Font Awesome CDN removed for performance - using lucide-react instead */}
-        {/* Preconnect to optimize external resources */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        {/* DNS prefetch for faster resource loading */}
-        <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
-      </head>
       <body className={`${fraunces.variable} ${sourceSans.variable} ${jetbrainsMono.variable} font-sans`}>
+        <a
+          href="#main"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-overlay focus:bg-ink focus:px-4 focus:py-2 focus:text-paper"
+        >
+          Skip to main content
+        </a>
         <Providers>
           {children}
         </Providers>

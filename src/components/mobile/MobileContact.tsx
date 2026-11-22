@@ -7,7 +7,7 @@ import { contactInfo } from '../../data/portfolio';
 import { submitContact } from '../../lib/submit-contact';
 import { AnimatedSectionTitle } from '../shared/AnimatedSectionTitle';
 
-const fieldClass = 'field w-full px-4 py-3 bg-paper border border-line text-ink placeholder:text-muted focus:outline-none';
+const fieldClass = 'field w-full px-4 py-3 bg-paper border border-line text-ink placeholder:text-muted focus:outline-hidden';
 
 export const MobileContact: React.FC = () => {
   const { t } = useLanguage();
@@ -154,7 +154,7 @@ export const MobileContact: React.FC = () => {
           <div key={item.info} className="rise-item py-5 border-b border-line">
             <dt className="flex items-center gap-2 text-accent">
               {item.icon}
-              <span className="font-jetbrains-mono text-[11px] tracking-[0.16em] uppercase">{item.title}</span>
+              <span className="font-mono text-[11px] tracking-[0.16em] uppercase">{item.title}</span>
             </dt>
             <dd className="mt-2 text-ink">
               {item.href ? (

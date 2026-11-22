@@ -52,8 +52,8 @@ export const ViewAllProjects: React.FC<ViewAllProjectsProps> = ({ onBack, projec
 
   return (
     <>
-      <div id="projects" data-studio="sheet" className="fixed inset-0 z-[1100] overflow-y-auto bg-paper text-ink">
-        <div className="sticky top-0 z-10 border-b border-line bg-paper">
+      <div id="projects" data-studio="sheet" className="fixed inset-0 z-overlay overflow-y-auto bg-paper text-ink">
+        <div className="sticky top-0 z-content-ui border-b border-line bg-paper">
           <div className="flex items-center gap-3 px-5 h-16">
             <button
               type="button"

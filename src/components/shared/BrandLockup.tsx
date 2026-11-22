@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useHydrated } from '../../hooks/useHydrated';
 import { useTheme } from 'next-themes';
 
 const files = {
@@ -39,11 +39,7 @@ export function BrandLockup({
   label = 'Rifqi Haikal',
 }: BrandLockupProps) {
   const { resolvedTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useHydrated();
 
   const theme = mounted ? resolvedTheme : 'dark';
   const darkBackground = surface === 'ink' ? theme !== 'dark' : theme === 'dark';
