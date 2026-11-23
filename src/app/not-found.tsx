@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export default function NotFound() {
   return (
     <main id="main" className="mx-auto flex min-h-svh max-w-3xl flex-col items-start justify-center px-5 py-24 lg:px-8">
-      {/* The paper puppet peering into the empty drawer (docs/art-motion-upgrade.md §4). */}
+      {/* The paper puppet peering into the empty drawer (DesignRules.md §2.7, §4.3). */}
       <div className="flex items-end" aria-hidden="true">
         <RifqiFigurine pose="peer" className="relative -mr-8 h-52 w-auto" />
         <svg viewBox="0 0 240 150" className="w-56" focusable="false">

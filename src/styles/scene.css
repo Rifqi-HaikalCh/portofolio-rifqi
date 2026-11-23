@@ -1,86 +1,100 @@
 /*
-  Hero stage (DesignRules.md §9). One 16/10 stage; layers align through the
-  shared viewBox. Pointer parallax reads --px / --py (written by
-  useParallaxStage); scroll depth uses scroll-driven animations where supported.
-  Only transform, translate and opacity move.
+  Paper Studio scenes (DesignRules.md §9.1–§9.2, §10.2).
+  A ShadowBox holds one PaperScene: flat layers placed in % of the active frame
+  (desktop ≥ 768 px, mobile below) and moved by their depth factor --k:
+  pointer look (--px / --py from useParallaxStage) and the hero scroll push.
+  The z = 0 plane (k = 0) never moves, so HTML on it stays on its art.
+  Only translate / transform move; layers are promoted only while they do.
 */
 
-.paper-stage {
+.shadowbox {
   --px: 0;
   --py: 0;
+  container-type: inline-size;
 }
 
-.stage-layer {
+.scene-viewport {
+  position: relative;
+  aspect-ratio: var(--aspect);
+  overflow: clip;
+  background: var(--ill-wall);
+  box-shadow:
+    calc(2px * var(--light-x)) 3px 4px rgb(var(--rgb-shadow) / 0.22),
+    calc(14px * var(--light-x)) 20px 36px rgb(var(--rgb-shadow) / 0.2);
+}
+
+.scene-layer {
+  position: absolute;
+  left: var(--l);
+  top: var(--t);
+  width: var(--w);
+  height: var(--h);
+  pointer-events: none;
+}
+
+.scene-hit {
+  position: absolute;
+  left: var(--l);
+  top: var(--t);
+  width: var(--w);
+  height: var(--h);
+}
+
+/* The shadow-box frame: a cardstock lip with depth falling inward from the light. */
+.shadowbox-frame {
   position: absolute;
   inset: 0;
-  width: 100%;
-  height: 100%;
   pointer-events: none;
-  transition: transform var(--dur-ui) var(--ease-paper);
+  border: clamp(6px, 1.25cqw, 16px) solid var(--ill-frame);
+  box-shadow:
+    inset calc(3px * var(--light-x)) 4px 3px rgb(var(--rgb-shadow) / 0.3),
+    inset calc(12px * var(--light-x)) 16px 28px rgb(var(--rgb-shadow) / 0.26),
+    0 0 0 1px rgb(var(--rgb-shadow) / 0.16);
 }
 
-/* L1 wall ±4 px, L2 desk/laptop/lamp anchored, figurine ±2 px, L3 props ±10 px. */
-.stage-l1 { transform: translate3d(calc(var(--px) * -4px), calc(var(--py) * -4px), 0); }
-.stage-fig { transform: translate3d(calc(var(--px) * -2px), calc(var(--py) * -2px), 0); }
-.stage-l3 { transform: translate3d(calc(var(--px) * -10px), calc(var(--py) * -10px), 0); }
+.scene-mobile-only { display: none; }
 
-/* Scroll depth: the wall drifts up and the front props drop away as the About
-   sheet arrives. The wall's lower edge stays hidden behind the desk band. */
+@media (max-width: 767px) {
+  .scene-viewport { aspect-ratio: var(--aspect-m); }
+  .scene-layer,
+  .scene-hit {
+    left: var(--lm);
+    top: var(--tm);
+    width: var(--wm);
+    height: var(--hm);
+  }
+  .scene-desktop-only { display: none; }
+  .scene-mobile-only { display: inline; }
+}
+
+/* Pointer look: the camera follows the pointer; depth does the rest. */
+@media (min-width: 1024px) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .scene-layer {
+    translate: calc(var(--px) * var(--k) * -9cqw) calc(var(--py) * var(--k) * -5cqw);
+    transition: translate 180ms var(--ease-paper);
+  }
+  .shadowbox.is-looking .scene-layer { will-change: translate; }
+}
+
+/* Hero push: while the About sheet slides over, far layers rise and near ones drop. */
 @supports (animation-timeline: scroll()) {
   @media (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
-    .stage-l1,
-    .stage-l3 {
-      animation-timing-function: linear;
-      animation-fill-mode: both;
+    #home .scene-layer {
+      animation: scene-push linear both;
       animation-timeline: scroll(root);
       animation-range: 0 100vh;
     }
-    .stage-l1 { animation-name: stage-depth-far; }
-    .stage-l3 { animation-name: stage-depth-near; }
   }
 }
 
-@keyframes stage-depth-far {
-  to { translate: 0 -6vh; }
-}
-
-@keyframes stage-depth-near {
-  to { translate: 0 12vh; }
-}
-
-/* Registration marks at the four stage corners (§2.3). */
-.stage-marks > i {
-  position: absolute;
-  width: 12px;
-  height: 12px;
-  border: 0 solid var(--color-line);
-  pointer-events: none;
-}
-.stage-marks > i:nth-child(1) { top: -6px; left: -6px; border-top-width: 1px; border-left-width: 1px; }
-.stage-marks > i:nth-child(2) { top: -6px; right: -6px; border-top-width: 1px; border-right-width: 1px; }
-.stage-marks > i:nth-child(3) { bottom: -6px; left: -6px; border-bottom-width: 1px; border-left-width: 1px; }
-.stage-marks > i:nth-child(4) { bottom: -6px; right: -6px; border-bottom-width: 1px; border-right-width: 1px; }
-
-/* Paper fibre over the whole stage (P6.3): one 4 KB tile, multiplied so it
-   only darkens. Below the HTML screen and the lamp button. */
-.stage-fibre {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background-image: url("/assets/papercraft/desk-fibre.webp");
-  background-size: 256px 256px;
-  mix-blend-mode: multiply;
-  opacity: 0.07;
-}
-.dark .stage-fibre {
-  mix-blend-mode: screen;
-  opacity: 0.025;
+@keyframes scene-push {
+  to { transform: translateY(calc(var(--k) * 26cqw)); }
 }
 
 /* Desk lamp: the head tilts and the light pool fades when the lamp turns on. */
 .lamp-head {
-  transform-box: view-box;
-  transform-origin: 1214px 300px;
+  transform-box: fill-box;
+  transform-origin: 68% 36%;
   transition: transform var(--dur-ui) var(--ease-paper);
 }
 .dark .lamp-head { transform: rotate(-6deg); }
@@ -100,7 +114,7 @@
   .screen-company { display: none; }
 }
 
-/* Under 768 px the screen is a compact paper laptop card instead of the stage. */
+/* Under 768 px the screen is a compact paper laptop card below the shadow box. */
 @media (max-width: 767px) {
   .laptop-screen {
     padding: 10px 10px 0;

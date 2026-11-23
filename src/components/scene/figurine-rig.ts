@@ -15,7 +15,7 @@ import {
   viewer). Each joint rotates about its pivot as M = T(p) · Rx · Ry · Rz · T(−p),
   chained from the parent. A flat part at depth z projects orthographically to
   one 2D affine matrix, so the SVG poster is exactly the 3D puppet seen from
-  the front (docs/art-motion-upgrade.md §2.1).
+  the front (DesignRules.md §9.4).
 */
 
 /** Row-major 3 × 4 affine matrix. */

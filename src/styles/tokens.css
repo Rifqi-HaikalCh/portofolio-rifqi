@@ -64,8 +64,29 @@
   --paper-shadow: rgb(27 25 22 / 0.18);
   --paper-cut: rgb(255 255 255 / 0.55);
   --paper-fold: rgb(27 25 22 / 0.12);
-  --paper-drop-sm: drop-shadow(calc(2px * var(--light-x)) 2px 0 var(--paper-shadow));
-  --paper-drop: drop-shadow(calc(4px * var(--light-x)) 4px 0 var(--paper-shadow));
+  --paper-drop-sm: drop-shadow(calc(2px * var(--light-x)) 3px 3px var(--paper-shadow));
+  --paper-drop: drop-shadow(calc(4px * var(--light-x)) 5px 6px var(--paper-shadow));
+
+  /* v2 light & depth model (DesignRules.md §2.3–§2.5, §5.6). paper-kit reads these. */
+  --light-len: 1;
+  --light-warmth: 0.2;
+  --rgb-shadow: 58 40 28;
+  --pk-shadow: rgb(var(--rgb-shadow));
+  --pk-dark: rgb(var(--rgb-shadow));
+  --pk-light: rgb(255 249 236);
+  --pk-contact: 0.34;
+  --pk-penumbra: 0.24;
+  --pk-grain: 0.2;
+  --pk-fall: 0.16;
+  --air: #e8edf0;
+  --ill-sky: #dfe9ef;
+  --ill-cloud: #f6f8f8;
+  --ill-city-far: #c2ced6;
+  --ill-city-near: #9fb0bc;
+  --ill-city-lit: #c9d4db;
+  --ill-cork: #b68b5e;
+  --ill-chair: #3b4850;
+  --ill-sun: #fff1d0;
   /* Lamp-side rim on the figurine at night, so he never sinks into the wall (P6.2). */
   --ill-figure-rim: transparent;
   --figure-rim: drop-shadow(calc(-1.5px * var(--light-x)) 0 0 var(--ill-figure-rim));
@@ -135,6 +156,24 @@
   --light-x: -1;
 
   --paper-shadow: rgb(0 0 0 / 0.5);
+
+  --light-len: 1;
+  --light-warmth: 0.8;
+  --rgb-shadow: 6 8 14;
+  --pk-light: rgb(255 214 150);
+  --pk-contact: 0.55;
+  --pk-penumbra: 0.36;
+  --pk-grain: 0.22;
+  --pk-fall: 0.2;
+  --air: #1a2430;
+  --ill-sky: #1b2633;
+  --ill-cloud: #2b3644;
+  --ill-city-far: #233040;
+  --ill-city-near: #2c3b4c;
+  --ill-city-lit: #e0b878;
+  --ill-cork: #6c5136;
+  --ill-chair: #2b353c;
+  --ill-sun: #ffd696;
   --paper-cut: rgb(255 255 255 / 0.13);
   --paper-fold: rgb(0 0 0 / 0.22);
   --ill-figure-rim: rgb(255 214 150 / 0.55);

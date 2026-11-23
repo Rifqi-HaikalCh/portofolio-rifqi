@@ -10,7 +10,7 @@ import { partGeometry, toMatrix4 } from './figurine-mesh';
 import { sample, type ActiveClip, type ClipId } from './figurine-clips';
 
 /*
-  The 3D paper puppet (DesignRules.md §2.6, §9.3; docs/art-motion-upgrade.md §2).
+  The 3D paper puppet (DesignRules.md §2.7, §9.4).
   Every part from figurine-parts.ts is a cardstock sheet hung on the rig from
   figurine-rig.ts, so the front view equals the SVG poster. Unlit materials keep
   token colours exact; fold planes cross-fade with --light-x like the poster.

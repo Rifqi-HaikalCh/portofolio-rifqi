@@ -1,7 +1,7 @@
 import { expect, test, type Page } from '@playwright/test';
 
 /*
-  Paper puppet gates (docs/art-motion-upgrade.md §6): the 3D view must match the
+  Paper puppet gates (DesignRules.md §9.4, §17.3): the 3D view must match the
   SVG poster at rest, and the canvas must not render while nothing moves.
   Desktop only: the 3D view never loads under 1024 px.
 */

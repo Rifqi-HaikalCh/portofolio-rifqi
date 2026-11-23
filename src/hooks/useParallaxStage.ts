@@ -4,7 +4,9 @@ import { useEffect, type RefObject } from 'react';
   Pointer parallax for the hero stage (DesignRules.md §9.2).
   Writes --px and --py (each -1…1) on the stage element inside one
   requestAnimationFrame per pointer move. No React state, no scroll listeners.
-  Layers turn the variables into translate3d() in CSS (.stage-layer-*).
+  Scene layers turn them into `translate` scaled by their depth factor (scene.css).
+  While the pointer is over the box it carries `.is-looking`, which promotes the
+  layers (will-change) only for as long as they move.
   Off for coarse pointers, widths under 1024 px and reduced motion.
 */
 
@@ -33,13 +35,17 @@ export function useParallaxStage(stageRef: RefObject<HTMLElement | null>) {
     };
 
     const onMove = (event: PointerEvent) => {
+      stage.classList.add('is-looking');
       const rect = stage.getBoundingClientRect();
       const x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
       const y = ((event.clientY - rect.top) / rect.height) * 2 - 1;
       schedule(Math.max(-1, Math.min(1, x)), Math.max(-1, Math.min(1, y)));
     };
 
-    const onLeave = () => schedule(0, 0);
+    const onLeave = () => {
+      schedule(0, 0);
+      window.setTimeout(() => stage.classList.remove('is-looking'), 400);
+    };
 
     const attach = () => {
       stage.addEventListener('pointermove', onMove);

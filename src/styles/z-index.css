@@ -22,7 +22,8 @@
 @utility z-chrome { z-index: var(--z-chrome); }
 @utility z-overlay { z-index: var(--z-overlay); }
 
-section {
+/* Page sections only: nested <section>s (the laptop screen) keep their utilities. */
+section[id] {
   position: relative;
   z-index: var(--z-content-ui);
 }

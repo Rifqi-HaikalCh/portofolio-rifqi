@@ -1,15 +1,15 @@
 import { cvFile, heroHighlights, heroIntro, workExperience } from '../../data/portfolio';
 import { displayCase } from '../../lib/display-case';
 import { heroScreen } from '../../lib/hero-screen';
-import { MobileDiorama } from '../scene/MobileDiorama';
-import { PaperDeskStage } from '../scene/PaperDeskStage';
 import { RifqiFigurine } from '../scene/RifqiFigurine';
+import { DeskStation } from '../scenes/desk/DeskStation';
 import { T } from '../ui/T';
 
 /*
-  `01` #home — front-desk diorama and open laptop (DesignRules.md §4).
+  `01` #home — The Desk station (DesignRules.md §2.2, §4.3).
   Server component: the headline, tickets and buttons are plain HTML on first
-  paint. Only the stage (parallax, lamp, figurine) is a client leaf. Sticky on
+  paint. The station's art is server-rendered; only the pointer look, lamp,
+  figurine and laptop screen are client leaves. Sticky on
   tall desktops so the About sheet slides over.
 */
 export function Hero() {
@@ -62,9 +62,7 @@ export function Hero() {
         </div>
 
         <div className="xl:col-span-7">
-          <PaperDeskStage screen={heroScreen()} poster={<RifqiFigurine crop="stage" pose="seated" className="h-full w-full" />}
-            mobile={<MobileDiorama />}
-          />
+          <DeskStation screen={heroScreen()} poster={<RifqiFigurine crop="stage" pose="seated" className="h-full w-full" />} />
         </div>
       </div>
     </section>

@@ -2,13 +2,14 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { RifqiFigurine } from '../../components/scene/RifqiFigurine';
 import { FigurineSlot } from '../../components/scene/FigurineSlot';
-import { PaperDeskStage } from '../../components/scene/PaperDeskStage';
+import { DeskStation } from '../../components/scenes/desk/DeskStation';
+import { PaperDefs, paperKit, rect, type Material } from '../../lib/paper-kit';
 import { EXPRESSIONS, POSES, type PoseId } from '../../components/scene/figurine-parts';
 import { heroScreen } from '../../lib/hero-screen';
 import { ThemeSwitch } from './ThemeSwitch';
 
 /*
-  Asset review sheet (DesignRules.md §16, docs/art-motion-upgrade.md §6).
+  Asset review sheet (DesignRules.md §9.5, §16.2, §17.3).
   Development only: production builds return 404, and the page is never indexed.
 */
 
@@ -85,9 +86,15 @@ export default function PapercraftPage() {
         </div>
       </section>
 
-      <section aria-label="Assembled stage" className="mb-14">
-        <Label>Assembled stage · L1 wall → L2 desk, laptop, figurine, lamp → L3 props · move the pointer for parallax</Label>
-        <PaperDeskStage screen={heroScreen()} poster={<RifqiFigurine crop="stage" pose="seated" className="h-full w-full" />} />
+      <PaperDefs />
+      <section aria-label="Paper material" className="mb-14">
+        <Label>paper-kit material · five parts per sheet (shadow, cut wall, falloff, rim, grain) · gap 0 → 240 left to right</Label>
+        <MaterialSheet />
+      </section>
+
+      <section aria-label="Desk station" className="mb-14">
+        <Label>Station 01 · The Desk · 14 layers in depth bands · move the pointer for the camera look · scroll for the push</Label>
+        <DeskStation screen={heroScreen()} poster={<RifqiFigurine crop="stage" pose="seated" className="h-full w-full" />} />
       </section>
 
       <section aria-label="Poster and 3D" className="grid gap-8 md:grid-cols-2">
@@ -110,5 +117,25 @@ export default function PapercraftPage() {
         </div>
       </section>
     </main>
+  );
+}
+
+function MaterialSheet() {
+  const k = paperKit('review');
+  const materials: { m: Material; fill: string }[] = [
+    { m: 'cardstock', fill: 'var(--ill-page)' },
+    { m: 'kraft', fill: 'var(--ill-pot)' },
+    { m: 'cork', fill: 'var(--ill-cork)' },
+    { m: 'wood', fill: 'var(--color-wood)' },
+  ];
+  const gaps = [0, 20, 60, 120, 240];
+  return (
+    <svg viewBox="0 0 1000 520" className="w-full border border-line bg-(--ill-wall)" aria-hidden="true">
+      {materials.map(({ m, fill }, row) =>
+        gaps.map((gap, col) => (
+          <g key={`${m}-${gap}`}>{k.sheet({ d: rect(40 + col * 190, 30 + row * 122, 150, 86, 3), fill, gap, edge: 3, material: m })}</g>
+        )),
+      )}
+    </svg>
   );
 }

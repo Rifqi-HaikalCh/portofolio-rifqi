@@ -5,7 +5,7 @@ import type { Affine } from './figurine-rig';
 
 /*
   Geometry for the 3D paper puppet, built from the same paths as the poster
-  (docs/art-motion-upgrade.md §2.1). Cut parts are extruded into cardstock
+  (DesignRules.md §9.4). Cut parts are extruded into cardstock
   sheets; details stay flat; line parts become flat strokes. Paths are sampled
   in poster space and flipped to Y-up (Y = −y); joint matrices get the same
   flip (S · M · S), so the front view equals the poster.

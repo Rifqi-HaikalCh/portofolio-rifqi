@@ -4,7 +4,7 @@ import { placeParts, type PlacedPart } from './figurine-rig';
 
 /*
   Rifqi paper figurine — 2D views of the paper puppet (DesignRules.md §2.6,
-  docs/art-motion-upgrade.md §2). Every view (hero poster, About bust, EQbot
+  DesignRules.md §2.7). Every view (hero poster, About bust, EQbot
   avatar, 404) draws the same parts from figurine-parts.ts, posed by
   figurine-rig.ts. No hooks: renders on the server.
 

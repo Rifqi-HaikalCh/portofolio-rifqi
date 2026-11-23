@@ -2,7 +2,7 @@ import { POSES, type Angles, type Expression, type JointId } from './figurine-pa
 import type { JointAngles } from './figurine-rig';
 
 /*
-  On-demand animation clips for the 3D puppet (docs/art-motion-upgrade.md §2.4).
+  On-demand animation clips for the 3D puppet (DesignRules.md §2.7, §10.2).
   A clip eases joints from the base pose toward its target, holds, and eases
   back. Joint rotations only, max 25° away from a rest pose except the wave.
   Nothing loops: the blink is a single 120 ms clip that the model schedules.

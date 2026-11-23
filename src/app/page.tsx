@@ -9,6 +9,7 @@ import { Footer } from '../components/sections/Footer';
 import { StudioProvider } from '../components/shared/StudioProvider';
 import { StudioRail } from '../components/shared/StudioRail';
 import { EqbotLoader } from '../components/shared/EqbotLoader';
+import { PaperDefs } from '../lib/paper-kit';
 
 /*
   One page, one section order (DesignRules.md §4, src/data/sections.ts).
@@ -23,6 +24,7 @@ export default function Home() {
       <Navbar />
       <StudioRail />
       <main id="main">
+        <PaperDefs />
         <Hero />
         <About />
         <Experience />

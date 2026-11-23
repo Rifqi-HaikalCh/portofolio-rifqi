@@ -118,7 +118,54 @@ for (const file of walk(join(root, 'public'))) {
   if (web.startsWith('/brand/')) continue; // brand source exports are kept on purpose
   const name = web.split('/').pop();
   if (!sourceText.includes(web) && !sourceText.includes(encodeURI(web)) && !sourceText.includes(name)) {
-    findings.push({ rule: 'orphan-asset', where: `public${web}`, detail: name, why: 'File in public/ not referenced by code or data (§9.5)' });
+    findings.push({ rule: 'orphan-asset', where: `public${web}`, detail: name, why: 'File in public/ not referenced by code or data (§9.6)' });
+  }
+}
+
+/* ---- 4. Paper Studio scene rules (§3.2, §9.2, §9.6) ---------------------- */
+
+const cssFiles = srcFiles.filter((f) => f.endsWith('.css'));
+for (const file of [...cssFiles, ...tsxFiles]) {
+  const rel = toPosix(relative(root, file));
+  const text = readFileSync(file, 'utf8');
+  const lines = text.split(/\r?\n/);
+  lines.forEach((line, i) => {
+    if (/^\s*(\/\/|\*|\/\*)/.test(line)) return;
+    if (/scroll-snap-type|\bsnap-(?:x|y|both|mandatory|proximity)\b/.test(line)) {
+      findings.push({ rule: 'scroll-snap', where: `${rel}:${i + 1}`, detail: line.trim(), why: 'Scroll snapping hijacks the scroll (§3.2)' });
+    }
+    if (/\bwill-change-\w+/.test(line) && file.endsWith('.tsx')) {
+      findings.push({ rule: 'static-will-change', where: `${rel}:${i + 1}`, detail: line.trim(), why: 'Static will-change; toggle it with a state class (§9.6)' });
+    }
+    if (/@property\b/.test(line)) {
+      findings.push({ rule: 'at-property', where: `${rel}:${i + 1}`, detail: line.trim(), why: 'Animated @property runs on the main thread (§9.6)' });
+    }
+  });
+  if (file.endsWith('.css')) {
+    // will-change only under a state selector (.is-*), never on a resting rule.
+    for (const m of text.replace(/\/\*[\s\S]*?\*\//g, '').matchAll(/([^{}]+)\{[^{}]*will-change\s*:/g)) {
+      const selector = m[1].trim();
+      if (!/\.is-[\w-]+/.test(selector)) {
+        findings.push({ rule: 'static-will-change', where: rel, detail: selector, why: 'Static will-change; toggle it with a state class (§9.6)' });
+      }
+    }
+  }
+}
+
+const sceneDir = join(root, 'src/components/scenes');
+if (existsSync(sceneDir)) {
+  for (const file of walk(sceneDir).filter((f) => f.endsWith('.tsx'))) {
+    const rel = toPosix(relative(root, file));
+    const text = readFileSync(file, 'utf8');
+    // Raw <svg> in scene code must be decorative; PaperScene wraps layer art itself.
+    for (const m of text.matchAll(/<svg\b[^>]*>/g)) {
+      if (!/aria-hidden/.test(m[0])) findings.push({ rule: 'scene-aria', where: rel, detail: m[0].slice(0, 60), why: 'Scene art without aria-hidden (§11)' });
+    }
+    // Station layer budget: ≤ 14 layers, each with a depth band.
+    const layerBlocks = [...text.matchAll(/\{\s*id:\s*'[\w-]+',[^}]*?\bz:\s*-?\d+/g)];
+    const banded = layerBlocks.filter((m) => /\bband:\s*'(?:far|back|mid|front|frame)'/.test(m[0]));
+    if (layerBlocks.length > 14) findings.push({ rule: 'layer-budget', where: rel, detail: `${layerBlocks.length} layers`, why: 'More than 14 layers in one station (§9.2)' });
+    if (banded.length < layerBlocks.length) findings.push({ rule: 'layer-band', where: rel, detail: `${layerBlocks.length - banded.length} layer(s)`, why: 'Layer without a depth band (§2.5)' });
   }
 }
 

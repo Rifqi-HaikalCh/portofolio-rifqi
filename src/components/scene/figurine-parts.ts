@@ -1,6 +1,6 @@
 /*
   Rifqi paper puppet — the single source for every view of the character
-  (docs/art-motion-upgrade.md §2, DesignRules.md §2.6).
+  (DesignRules.md §2.7).
 
   Every body part is a flat cut-out sheet in poster units (x 0–200, y 0–460,
   y down) at a depth z (toward the viewer). Parts hang from joints that pivot

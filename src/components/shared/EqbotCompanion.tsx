@@ -30,7 +30,7 @@ function reducedMotion() {
 
 function EqbotFace({ expression = 'neutral' }: { expression?: Expression }) {
   // Head crop of the same paper puppet as the hero (DesignRules §2.6); the
-  // expression swaps face parts only (docs/art-motion-upgrade.md §4).
+  // expression swaps face parts only (DesignRules.md §2.7).
   return <RifqiFigurine crop="head" expression={expression} className="h-full w-full" />;
 }
 
