@@ -155,6 +155,19 @@
 .paper-dialog[open] {
   animation: sheet-in var(--dur-sheet) var(--ease-paper);
 }
+
+/* Frame → sheet morph (§10.2): the case study grows out of the frame that opened it (ProjectShelf). */
+.case-dialog[open] { view-transition-name: case-sheet; }
+:root.is-morphing .paper-dialog[open] { animation: none; }
+::view-transition-group(case-sheet) {
+  animation-duration: var(--dur-morph);
+  animation-timing-function: var(--ease-paper);
+}
+::view-transition-old(case-sheet),
+::view-transition-new(case-sheet) {
+  height: 100%;
+  object-fit: cover;
+}
 .paper-dialog.is-drawer {
   width: 100vw;
   max-width: 100vw;

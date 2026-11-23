@@ -4,10 +4,12 @@ import { displayCase } from '../../lib/display-case';
 import { SectionTitle } from '../ui/SectionTitle';
 import { T } from '../ui/T';
 import { ArchiveStation } from '../scenes/archive/ArchiveStation';
+import { ARCHIVE_CHAPTER } from '../scenes/archive/beats';
+import { Beat, Chapter } from '../scenes/chapter/Chapter';
 
 /*
-  05 Certificates — the Archive Shelf station and its folios (DesignRules.md
-  §4.5 `05`). Each folio is tagged `data-binder` so its binder pulls out.
+  05 Certificates — the Archive Shelf chapter (DesignRules.md §4.5 `05`): the
+  title rises as the binders settle, then the folios rise in flow. Each folio is tagged `data-binder` so its binder pulls out.
   Each folio is a native <details>: keyboard and screen readers get the
   expanded state for free and the section ships no JS. The first folio is open.
 */
@@ -15,8 +17,19 @@ export function Certificates() {
   const total = certificateCategories.reduce((sum, category) => sum + category.certificates.length, 0);
 
   return (
-    <section id="certificates" data-studio="archive" aria-labelledby="certificates-title" className="py-16 md:py-24">
-      <div className="mx-auto max-w-6xl px-5 lg:px-8">
+    <Chapter
+      spec={ARCHIVE_CHAPTER}
+      labelledBy="certificates-title"
+      studio="archive"
+      next={{ id: 'contact', en: 'Contact', idn: 'Kontak' }}
+      stage={
+        <ArchiveStation
+          wide
+          binders={certificateCategories.map((category) => ({ label: category.id.toUpperCase(), count: category.certificates.length }))}
+        />
+      }
+    >
+      <Beat id="title" className="fold-tr [&>header]:mb-0">
         <SectionTitle
           index="05"
           eyebrow={<T en="Archive shelf" id="Rak arsip" />}
@@ -29,12 +42,9 @@ export function Certificates() {
             />
           }
         />
+      </Beat>
 
-        <ArchiveStation
-          binders={certificateCategories.map((category) => ({ label: category.id.toUpperCase(), count: category.certificates.length }))}
-        />
-
-        <div className="station-sheet sm:mx-6 lg:mx-10">
+      <Beat id="folios" flow>
         <ul data-eqbot="certificates-list" data-eqbot-at="above" className="grid gap-3">
           {certificateCategories.map((category, index) => (
             <li key={category.id}>
@@ -86,8 +96,7 @@ export function Certificates() {
             </li>
           ))}
         </ul>
-        </div>
-      </div>
-    </section>
+      </Beat>
+    </Chapter>
   );
 }

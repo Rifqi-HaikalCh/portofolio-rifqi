@@ -1,7 +1,7 @@
 import AxeBuilder from '@axe-core/playwright';
-import { expect, type Page } from '@playwright/test';
+import { expect, type Locator, type Page } from '@playwright/test';
 
-export const sectionIds = ['home', 'about', 'experience', 'services', 'certificates', 'contact'] as const;
+export const sectionIds = ['home', 'about', 'experience', 'services', 'projects', 'certificates', 'contact'] as const;
 
 export const eqbotAnchors = [
   'home-name',
@@ -9,7 +9,7 @@ export const eqbotAnchors = [
   'home-available',
   'about-photo',
   'experience-total',
-  'experience-tabs',
+  'experience-files',
   'services-tabs',
   'projects-title',
   'projects-filters',
@@ -40,4 +40,45 @@ export async function expectNoSeriousA11yIssues(page: Page, include?: string) {
 /* Settles scroll-driven reveals so screenshots and axe see final colours. */
 export async function revealAll(page: Page) {
   await page.addStyleTag({ content: '*,*::before,*::after{animation:none!important;transition:none!important}' });
+}
+
+/*
+  Brings a beat on (§4.4 v3.3): pinned sheets only show while their track is
+  under the cue line, as a visitor would scroll to them. On the split stage
+  (tracks not laid out) the sheet itself is scrolled into view.
+*/
+export async function cueBeat(page: Page, chapter: string, beat: string) {
+  await page.evaluate(
+    ([chapter, beat]) => {
+      document.documentElement.style.scrollBehavior = 'auto';
+      const root = document.getElementById(chapter)!;
+      const track = root.querySelector<HTMLElement>(`.beat-track[data-track="${beat}"]`);
+      if (track && track.offsetHeight > 0) {
+        const r = track.getBoundingClientRect();
+        scrollTo(0, r.top + scrollY + r.height / 2 - innerHeight / 2);
+      } else root.querySelector(`[data-beat="${beat}"]`)?.scrollIntoView({ block: 'center' });
+    },
+    [chapter, beat],
+  );
+  await expect(page.locator(`#${chapter} .beat[data-beat="${beat}"] > .beat-sheet`)).toHaveCSS('opacity', '1');
+}
+
+/*
+  Scrolls a control into the reading window before a tap. On the split stage
+  (§4.4 mobile) the top of the viewport belongs to the sticky stage, so a
+  visitor scrolls a control below it; Playwright's own scroll stops as soon as
+  the control is anywhere in the viewport.
+*/
+export async function toReadingWindow(locator: Locator) {
+  await locator.evaluate(async (el) => {
+    document.documentElement.style.scrollBehavior = 'auto';
+    scrollBy(0, el.getBoundingClientRect().top - innerHeight * 0.68);
+    // Let the sheet's entrance finish first: it may have been cued by this scroll.
+    await new Promise(requestAnimationFrame);
+    const sheet = el.closest('.beat') ?? el;
+    const finite = sheet.getAnimations({ subtree: true }).filter((a) => a.effect?.getTiming().iterations !== Infinity);
+    await Promise.all(finite.map((a) => a.finished.catch(() => undefined)));
+    scrollBy(0, el.getBoundingClientRect().top - innerHeight * 0.68);
+  });
+  return locator;
 }

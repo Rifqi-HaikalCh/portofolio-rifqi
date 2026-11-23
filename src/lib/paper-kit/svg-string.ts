@@ -12,7 +12,7 @@ import { Fragment, isValidElement, type ReactNode } from 'react';
   hook-free function components, text, numbers. Server-only by use.
 */
 
-const KEEP = new Set(['viewBox', 'preserveAspectRatio', 'gradientTransform', 'gradientUnits', 'patternUnits', 'stdDeviation', 'href']);
+const KEEP = new Set(['viewBox', 'preserveAspectRatio', 'gradientTransform', 'gradientUnits', 'patternUnits', 'patternTransform', 'stdDeviation', 'href']);
 
 const attrName = (name: string) => {
   if (name === 'className') return 'class';

@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react';
 import { cvFile, heroHighlights, heroIntro, workExperience } from '../../data/portfolio';
 import { displayCase } from '../../lib/display-case';
 import { heroScreen } from '../../lib/hero-screen';
@@ -9,8 +10,8 @@ import { T } from '../ui/T';
   `01` #home — The Desk station (DesignRules.md §2.2, §4.3).
   Server component: the headline, tickets and buttons are plain HTML on first
   paint. The station's art is server-rendered; only the pointer look, lamp,
-  figurine and laptop screen are client leaves. Sticky on
-  tall desktops so the About sheet slides over.
+  figurine and laptop screen are client leaves. On tall desktops it
+  leaves by the push-in and pan right to the pinboard (scene.css `01 → 02`).
 */
 export function Hero() {
   const current = workExperience[0];
@@ -18,7 +19,7 @@ export function Hero() {
   return (
     <section id="home" data-studio="folio" aria-labelledby="home-title" className="hero-sticky border-b border-line bg-paper">
       <div className="mx-auto grid max-w-7xl gap-10 px-5 pb-12 pt-24 lg:px-8 xl:min-h-svh xl:grid-cols-12 xl:items-center xl:gap-12 xl:pt-24">
-        <div className="xl:col-span-5">
+        <div className="hero-title xl:col-span-5">
           <p className="mb-5 font-mono text-[11px] uppercase tracking-[0.22em] text-accent">
             <span className="stamp">01</span> — Software Engineer
           </p>
@@ -39,8 +40,8 @@ export function Hero() {
           </p>
 
           <ul className="mt-7 grid max-w-md grid-cols-2 gap-2">
-            {heroHighlights.map((item) => (
-              <li key={item.label} className="ticket border border-line bg-raised px-5 py-3">
+            {heroHighlights.map((item, i) => (
+              <li key={item.label} className="ticket border border-line bg-raised px-5 py-3" style={{ '--i': i } as CSSProperties}>
                 <p className="font-serif text-2xl leading-none text-ink">{item.value}</p>
                 <p className="mt-1.5 font-mono text-[11px] uppercase tracking-[0.1em] text-muted">
                   <T en={item.label} id={item.labelId} />
@@ -61,7 +62,7 @@ export function Hero() {
           </div>
         </div>
 
-        <div className="xl:col-span-7">
+        <div className="hero-desk xl:col-span-7">
           <DeskStation screen={heroScreen()} poster={<RifqiFigurine crop="stage" pose="seated" className="h-full w-full" />} />
         </div>
       </div>

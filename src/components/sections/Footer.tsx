@@ -14,7 +14,7 @@ export function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer data-studio="colophon" className="bg-ink text-paper">
+    <footer data-studio="colophon" className="relative z-content-ui bg-ink text-paper">
       <FrameBack />
       <div className="mx-auto max-w-6xl px-5 pb-8 pt-16 lg:px-8">
         <p className="mb-12">

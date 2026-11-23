@@ -12,7 +12,7 @@ export function FooterControls() {
 
   return (
     <div className="flex flex-wrap gap-2">
-      <button type="button" onClick={toggleTheme} className={button}>
+      <button type="button" data-sound="lamp" onClick={toggleTheme} className={button}>
         <span className="dark:hidden">
           <T en="Turn the lamp on (dark)" id="Nyalakan lampu (gelap)" />
         </span>

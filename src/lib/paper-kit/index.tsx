@@ -1,4 +1,5 @@
 import type { CSSProperties, ReactNode } from 'react';
+import { preload } from 'react-dom';
 
 /*
   paper-kit — turns authored shapes into lit paper sheets (DesignRules.md §2.4, §9.3).
@@ -131,6 +132,11 @@ export function paperKit(scope: string): Kit {
 
 /** Shared definitions for every scene on the page: render once (PaperDefs). */
 export function PaperDefs() {
+  // The grain tiles are fetched through an SVG <image>, which the browser discovers late and loads
+  // at low priority; the cardstock tile paints over the whole hero, so it is the page's LCP image.
+  // Preloading it (high) and the desk's wood (default) lets them paint with the first frame (§9.6, v3.5).
+  preload(GRAIN.cardstock, { as: 'image', fetchPriority: 'high' });
+  preload(GRAIN.wood, { as: 'image' });
   return (
     <svg width="0" height="0" aria-hidden="true" focusable="false" style={{ position: 'absolute' }}>
       <defs>
@@ -158,8 +164,10 @@ export function PaperDefs() {
           <stop offset="0.5" style={{ stopColor: 'var(--pk-light)', stopOpacity: 0 }} />
         </linearGradient>
         {Object.entries(GRAIN).map(([g, src]) => (
-          <pattern key={g} id={`pk-grain-${g}`} patternUnits="userSpaceOnUse" width="256" height="256">
-            <image href={src} width="256" height="256" />
+          // Drawn at 128 and scaled ×2: the same 256-unit grain on screen, but the tile is too small to
+          // be the page's LCP element, so the hero h1 is (§9.6). Rasterised after the transform: no blur.
+          <pattern key={g} id={`pk-grain-${g}`} patternUnits="userSpaceOnUse" width="128" height="128" patternTransform="scale(2)">
+            <image href={src} width="128" height="128" />
           </pattern>
         ))}
       </defs>

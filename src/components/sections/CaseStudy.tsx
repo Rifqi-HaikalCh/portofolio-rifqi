@@ -23,7 +23,7 @@ export function CaseStudy({ project, onClose }: { project: ShelfProject; onClose
   ].filter((link): link is { href: string; en: string; id: string } => Boolean(link));
 
   return (
-    <PaperDialog open onClose={onClose} labelledBy={titleId}>
+    <PaperDialog open onClose={onClose} labelledBy={titleId} className="case-dialog">
       <div className="fold-tr max-h-[calc(100dvh-2rem)] overflow-y-auto">
         <header className="flex items-start justify-between gap-6 border-b border-line p-6 md:p-8">
           <div>

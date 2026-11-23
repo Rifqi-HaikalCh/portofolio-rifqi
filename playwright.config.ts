@@ -14,6 +14,9 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: Boolean(process.env.CI),
   retries: process.env.CI ? 1 : 0,
+  // Locally every test walks a long page against one `next start`; past three workers the
+  // server, not the page, becomes the bottleneck and loads time out (v3.4).
+  workers: process.env.CI ? undefined : 3,
   reporter: process.env.CI ? [['github'], ['list']] : 'list',
   use: {
     baseURL: `http://localhost:${PORT}`,

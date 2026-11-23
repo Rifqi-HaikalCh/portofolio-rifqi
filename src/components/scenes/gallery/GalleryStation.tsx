@@ -10,7 +10,8 @@ import { STRIP, bar, figureLayer, floorLayer, wallLayer } from '../office';
   project frames themselves are the ProjectShadowBox cards below the scene.
 */
 
-const FRAMES: Frames = { desktop: STRIP, mobile: { x: 380, y: 0, w: 900, h: 640 } };
+export const GALLERY_FRAMES: Frames = { desktop: STRIP, mobile: { x: 380, y: 0, w: 900, h: 640 } };
+const FRAMES = GALLERY_FRAMES;
 const RAIL_Y = 46;
 
 /** One hung frame: wires to the rail, frame lip, backing, two inner sheets. */
@@ -27,12 +28,16 @@ function hungFrame(k: Kit, x: number, y: number, w: number, h: number, fills: [s
   );
 }
 
-export function GalleryStation() {
+/*
+  As a chapter stage (§4.5): `wide` bleeds the wall and floor for the fullscreen
+  cover fit; `only` renders a subset of layers (the occluder copy).
+*/
+export function GalleryStation({ wide = false, only }: { wide?: boolean; only?: readonly string[] } = {}) {
   const k = paperKit('gallery');
 
   const layers: SceneLayer[] = [
-    wallLayer(k, { beam: 'M-40 40L140 40L560 566L-40 566Z' }),
-    floorLayer(k),
+    wallLayer(k, { beam: 'M-40 40L140 40L560 566L-40 566Z', wide }),
+    floorLayer(k, undefined, wide),
     {
       id: 'rail',
       band: 'back',
@@ -66,6 +71,7 @@ export function GalleryStation() {
       ),
     },
     figureLayer('hang', 690, 83, 330),
+    ...(wide ? [{ ...figureLayer('reach', 690, 83, 330, 0, 'figure-alt'), className: 'station-fig pose-alt' }] : []),
     {
       id: 'new-frame',
       band: 'mid',
@@ -97,5 +103,5 @@ export function GalleryStation() {
     },
   ];
 
-  return <Station name="gallery" layers={layers} frames={FRAMES} light="midday" />;
+  return <Station name="gallery" layers={layers} frames={FRAMES} light="midday" only={only} />;
 }

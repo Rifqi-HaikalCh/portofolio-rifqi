@@ -8,6 +8,7 @@ import { useLanguage } from '../../context/LanguageContext';
 import { pageSections } from '../../data/sections';
 import { useStudio, scrollToStudioSection } from '../shared/StudioProvider';
 import { BrandLockup } from '../shared/BrandLockup';
+import { SoundToggle } from '../shared/SoundToggle';
 import { T } from '../ui/T';
 
 /*
@@ -93,8 +94,10 @@ export default function Navbar() {
 
         <div className="ml-auto flex items-center gap-2 lg:ml-0">
           <div className="hidden items-stretch border border-line sm:flex">
+            <SoundToggle className="border-r border-line" />
             <button
               type="button"
+              data-sound="lamp"
               onClick={toggleTheme}
               aria-label={say('Dark mode', 'Mode gelap')}
               aria-pressed={hydrated ? isDark : undefined}
@@ -145,7 +148,8 @@ export default function Navbar() {
             </a>
           ))}
           <div className="flex gap-2 py-4">
-            <button type="button" onClick={toggleTheme} className="h-11 flex-1 border border-line text-sm text-ink">
+            <SoundToggle variant="menu" />
+            <button type="button" data-sound="lamp" onClick={toggleTheme} className="h-11 flex-1 border border-line text-sm text-ink">
               <span className="dark:hidden">
                 <T en="Dark mode" id="Mode gelap" />
               </span>

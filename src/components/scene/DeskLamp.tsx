@@ -28,6 +28,7 @@ export function DeskLamp({ style }: { style: CSSProperties }) {
           ? say('Turn desk lamp off (light theme)', 'Matikan lampu meja (tema terang)')
           : say('Turn desk lamp on (dark theme)', 'Nyalakan lampu meja (tema gelap)')
       }
+      data-sound="lamp"
       onClick={toggleTheme}
       className="desk-lamp scene-hit z-scene-front bg-transparent"
       style={style}

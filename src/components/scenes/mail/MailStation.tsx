@@ -11,18 +11,24 @@ import { STRIP, bar, figureLayer, floorLayer, wallLayer, windowHole, windowLayer
   contact form reports a real send (`#contact:has(.postmark)`, scene.css).
 */
 
-const FRAMES: Frames = { desktop: STRIP, mobile: { x: 420, y: 40, w: 1000, h: 600 } };
+export const MAIL_FRAMES: Frames = { desktop: STRIP, mobile: { x: 420, y: 40, w: 1000, h: 600 } };
+const FRAMES = MAIL_FRAMES;
 const WIN = { x: 100, y: 56, w: 320, h: 330 };
 const ENV = { x: 694, y: 362, w: 142, h: 90 };
 
-export function MailStation() {
+/*
+  As a chapter stage (§4.5): `wide` bleeds the wall and floor for the fullscreen
+  cover fit; `only` renders a subset of layers (the occluder copy).
+*/
+export function MailStation({ wide = false, only }: { wide?: boolean; only?: readonly string[] } = {}) {
   const k = paperKit('mail');
 
   const layers: SceneLayer[] = [
     ...windowLayers(k, 'mail', WIN, 'dusk').map((l) => ({ ...l, desktopOnly: true })),
-    wallLayer(k, { hole: windowHole(WIN), beam: 'M150 400L420 400L1040 566L640 566Z' }),
-    floorLayer(k),
+    wallLayer(k, { hole: windowHole(WIN), beam: 'M150 400L420 400L1040 566L640 566Z', wide }),
+    floorLayer(k, undefined, wide),
     figureLayer('seal', 572, 72, 520, -70),
+    ...(wide ? [{ ...figureLayer('hand', 572, 72, 520, -70, 'figure-alt'), className: 'station-fig pose-alt' }] : []),
     {
       id: 'desk',
       band: 'mid',
@@ -71,7 +77,10 @@ export function MailStation() {
           <path d="M462 446H560M466 454H528" stroke="var(--color-muted)" strokeWidth="2" opacity="0.5" />
           {/* The envelope in his hands: flap, stamp, and the postmark (after a real send). */}
           {k.sheet({ d: rect(ENV.x, ENV.y, ENV.w, ENV.h, 2), fill: 'var(--ill-envelope)', gap: 40, edge: 2 })}
-          {k.sheet({ d: poly([[ENV.x, ENV.y], [ENV.x + ENV.w, ENV.y], [ENV.x + ENV.w / 2, ENV.y + 50]]), fill: 'var(--ill-envelope)', gap: 6, edge: 1.5 })}
+          {/* The flap: hinged on the envelope's top edge; the card beat folds it open (scale 1 → −1). */}
+          <g data-obj="env-flap" className="env-flap">
+            {k.sheet({ d: poly([[ENV.x, ENV.y], [ENV.x + ENV.w, ENV.y], [ENV.x + ENV.w / 2, ENV.y + 50]]), fill: 'var(--ill-envelope)', gap: 6, edge: 1.5 })}
+          </g>
           {k.sheet({ d: rect(ENV.x + ENV.w - 40, ENV.y + 52, 28, 30, 1), fill: 'var(--color-accent)', gap: 3, edge: 1, rim: false })}
           <g className="scene-postmark">
             <path d={`${circle(ENV.x + ENV.w - 34, ENV.y + 64, 20)}`} fill="none" stroke="var(--color-ink)" strokeWidth="2.5" opacity="0.75" />
@@ -129,5 +138,5 @@ export function MailStation() {
     },
   ];
 
-  return <Station name="mail" layers={layers} frames={FRAMES} light="golden" />;
+  return <Station name="mail" layers={layers} frames={FRAMES} light="golden" only={only} />;
 }

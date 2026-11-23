@@ -2,12 +2,13 @@ import Navbar from '../components/sections/Navbar';
 import { Hero } from '../components/sections/Hero';
 import { About } from '../components/sections/About';
 import { Experience } from '../components/sections/Experience';
-import { Services } from '../components/sections/Services';
+import { Projects, Services } from '../components/sections/Services';
 import { Certificates } from '../components/sections/Certificates';
 import { Contact } from '../components/sections/Contact';
 import { Footer } from '../components/sections/Footer';
 import { StudioProvider } from '../components/shared/StudioProvider';
 import { StudioRail } from '../components/shared/StudioRail';
+import { ChapterBar } from '../components/shared/ChapterBar';
 import { EqbotLoader } from '../components/shared/EqbotLoader';
 import { PaperDefs } from '../lib/paper-kit';
 
@@ -23,12 +24,14 @@ export default function Home() {
     <StudioProvider>
       <Navbar />
       <StudioRail />
+      <ChapterBar />
       <main id="main">
         <PaperDefs />
         <Hero />
         <About />
         <Experience />
         <Services />
+        <Projects />
         <Certificates />
         <Contact />
       </main>

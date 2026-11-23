@@ -14,7 +14,7 @@
 */
 
 section[id] {
-  scroll-margin-top: 4.5rem;
+  scroll-margin-top: calc(var(--chrome-h) + 0.5rem);
 }
 
 section[data-studio],
@@ -87,6 +87,52 @@ footer[data-studio="colophon"]::after {
 
 .studio-rail {
   display: none;
+}
+
+/* Chapter bar (< 1024 px): fixed under the 4 rem navbar; --chrome-h is what the split stage sticks below. */
+:root { --chrome-h: 4rem; }
+@media (max-width: 1023px) {
+  :root { --chrome-h: 6.75rem; }
+}
+.chapter-bar {
+  position: fixed;
+  z-index: var(--z-chrome);
+  inset-inline: 0;
+  top: 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  height: 2.75rem;
+  padding-inline: 1.25rem;
+  border-bottom: 1px solid rgb(var(--rgb-line));
+  background: var(--color-paper);
+  transition: translate var(--dur-ui) var(--ease-paper);
+}
+.chapter-bar[data-hidden] {
+  translate: 0 -100%;
+  visibility: hidden;
+}
+.chapter-bar-track {
+  position: absolute;
+  inset-inline: 0;
+  bottom: -1px;
+  height: 1px;
+  background: rgb(var(--rgb-accent));
+  transform-origin: left;
+  transform: scaleX(0);
+}
+@supports (animation-timeline: scroll()) {
+  .chapter-bar-track {
+    animation: bar-progress linear both;
+    animation-timeline: scroll(root block);
+  }
+}
+@keyframes bar-progress {
+  to { transform: scaleX(1); }
+}
+@media (min-width: 1024px) {
+  .chapter-bar { display: none; }
 }
 
 @media (min-width: 1440px) {

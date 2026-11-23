@@ -10,14 +10,19 @@ import { STRIP, figureLayer, floorLayer, stateCss, wallLayer } from '../office';
   tilts it toward the visitor (CSS :has, no JS).
 */
 
-const FRAMES: Frames = { desktop: STRIP, mobile: { x: 280, y: 40, w: 1060, h: 600 } };
+export const ARCHIVE_FRAMES: Frames = { desktop: STRIP, mobile: { x: 280, y: 40, w: 1060, h: 600 } };
+const FRAMES = ARCHIVE_FRAMES;
 const CASE = { x: 540, y: 70, w: 760, h: 520 };
 const SHELF_1 = 300;
 const SHELF_2 = 520;
 
 export type BinderData = { label: string; count: number };
 
-export function ArchiveStation({ binders }: { binders: BinderData[] }) {
+/*
+  As a chapter stage (§4.5): `wide` bleeds the wall and floor for the fullscreen
+  cover fit; `only` renders a subset of layers (the occluder copy).
+*/
+export function ArchiveStation({ binders, wide = false, only }: { binders: BinderData[]; wide?: boolean; only?: readonly string[] }) {
   const k = paperKit('archive');
   const fills = ['var(--color-accent)', 'var(--color-blueprint)', 'var(--color-sage)', 'var(--ill-kraft)'];
   const widths = [86, 78, 70, 64];
@@ -29,8 +34,8 @@ export function ArchiveStation({ binders }: { binders: BinderData[] }) {
   });
 
   const layers: SceneLayer[] = [
-    wallLayer(k, { beam: 'M-40 20L180 20L760 566L-40 566Z' }),
-    floorLayer(k),
+    wallLayer(k, { beam: 'M-40 20L180 20L760 566L-40 566Z', wide }),
+    floorLayer(k, undefined, wide),
     {
       id: 'case',
       band: 'back',
@@ -125,5 +130,5 @@ export function ArchiveStation({ binders }: { binders: BinderData[] }) {
     spines.map((_, i) => ({ when: `details[data-binder="${i}"][open]`, key: `binder-${i}`, transform: 'translateY(6px) rotate(-6deg) scale(1.06)' })),
   );
 
-  return <Station name="archive" layers={layers} frames={FRAMES} light="afternoon" css={css} />;
+  return <Station name="archive" layers={layers} frames={FRAMES} light="afternoon" css={css} only={only} />;
 }

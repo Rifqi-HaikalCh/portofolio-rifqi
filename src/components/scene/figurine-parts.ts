@@ -393,7 +393,7 @@ export const PARTS: readonly Part[] = [
 /* ---- Poses: joint angles in degrees [rx, ry, rz] ------------------------- */
 
 export type Angles = readonly [number, number, number];
-export type PoseId = 'stand' | 'wave' | 'think' | 'seated' | 'peer' | 'pin' | 'folder' | 'draw' | 'hang' | 'binder' | 'seal' | 'reach';
+export type PoseId = 'stand' | 'wave' | 'think' | 'seated' | 'peer' | 'pin' | 'folder' | 'draw' | 'hang' | 'binder' | 'seal' | 'reach' | 'hand';
 
 export type Pose = {
   joints: Partial<Record<JointId, Angles>>;
@@ -534,6 +534,19 @@ export const POSES: Record<PoseId, Pose> = {
       head: [10, 0, 0],
       shoulderL: [0, 0, 22],
       elbowL: [0, 0, -86],
+      shoulderR: [0, 0, -22],
+      elbowR: [0, 0, 86],
+    },
+  },
+  // 06 Mail Tray, stop-motion partner of `seal` (§10.2): the card held out to the visitor on his
+  // right (the viewer's left, where the letterpress card lands); the other hand keeps the envelope.
+  hand: {
+    expression: 'smile',
+    joints: {
+      head: [0, 12, 4],
+      shoulderL: [0, 0, 58],
+      elbowL: [0, 0, -34],
+      wristL: [0, 0, -8],
       shoulderR: [0, 0, -22],
       elbowR: [0, 0, 86],
     },

@@ -15,6 +15,9 @@ import { T } from '../ui/T';
 import { AdditionalSkillsLauncher } from './AdditionalSkillsLauncher';
 import { ProjectShelf, type ShelfProject } from './ProjectShelf';
 import { DraftingStation } from '../scenes/drafting/DraftingStation';
+import { DRAFTING_CHAPTER } from '../scenes/drafting/beats';
+import { GALLERY_CHAPTER } from '../scenes/gallery/beats';
+import { Beat, Chapter } from '../scenes/chapter/Chapter';
 import { motifArt } from '../scenes/gallery/motifs';
 import { GalleryStation } from '../scenes/gallery/GalleryStation';
 
@@ -173,24 +176,7 @@ function DevelopmentPanel() {
     <div className="grid gap-12 pt-8">
       <CapabilityBoard items={developerServices} />
       <div>
-        <h3 className="font-serif text-2xl font-medium text-ink">
-          <T en="Core stack" id="Stack inti" />
-        </h3>
-        <div className="mt-6 grid gap-8 sm:grid-cols-3">
-          {coreGroups.map((group) => (
-            <div key={group.en}>
-              <p className={groupLabel}>
-                <T en={group.en} id={group.id} />
-              </p>
-              <ul className="grid gap-2">
-                {group.names.map((name) => (
-                  <SkillChip key={name} name={name} image={developerSkills.find((skill) => skill.name === name)?.image} />
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-        <div className="mt-8">
+        <div>
           <p className={groupLabel}>
             <T en="Tooling" id="Perkakas" />
           </p>
@@ -238,20 +224,22 @@ function DesignPanel() {
 }
 
 /*
-  04 Services — a blueprint board, then selected work with the archive
-  drawer behind it (DesignRules.md §4 `04`). Server component; the tabs,
-  shelf and skills dialog are the only client leaves.
+  04 Services — the Drafting Table chapter (DesignRules.md §4.5 `04`): the
+  title drops as the lamp swings, the core stack lands as three tracing
+  overlays once the cover sheet slides off the blueprint, then the service
+  boards rise in flow. Server component; the tabs and the skills dialog are
+  the only client leaves.
 */
 export function Services() {
-  const projects = [
-    ...individualProjects.map((project) => toShelf(project, 'individual')),
-    ...groupProjects.map((project) => toShelf(project, 'group')),
-    ...designProjects.map((project) => toShelf(project, 'design')),
-  ];
-
   return (
-    <section id="services" data-studio="draft" aria-labelledby="services-title" className="py-16 md:py-24">
-      <div className="mx-auto max-w-6xl px-5 lg:px-8">
+    <Chapter
+      spec={DRAFTING_CHAPTER}
+      labelledBy="services-title"
+      studio="draft"
+      next={{ id: 'projects', en: 'Selected work', idn: 'Karya pilihan' }}
+      stage={<DraftingStation wide />}
+    >
+      <Beat id="title" className="fold-tr [&>header]:mb-0">
         <SectionTitle
           index="04"
           eyebrow={<T en="Blueprint" id="Cetak biru" />}
@@ -264,36 +252,85 @@ export function Services() {
             />
           }
         />
+      </Beat>
 
-        <DraftingStation />
+      <Beat id="stack">
+        <h3 className="font-serif text-2xl font-medium text-ink">
+          <T en="Core stack" id="Stack inti" />
+        </h3>
+        <div className="mt-5 grid gap-3">
+          {coreGroups.map((group, index) => (
+            <div key={group.en} data-step={index} className="tracing border border-line p-4">
+              <p className={groupLabel}>
+                <T en={group.en} id={group.id} />
+              </p>
+              <ul className="flex flex-wrap gap-2">
+                {group.names.map((name) => (
+                  <SkillChip key={name} name={name} image={developerSkills.find((skill) => skill.name === name)?.image} />
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </Beat>
 
-        <div className="station-sheet paper-sheet border border-line bg-raised p-4 sm:mx-6 sm:p-6 lg:mx-10">
-          <TabbedPanels
-            idBase="services"
-            eqbot="services-tabs"
-            label={{ en: 'Service area', id: 'Bidang layanan' }}
-            tabs={[
-              { id: 'development', en: 'Development', idn: 'Pengembangan', panel: <DevelopmentPanel /> },
-              { id: 'design', en: 'Interface design', idn: 'Desain antarmuka', panel: <DesignPanel /> },
-            ]}
+      <Beat id="services" flow>
+        <TabbedPanels
+          idBase="services"
+          eqbot="services-tabs"
+          label={{ en: 'Service area', id: 'Bidang layanan' }}
+          tabs={[
+            { id: 'development', en: 'Development', idn: 'Pengembangan', panel: <DevelopmentPanel /> },
+            { id: 'design', en: 'Interface design', idn: 'Desain antarmuka', panel: <DesignPanel /> },
+          ]}
+        />
+      </Beat>
+    </Chapter>
+  );
+}
+
+/*
+  04b Selected work — the Shadow-Box Gallery chapter (DesignRules.md §4.5
+  `04b`): the title rises while the figure hangs a new frame, then the project
+  frames rise in flow with the archive drawer behind them.
+*/
+export function Projects() {
+  const projects = [
+    ...individualProjects.map((project) => toShelf(project, 'individual')),
+    ...groupProjects.map((project) => toShelf(project, 'group')),
+    ...designProjects.map((project) => toShelf(project, 'design')),
+  ];
+
+  return (
+    <Chapter
+      spec={GALLERY_CHAPTER}
+      labelledBy="projects-title"
+      studio="gallery"
+      next={{ id: 'certificates', en: 'Certificates', idn: 'Sertifikat' }}
+      stage={<GalleryStation wide />}
+    >
+      <Beat id="title" className="[&_header]:mb-0">
+        <div data-eqbot="projects-title" data-eqbot-at="above">
+          <SectionTitle
+            index="04b"
+            eyebrow={<T en="Gallery wall" id="Dinding galeri" />}
+            title={<T en="Selected work" id="Karya pilihan" />}
+            titleId="projects-title"
+            lede={
+              <T
+                en="Six projects framed, the rest in the archive drawer. Open a frame for the case study."
+                id="Enam proyek dibingkai, sisanya di laci arsip. Buka bingkai untuk melihat studi kasusnya."
+              />
+            }
           />
         </div>
+      </Beat>
 
-        <div id="projects" className="mt-20 scroll-mt-24 md:mt-28">
-          <div className="mb-10 flex flex-col gap-2">
-            <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-accent">
-              <T en="Pinned to the board" id="Disematkan di papan" />
-            </p>
-            <h3 data-eqbot="projects-title" data-eqbot-at="above" className="font-serif text-3xl font-medium tracking-tight text-ink md:text-4xl">
-              <T en="Selected work" id="Karya pilihan" />
-            </h3>
-          </div>
-          <GalleryStation />
-          <div data-eqbot="projects-filters" data-eqbot-at="above" className="station-sheet gallery-wall border border-line p-5 sm:mx-6 sm:p-8 lg:mx-10">
-            <ProjectShelf projects={projects} featured={featured} />
-          </div>
+      <Beat id="shelf" flow className="gallery-wall">
+        <div data-eqbot="projects-filters" data-eqbot-at="above">
+          <ProjectShelf projects={projects} featured={featured} />
         </div>
-      </div>
-    </section>
+      </Beat>
+    </Chapter>
   );
 }

@@ -29,7 +29,16 @@
 }
 
 .chapter .stage-front,
-.chapter .beat-arrive { display: none; }
+.chapter .beat-lead,
+.chapter .beat-track,
+.chapter .beat-tail { display: none; }
+
+/* Stacked: the pinned sheets are simply the first sheets of the flow. */
+.chapter .beat-pins,
+.chapter .beat-deck {
+  display: grid;
+  gap: 1.5rem;
+}
 
 .chapter .flow {
   position: relative;
@@ -47,6 +56,41 @@
   .chapter .beat-sheet { padding: 2.25rem; }
 }
 
+/*
+  Paper leaf (§2.6, v3.3): every beat sheet is a sheet of the studio's stock,
+  not a card. Fibre grain sits in the sheet's own background (static, so it
+  costs nothing on scroll); the top edge catches the light; ::before is the
+  curvature shade that only shows while the sheet bends in flight.
+*/
+.paper-leaf {
+  position: relative;
+  --leaf-tone: var(--color-raised);
+  /* The cardstock tile (the scenes' own grain, §2.3) under a veil of the sheet's tone: 22 % strength. */
+  background-image:
+    linear-gradient(color-mix(in oklab, var(--leaf-tone) 78%, transparent) 0 0),
+    image-set(url("/assets/papercraft/tex-cardstock.avif") type("image/avif"), url("/assets/papercraft/tex-cardstock.webp") type("image/webp"));
+  background-size: auto, 256px 256px;
+  box-shadow: var(--leaf-lip), var(--paper-edge-cut);
+}
+.paper-leaf.bg-paper { --leaf-tone: var(--color-paper); }
+.paper-leaf::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  background: linear-gradient(180deg, rgb(var(--rgb-shadow) / 0.2), rgb(var(--rgb-shadow) / 0) 55%, rgb(var(--rgb-shadow) / 0.08));
+}
+
+/* Tracing-paper overlay (the core stack on the drafting board). */
+.tracing {
+  background: color-mix(in oklab, var(--color-raised) 78%, transparent);
+  border-style: dashed;
+}
+
+/* Layers that exist only for a theatre act (a cover sheet that slides away). */
+.chapter .theatre-only { display: none; }
+
 /* Alternate stop-motion poses are hidden until their beat swaps them in. */
 .chapter .pose-alt > * { opacity: 0; }
 .chapter .stage-front .scene-layer { opacity: 0; }
@@ -62,20 +106,33 @@
 }
 
 /* ---- Theatre ------------------------------------------------------------- */
+/*
+  Active only once ChapterCue has started ([data-cue]): without JS the chapter
+  stays the stacked studio, fully readable.
+*/
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) and (min-height: 561px) {
-    .chapter:not([data-stacked]) {
+    .chapter[data-cue]:not([data-stacked]) {
       --beat-top: 18svh;
       --lane-pad: 5cqw;
       --lane-w: min(34rem, 40cqw);
       --lane-w-flow: min(60rem, 64cqw);
       container-type: inline-size;
+      /* Each chapter paints as one unit: an incoming stage covers the outgoing chapter, sheets included. */
+      isolation: isolate;
+      /* Transparent: during a handoff the outgoing stage shows through the incoming chapter's box. */
+      background: none;
       padding-block: 0;
-      /* In-page links land with the first beat composed: arrival + its entry. */
-      scroll-margin-top: calc(-1 * (200svh - var(--beat-top)));
+      /* In-page links land on the composed stage; the first cue is already on there. */
+      scroll-margin-top: 0;
     }
 
-    .chapter:not([data-stacked]) .stage {
+    /* Stage moves slide whole stages sideways; nothing may widen the page. */
+    main:has(> .chapter) { overflow-x: clip; }
+
+    .chapter[data-cue]:not([data-stacked]) .theatre-only { display: block; }
+
+    .chapter[data-cue]:not([data-stacked]) .stage {
       position: sticky;
       top: 0;
       z-index: 0;
@@ -87,7 +144,12 @@
       background: var(--ill-wall);
     }
     /* The shadow-box lip on the viewport edges. */
-    .chapter:not([data-stacked]) .stage::after {
+    /* Only the stages near the viewport are painted (§1.5 low-end GPU); their size is fixed, so anchors are unaffected. */
+    .chapter[data-cue]:not([data-stacked]) :is(.stage, .stage-front) {
+      content-visibility: auto;
+      contain-intrinsic-size: auto 100svh;
+    }
+    .chapter[data-cue]:not([data-stacked]) .stage::after {
       content: "";
       position: absolute;
       inset: 0;
@@ -98,7 +160,7 @@
         inset calc(14px * var(--light-x)) 18px 30px rgb(var(--rgb-shadow) / 0.24);
     }
 
-    .chapter:not([data-stacked]) .stage-front {
+    .chapter[data-cue]:not([data-stacked]) .stage-front {
       display: block;
       position: sticky;
       top: 0;
@@ -111,21 +173,22 @@
     }
 
     /* Cover fit of the theatre rect: --s is pixels per world unit. */
-    .chapter:not([data-stacked]) .stage-canvas {
+    .chapter[data-cue]:not([data-stacked]) .stage-canvas {
       --s: max(calc(100cqw / var(--tw)), calc(100cqh / var(--th)));
       position: absolute;
       width: calc(var(--fw) * var(--s));
       left: calc((100cqw - var(--tw) * var(--s)) / 2 - var(--tx) * var(--s));
       top: calc((100cqh - var(--th) * var(--s)) / 2 - var(--ty) * var(--s));
     }
-    .chapter:not([data-stacked]) .stage-canvas .scene-viewport {
+    .chapter[data-cue]:not([data-stacked]) .stage-canvas .scene-viewport {
+      content-visibility: visible;
       overflow: visible;
       background: none;
       box-shadow: none;
     }
-    .chapter:not([data-stacked]) .stage-canvas .shadowbox-frame { display: none; }
+    .chapter[data-cue]:not([data-stacked]) .stage-canvas .shadowbox-frame { display: none; }
 
-    .chapter:not([data-stacked]) .flow {
+    .chapter[data-cue]:not([data-stacked]) .flow {
       position: relative;
       z-index: 1;
       display: block;
@@ -134,65 +197,162 @@
       padding: 0;
       pointer-events: none;
     }
-    .chapter:not([data-stacked]) .beat-arrive { display: block; height: 100svh; }
 
-    .chapter:not([data-stacked]) .beat { height: calc(100svh + var(--hold, 40) * 1svh); }
-    .chapter:not([data-stacked]) .beat[data-flow] { height: auto; padding-bottom: 24svh; }
-
-    .chapter:not([data-stacked]) .beat-sheet {
+    /*
+      The deck: one sticky viewport layer holding every pinned sheet at its
+      place in the lane. It never moves while its tracks scroll past beneath
+      it; the cue line (viewport middle) crossing a track turns its beat on.
+      Lead-in 35svh (the first cue fires as the stage settles), a track of
+      40svh + hold per beat, and a 70svh tail so the last sheet has left
+      before the deck scrolls away with the page.
+    */
+    .chapter[data-cue]:not([data-stacked]) .beat-pins { display: block; }
+    .chapter[data-cue]:not([data-stacked]) .beat-deck {
+      display: block;
       position: sticky;
+      top: 0;
+      height: 100svh;
+      margin-bottom: -100svh;
+    }
+    .chapter[data-cue]:not([data-stacked]) .beat-lead { display: block; height: 35svh; }
+    .chapter[data-cue]:not([data-stacked]) .beat-track { display: block; height: calc((40 + var(--hold, 40)) * 1svh); }
+    .chapter[data-cue]:not([data-stacked]) .beat-tail { display: block; height: 70svh; }
+
+    .chapter[data-cue]:not([data-stacked]) .beat-deck > .beat > .beat-sheet {
+      position: absolute;
       top: var(--beat-top);
+      left: var(--lane-pad);
       width: var(--lane-w);
+      box-shadow: var(--leaf-lip), var(--sheet-shadow);
+      backface-visibility: hidden;
+      /* Off until cued: out of sight and out of reach, but still in the accessibility tree. */
+      opacity: 0;
+      pointer-events: none;
+    }
+    .chapter[data-cue]:not([data-stacked])[data-lane="right"] .beat-deck > .beat > .beat-sheet {
+      left: auto;
+      right: var(--lane-pad);
+    }
+    .chapter[data-cue]:not([data-stacked]) .beat-deck > .beat[data-state="in"] > .beat-sheet {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    /* The bend shade plays with every flight (chapter-css.ts writes the flight itself). */
+    .chapter[data-cue]:not([data-stacked]) .beat-deck > .beat:is([data-dir="fwd"], [data-dir="back"]) > .beat-sheet::before {
+      animation: leaf-shade var(--dur-leaf-in) var(--ease-leaf) both;
+    }
+    .chapter[data-cue]:not([data-stacked]) .beat-deck > .beat:is([data-state="after"], [data-state="before"]) > .beat-sheet::before {
+      animation-name: leaf-shade-out;
+      animation-duration: var(--dur-leaf-out);
+    }
+
+    /* Long sheets scroll as normal pages; each rises off the tray once, when it first comes into view. */
+    .chapter[data-cue]:not([data-stacked]) .beat[data-flow] { padding: 30svh 0 24svh; }
+    .chapter[data-cue]:not([data-stacked]) .beat[data-flow] > .beat-sheet {
+      width: var(--lane-w-flow);
       margin-inline-start: var(--lane-pad);
       pointer-events: auto;
-      box-shadow: var(--sheet-shadow);
+      box-shadow: var(--leaf-lip), var(--sheet-shadow);
     }
-    .chapter:not([data-stacked])[data-lane="right"] .beat-sheet {
-      margin-inline-start: calc(100cqw - var(--lane-pad) - var(--lane-w));
-    }
-    .chapter:not([data-stacked]) .beat[data-flow] .beat-sheet {
-      position: relative;
-      top: auto;
-      width: var(--lane-w-flow);
-    }
-    .chapter:not([data-stacked])[data-lane="right"] .beat[data-flow] .beat-sheet {
+    .chapter[data-cue]:not([data-stacked])[data-lane="right"] .beat[data-flow] > .beat-sheet {
       margin-inline-start: calc(100cqw - var(--lane-pad) - var(--lane-w-flow));
     }
+    .chapter[data-cue]:not([data-stacked]) .beat[data-flow]:not([data-shown]) > .beat-sheet { opacity: 0; }
+    .chapter[data-cue]:not([data-stacked]) .beat[data-flow][data-shown=""] > .beat-sheet {
+      transform-origin: 50% 100%;
+      animation: leaf-rise var(--dur-leaf-in) var(--ease-leaf) both;
+    }
+    .chapter[data-cue]:not([data-stacked]) .beat[data-flow][data-shown=""] > .beat-sheet::before {
+      animation: leaf-shade var(--dur-leaf-in) var(--ease-leaf) both;
+    }
 
-    /* A focused or targeted beat is always composed (§4.4 step 8). */
-    .chapter .beat:is(:focus-within, :target) > .beat-sheet,
-    .chapter .beat:is(:focus-within, :target) [data-step] {
+    /*
+      A keyboard-focused sheet that is not showing yet is composed at once (§4.4 step 8);
+      ChapterCue also scrolls a focused pinned sheet's track under the cue line. Only sheets
+      that are off: switching a showing sheet's animation off and on again (a text field is
+      :focus-visible even after a click) would replay its entrance under the pointer.
+    */
+    .chapter .beat-deck > .beat:not([data-state="in"]):has(:focus-visible) > .beat-sheet,
+    .chapter .beat-deck > .beat:not([data-state="in"]):has(:focus-visible) [data-step],
+    .chapter .beat[data-flow]:not([data-shown]):has(:focus-visible) > .beat-sheet {
+      opacity: 1 !important;
+      pointer-events: auto !important;
       animation: none !important;
     }
 
     /* Tablet: a wider lane. */
     @media (min-width: 768px) and (max-width: 1023px) {
-      .chapter:not([data-stacked]) { --lane-w: min(34rem, 56cqw); --lane-w-flow: 90cqw; }
+      .chapter[data-cue]:not([data-stacked]) { --lane-w: min(34rem, 56cqw); --lane-w-flow: 90cqw; }
     }
 
-    /* Split stage: the station pinned in the top 46svh, beats at reading pace below it. */
+    /* Split stage: the station pinned in the top 46svh, sheets in flow below it, each rising once. */
     @media (max-width: 767px) {
-      .chapter:not([data-stacked]) {
+      .chapter[data-cue]:not([data-stacked]) {
         --tw: var(--twm);
         --th: var(--thm);
         --tx: var(--txm);
         --ty: var(--tym);
         --fw: var(--fwm);
-        scroll-margin-top: 0;
       }
-      .chapter:not([data-stacked]) .stage { z-index: 2; height: 46svh; }
-      .chapter:not([data-stacked]) .stage-front,
-      .chapter:not([data-stacked]) .beat-arrive { display: none; }
-      .chapter:not([data-stacked]) .flow { margin-top: 0; padding: 1.5rem 1.25rem 4rem; display: grid; gap: 1.25rem; }
-      .chapter:not([data-stacked]) .beat,
-      .chapter:not([data-stacked]) .beat[data-flow] { height: auto; padding: 0; }
-      .chapter:not([data-stacked]) .beat-sheet,
-      .chapter:not([data-stacked]) .beat[data-flow] .beat-sheet {
+      /* Pinned below the navbar and chapter bar, so the whole 46svh crop is seen. */
+      .chapter[data-cue]:not([data-stacked]) .stage { z-index: 2; top: var(--chrome-h); height: 46svh; }
+      .chapter[data-cue]:not([data-stacked]) .stage-front,
+      .chapter[data-cue]:not([data-stacked]) .beat-lead,
+      .chapter[data-cue]:not([data-stacked]) .beat-track,
+      .chapter[data-cue]:not([data-stacked]) .beat-tail { display: none; }
+      .chapter[data-cue]:not([data-stacked]) .flow { margin-top: 0; padding: 1.5rem 1.25rem 4rem; display: grid; gap: 1.25rem; }
+      .chapter[data-cue]:not([data-stacked]) .beat-pins,
+      .chapter[data-cue]:not([data-stacked]) .beat-deck {
+        position: static;
+        height: auto;
+        margin: 0;
+        display: grid;
+        gap: 1.25rem;
+      }
+      .chapter[data-cue]:not([data-stacked]) .beat,
+      .chapter[data-cue]:not([data-stacked]) .beat[data-flow] { padding: 0; }
+      .chapter[data-cue]:not([data-stacked]) .beat-deck > .beat > .beat-sheet,
+      .chapter[data-cue]:not([data-stacked]) .beat[data-flow] > .beat-sheet,
+      .chapter[data-cue]:not([data-stacked])[data-lane="right"] .beat-deck > .beat > .beat-sheet,
+      .chapter[data-cue]:not([data-stacked])[data-lane="right"] .beat[data-flow] > .beat-sheet {
         position: relative;
         top: auto;
+        left: auto;
+        right: auto;
         width: auto;
         margin: 0;
+        opacity: 1;
+        pointer-events: auto;
+        animation: none;
+      }
+      .chapter[data-cue]:not([data-stacked]) .beat:not([data-shown]) > .beat-sheet { opacity: 0; }
+      .chapter[data-cue]:not([data-stacked]) .beat[data-shown=""] > .beat-sheet {
+        transform-origin: 50% 100%;
+        animation: leaf-rise var(--dur-leaf-in) var(--ease-leaf) both;
+      }
+      .chapter[data-cue]:not([data-stacked]) .beat[data-shown=""] > .beat-sheet::before {
+        animation: leaf-shade var(--dur-leaf-in) var(--ease-leaf) both;
       }
     }
   }
+}
+
+/* Leaf motion shared by every chapter (the per-origin flights are generated). */
+@keyframes leaf-rise {
+  0% { transform: perspective(1400px) translateY(9svh) rotateX(-18deg); opacity: 0; }
+  30% { opacity: 1; }
+  62% { transform: perspective(1400px) translateY(-0.6svh) rotateX(3deg); }
+  84% { transform: perspective(1400px) translateY(0.15svh) rotateX(-0.8deg); }
+  to { transform: none; opacity: 1; }
+}
+/* The bend shade: strongest while the leaf is curved, gone once it lies flat. */
+@keyframes leaf-shade {
+  0% { opacity: 1; }
+  55% { opacity: 0.5; }
+  to { opacity: 0; }
+}
+@keyframes leaf-shade-out {
+  0% { opacity: 0; }
+  40% { opacity: 0.8; }
+  to { opacity: 1; }
 }

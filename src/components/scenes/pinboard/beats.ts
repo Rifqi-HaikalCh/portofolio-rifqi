@@ -14,7 +14,7 @@ export const PINBOARD_CHAPTER: ChapterSpec = {
   frames: PINBOARD_FRAMES,
   theatre: { x: -260, y: -170, w: 1860, h: 1162 },
   theatreMobile: { x: 760, y: 30, w: 760, h: 620 },
-  handoffIn: 'none',
+  handoffIn: 'pan-right',
   handoffOut: 'tilt-down',
   beats: [
     { id: 'title', hold: 30, origin: 'drop' },

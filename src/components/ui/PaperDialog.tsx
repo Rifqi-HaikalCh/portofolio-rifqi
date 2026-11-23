@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, type ReactNode } from 'react';
+import { useEffect, useLayoutEffect, useRef, type ReactNode } from 'react';
 
 /*
   Native <dialog> as a folded paper sheet (DesignRules.md §7, §11.1).
@@ -25,7 +25,9 @@ export function PaperDialog({
   const ref = useRef<HTMLDialogElement>(null);
   const opener = useRef<Element | null>(null);
 
-  useEffect(() => {
+  // Layout effect: the dialog must be in the top layer within the same commit, so a View
+  // Transition (the frame → sheet morph) captures it in its new state.
+  useLayoutEffect(() => {
     const dialog = ref.current;
     if (!dialog) return;
     if (open && !dialog.open) {

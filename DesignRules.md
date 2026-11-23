@@ -2,7 +2,7 @@
 
 # Design System, UX Blueprint & Engineering Guardrails — 3D Paper Craft Developer Portfolio
 
-> **Status:** Single Source of Truth (v3.1). Replaces `PORTFOLIO_STANDARDS.md` and `.cursor/rules/portfolio-standards.mdc` (both deleted 2026-11-22).
+> **Status:** Single Source of Truth (v3.5). Replaces `PORTFOLIO_STANDARDS.md` and `.cursor/rules/portfolio-standards.mdc` (both deleted 2026-11-22).
 > **Owner:** Rifqi Haikal Chairiansyah (`portofolio-rifqi`)
 > **Approved Concept:** *The Paper Studio — Walkthrough* — a fullscreen paper office the visitor walks through in scroll chapters: each section's station fills the screen, its information arrives in small paper beats, and the camera hands off from station to station along one office plan (final score 90.75 / 100 on the v3 rubric, see §1). Builds on *The Paper Studio* (v2) and supersedes *The Architect's Paper Desk* (v1).
 > **Rendering Strategy:** Hybrid 2D + 3D — 8–14 procedurally lit 2D paper layers per station placed at real depths and projected through one analytic camera (§9.2), staged fullscreen and choreographed by native CSS scroll-driven timelines (§9.7), plus one lazy React Three Fiber paper puppet on capable desktops
@@ -120,7 +120,7 @@ Baseline: v2.2 as built scores **75.0** on this rubric (row A).
 | --- | --- | --- |
 | Recruiter, phone, 4G, 30 seconds | Fullscreen chapters push proof far down; a pinned stage leaves half the screen for text | Hero beat 1 is in the server HTML at load (name, role, value, CTAs, CV). Mobile uses a **split stage**: the scene is pinned in the top 46 % and beats flow below it at reading pace (§8). Navbar keeps *Projects* and *CV* one tap away |
 | Engineering manager, desktop, 5 minutes | Long holds feel slow; proof is spread across many beats | Track caps: ≤ 60 svh hold per beat, ≤ 600 svh per chapter (§4.6 formula), ≤ 2,400 svh for the page. Every chapter's first beat states its facts |
-| Keyboard / screen-reader user | A focused link inside a beat could be mid-exit and invisible | `:focus-within` on a beat forces its composed state (`animation: none`). The stage is `aria-hidden`. Reading order = DOM order = beat order. *Skip chapter* links |
+| Keyboard / screen-reader user | A focused link inside a beat could be mid-exit and invisible | Keyboard focus into a sheet that is off scrolls its track under the cue line and composes it at once (v3.3, §4.4); a sheet that is already showing is never re-animated by focus (a text field is `:focus-visible` even after a click, and replaying the entrance moved the button between press and release). The stage is `aria-hidden`. Reading order = DOM order = beat order. *Skip chapter* links |
 | 200 % zoom, short laptop screens | Sticky holds and a fullscreen stage leave no room for text | Below `max-height: 560px` or at text zoom where a beat sheet is taller than `70svh`, the chapter falls back to the **stacked studio** (§8): the v2.2 layout, sheets in flow, no pin |
 | Low-end laptop GPU | Two fullscreen stages × 14 layers during a handoff | Only the active chapter and its neighbour are painted (`content-visibility: auto` on the fixed-size stage); ≤ 14 layers per stage; ≤ 28 animated layers at any moment; poses swap by `opacity`, never by repainting joints |
 | Visitor with motion sensitivity | Handoffs and emerges add up to a lot of motion | Reduced motion → the stacked studio: no pin, no holds, no handoffs, scenes in their final composed state (§10.2) |
@@ -240,6 +240,48 @@ After the fixes: Perf 7 → 8, Risk 7 → 8. **Final score of C3′ = 92.75.** T
 | A visible frame with depth: the shadow box | Text that is part of a picture |
 | Warm side light from a window; real paper grain; organic cut edges | |
 
+### 1.10 Round 4 — Cued Paper (v3.3, owner feedback on W2)
+
+**Owner feedback (2026-11-23).** (1) The information sheets look stiff: they read as UI cards, not paper. (2) Sheets that arrive while scrolling are hard to read because they *follow the scroll*: a sheet is half-way in for as long as the wheel is half-way through its entry range. Wanted: each scroll *triggers* an animation that plays to the end on its own, so the page feels tidy.
+
+**Diagnosis of W2 as built.** The §9.7 rule "scroll position is the clock" was applied to the text as well as to the camera. A trackpad or wheel stops anywhere, so a sheet is often left mid-flight, tilted or half off-screen, exactly where the visitor wants to read. And the sheets have one flat colour and a hard drop shadow: no stock, no give. Scored on the §1.2 rubric, W2 as built is lower than the D4′ plan (row W2).
+
+**Round 4a — how a beat is triggered**
+
+| # | Option | Brand | Craft | Immer. | Choreo | Scan | Memo | Perf | A11y | Risk | **Total** |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| W2 | As built: sheets scrubbed by their beat timelines | 10 | 8 | 9 | 7 | 7 | 9 | 7 | 9 | 7 | **81.75** |
+| C1 | Keep scrubbing, shorten entries to 30 svh and add flex keyframes | 10 | 9 | 9 | 8 | 7 | 9 | 7 | 9 | 8 | **85.25** — a stopped wheel still leaves text mid-flight, only for less time |
+| C2 | Cue beats by scroll position; sheets stay sticky inside their own wrappers, hidden while they ride up | 10 | 9 | 9 | 8 | 8 | 9 | 7 | 9 | 6 | **85.25** — a sticky sheet still rises with the page before it sticks and scrolls away after its wrapper ends; hiding both phases makes the hold window jump |
+| **C3** | **Cue + deck**: one sticky viewport layer per chapter holds every pinned sheet at its place in the lane; empty *tracks* give the scroll length; an `IntersectionObserver` picks the beat under the viewport's middle line; each sheet then plays its whole flight in time | 10 | 10 | 9 | 10 | 9 | 10 | 8 | 8 | 6 | **92.0** |
+| C4 | Scroll-snap one beat per page | 10 | 9 | 9 | 8 | 6 | 9 | 8 | 6 | 6 | **82.0** — banned (§3.2, §10.2); fights trackpad inertia, anchors and find-in-page |
+| C5 | Wheel stepper: one gesture = one beat (`preventDefault` + programmatic scroll) | 10 | 10 | 9 | 9 | 5 | 10 | 7 | 4 | 4 | **81.5** — scroll hijacking (§10.2); breaks keyboard, inertia and assistive scrolling |
+
+**Round 4b — what makes a sheet paper**
+
+| # | Option | Verdict |
+| --- | --- | --- |
+| P1 | Per-sheet `feTurbulence` noise | Rejected: §5.4 keeps the generated noise on the page ground only; mushy noise is the "AI paper" finish (§3.2) |
+| **P2** | **The scenes' own cardstock tile** (`tex-cardstock.webp`, §1.8) under a veil of the sheet's tone (78 %), plus a lit top edge (`--leaf-lip`) | **Chosen**: the sheets are cut from the same stock as the stations |
+| **F1** | **Flex in flight**: every flight bends the sheet about its leading edge (`rotateX` / `skewX` in perspective), overshoots a little and settles flat; a curvature shade (`::before`, `opacity` only) shows while it bends | **Chosen**: paper has weight and give; at rest it is flat and still |
+| F2 | Real curl (sliced sheet or WebGL page curl) | Rejected: slices break text selection and the accessibility tree; GPU cost |
+| F3 | Idle "breathing" or a hover tilt | Rejected: floating loops and hover 3D tilt are banned (§3.2) |
+
+**Persona check of C3 + P2 + F1** (fixes are in §4.4, §9.7 and §10.2):
+
+| Persona | Risk | Answer |
+| --- | --- | --- |
+| Trackpad flick through three beats | Every skipped sheet flashes in and out | A beat jumped over (`before ↔ after`) changes state without playing; only the beat the wheel lands on plays |
+| Scrolling back | One-way animations feel broken | Back from the next beat plays the exit backwards; back to before plays the entrance backwards |
+| Keyboard | Tabbing into a sheet that is off | Keyboard focus into an off sheet scrolls its track under the cue line (the one programmatic scroll allowed besides anchors) and shows it at once |
+| Screen reader | Off sheets hidden from AT | Off = `opacity: 0` + `pointer-events: none`, never `visibility` / `display`: every sheet stays in the accessibility tree in DOM order |
+| No JavaScript | Sheets never cued | The theatre needs `[data-cue]`, set by the cue on mount; without it the chapter is the stacked studio |
+| 200 % zoom | Text trapped in the fixed-height deck | Unchanged: `ChapterFit` drops a chapter to the stacked studio when a sheet is taller than 70 % of the viewport |
+| Find-in-page | A match inside an off sheet is highlighted but not shown | **Known limitation** of C3 against D2's in-flow sheets (§1.4). *W4 decision:* `beforematch` fires only on `hidden="until-found"` content, which is also removed from the accessibility tree and from Tab order; hiding off sheets that way would take every off beat away from screen-reader browsing, a worse loss than the find-in-page gap. Rejected; the limitation stays. The stacked studio (no JS, reduced motion, text zoom, short viewports) and the split stage keep every sheet in flow, so find-in-page works there |
+| Low-end GPU | More animation | Sheets animate `transform` / `opacity` in time (compositor), not on every scroll frame; the observer fires only on crossings |
+
+C3 + P2 + F1 is adopted as v3.3. It supersedes the D2 rule "beat sheets are normal-flow HTML that hold with `position: sticky`" for *pinned* beats; long beats (`hold: 'flow'`) stay in flow.
+
 ---
 
 ## 2. Brand Identity & Art Direction
@@ -260,7 +302,7 @@ Rifqi is a **craft-minded Software Engineer (Enterprise .NET/C#/SQL & Fullstack 
 | --- | --- | --- | --- | --- | --- |
 | `01` | `#home` | **The Desk** — front view through the open shadow box | Jakarta skyline in 3 paper planes outside the window → window frame → wall, shelf with `.NET` `SQL` `C#` binders, pinboard → lamp → desk, laptop, notebook → figurine → mug, plant → chair back → frame lip | Seated on the notebook, near hand on the laptop (3D on capable desktops) | Hero text beside/above; live `LaptopScreenUI` on the glass; lamp = theme switch |
 | `02` | `#about` | **The Pinboard** — cork board on the wall by the window | Wall → cork board (stacked edge) → pinned sheets at 2–3 depths → pins, one string-free cluster | Bust poster pinned as a "photo" card; full figure pinning a card at the board's edge | Dossier sheet + four index cards pinned to the board |
-| `03` | `#experience` | **The Filing Cabinet** — top drawer pulled open, seen from slightly above | Wall → cabinet body → drawer walls → hanging folders (one per role, ordered by year) → drawer front with label holder | Leaning on the cabinet, holding a folder | Folder tabs (`Work` / `Organization` `tablist`); each folder = a ledger row |
+| `03` | `#experience` | **The Filing Cabinet** — top drawer pulled open, seen from slightly above | Wall → cabinet body → drawer walls → hanging folders (one per role, ordered by year) → drawer front with label holder | Leaning on the cabinet, holding a folder | Each folder = one role, whose sheet comes out of it (v3.5; the `Work` / `Organization` tabs and ledger rows are gone, §4.5 `03`) |
 | `04` | `#services` | **The Drafting Table** — angled board under the lamp | Wall → board (tilted plane) → blueprint sheet → ruler, set square, pencil → board edge | Drawing with a pencil | Capability board on the blueprint sheet |
 | `04` | `#projects` | **The Shadow-Box Gallery** — wall of small framed shadow boxes | Wall → frames → inside each frame: backing, 3–5 domain sheets from that project's data, the paper laptop with the real screenshot | Hanging a frame | Each frame is a `ProjectCard`; focus or hover separates its layers (depth reveal); opens the case study |
 | `05` | `#certificates` | **The Archive Shelf** — binders and boxes on a shelf | Wall → shelf back → binders (one per category, spine label + count from data) → shelf edge | Pulling a binder out | Each binder is a folio control; opening it pulls the binder forward and reveals the rows |
@@ -457,24 +499,28 @@ The office is one room seen from its centre. The camera walks it clockwise, so e
 | --- | --- | --- | --- | --- |
 | `01 → 02` | **Pan right** | leaves to the left (`translateX` 0 → −100 vw) | arrives from the right | `exit` of `01` = `entry` of `02` (100 svh, §9.7) |
 | `02 → 03` | **Tilt down** | moves up (natural scroll, no counter-transform) | rises from below | same 100 svh |
-| `03 → 04` | **Tilt up + pan** | moves down and left | drops in from above-right | same |
+| `03 → 04` | **Tilt up** | sinks (`translateY` → +200 svh against the natural −100) | drops in from above | same. W2: a diagonal tilt-and-pan left two empty viewport corners between the stages, so the move is vertical only |
 | `04 → 04b` | **Pan right** | left | from the right | same |
-| `04b → 05` | **Dolly out + pan** | scales to 0.86 and leaves left | arrives from the right at scale 1.12 → 1 | same |
+| `04b → 05` | **Dolly out + pan** | pans left while its scene (the `.stage-canvas`, not the stage box) pulls back to 0.86 | pans in from the right while its scene settles 1.12 → 1 | same. Scaling the stage box itself left bare page around it |
 | `05 → 06` | **Pan right** (to the window) | left | from the right; the light arc warms to golden hour during the move | same |
-| `06 → footer` | **Turn-over** | the frame turns (`rotateY` 0 → 180°, one composited layer) to its kraft back, which *is* the footer | — | last 100 svh of `06` |
+| `06 → footer` | **Turn-over** | the frame turns edge-on (`perspective(1600px) rotateY(0 → −90°)`, held in place) while the footer, which *is* its kraft back, rises over it | — | `exit 0% → 50%` of `06` (the footer is shorter than a viewport, so the full exit range is never reached) |
 
-During a handoff both stages are visible. The last beat of a chapter exits during the first 25 % of its handoff (its `exit 0% → 25%` range starts where the chapter's `exit` range starts); no other sheet moves during a handoff.
+The `01 → 02` move lives in `scene.css` (the hero is not a chapter: its controls are live HTML): over the hero's `exit` range it holds still, pushes in to the laptop (`scale 1.14`) while the title column steps aside over the first 40 %, then pans left; only at ≥ 1280 × 800, where the hero is one screen tall. During a handoff both stages are visible. The last beat of a chapter exits during the first 25 % of its handoff (its `exit 0% → 25%` range starts where the chapter's `exit` range starts); no other sheet moves during a handoff.
 
 ### 4.4 Beat Anatomy (every beat follows it)
 
-1. **Wrapper** — `div.beat` in normal flow, `min-height: calc(var(--hold) * 1svh)` (the hold), `view-timeline: --b-<chapter>-<n>`.
-2. **Sheet** — the paper (`bg-raised`, `--sheet-shadow`, one fold at most), `position: sticky; top: var(--beat-top)` so it stays still for the hold. Desktop: placed in the stage's **reading lane**, the empty wall area each station composition reserves (left or right third, §4.5). Mobile: full width below the split stage.
-3. **Entrance** — the origin's keyframes over `entry 0% → entry 60%` of the beat timeline (`transform` + `opacity`, `--ease-paper`).
-4. **Hold** — fully composed, no motion, for at least the sheet's reading time (`--hold`, 30–60 svh).
-5. **Exit** — over `exit 20% → exit 80%`: back the way it came, or into the next object (a folder sheet returns into the drawer).
-6. **Act** — the scene's change for this beat, keyed to the same timeline, starting up to 10 svh **before** the entrance so the object moves first and the paper follows.
-7. **Emerge occluder** — for Emerge beats only, a cut-out copy of the object's front edge (drawer front, envelope flap, binder spine) sits above the sheet for the entrance range, so the paper appears to come out from behind it.
-8. **Safety** — `:focus-within` and `:target` force the composed state; in the fallback layouts the beat is a plain sheet.
+*v3.3 — cued paper (§1.10).* Scroll position decides **which** beat is on; the sheet then plays its whole flight **in time**. Text never travels with the wheel.
+
+1. **Deck and track** — a chapter's pinned sheets live in `div.beat-deck`, one sticky `100svh` layer, in reading order. Each pinned beat also owns an empty `div.beat-track` of `40svh + hold` (after a `35svh` lead-in; a `70svh` tail ends the deck). `ChapterCue` (an `IntersectionObserver`) turns a beat on while its track is under the viewport's middle line.
+2. **Sheet** — the paper (`.paper-leaf`: cardstock tile under the sheet tone, lit top edge, `--sheet-shadow`, one fold at most), placed absolutely in the stage's **reading lane** at `--beat-top`, the empty wall area each station composition reserves (left or right third, §4.5). Mobile: full width in flow below the split stage.
+3. **State** — `data-state` = `before | in | after`, `data-dir` = `fwd | back | none` on the beat; `data-beat` (the active id) and `data-reached` (ids reached) on the chapter. `none` = set without playing (page load, or a beat jumped over).
+4. **Entrance** — the origin's flight (`--dur-leaf-in`, `--ease-leaf`): the sheet bends about its leading edge, overshoots a little and lies flat (`transform: none`). Back from the next beat: the exit played in reverse.
+5. **Hold** — fully composed and still for as long as its track is under the line; scrolling inside the track moves nothing.
+6. **Exit** — `--dur-leaf-out`: lifted by its near edge and carried up and off (slides go back the way they came). Back to before: the entrance played in reverse.
+7. **Act** — the scene's change for this beat, a transition (`--dur-act`) keyed to `data-reached` / `data-beat`, so the object moves as the sheet flies; poses swap in time (`--dur-pose` per swap) while the beat is on; sub-steps land one after another once the sheet has settled (`--gap-step`).
+8. **Emerge occluder** — for Emerge beats only, a cut-out copy of the object (envelope, drawer front) sits above the sheet for the first 60 % of its entrance, so the paper appears to come out from behind it.
+9. **Safety** — keyboard focus into an off sheet cues it (track scrolled under the line) and composes it at once; off sheets stay in the accessibility tree; in the fallback layouts the beat is a plain sheet.
+10. **Long beats** (`hold: 'flow'`) are not pinned: they scroll as normal pages after the deck and rise off the tray once, the first time they come into view (`data-shown`).
 
 ### 4.5 Chapter Specifications
 
@@ -485,7 +531,7 @@ Hold values are in `svh`. "Lane" is the reading lane on desktop.
 | Beat | Content | Origin | Act |
 | --- | --- | --- | --- |
 | 1 Title (in HTML at load, **never animated in**) | Eyebrow `01 — Software Engineer`, `h1` name (LCP), static role line with caret, value ≤ 2 lines, **View projects**, **Download CV** | — | The 3D figure waves once (capable desktops); the poster otherwise |
-| 2 Proof | The four metric tickets (`5`, `100+`, `3+`, `30+`) | Emerge from the notebook | Notebook cover lifts; tickets fan out |
+| 2 Proof | The four metric tickets (`5`, `100+`, `3+`, `30+`) | In the title column in the server HTML. *W3:* at ≥ 1280 × 800 they come out of the notebook on the desk once, on load (`ticket-emerge`, `--dur-leaf-in`, 110 ms apart), not on scroll: they are first-screen facts | — (the notebook cover does not lift: the hero desk is not a chapter stage) |
 | 3 Screen | `LaptopScreenUI`: current role and company, core stack, **Open projects**, **Ask EQbot** | — (it lives on the glass) | Camera pushes in to the laptop (hero push-in, `z` +160); the Front band drops away; the title sheet exits left |
 
 Clicks: lamp = theme (View Transition from the bulb), laptop hover/focus = figure looks at it.
@@ -498,51 +544,51 @@ Clicks: lamp = theme (View Transition from the bulb), laptop hover/focus = figur
 | 2 Dossier | Bio paragraphs, **Download CV**, **Get in touch** | Unfold out of the photo card | The photo card tilts forward; the bust stays pinned |
 | 3 Index cards | The four `aboutHighlights` cards, pinned one after another (4 sub-steps over the sheet's last 40 % of arrival plus its hold, ≈ 18 svh each) | Slide in from the right, cards dealt from the figure's side | Stop-motion `pin` ↔ `reach` per card |
 
-#### `03` `#experience` — The Filing Cabinet (386 svh + ledger length as built, lane left over the kraft boxes)
+#### `03` `#experience` — The Filing Cabinet (735 svh as built, a record chapter §4.6, lane left over the kraft boxes)
+
+*v3.5, owner request:* every role comes out of its own folder with the same flight; the ledger list is gone.
 
 | Beat | Content | Origin | Act |
 | --- | --- | --- | --- |
-| 1 Title + tabs | Eyebrow, `h2`, folder tabs `Work` / `Organization` | Rise | The top drawer slides out toward the camera; folders show their year tabs |
-| 2 Current role | `workExperience[0]`: role, company, period, location, impact, stack | Emerge from the newest folder | The folder rises (`z` +24) and opens; pose `folder` |
-| 3 Ledger | Every role as a `Folio` row (click to open), in flow, as long as it needs | Rise | Remaining folders fan up; the open row's folder lifts (existing `:has()` rule) |
+| 1 Title | Eyebrow *Files*, `h2`, lede with the role counts, total work experience | Rise | The top drawer slides out toward the camera; folders show their year tabs |
+| 2 … 7 Work roles | One sheet per `workExperience` entry, newest first: start year, *Work · 0n/06*, role, company, period · location, short description, **Open the file** | Emerge from that role's folder (`folderMouth(n, i)`: under its tab, up past the drawer front; occluder `drawer-front`) | That folder lifts (`translateY(−58px)`) while its beat is on (`#experience[data-beat]`, station CSS) |
+| 8 … 9 Organization roles | The same sheet for each `organizationExperience` entry | Emerge from its folder | Reaching the first one swaps the drawer's folder set to the organisation folders (`data-reached`, `scene.css`); its folder lifts |
 
-Clicks: tabs swap the folder set in the drawer; rows lift their folder.
+Clicks: **Open the file** opens the full entry (what was shipped, logo, stack) as a paper dialog (`ExperienceFile`, `PaperDialog`); the sheet itself stays short enough to pin. Mobile: the same sheets in flow under the split stage; the folder lift and set swap follow the cue there too.
 
-#### `04` `#services` — The Drafting Table (≈ 280 svh, lane right)
-
-| Beat | Content | Origin | Act |
-| --- | --- | --- | --- |
-| 1 Title | Eyebrow, `h2`, lede | Drop | Lamp head swings toward the board (night: the light pool follows) |
-| 2 Board | Blueprint capability board header | Slide (the cover sheet slides off left, revealing the blueprint) | Cover sheet layer slides off |
-| 3 Overlays | Backend, Data, Frontend, Tooling as four tracing-paper overlays (4 sub-steps) | Drop, registered on crop marks | Pose `draw`; the pencil moves to each group in stop-motion |
-| 4 More | **Additional skills** button (dialog) | Rise | — |
-
-#### `04b` `#projects` — The Shadow-Box Gallery (≈ 360 svh, lane: the wall itself)
+#### `04` `#services` — The Drafting Table (380 svh + boards as built, lane right)
 
 | Beat | Content | Origin | Act |
 | --- | --- | --- | --- |
-| 1 Title | Eyebrow, `h2`, lede | Rise | Figure climbs the ladder (pose `hang`) |
-| 2 Hanging | The six `ProjectShadowBox` cards hung onto the rail positions, two at a time (3 sub-steps) | Drop on their wire | Stop-motion `hang` ↔ `reach` |
-| 3 Archive | **View all projects** (archive drawer dialog) | Rise | — |
+| 1 Title | Eyebrow, `h2`, lede | Drop | Lamp head swings toward the board; *W3:* the light pool swings with it about the same point (`origin: 100% 10%`) |
+| 2 Core stack | Backend, Data, Interface as three tracing-paper overlays (`.tracing`, 3 sub-steps) | Drop | The cover sheet (`theatre-only` layer) slides off the blueprint (act mode `off`); stop-motion `draw` ↔ `reach` |
+| 3 Boards | The Development / Interface design tabs: capability boards, tooling, **Additional skills** (dialog) | Rise, in flow | — |
+
+#### `04b` `#projects` — The Shadow-Box Gallery (240 svh + shelf as built, lane left; its own `section`, after `#services`)
+
+| Beat | Content | Origin | Act |
+| --- | --- | --- | --- |
+| 1 Title | Eyebrow `04b`, `h2` *Selected work*, lede | Rise | The new frame is lifted onto the rail; stop-motion `hang` ↔ `reach` |
+| 2 Shelf | The six `ProjectShadowBox` frames, filters and **Open the archive** (dialog) | Rise, in flow; *W3:* the frames are hung two at a time once it shows (`steps: 3`, a swing on their wire) | Opening a frame grows it into its case-study sheet (frame → sheet morph, §10.2) |
 
 Clicks: a frame opens its case study with a **frame → sheet morph** (View Transition with a shared name from the card to the dialog sheet); hover/focus = depth reveal.
 
-#### `05` `#certificates` — The Archive Shelf (≈ 260 svh, lane right)
+#### `05` `#certificates` — The Archive Shelf (240 svh + folios as built, lane right)
 
 | Beat | Content | Origin | Act |
 | --- | --- | --- | --- |
-| 1 Title | Eyebrow, `h2`, lede | Rise | Pose `binder` |
-| 2 Binders | The four category `Folio` controls (`Dicoding`, `Kegiatan`, `Organisasi`, `Magang`) with counts, pulled one by one (4 sub-steps) | Slide out of the shelf | Each binder slides forward (`z` +40) as its control arrives |
+| 1 Title | Eyebrow, `h2`, lede | Rise | The binders settle onto their shelf; *W3:* then each is pulled half out and pushed back, left to right (act mode `pulse`, 260 ms apart) |
+| 2 Folios | The four category `Folio` controls with counts, in flow (an open folio grows; a pinned sheet would outgrow the viewport) | Rise, in flow | Opening a folio pulls its binder (existing `:has()` rule) |
 
 Clicks: opening a binder makes its list **emerge** from the binder (the existing binder-tilt rule + the sheet's open transition).
 
-#### `06` `#contact` — The Mail Tray (≈ 280 svh + footer turn-over, lane left)
+#### `06` `#contact` — The Mail Tray (380 svh + form + footer turn-over as built, lane left)
 
 | Beat | Content | Origin | Act |
 | --- | --- | --- | --- |
 | 1 Letterhead | Eyebrow, `h2`, one line | Drop | Golden-hour light (light theme) / lamp (dark) |
-| 2 Card | Letterpress card: email + copy, LinkedIn, GitHub, WhatsApp, Jakarta | Emerge from the envelope | Envelope flap opens; pose `seal` → `hand` |
-| 3 Form | Correspondence sheet: name, email, message, honeypot | Rise from the letter tray | Tray slides forward |
+| 2 Card | Letterpress card: email + copy, LinkedIn, GitHub, WhatsApp, Jakarta | Emerge from the envelope (occluder: the `letters` layer) | The flap folds open (`scale` 1 → −1 on its top edge, in the occluder copy too); the tray slides forward; *W3:* stop-motion `seal` → `hand`, held for the beat (`end: 'alt'`) |
+| 3 Form | Correspondence sheet: name, email, message, honeypot | Rise, in flow | — |
 
 Send: sending → the postmark lands on the envelope and the sheet only after a real 2xx; failed → oxide error, retry, direct email. Never a fake success.
 
@@ -565,10 +611,11 @@ A single short chapter without a track: the drawer slides out empty (one act, on
 
 | Limit | Desktop | Mobile (split stage) |
 | --- | --- | --- |
-| Hold per beat | 30–60 svh (each pinned beat also spends 100 svh rising to its sticky top and leaving) | content height |
+| Hold per beat | 30–60 svh; each pinned beat's track is `40 + hold` svh (v3.3: sheets no longer ride the scroll, so the old 100 svh rise is gone) | content height |
 | Sub-step inside a beat | ≥ 10 svh | collapsed: the group arrives as one |
-| Chapter track (excluding in-flow lists) | ≤ 600 svh, measured as `100` (arrival) `+ Σ (100 + hold)` per pinned beat; the validator in `chapter/spec.ts` enforces it | content height |
-| Whole page (excluding in-flow lists) | ≤ 2,400 svh | ≤ 1,600 svh |
+| Chapter track (excluding in-flow lists) | ≤ 600 svh, measured as `35` (lead-in) `+ Σ (40 + hold)` per pinned beat `+ 70` (tail); the validator in `chapter/spec.ts` enforces it | content height |
+| Record chapter (v3.5) | A chapter whose beats are one entry each, replacing an in-flow list (`records: true`; today `03` Experience): ≤ 800 svh, and every entry holds exactly 30 svh. The validator enforces both | content height |
+| Whole page (excluding in-flow lists) | ≤ 2,900 svh (v3.5; was 2,400 before `03` turned its ledger into nine pinned beats; as built ≈ 2,820) | ≤ 1,600 svh |
 | Handoff | exactly 100 svh | exactly 100 svh |
 
 ---
@@ -714,7 +761,7 @@ Every component is a token consumer. Names are fixed; do not create look-alikes.
 | `ProjectShadowBox` | `scenes/ProjectShadowBox.tsx` | inside the project `article` (one stretched link) | rest, depth reveal (hover/focus) | Two motif layers (`gallery/motifs.tsx`, from `project.motif`, serialised server-side), cast shadow, taped laptop or phone with the screenshot, frame lip |
 | `FrameBack` | `scenes/FrameBack.tsx` | `svg` | — | Footer: the kraft back of the frame with staples, D-rings and wire |
 | `Chapter` | `scenes/chapter/Chapter.tsx` | `section.chapter` | theatre, split, stacked (`data-stacked`) | Server Component that renders the stage, beat wrappers, skip link, handoff spacer and one generated `<style>` from the station's `beats.ts` (§9.7); the only client part is the `ResizeObserver` stacked test (`ChapterFit`, client leaf) |
-| `Beat` | `scenes/chapter/Beat.tsx` | `div.beat` > `article.beat-sheet` | entering, holding, exiting, composed (`:focus-within`) | One piece of information; origin, hold, optional occluder; content passed as children from the section |
+| `Beat` | `scenes/chapter/Beat.tsx` | `div.beat` > `article.beat-sheet` | entering, holding, exiting, composed (keyboard focus, `:target`) | One piece of information; origin, hold, optional occluder; content passed as children from the section |
 | `ChapterIndex` | `shared/StudioRail.tsx` + `shared/ChapterBar.tsx` | `nav` | active chapter | StudioRail (≥ 1440 px) and chapter bar (< 1024 px) share one `IntersectionObserver` |
 | `LaptopScreenUI` | `scene/LaptopScreenUI.tsx` | `section aria-label` | — | Client leaf; positioned by `--screen-*` |
 | `DeskLamp` | `scene/DeskLamp.tsx` | `button` | on / off | Transparent theme switch over the Desk's `lamp` layer (art in the layer, hit area at z = 0) |
@@ -842,11 +889,19 @@ main  (timeline-scope: every --ch-* and --b-* name used across siblings)
    ├─ div.stage                    position: sticky; top: 0; height: 100svh; margin-bottom: -100svh
    │  │                            content-visibility: auto; contain-intrinsic-size: auto 100svh
    │  └─ PaperScene (fit: cover)   the station's layers re-framed to the viewport (§9.1)
-   ├─ div.beat × n                 normal flow; min-height = hold; view-timeline: --b-about-<n>
-   │  ├─ div.beat-occluder?        Emerge beats only: copy of the object's front edge
-   │  └─ article.beat-sheet        position: sticky; top: var(--beat-top); the real content
-   └─ div.handoff                  100svh spacer that ends the track (the outgoing half of the move)
+   ├─ div.stage-front?             Emerge beats only: occluder copies above the sheets
+   └─ div.flow                     margin-top: -100svh
+      ├─ div.beat-pins
+      │  ├─ div.beat-deck          position: sticky; top: 0; height: 100svh — every pinned sheet,
+      │  │  └─ div.beat × n          in reading order, absolutely placed in the lane (v3.3)
+      │  │     └─ div.beat-sheet   the real content; data-state / data-dir from ChapterCue
+      │  ├─ div.beat-lead          35svh
+      │  ├─ div.beat-track × n     40svh + hold each: scroll length only, aria-hidden
+      │  └─ div.beat-tail          70svh
+      └─ div.beat[data-flow] × m   long sheets in normal flow
 ```
+
+*v3.3:* the diagram above replaces the W1–W2 layout of sticky sheets in per-beat wrappers with beat view timelines (§1.10). The chapter view timeline and its handoffs are unchanged.
 
 **Timelines.** Every chapter names its own view timeline on the (non-sticky) section. Handoffs use the `entry` and `exit` ranges, each exactly one viewport of scroll for a chapter taller than the viewport (W1 measured: `entry-crossing` / `exit-crossing` span the chapter's whole height instead, so they are not used):
 - the incoming stage animates over `entry 0% → 100%` of its chapter;
@@ -854,7 +909,7 @@ main  (timeline-scope: every --ch-* and --b-* name used across siblings)
 
 Because the section's edge travels exactly `100svh` in each range, a stage that should *look still* while it slides sideways counter-translates the natural scroll. For example, the incoming pan keyframe goes from `translate(100vw, -100svh)` to `translate(0, 0)`, and the outgoing pan from `translate(0, 0)` to `translate(-100vw, 100svh)`. A tilt omits the vertical counter-term, so the natural scroll *is* the move.
 
-**Acts.** Stage layers read the beat timelines through `timeline-scope`: `animation-timeline: --b-experience-current; animation-range: entry 0% entry 60%`. Acts animate the layer's child (`[data-layer] > *`), never the layer itself, so they compose with the handoff transform on the layer and the pointer look's `translate`; objects inside a layer animate `translate`, so they compose with `stateCss` transforms. `transform` (and `opacity` for pose swaps) only, on layers the station marks as actors (`actor: true` in its layer list; ≤ 6 actors per station).
+**Acts.** *v3.3:* acts are cued, not scrubbed: a transition on the actor, keyed to the chapter's `data-reached` (mode `in` / `off`) or `data-beat` (mode `out`). (W1–W2 read the beat timelines through `timeline-scope`.) Acts animate the layer's child (`[data-layer] > *`), never the layer itself, so they compose with the handoff transform on the layer and the pointer look's `translate`; objects inside a layer animate `translate`, so they compose with `stateCss` transforms. `transform` (and `opacity` for pose swaps) only, on layers the station marks as actors (`actor: true` in its layer list; ≤ 6 actors per station).
 
 **Data, not hand-written CSS.** Each station exports `beats.ts`:
 
@@ -889,11 +944,11 @@ Because the section's edge travels exactly `100svh` in each range, a stage that 
 `Chapter` turns it into the section, the wrappers and one `<style>` block (like `stateCss`, §7). Hand-written keyframes per beat are not allowed.
 
 **Rules.**
-- **No JS on the scroll path.** No scroll or wheel listeners, no `requestAnimationFrame` loops driven by scroll, no scroll libraries (GSAP ScrollTrigger, Lenis, Locomotive). `IntersectionObserver` is allowed only for the active-chapter index (StudioRail, chapter bar) and the figurine's on-screen check.
+- **No JS on the scroll path.** No scroll or wheel listeners, no `requestAnimationFrame` loops driven by scroll, no scroll libraries (GSAP ScrollTrigger, Lenis, Locomotive). `IntersectionObserver` is allowed only for the active-chapter index (StudioRail, chapter bar), the figurine's on-screen check and, from v3.3, **`ChapterCue`**: one observer per chapter on its tracks (desktop) or sheets (split stage), plus a one-shot observer that marks flow sheets `data-shown`. Its callbacks fire on threshold crossings only and set attributes; CSS does the motion.
 - **Only station-sized things animate.** The stage (100 svh), its layers, beat sheets and occluders. Never a chapter, a section, `main` or anything taller than `100svh` (R2 lesson, §9.2).
-- **Ranges end.** Stage layers and acts may use `fill-mode: both`. A pinned sheet's entrance uses `forwards` only: its origin is counter-translated by up to a viewport, so a backwards fill would show it early over the previous beat (W1 finding); before its entry it waits at its natural place below the fold. Exits use `forwards`. A stage that is off screen is skipped by `content-visibility` (its size is fixed, so anchors are unaffected).
+- **Two clocks.** The camera (handoffs, tilt-down layer parallax, the hero push-in) is scroll-driven and ends with its ranges. The paper (sheets, sub-steps, acts, poses, occluders) is cued and timed (§10.1 `--dur-leaf-*`), with `fill-mode: both`; `-r` twin keyframes restart a flight when its direction flips. A stage that is off screen is skipped by `content-visibility` (its size is fixed, so anchors are unaffected).
 - **At most 2 stages live** (during a handoff) and **≤ 28 animated layers** at once.
-- **Text holds still.** A sheet's transform is identity for its whole hold range. No parallax on text, ever.
+- **Text holds still.** A sheet's transform is identity once its flight ends and for as long as its beat is on; the wheel never moves it. No parallax on text, ever.
 - **Composed state is the fallback.** Without `@supports (animation-timeline: view())`, under reduced motion, or below the stacked-studio thresholds (§8), chapters render the v2.2 layout: the station as a framed box (its desktop or mobile frame), then the beat sheets stacked, no pin, no hold spacers, no handoffs.
 - **Prototype first.** W1 (§16.3) MUST prove `entry` / `exit` counter-translation, sticky beats inside a sticky stage's chapter, `timeline-scope` acts and the scroll gates on two chapters before any other chapter is converted. If a mechanism fails in a target browser (Chrome, Edge, Safari 26), the rule here is amended with the measured alternative before W2.
 
@@ -912,6 +967,12 @@ Because the section's edge travels exactly `100svh` in each range, a stage that 
 | `--dur-sheet` | `320ms` | Dialog open/close |
 | `--dur-theme` | `450ms` | Lamp theme View Transition |
 | `--dur-reveal` | `600ms` | Content reveal (once) |
+| `--ease-leaf` | `cubic-bezier(0.3, 0.72, 0.28, 1)` | Beat flights (each keyframe segment) |
+| `--dur-leaf-in` / `--dur-leaf-out` | `760ms` / `520ms` | A cued sheet landing / being lifted off |
+| `--dur-act` | `900ms` | A cued scene act |
+| `--dur-pose` | `420ms` | One stop-motion swap |
+| `--dur-step` / `--gap-step` | `520ms` / `170ms` | A sub-step landing / the gap between sub-steps |
+| `--dur-morph` | `520ms` | Frame → sheet morph |
 
 ### 10.2 Signature Moves, Allowed & Forbidden Motion
 
@@ -920,32 +981,31 @@ The paper world's motion vocabulary is listed below. Use these moves and invent 
 | Family | Move | What happens | Trigger | Implementation |
 | --- | --- | --- | --- | --- |
 | **Handoff** | Pan, Tilt, Dolly, Turn-over | The camera moves to the next station along the office plan (§4.3) | Scroll, 100 svh | Stage `transform` on the chapter's `entry` / `exit` ranges (§9.7) |
-| **Beat origin** | Drop, Rise, Slide, Emerge, Unfold | A beat's sheet arrives the way that paper would (§4.1) | Scroll, beat `entry` | Sheet `transform` + `opacity`; Emerge adds an occluder |
-| **Act** | Drawer out, folder rise, binder pull, envelope open, cover slide, lamp swing, tray forward | The scene object a beat is about moves first | Scroll, beat timeline (starts ≤ 10 svh before the sheet) | Actor layer `transform` |
-| **Stop-motion pose** | Figure pose swap | The figure jumps between 2–4 posed posters per chapter, like stop-motion paper animation | Scroll, at beat boundaries | Pose layers stacked; `opacity` swapped with `steps(1)`; each pose holds ≥ 8 svh. **No tweened 2D joints** (SVG joint transforms repaint) |
+| **Beat origin** | Drop, Rise, Slide, Emerge, Unfold | A beat's sheet arrives the way that paper would (§4.1), bending about its leading edge and settling flat | Cue (scroll position picks the beat), then time (`--dur-leaf-in`) | Sheet `transform` + `opacity`, curvature shade `opacity`; Emerge adds an occluder |
+| **Act** | Drawer out, folder rise, binder pull, envelope open, cover slide, lamp swing, tray forward | The scene object a beat is about moves with its sheet | Cue (`data-reached` / `data-beat`), `--dur-act`; optional `delay` for acts that follow one another | Actor `transform` / `translate` / `scale` transition (modes `in`, `out`, `off`), or one keyframe there and back (`pulse`) |
+| **Stop-motion pose** | Figure pose swap | The figure jumps between 2–4 posed posters per chapter, like stop-motion paper animation | Cue, then time (`--dur-pose` per swap) | Pose layers stacked; `opacity` swapped with `step-end`. **No tweened 2D joints** (SVG joint transforms repaint) |
 | **Camera** | **Unfold into depth** | A stage's layers start flattened and separate to their `z` as its chapter arrives | Handoff incoming range | Per-layer `transform`, then still |
 | **Camera** | **Camera dolly** | During a long hold the camera drifts slightly (`x` ±30, `z` 0 → +80) | Scroll, chapter `contain` range | Layer `translate` by `--k` (§9.2); never moves a sheet |
 | **Camera** | **Hero push-in** | Camera moves to the laptop while the title sheet exits | `01` beat 3 | As above |
 | **Camera** | **Pointer look** | Camera follows the pointer by ±12 / ±8 px | `pointermove`, fine pointer, theatre only | `--px` / `--py` (§9.2) |
 | **Object** | **Depth reveal** | An object's inner layers separate (`z` × 1.6) and its shadow grows | Hover **and** `:focus-visible` / open | `transform` transition, `--dur-depth` |
-| **Click** | **Frame → sheet morph** | A project frame grows into its case-study sheet | Click | View Transition with a shared `view-transition-name` |
+| **Click** | **Frame → sheet morph** | A project frame grows into its case-study sheet | Click | View Transition: the frame's `.psb` and the open `.case-dialog` share `case-sheet` (never both at once); `PaperDialog` opens in a layout effect so the new state holds the dialog; `--dur-morph`; skipped under reduced motion or without the API |
 | **Click** | **Lamp theme switch** | The new theme grows as a circle from the lamp bulb | Lamp or navbar toggle | View Transition + `clip-path`, `--dur-theme` |
 | **Click** | **Postmark** | Stamp lands once | Real 2xx from the contact action | One keyframe, once |
 | **Figure** | **Figurine clips** (3D, `01` only) | Wave once per session, look at the laptop, glance at the lamp, think while EQbot is open, blink every 4–7 s while on screen | On demand (§2.7) | `figurine-clips.ts`, demand frames |
 
 **Timing.**
-- Entrances use `--ease-paper` over 40–60 % of a beat's entry range.
-- Exits mirror the entrance.
-- Acts lead the sheet by ≤ 10 svh.
-- Nothing scroll-linked has its own duration: scroll position is the clock, so every move is reversible by scrolling back.
+- *v3.3:* the camera is scroll-linked (scroll position is its clock); the paper is cued and timed. Both reverse when the visitor scrolls back: the camera because it is scrubbed, the paper because the cue plays the flight backwards.
+- Entrances: `--dur-leaf-in`, `--ease-leaf`, ending flat. Exits: `--dur-leaf-out`.
+- Acts start with their sheet (`--dur-act`).
 - Click-triggered moves use the duration tokens (§10.1).
 
 **Forbidden:**
 - Splash, loading or preloader screens (including "0 → 100 %" counters).
-- **Scroll hijacking**: wheel or touch interception, Lenis or any smooth-scroll override, JS scroll animation libraries, programmatic scrolling except anchor and skip links.
+- **Scroll hijacking**: wheel or touch interception, Lenis or any smooth-scroll override, JS scroll animation libraries, programmatic scrolling except anchor and skip links and, from v3.3, bringing a keyboard-focused off sheet's track under the cue line (§4.4).
 - `scroll-snap`.
 - Horizontal scroll-jacked galleries (a handoff pan is a camera move over vertical scroll, not a horizontal scroller).
-- Pinning by any means other than the chapter stage and beat sheets' `position: sticky`.
+- Pinning by any means other than `position: sticky` on the chapter stage, the stage front and the beat deck.
 - Text that moves during its hold; parallax on text.
 - Continuous loops on props (the blink is the only repeating motion).
 - Physics engines; falling or flying cards with rotation spins; 3D tilt on cards.
@@ -971,6 +1031,19 @@ Every feature still works.
 - CSS first: scroll-driven animations, transitions and View Transitions.
 - `motion` (`motion/react`) only for mount/unmount presence (dialog content, tab panels, EQbot sheet), loaded with `LazyMotion` + `domAnimation`.
 - No scroll-timeline polyfill.
+
+### 10.3 Sound (v3.5, owner request)
+
+The studio may be heard: paper sounds for what the paper does, and a quiet backsound. Sound is an addition to the walk, never a carrier of information: every sound has a visible event, and nothing depends on hearing it.
+
+| Rule | |
+| --- | --- |
+| Default | **Off.** One switch, `SoundToggle` (navbar group at ≥ 640 px, labelled button in the mobile menu), `aria-pressed`, label *Sound and music* / *Suara dan musik*. The choice is kept in `localStorage` (`studio-sound`); a remembered *on* starts at the visit's first click or key press (browsers allow audio only inside a gesture). Nothing ever plays on load (WCAG 1.4.2). |
+| Source | **Synthesised, no audio files** (`lib/sound/engine.ts`, Web Audio API): paper is filtered noise, the drawer a low rumble and a stop, a tap a short click, the backsound a pad of four chords (D major, 8 s each) with a few random plucks, through one small room delay. No downloads, no samples, no AI-generated audio (§2.7). |
+| Cost | The engine is imported only when sound turns on (≈ 2 KB gzip); first-load JS is unchanged. One `AudioContext`, suspended when sound is off or the tab is hidden. |
+| Cues | `studio:cue` from `ChapterCue` (sheet on → `leaf-in`, lifted off → `leaf-out`; the Experience title → `drawer`); a click on a control → `tap`, or the cue named by `data-sound` (`lamp` on every theme switch, `none` on the sound switch); a dialog opening / closing (`toggle`) → `unfold` / `fold`. |
+| Level | Effects quiet (peak ≈ −12 dBFS after the compressor), backsound lower still; music fades in over 3 s and out over 1.2 s. |
+| Forbidden | Autoplay; a sound without a visible event; a sound on every scroll frame (cues fire on beat changes only); hover sounds; voice; audio files fetched before the visitor turns sound on. |
 
 ---
 
@@ -1094,7 +1167,7 @@ src/
 - Dialogs: native `<dialog>` modal, `Escape` closes, focus returns to the trigger. Mobile menu traps focus.
 - Target size ≥ 24 px everywhere and ≥ 44 px on touch layouts.
 - Theme and language toggles expose their state (`aria-pressed`, `lang` attributes).
-- **Chapters (v3):** reading order = DOM order = beat order; the stage is `aria-hidden`; every chapter starts with a *Skip to …* link; `:focus-within` and `:target` force a beat's composed state; anchors land on the chapter start; find-in-page finds every fact (beats are in flow); 200 % zoom and 320 px width reach the stacked studio with nothing clipped (WCAG 1.4.10).
+- **Chapters (v3):** reading order = DOM order = beat order; the stage is `aria-hidden`; every chapter starts with a *Skip to …* link; `:focus-within` and `:target` force a beat's composed state; anchors land on the chapter start; find-in-page finds every fact in the stacked studio and on the split stage (in the desktop theatre an off pinned sheet is a known limitation, §1.10); 200 % zoom and 320 px width reach the stacked studio with nothing clipped (WCAG 1.4.10).
 - Motion is never the only carrier of meaning: a beat's content is complete without its entrance, and acts repeat nothing the sheet does not say.
 
 ### 14.3 Security & Privacy
@@ -1161,10 +1234,10 @@ R1–R2 stay as built: their stations become the stages and the stacked-studio f
 | Phase | Scope | Exit criteria |
 | --- | --- | --- |
 | **W1 — Theatre proof** — *built 2026-11-23, awaiting owner review* | `Chapter`, `Beat`, beat CSS generator, `beats.ts` schema; chapters `02` Pinboard and `03` Cabinet converted (stage, lane, beats, acts, the `02 → 03` tilt handoff, one Emerge with occluder, one stop-motion swap); stacked-studio fallback; `e2e/perf.spec.ts` | Mechanisms of §9.7 verified in Chrome, Edge and Safari 26; scroll gates pass at 1440 px and 390 px (4× CPU); owner review of the feel on `/papercraft` and `/` |
-| **W2 — All chapters** | `01` (hero push-in, ticket Emerge), `04`, `04b`, `05`, `06`, every handoff of §4.3 including the footer turn-over; station `safe` rects and reading lanes; `e2e/chapters.spec.ts` | Every beat passes the eight tests (§3.3); every fact in flow HTML; track caps met |
-| **W3 — Paper acts & poses** | All acts, occluders and the `reach` / `hand` poses; frame → sheet morph; lamp swing; tray and envelope | Owner review per chapter; poster ↔ 3D gate still ≤ 2 % |
-| **W4 — Mobile & hardening** | Split stage tuned per station, chapter bar, `data-stacked` test, `content-visibility` on stages, RSC payload and first-load JS reduction (§9.6), texture `image-set` | §9.6 gates on a real mid-range Android over 4G; no overflow at 320 px; 200 % zoom check |
-| **W5 — QA & launch** | Full Playwright + axe, Lighthouse, EN/ID copy, owner review on the Vercel preview | DoD (§17.3) fully checked |
+| **W2 — All chapters** — *built 2026-11-23, awaiting owner review* | `01` (hero push-in, ticket Emerge), `04`, `04b`, `05`, `06`, every handoff of §4.3 including the footer turn-over; station `safe` rects and reading lanes; `e2e/chapters.spec.ts` | Every beat passes the eight tests (§3.3); every fact in flow HTML; track caps met |
+| **W3 — Paper acts & poses** — *built 2026-11-23 with v3.3 cued paper, awaiting owner review* | All acts, occluders and the `reach` / `hand` poses; frame → sheet morph; lamp swing; tray and envelope | Owner review per chapter; poster ↔ 3D gate still ≤ 2 % |
+| **W4 — Mobile & hardening** — *built 2026-11-23 (v3.4); §9.6 gates on real Android and the RSC payload proposal await the owner* | Split stage tuned per station, chapter bar, `data-stacked` test, `content-visibility` on stages, RSC payload and first-load JS reduction (§9.6), texture `image-set` | §9.6 gates on a real mid-range Android over 4G; no overflow at 320 px; 200 % zoom check |
+| **W5 — QA & launch** — *local QA done 2026-11-23 (v3.5); Lighthouse CLI, the Vercel preview and the owner review need the owner* | Full Playwright + axe, Lighthouse, EN/ID copy, owner review on the Vercel preview | DoD (§17.3) fully checked |
 
 ---
 
@@ -1238,3 +1311,10 @@ R1–R2 stay as built: their stations become the stages and the stacked-studio f
 | 2026-11-23 | **v2.2 — R2 built.** Six office stations on one shared room (`scenes/office.tsx`: 1600 × 640 strips, window with day/dusk sky, wall, floor, figure layer) through `Station`: Pinboard (About), Filing Cabinet (Experience; folders follow the work/organisation tab and lift with the open ledger row via `:has()`), Drafting Table (Services), Shadow-Box Gallery (Projects; `ProjectShadowBox` with `project.motif` layers), Archive Shelf (Certificates; binders tilt with the open folio), Mail Tray (Contact; postmark after a real send). `FrameBack` footer, Empty Drawer 404 (cabinet with `peer` pose). Figurine poses `pin`, `folder`, `draw`, `hang`, `binder`, `seal`. Workday light via `ShadowBox light` (midday → afternoon → golden). `paper-kit` sheets emit compact classes (`pk-*`, `--x/--y`, day/night via `--pk-fall-ref/--pk-rim-ref`). Performance fixes: static art serialised with `svgString` (no hydration), section-wide scroll settle removed (permanent giant layers), `content-visibility` on scenes removed (anchor drift). Results: lint, types, `check:design`, build green; Playwright 103 passed / 12 skipped; 390 px at 4× CPU LCP 1.16 s, CLS 0, 3 long frames (max 110 ms); 1440 px LCP 0.61 s, CLS 0, 3 long frames (max 80 ms), so the 50 ms desktop gate is not met yet; the remainder comes from the sticky-hero push overlap and is R3/R4 scope. HTML 1.45 MB raw / 218 KB gzip. First-load JS 201 KB gzip. |
 | 2026-11-23 | **v3.0 — *Walkthrough*.** Owner feedback on R2: keep the look, but make the paper craft fullscreen; information should arrive on scroll from below, the side, above or out of the paper objects, in smaller pieces; scenes should hand off with the current assets leaving one way and the next arriving from another; the 2D/3D paper world fully animated by scroll and click. New §1 (diagnosis of v2.2, rubric v3 with Scroll choreography, 7 directions, 4 refinements, persona stress test; Chapter Theatre D4′ wins with 90.75; v2.2 rescored 75.0); v2 record kept as §1.7 history. New §4 (chapters, stages, beats, acts, handoffs; five beat origins; office plan and handoff map; beat anatomy; beat sheets for every chapter; track budget). New §8 (theatre, split stage, stacked studio). New §9.7 (chapter theatre architecture: named timelines, crossing-range counter-translation, `timeline-scope` acts, `beats.ts` data, rules). §10.2 rewritten (move families, stop-motion poses; pinning only through chapter stages; scroll libraries, text motion during holds and animating anything taller than `100svh` forbidden). §3.3 adds the Choreography test. Tokens `--scrim-paper`, `--beat-top`; poses `reach`, `hand`; components `Chapter`, `Beat`, `ChapterIndex`; guardrails for `beats.ts`, scroll listeners and chapter e2e; roadmap W1–W5 replaces R3–R5; DoD v3. No code changed in this revision. |
 | 2026-11-23 | **v3.1 — W1 built.** `scenes/chapter/` (`spec.ts` types + `validateChapter`, `chapter-css.ts` generator, `Chapter` / `Beat`, client `ChapterFit` that sets `data-stacked` when a pinned sheet is taller than 70 % of the viewport), `styles/chapter.css` (stacked studio by default; theatre inside `@supports (animation-timeline: view())` + `prefers-reduced-motion: no-preference` + `min-height: 561px`; split stage under 768 px), `pinboard/beats.ts` and `cabinet/beats.ts`; About and Experience converted; pose `reach`; stations take `wide` and `only` (front copy for the occluder). Measured and amended: handoffs use `entry` / `exit`, not the crossing ranges (§9.7); pinned-sheet entrances fill `forwards` only; sub-steps run from 60 % of the sheet's arrival to the end of its hold; the track cap is the measured formula (§4.6); `03` reads in the left lane. Mechanisms verified in Chrome and Edge; composition checked in Chrome at 1440 × 900 (light, dark), 390 × 844 split stage and reduced motion (stacked studio). Safari 26 not verified (WebKit not installed here). Pointer look does not reach the stage inside the theatre (the beat flow covers it): open for W3. Gates: types, lint, `check:design`, build green; Playwright 103 passed / 12 skipped after one re-run (two desktop-dark timeouts under parallel load passed on retry). `e2e/perf.spec.ts` added; it is not green on this machine: one unattributed long frame per run near the page end (116 ms desktop, 160 ms at 4× CPU), and an A/B with every chapter animation switched off showed the same frames, so W1 adds none; the gate needs a run on real hardware. |
+| 2026-11-23 | **v3.2 — W2 built.** Every section is a chapter: `04` Drafting Table (`drafting/beats.ts`; cover sheet + `figure-alt`), `04b` Gallery as its own `section#projects` (`gallery/beats.ts`), `05` Archive Shelf, `06` Mail Tray (`mail/beats.ts`, Emerge from the envelope); stations take `wide` / `only`. Generator: stage moves `tilt-up`, `dolly-out` (canvas scale), `turn-over`; act mode `off`. Hero `01 → 02` push-in + pan in `scene.css` (sticky hero and its scroll push removed). Found and fixed while verifying: the global `section { background }` hid the outgoing stage during handoffs (theatre chapters are now transparent and `isolation: isolate`); the footer sat under the last stage (`z-content-ui`); lane-right sheets kept their desktop offset on mobile; a diagonal tilt left empty corners (now vertical); clicking a control in a moving sheet missed (focus rule is keyboard-only now); `main` clips horizontal overflow during pans. Deferred to W3 and recorded in §4.5: hero ticket Emerge, frames hung two at a time, binders pulled one by one, envelope flap and `hand` pose. Gates: types, lint, `check:design`, build green; Playwright 113 passed / 16 skipped, including the new `e2e/chapters.spec.ts` (every pinned beat composed mid-hold at `--beat-top`, no overflow entering any chapter, stacked studio under reduced motion). `e2e/perf.spec.ts` still fails on this machine (long frames up to ~550 ms); with every chapter and hero animation switched off the same run showed frames up to 750 ms, so this machine cannot judge the gate; it needs real hardware. Safari 26 still unverified. |
+| 2026-11-23 | **v3.3 — Cued paper + W3.** Owner feedback on W2: sheets read as stiff cards, and they are hard to read because they follow the scroll. Decision record §1.10 (C3 cue + deck, 92.0; P2 cardstock leaf; F1 flex in flight). Built: `ChapterCue` (one `IntersectionObserver` per chapter; `data-state` / `data-dir` / `data-beat` / `data-reached` / `data-shown`), `Chapter` renders pinned sheets into a sticky `.beat-deck` with empty `.beat-track`s, the theatre needs `[data-cue]` (no JS = stacked studio); `chapter-css.ts` writes time-based flights per origin (bend about the leading edge, overshoot, flat), reverse twins for scrolling back, cued acts (transitions, new mode `pulse`, `delay`, `origin`) and timed poses (`end: 'alt'`); `.paper-leaf` (cardstock tile under a 78 % veil, `--leaf-lip`, curvature shade on `::before`); motion tokens `--ease-leaf`, `--dur-leaf-in/out`, `--dur-act`, `--dur-pose`, `--dur-step`, `--gap-step`, `--dur-morph`. Track budget is now `35 + Σ(40 + hold) + 70`. Rules amended: §4.4 (beat anatomy), §4.6, §9.7 (diagram, *No JS on the scroll path* now admits `ChapterCue`, *Two clocks*, *Text holds still*), §10.2 (triggers, timing, programmatic scroll for keyboard focus, pinning). W3: hero tickets emerge from the notebook on load; drafting light pool swings with the lamp; gallery frames hung two at a time; archive binders pulled one by one; mail flap opens and the figure holds the card out (new pose `hand`); frame → sheet morph for the case study. Found and fixed while verifying: the W2 focus rule switched a showing sheet's animation off and on when focus moved from a text field to a button, replaying its entrance between press and release (the contact form never submitted); the rule now only composes sheets that are off. Known limitation: find-in-page into an off pinned sheet (§1.10, W4). Gates: types, lint, `check:design`, build green; Playwright 113 passed / 14 skipped (excluding perf; `chapters.spec` now checks every pinned sheet is cued, flat, at `--beat-top`, still while the wheel moves inside its track, and alone on the deck); the axe case-study test waits for the morph to end. `e2e/perf.spec.ts` still fails on this machine (desktop long frames over 50 ms, as in W2 where it failed with every animation off too): it needs real hardware. Safari 26 still unverified. |
+| 2026-11-23 | **v3.4 — W4 built (mobile & hardening).** Chapter bar below 1024 px (`shared/ChapterBar`: current chapter with `aria-current`, a 44 px link to the next one, a scroll-driven reading hairline; hidden on the hero; `--chrome-h` = 4 rem, 6.75 rem below 1024 px; `section[id]` scroll margin follows it). `04b Projects` is in `pageSections` (index, navbar, bar). Split stage sticks under the chrome (`top: var(--chrome-h)`, 46 svh). `content-visibility: auto` + `contain-intrinsic-size: auto 100svh` on `.stage` / `.stage-front` inside the theatre only (checked at 1440 × 900: every handoff paints both stages, nothing skipped). Cardstock texture served through `image-set` (AVIF 47.8 KB, WebP 74 KB fallback). Find-in-page: `beforematch` rejected (§1.10). **Measured, not reduced:** first-load JS 203 KB gzip (gate 220, met); HTML 1.75 MB raw / 243 KB gzip; inline RSC payload 825–956 K characters, almost all station art serialised twice (HTML and RSC text rows). Cutting it means moving station art to static files loaded per chapter, which conflicts with §9.6 *station scenes server-rendered* and would leave the stacked studio without art when a file fails; **proposed to the owner, not built.** Tests: `chapters.spec` adds text zoom 200 % → `data-stacked`, page zoom 200 % (720 × 450) → stacked with no overflow, no overflow at 320 px along the whole walk, the chapter bar; `helpers.toReadingWindow` scrolls a control below the split stage and waits for its sheet's entrance before a tap (Playwright stops scrolling as soon as a control is anywhere in the viewport, which on mobile is under the stage). Gates: types, lint, `check:design`, build green; Playwright 124 passed / 18 skipped excluding perf (one figurine idle test timed out under six workers and passed 6/6 serially); `contact.spec` 48/48 over three repeats. Not measurable here: §9.6 gates on a real mid-range Android over 4G, `perf.spec` (fails on this machine since W2), Safari 26. |
+| 2026-11-23 | **v3.5 — Experience files + sound (owner request).** `03` Experience: the ledger list and its `Work` / `Organization` tabs are gone; every role is a pinned beat whose sheet emerges from its own folder (`folderMouth(n, i)` in `CabinetStation`, occluder `drawer-front`), the folder lifting while its beat is on; reaching the organisation roles swaps the drawer's folder set; **Open the file** opens the full entry as a paper dialog (`ExperienceFile`). New *record chapter* budget (§4.6): `records: true`, ≤ 800 svh, entries hold 30 svh (Experience is 735 svh); whole-page cap 2,400 → 2,900 svh. Sound (§10.3): off by default, one `SoundToggle`, everything synthesised with Web Audio (no audio files), engine loaded only on demand (≈ 2 KB), cues from `studio:cue` (new event from `ChapterCue`), control clicks (`data-sound`) and dialog `toggle`. Found and fixed while verifying: an incoming `tilt-up` stage (Services) was filled backwards to −200 svh and showed through two viewports before its chapter arrived (seen as a seam in the W4 handoff check); stage `in` moves now fill `forwards` only, with a new `chapters.spec` test that no other chapter is visible mid-track. Tests: tabs/ledger tests replaced (every role has its own beat and folder; a role file opens from the keyboard and returns focus); EQbot anchor `experience-tabs` → `experience-files`; Playwright runs three workers locally (six overloaded the single `next start`). Gates: types, lint, `check:design`, build green; Playwright 127 passed / 20 skipped excluding perf; first-load JS unchanged (sound engine is a separate 1.7 KB chunk). |
+| 2026-11-23 | **W5 — local QA (v3.5).** Full Playwright + axe green (127 passed / 20 skipped excluding perf). EN/ID copy for the new Experience files and the sound switch reviewed (natural Indonesian: *Berkas*, *Buka berkas*, *Suara dan musik*); role sheets are labelled by their bilingual heading (`aria-labelledby`), not an English-only `aria-label`. Vitals measured in Chrome through CDP (the Lighthouse CLI is not installed here and installing it needs the owner's approval): mobile 390 × 844 at 4× CPU and ~9 Mbps / 150 ms: LCP 2.05 s (gate 2.5), CLS 0.001 across a full wheel walk, long tasks while walking up to 317 ms (9 over 50 ms; the 100 ms mobile gate is not met in emulation on this machine, which in W2 also showed 550–750 ms frames with every animation off); desktop 1440 × 900: LCP 0.94 s, CLS 0, no long task over 50 ms during the walk. Open for the owner: Lighthouse run, deploy to a Vercel preview, review on a real mid-range Android over 4G (§9.6), Safari 26, the RSC-payload proposal (v3.4). |
+| 2026-11-23 | **W5 — Lighthouse (owner approved the install).** `@lhci/cli` 0.15.1 is a devDependency (same pin as CI) with `npm run lighthouse` (`lighthouserc.json`, mobile, simulated throttling, 3 runs; reports in the ignored `.lighthouseci/`). Production dependencies: 0 vulnerabilities (the 19 npm reports are dev tooling). First run: Accessibility 0.99 from `heading-order` (shelf project cards were `h4` straight under the chapter `h2` since `04b` became its own chapter); fixed with `ProjectCard level` (h3 on the shelf, h4 in the archive). Result: **Accessibility 1.00, Best Practices 1.00, SEO 1.00; Performance 0.45–0.59, LCP 6.4–6.9 s simulated, TBT 0.67–2.35 s, CLS 0** (v1.5 was 0.87–0.88, last measured before v2). Diagnosis, not yet acted on: LCP is 91 % render delay; the LCP element is the cardstock tile `<image>` inside the SVG art, not the hero `h1` (§9.6 expects the `h1`); main-thread work 8.7 s, mostly *other* (4.5 s) and style/layout (2.2 s), with one ~2.5 s unattributed task; DOM 7,865 elements. The §9.6 LCP gate is not met under Lighthouse's simulated slow 4G, while the CDP measurement (4× CPU, ~9 Mbps) gave 2.05 s; both need confirming on a real mid-range Android. |
+| 2026-11-23 | **W5 — load work (v3.5, owner: "fix it").** Traced with CDP at 4× CPU (412 × 823), with invalidation tracking. Fixed: (1) `LanguageProvider` wrote `<html lang>` on hydration even though the value was unchanged, and Blink then restyled all 6,594 elements for `:lang()` (one 951 ms recalc); it now writes only when the language really changes. (2) `ChapterFit` read `offsetHeight` on mount, and `ChapterCue` read rects between its own writes, which forced a synchronous style and layout per chapter; heights now come from `ResizeObserver`, and the cue's starting state comes from each `IntersectionObserver`'s first report. (3) `.scene-lazy` (`content-visibility: auto`) on station viewports outside the theatre. (4) The cardstock tile is preloaded (`fetchPriority: high`), and the grain pattern is drawn at 128 px under `patternTransform="scale(2)"`, so the LCP element is the hero text, not the tile. (5) An inline script in `Chapter` sets `data-cue` while the HTML is parsed, so the page is not laid out first as the stacked studio and then again as the theatre (without JS it never runs). Trace before → after, at 4× CPU: style + layout 3.9–5.1 s → 2.3 s; forced recalcs 428–1,048 ms → 90 ms; largest single recalc 560–1,539 ms → 191 ms. **Lighthouse could not confirm the gain here:** the machine was under ~37 % background load (another dev server, Visual Studio), and runs spread widely (simulated Performance 0.35–0.46, TBT 2.2–11.5 s for the same build; devtools-throttled LCP 3.3–9.2 s). Accessibility, Best Practices and SEO stay 1.00, CLS 0. The scores need a quiet machine or PageSpeed Insights on the Vercel preview. What remains is structural: about 7,900 DOM elements of SVG art and the RSC payload (the v3.4 proposal). Gates: types, lint, `check:design`, build green; Playwright 127 passed / 22 skipped; `perf.spec` fails as it has since W2 on this machine. |

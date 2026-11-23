@@ -1,92 +1,153 @@
 import type { Act, BeatSpec, ChapterSpec, Handoff, Origin } from './spec';
 
 /*
-  Beat CSS generator (DesignRules.md §9.7). Everything here runs on scroll
-  timelines, so scroll position is the clock and every move reverses when the
-  visitor scrolls back. Only viewport-bounded things animate: the stage, its
-  layers, sheets and occluders. Rules are scoped to the chapter id and apply
-  only in the theatre layouts (chapter.css holds the static part).
+  Beat CSS generator (DesignRules.md §4.4, §9.7 v3.3). Two clocks:
 
-  Sheet maths: a pinned sheet rises with the page from the viewport bottom to
-  its sticky top (--beat-top) during its beat's `entry` range. An origin is an
-  extra transform on that natural path, written as V − N(t): the visual
-  position wanted minus where scrolling alone would put it.
+  - Camera (scroll-driven): the stage handoffs between chapters run on the
+    chapter's view timeline, so the camera moves with the wheel and reverses.
+  - Paper (time-driven): sheets, sub-steps, acts and poses are *cued*. The
+    scroll position only picks the active beat (ChapterCue sets `data-state`,
+    `data-dir`, `data-beat`, `data-reached`); each sheet then plays its whole
+    entrance or exit in time, flexing like paper, and holds still to be read.
+
+  Rules are scoped to the chapter id and apply only in the cued theatre
+  (chapter.css holds the static part and the shared leaf keyframes).
 */
 
 const THEATRE = '@supports (animation-timeline: view()) { @media (prefers-reduced-motion: no-preference) and (min-height: 561px) {';
 const DESKTOP = '@media (min-width: 768px) {';
-const ENTRY = 'entry 0% entry calc(100svh - var(--beat-top))';
+
+/** Time a sheet takes to land (in) and to be lifted away (out). */
+const IN = 'var(--dur-leaf-in)';
+const OUT = 'var(--dur-leaf-out)';
+const EASE = 'var(--ease-leaf)';
+const P = 'perspective(1400px)';
 
 const n = (v: number) => Math.round(v * 100) / 100;
 
 /*
-  Sub-steps share a pinned beat's working window, measured on its entry range:
-  from 60 % of the sheet's arrival to the end of its hold. Steps start while the
-  sheet is still landing, so it never travels as an empty tray.
+  Entrances, one per origin (§4.1). Every one bends the sheet on its way in
+  (rotateX/skew about the edge that leads), overshoots a little and settles
+  flat: paper has weight and give, a card does not. They all end on
+  `transform: none` so the held sheet is pixel-still.
 */
-function stepRange(beat: BeatSpec, i: number, count: number, share: number) {
-  const hold = typeof beat.hold === 'number' ? beat.hold : 0;
-  const start = '0.6 * (100svh - var(--beat-top))';
-  const span = `(100svh + ${hold}svh - ${start})`;
-  const at = (k: number) => `entry calc(${start} + ${n(k)} * ${span})`;
-  return `${at(i / count)} ${at((i + share) / count)}`;
-}
-
-/** Natural top of a pinned sheet at progress t of its entry. */
-const natural = (t: number) => `(100svh - ${t} * (100svh - var(--beat-top)))`;
-
 function sheetIn(spec: ChapterSpec, beat: BeatSpec, name: string) {
   const o: Origin = beat.origin;
-  const counter = 'calc(var(--beat-top) - 100svh)';
-  if (o === 'drop') return `@keyframes ${name}{from{transform:translateY(calc(-100svh - 100%))}to{transform:none}}`;
-  if (o === 'rise') return `@keyframes ${name}{from{transform:translateY(8svh);opacity:0}to{transform:none;opacity:1}}`;
+  const frames = (body: string) => `@keyframes ${name}{${body}}@keyframes ${name}-r{${body}}`;
+  if (o === 'drop') {
+    return frames(
+      `0%{transform:${P} translateY(calc(-1 * (var(--beat-top) + 100%) - 6svh)) rotate(-2.5deg) rotateX(26deg);opacity:0}` +
+        `8%{opacity:1}` +
+        `60%{transform:${P} translateY(1.2svh) rotate(.5deg) rotateX(-7deg)}` +
+        `80%{transform:${P} translateY(-.4svh) rotate(-.15deg) rotateX(2.5deg)}` +
+        `to{transform:none;opacity:1}`,
+    );
+  }
+  if (o === 'rise') {
+    return frames(
+      `0%{transform:${P} translateY(34svh) rotateX(-30deg);opacity:0}` +
+        `25%{opacity:1}` +
+        `58%{transform:${P} translateY(-1svh) rotateX(5deg)}` +
+        `80%{transform:${P} translateY(.3svh) rotateX(-1.5deg)}` +
+        `to{transform:none;opacity:1}`,
+    );
+  }
   if (o === 'slide-left' || o === 'slide-right') {
-    const x = o === 'slide-left' ? '-70cqw' : '70cqw';
-    return `@keyframes ${name}{from{transform:translate(${x},${counter})}to{transform:none}}`;
+    const s = o === 'slide-left' ? -1 : 1;
+    return frames(
+      `0%{transform:translateX(${s * 100}cqw) skewX(${-s * 9}deg) rotate(${s * 2}deg);opacity:0}` +
+        `10%{opacity:1}` +
+        `64%{transform:translateX(${-s * 1.2}cqw) skewX(${s * 3}deg) rotate(${-s * 0.4}deg)}` +
+        `84%{transform:translateX(${s * 0.3}cqw) skewX(${-s}deg)}` +
+        `to{transform:none;opacity:1}`,
+    );
   }
   if (o === 'unfold') {
-    return `@keyframes ${name}{from{transform:translateY(${counter}) perspective(1600px) rotateX(-84deg);opacity:.3}35%{opacity:1}to{transform:translateY(0) perspective(1600px) rotateX(0deg)}}`;
+    return frames(
+      `0%{transform:${P} rotateX(-96deg);opacity:0}` +
+        `15%{opacity:1}` +
+        `55%{transform:${P} rotateX(11deg)}` +
+        `76%{transform:${P} rotateX(-4deg)}` +
+        `90%{transform:${P} rotateX(1.2deg)}` +
+        `to{transform:none;opacity:1}`,
+    );
   }
-  // Emerge: from an object in the stage (world coordinates → viewport through the cover fit).
+  // Emerge: out of an object in the stage (world coordinates → viewport through the cover fit).
   const t = spec.theatre;
   const cs = `max(calc(100cqw / ${t.w}), calc(100svh / ${t.h}))`;
   const vx = (x: number) => `((100cqw - ${t.w} * ${cs}) / 2 + ${n(x - t.x)} * ${cs})`;
   const vy = (y: number) => `((100svh - ${t.h} * ${cs}) / 2 + ${n(y - t.y)} * ${cs})`;
   const centre =
     spec.lane === 'right' ? '(100cqw - var(--lane-pad) - var(--lane-w) / 2)' : '(var(--lane-pad) + var(--lane-w) / 2)';
-  const at = ([x, y]: readonly [number, number], tt: number, scale: number) =>
-    `translate(calc(${vx(x)} - ${centre}),calc(${vy(y)} - ${natural(tt)})) scale(${scale})`;
+  const at = ([x, y]: readonly [number, number]) => `translate(calc(${vx(x)} - ${centre}),calc(${vy(y)} - var(--beat-top)))`;
   const { from, via } = o.emerge;
-  return `@keyframes ${name}{from{transform:${at(from, 0, 0.32)}}40%{transform:${at(via, 0.4, 0.55)}}to{transform:translate(0,0) scale(1)}}`;
-}
-
-function sheetOut(beat: BeatSpec, name: string) {
-  const o = beat.origin;
-  if (o === 'slide-left' || o === 'slide-right') {
-    return `@keyframes ${name}{to{transform:translateX(${o === 'slide-left' ? '-70cqw' : '70cqw'});opacity:0}}`;
-  }
-  return `@keyframes ${name}{to{transform:translateY(calc(-1 * (var(--beat-top) + 100%)));opacity:0}}`;
-}
-
-function actCss(sel: string, tl: string, act: Act, name: string) {
-  const target = 'layer' in act.target ? `${sel} [data-layer="${act.target.layer}"] > *` : `${sel} [data-obj="${act.target.obj}"]`;
-  const prop = act.property ?? 'transform';
-  const rest = prop === 'translate' ? '0 0' : 'none';
-  if (act.mode === 'in') {
-    return (
-      `@keyframes ${name}{from{${prop}:${act.moved}}to{${prop}:${rest}}}` +
-      `${target}{animation:${name} linear both;animation-timeline:${tl};animation-range:entry 0% entry 60%}`
-    );
-  }
-  return (
-    `@keyframes ${name}-go{from{${prop}:${rest}}to{${prop}:${act.moved}}}` +
-    `@keyframes ${name}-back{from{${prop}:${act.moved}}to{${prop}:${rest}}}` +
-    `${target}{animation:${name}-go linear both,${name}-back linear forwards;animation-timeline:${tl},${tl};animation-range:entry 0% entry 50%,exit 0% exit 25%}`
+  return frames(
+    `0%{transform:${at(from)} scale(.3) rotate(-5deg);opacity:0}` +
+      `10%{opacity:1}` +
+      `42%{transform:${at(via)} scale(.56) rotate(3deg)}` +
+      `78%{transform:translate(0,-.6svh) scale(1.015) rotate(-.4deg)}` +
+      `to{transform:none;opacity:1}`,
   );
 }
 
-/** Stop-motion pose swap: `alt` shows for the first 60 % of each step window, `base` the rest (§10.2). */
-function poseCss(sel: string, tl: string, beat: BeatSpec, name: string) {
+/* Exits: the sheet is lifted by its near edge and carried off (slides go back the way they came). */
+function sheetOut(beat: BeatSpec, name: string) {
+  const o = beat.origin;
+  const frames = (body: string) => `@keyframes ${name}{${body}}@keyframes ${name}-r{${body}}`;
+  if (o === 'slide-left' || o === 'slide-right') {
+    const s = o === 'slide-left' ? -1 : 1;
+    return frames(
+      `0%{transform:none;opacity:1}` +
+        `25%{transform:translateX(${-s * 0.8}cqw) skewX(${-s * 1.5}deg)}` +
+        `80%{opacity:1}` +
+        `to{transform:translateX(${s * 100}cqw) skewX(${s * 8}deg) rotate(${s * 2}deg);opacity:0}`,
+    );
+  }
+  return frames(
+    `0%{transform:none;opacity:1}` +
+      `28%{transform:${P} translateY(-1.2svh) rotateX(9deg)}` +
+      `75%{opacity:1}` +
+      `to{transform:${P} translateY(calc(-1 * (var(--beat-top) + 100%))) rotateX(-14deg) rotate(1.5deg);opacity:0}`,
+  );
+}
+
+/** Where each sheet bends from: the edge that leads its move. */
+function sheetOrigin(o: Origin) {
+  if (o === 'drop' || o === 'unfold' || typeof o === 'object') return '50% 0';
+  if (o === 'rise') return '50% 100%';
+  return o === 'slide-left' ? '100% 50%' : '0 50%';
+}
+
+/*
+  Acts are cued too: the scene moves when its beat comes on, in time, and
+  rests at a transition's end. `in` = moved until the beat is reached;
+  `off` = moved once reached; `out` = moved only while the beat is on.
+*/
+function actCss(sel: string, beat: BeatSpec, act: Act, name: string) {
+  // The stage and its occluder copy (stage-front) act together, so an occluding envelope opens with the real one.
+  const target = `:is(.stage, .stage-front) ${'layer' in act.target ? `[data-layer="${act.target.layer}"] > *` : `[data-obj="${act.target.obj}"]`}`;
+  const prop = act.property ?? 'transform';
+  const rest = prop === 'transform' ? 'none' : prop === 'scale' ? '1' : '0 0';
+  const delay = `${act.delay ?? 0}ms`;
+  const origin = act.origin ? `transform-origin:${act.origin};` : '';
+  if (act.mode === 'pulse') {
+    return (
+      `@keyframes ${name}{0%,100%{${prop}:${rest}}45%{${prop}:${act.moved}}}` +
+      (origin ? `${sel} ${target}{${origin}}` : '') +
+      `${sel}[data-beat="${beat.id}"] ${target}{animation:${name} calc(var(--dur-act) * 1.3) var(--ease-paper) ${delay} both}`
+    );
+  }
+  const when =
+    act.mode === 'in'
+      ? `${sel}:not([data-reached~="${beat.id}"])`
+      : act.mode === 'off'
+        ? `${sel}[data-reached~="${beat.id}"]`
+        : `${sel}[data-beat="${beat.id}"]`;
+  return `${sel} ${target}{${origin}transition:${prop} var(--dur-act) var(--ease-paper) ${delay}}${when} ${target}{${prop}:${act.moved}}`;
+}
+
+/** Stop-motion pose swap while the beat is on: `alt` for the first 60 % of each swap (§10.2), in time. */
+function poseCss(sel: string, beat: BeatSpec, name: string) {
   const p = beat.poses!;
   const on: string[] = [];
   for (let j = 0; j < p.swaps; j += 1) {
@@ -94,19 +155,42 @@ function poseCss(sel: string, tl: string, beat: BeatSpec, name: string) {
     on.push(`${n(a + 1)}%{opacity:1}`, `${n(a + (0.6 / p.swaps) * 100)}%{opacity:0}`);
   }
   const off = on.map((k) => k.replace('opacity:1', 'opacity:X').replace('opacity:0', 'opacity:1').replace('opacity:X', 'opacity:0'));
-  const anim = (n2: string) => `animation:${n2} step-end both;animation-timeline:${tl};animation-range:${stepRange(beat, 0, 1, 1)}`;
+  const dur = `calc(${p.swaps} * var(--dur-pose))`;
+  const hold = p.end === 'alt';
+  // A held pose changes as the sheet comes out (30 % into its flight); swaps wait until it has landed.
+  const anim = (k: string) => `animation:${k} ${dur} step-end ${hold ? `calc(${IN} * .3)` : IN} both`;
+  const on2 = `${sel}[data-beat="${beat.id}"] .stage`;
   return (
-    `@keyframes ${name}-alt{0%{opacity:0}${on.join('')}100%{opacity:0}}` +
-    `@keyframes ${name}-base{0%{opacity:1}${off.join('')}100%{opacity:1}}` +
-    `${sel} .stage [data-layer="${p.alt}"] > *{${anim(`${name}-alt`)}}` +
-    `${sel} .stage [data-layer="${p.base}"] > *{${anim(`${name}-base`)}}`
+    `@keyframes ${name}-alt{0%{opacity:0}${on.join('')}100%{opacity:${hold ? 1 : 0}}}` +
+    `@keyframes ${name}-base{0%{opacity:1}${off.join('')}100%{opacity:${hold ? 0 : 1}}}` +
+    `${on2} [data-layer="${p.alt}"] > *{${anim(`${name}-alt`)}}` +
+    `${on2} [data-layer="${p.base}"] > *{${anim(`${name}-base`)}}`
   );
 }
+
+/*
+  Stage moves for the camera handoffs (§4.3). Each is one viewport of scroll
+  (the chapter's `entry` or `exit` range) and counter-translates the natural
+  scroll where the stage should look held: `in` keyframes run from → none,
+  `out` keyframes none → to. Outgoing and incoming moves of a pair mirror each
+  other, so the two stages travel as one camera move.
+*/
+const STAGE_MOVES: Partial<Record<Handoff, { in?: string; out?: string; outRange?: string; canvasIn?: string; canvasOut?: string }>> = {
+  'pan-right': { in: 'translate(100%,-100svh)', out: 'translate(-100%,100svh)' },
+  // Tilt up: the outgoing station sinks, the next drops in from above. (A diagonal tilt-and-pan left
+  // two empty viewport corners between the stages in W2, so the pan part was dropped.)
+  'tilt-up': { in: 'translateY(-200svh)', out: 'translateY(200svh)' },
+  // Dolly out and pan: the stages pan; inside them the scene pulls back (outgoing) and settles (incoming).
+  'dolly-out': { in: 'translate(100%,-100svh)', out: 'translate(-100%,100svh)', canvasIn: 'scale(1.12)', canvasOut: 'scale(0.86)' },
+  // Turn-over: the frame turns edge-on while the footer (its kraft back) rises over it.
+  'turn-over': { out: 'translateY(50svh) perspective(1600px) rotateY(-90deg)', outRange: 'exit 0% exit 50%' },
+};
 
 function handoffCss(sel: string, spec: ChapterSpec) {
   const tl = `--ch-${spec.id}`;
   const layerAnims: string[] = [];
   const stageAnims: string[] = [];
+  const canvasAnims: string[] = [];
   let keys = '';
   const tilt = (dir: 1 | -1, phase: 'in' | 'out') => {
     const name = `ch-${spec.id}-tilt-${phase}`;
@@ -114,19 +198,26 @@ function handoffCss(sel: string, spec: ChapterSpec) {
     keys += phase === 'in' ? `@keyframes ${name}{from{transform:${shifted}}to{transform:none}}` : `@keyframes ${name}{from{transform:none}to{transform:${shifted}}}`;
     layerAnims.push(`${name} linear ${phase === 'in' ? 'both' : 'forwards'}|${phase === 'in' ? 'entry 0% entry 100%' : 'exit 0% exit 100%'}`);
   };
-  const pan = (phase: 'in' | 'out') => {
-    const name = `ch-${spec.id}-pan-${phase}`;
-    keys +=
-      phase === 'in'
-        ? `@keyframes ${name}{from{transform:translate(100%,-100svh)}to{transform:none}}`
-        : `@keyframes ${name}{from{transform:none}to{transform:translate(-100%,100svh)}}`;
-    stageAnims.push(`${name} linear ${phase === 'in' ? 'both' : 'forwards'}|${phase === 'in' ? 'entry 0% entry 100%' : 'exit 0% exit 100%'}`);
+  const stage = (h: Handoff, phase: 'in' | 'out') => {
+    const move = STAGE_MOVES[h];
+    const end = move?.[phase];
+    if (!end) throw new Error(`Handoff "${h}" has no ${phase} move (DesignRules.md §4.3)`);
+    const name = `ch-${spec.id}-${h}-${phase}`;
+    keys += phase === 'in' ? `@keyframes ${name}{from{transform:${end}}to{transform:none}}` : `@keyframes ${name}{from{transform:none}to{transform:${end}}}`;
+    const range = phase === 'in' ? 'entry 0% entry 100%' : (move.outRange ?? 'exit 0% exit 100%');
+    // `forwards`, never `both`: filled backwards, an incoming `tilt-up` stage (−200svh) showed
+    // through two viewports before its chapter arrived (v3.4). Every `in` move starts off-screen.
+    stageAnims.push(`${name} linear forwards|${range}`);
+    const canvas = phase === 'in' ? move.canvasIn : move.canvasOut;
+    if (canvas) {
+      keys += phase === 'in' ? `@keyframes ${name}-c{from{transform:${canvas}}to{transform:none}}` : `@keyframes ${name}-c{from{transform:none}to{transform:${canvas}}}`;
+      canvasAnims.push(`${name}-c linear forwards|${range}`);
+    }
   };
   const apply = (h: Handoff, phase: 'in' | 'out') => {
     if (h === 'none') return;
     if (h === 'tilt-down') tilt(phase === 'in' ? 1 : -1, phase);
-    else if (h === 'pan-right') pan(phase);
-    else throw new Error(`Handoff "${h}" lands in W2 (DesignRules.md §16.3)`);
+    else stage(h, phase);
   };
   apply(spec.handoffIn, 'in');
   apply(spec.handoffOut, 'out');
@@ -134,56 +225,63 @@ function handoffCss(sel: string, spec: ChapterSpec) {
     list.length
       ? `${target}{animation:${list.map((a) => a.split('|')[0]).join(',')};animation-timeline:${list.map(() => tl).join(',')};animation-range:${list.map((a) => a.split('|')[1]).join(',')}}`
       : '';
-  // Pans counter-translate the natural scroll of a 100svh stage: desktop only until W2 tunes the split stage.
-  return keys + rule(`${sel} .stage .scene-layer`, layerAnims) + (stageAnims.length ? `${DESKTOP}${rule(`${sel} .stage`, stageAnims)}}` : '');
+  // Stage moves counter-translate a 100svh stage: desktop only (the split stage is 46svh).
+  return (
+    keys +
+    rule(`${sel} .stage .scene-layer`, layerAnims) +
+    (stageAnims.length ? `${DESKTOP}${rule(`${sel} .stage`, stageAnims)}${rule(`${sel} .stage > .stage-canvas`, canvasAnims)}}` : '')
+  );
 }
 
 export function chapterCss(spec: ChapterSpec) {
-  const sel = `#${spec.id}:not([data-stacked])`;
-  const beatTl = (b: BeatSpec) => `--b-${spec.id}-${b.id}`;
-  let all = `${sel}{view-timeline:--ch-${spec.id};timeline-scope:${spec.beats.map(beatTl).join(',')}}`;
+  const sel = `#${spec.id}[data-cue]:not([data-stacked])`;
+  let all = `${sel}{view-timeline:--ch-${spec.id}}`;
   let desktop = '';
 
   for (const beat of spec.beats) {
-    const tl = beatTl(beat);
     const b = `${sel} [data-beat="${beat.id}"]`;
     const name = `b-${spec.id}-${beat.id}`;
-    all += `${b}{view-timeline:${tl};${beat.hold === 'flow' ? '' : `--hold:${beat.hold}`}}`;
 
-    // Acts and occluders play at every width; sheets move only in the desktop theatre.
+    // Acts and poses play at every width (the split stage too); sheets fly only on the desktop deck.
     (beat.acts ?? []).forEach((act, i) => {
-      all += actCss(sel, tl, act, `${name}-act${i}`);
+      all += actCss(sel, beat, act, `${name}-act${i}`);
     });
-
+    if (beat.poses) all += poseCss(sel, beat, `${name}-pose`);
     if (beat.hold === 'flow') {
-      desktop += `@keyframes ${name}-in{from{transform:translateY(8svh);opacity:0}to{transform:none;opacity:1}}`;
-      desktop += `${b} > .beat-sheet{animation:${name}-in linear both;animation-timeline:${tl};animation-range:entry 0% entry 40%}`;
+      if (beat.steps) {
+        // Sub-steps of a long sheet hang one group after another once it shows (frames dropped onto their wire).
+        all += `@keyframes ${name}-hang{0%{transform:translateY(-1.4rem) rotate(-2.4deg);opacity:0}25%{opacity:1}60%{transform:translateY(.2rem) rotate(1deg)}82%{transform:rotate(-.35deg)}to{transform:none;opacity:1}}`;
+        for (let i = 0; i < beat.steps; i += 1) {
+          all += `${b}[data-shown=""] [data-step="${i}"]{transform-origin:50% 0;animation:${name}-hang calc(var(--dur-step) * 1.4) ${EASE} calc(${IN} * .5 + ${i} * var(--gap-step) * 2) both}`;
+        }
+      }
       continue;
     }
 
+    const s = `${b} > .beat-sheet`;
     desktop += sheetIn(spec, beat, `${name}-in`) + sheetOut(beat, `${name}-out`);
-    // No backwards fill: before its entry a sheet waits at its natural place below the fold. A filled
-    // `from` (counter-translated by up to a viewport) would show it early over the previous beat.
-    desktop += `${b} > .beat-sheet{animation:${name}-in linear forwards,${name}-out linear forwards;animation-timeline:${tl},${tl};animation-range:${ENTRY},exit 0% exit 25%}`;
-    if (typeof beat.origin === 'object') desktop += `${b} > .beat-sheet{transform-origin:50% 0}`;
-    if (beat.origin === 'unfold') desktop += `${b} > .beat-sheet{transform-origin:50% 0}`;
+    desktop += `${s}{transform-origin:${sheetOrigin(beat.origin)}}`;
+    // Forward: land. Back from the next beat: the exit played backwards. Leaving: the exit.
+    // Back to before: the entrance played backwards. `-r` twins restart the animation on a direction change.
+    desktop += `${b}[data-state="in"][data-dir="fwd"] > .beat-sheet{animation:${name}-in ${IN} ${EASE} both}`;
+    desktop += `${b}[data-state="in"][data-dir="back"] > .beat-sheet{animation:${name}-out-r ${OUT} ${EASE} reverse both}`;
+    desktop += `${b}[data-state="after"][data-dir="fwd"] > .beat-sheet{animation:${name}-out ${OUT} ${EASE} both}`;
+    desktop += `${b}[data-state="before"][data-dir="back"] > .beat-sheet{animation:${name}-in-r ${OUT} ${EASE} reverse both}`;
 
     if (beat.occluder) {
-      desktop += `@keyframes ${name}-occlude{from,to{opacity:1}}`;
+      desktop += `@keyframes ${name}-occlude{0%,62%{opacity:1}to{opacity:0}}`;
       desktop += beat.occluder
-        .map((l) => `${sel} .stage-front [data-layer="${l}"]{animation:${name}-occlude linear none;animation-timeline:${tl};animation-range:${ENTRY}}`)
+        .map((l) => `${sel}:has([data-beat="${beat.id}"][data-state="in"][data-dir="fwd"]) .stage-front [data-layer="${l}"]{animation:${name}-occlude ${IN} linear both}`)
         .join('');
     }
 
     if (beat.steps) {
-      const fromX = spec.lane === 'left' ? '40cqw' : '-40cqw';
-      desktop += `@keyframes ${name}-step{from{transform:translateX(${fromX}) rotate(2deg);opacity:0}to{transform:none;opacity:1}}`;
+      // Sub-steps land one after another once the sheet has settled (tracing overlays on crop marks).
+      desktop += `@keyframes ${name}-step{0%{transform:translateY(-.7rem) rotate(-.8deg) scale(1.01);opacity:0}65%{transform:translateY(.12rem) rotate(.15deg);opacity:1}to{transform:none;opacity:1}}`;
       for (let i = 0; i < beat.steps; i += 1) {
-        desktop += `${b} [data-step="${i}"]{animation:${name}-step linear both;animation-timeline:${tl};animation-range:${stepRange(beat, i, beat.steps, 0.6)}}`;
+        desktop += `${b}[data-state="in"][data-dir="fwd"] [data-step="${i}"]{animation:${name}-step var(--dur-step) ${EASE} calc(${IN} * .6 + ${i} * var(--gap-step)) both}`;
       }
     }
-
-    if (beat.poses) desktop += poseCss(sel, tl, beat, `${name}-pose`);
   }
 
   return `${THEATRE}${all}${handoffCss(sel, spec)}${DESKTOP}${desktop}}}}`;

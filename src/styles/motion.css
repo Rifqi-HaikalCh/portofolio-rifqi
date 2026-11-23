@@ -6,6 +6,15 @@
   --dur-ui: 200ms;
   --dur-sheet: 320ms;
   --dur-reveal: 600ms;
+  /* Cued paper (§4.4 v3.3): a sheet lands in --dur-leaf-in and is lifted off in --dur-leaf-out. */
+  --ease-leaf: cubic-bezier(0.3, 0.72, 0.28, 1);
+  --dur-leaf-in: 760ms;
+  --dur-leaf-out: 520ms;
+  --dur-act: 900ms;
+  --dur-pose: 420ms;
+  --dur-step: 520ms;
+  --gap-step: 170ms;
+  --dur-morph: 520ms;
 }
 
 /* Hero role caret: the one allowed blinking element. */

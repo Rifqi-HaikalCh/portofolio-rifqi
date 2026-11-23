@@ -1,37 +1,39 @@
 import { expect, test } from '@playwright/test';
+import { cueBeat, toReadingWindow } from './helpers';
 
 test.describe('interaction', () => {
-  test('experience tabs follow the ARIA tabs pattern', async ({ page }) => {
+  test('every role comes out of its own folder as its own beat', async ({ page }) => {
     await page.goto('/');
-    const work = page.locator('#experience-tab-work');
-    const org = page.locator('#experience-tab-organization');
-    await work.focus();
-    await page.keyboard.press('ArrowRight');
-    await expect(org).toBeFocused();
-    await expect(org).toHaveAttribute('aria-selected', 'true');
-    await expect(page.locator('#experience-panel-organization')).toBeVisible();
-    await expect(page.locator('#experience-panel-work')).toBeHidden();
-    await page.keyboard.press('Home');
-    await expect(work).toBeFocused();
+    const chapter = page.locator('#experience');
+    await expect(chapter.locator('.beat[data-beat^="work-"]')).toHaveCount(6);
+    await expect(chapter.locator('.beat[data-beat^="organization-"]')).toHaveCount(2);
+    await expect(chapter.locator('.beat-track')).toHaveCount(9);
+    // Each role has a folder in the drawer for its sheet to come out of.
+    for (const set of ['work', 'organization']) {
+      const beats = await chapter.locator(`.beat[data-beat^="${set}-"]`).evaluateAll((els) => els.map((e) => (e as HTMLElement).dataset.beat));
+      for (const id of beats) await expect(chapter.locator(`.stage [data-obj="${id}"]`), id).toHaveCount(1);
+    }
   });
 
   test('in-page links land on their target', async ({ page }) => {
     await page.goto('/');
     await page.getByRole('link', { name: 'View projects' }).click();
-    await expect
-      .poll(() => page.locator('#projects').evaluate((el) => Math.round(el.getBoundingClientRect().top)))
-      .toBeLessThan(200);
-    const top = await page.locator('#projects').evaluate((el) => el.getBoundingClientRect().top);
-    expect(top).toBeGreaterThanOrEqual(0);
+    // A chapter link lands with its first beat composed (§4.4), so the title is what must be on screen.
+    await expect(page.locator('#projects-title')).toBeInViewport({ ratio: 1 });
   });
 
-  test('ledger rows unfold from the keyboard', async ({ page }) => {
+  test('a role file opens from the keyboard and returns focus', async ({ page }) => {
     await page.goto('/');
-    const row = page.locator('#experience-panel-work details').first();
-    await row.locator('summary').focus();
+    await cueBeat(page, 'experience', 'work-1');
+    const open = await toReadingWindow(page.locator('#experience .beat[data-beat="work-1"]').getByRole('button', { name: /Open the file/ }));
+    await open.focus();
     await page.keyboard.press('Enter');
-    await expect(row).toHaveAttribute('open', '');
-    await expect(row.locator('.folio-body li').first()).toBeVisible();
+    const dialog = page.locator('dialog[open]');
+    await expect(dialog).toBeVisible();
+    await expect(dialog.locator('li').first()).toBeVisible();
+    await page.keyboard.press('Escape');
+    await expect(dialog).toHaveCount(0);
+    await expect(open).toBeFocused();
   });
 
   test('case study opens, closes on Escape and returns focus', async ({ page }) => {

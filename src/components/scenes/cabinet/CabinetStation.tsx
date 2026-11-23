@@ -2,14 +2,15 @@ import { circle, paperKit, poly, rect, type Kit } from '../../../lib/paper-kit';
 import type { PoseId } from '../../scene/figurine-parts';
 import type { Frames, SceneLayer } from '../PaperScene';
 import { Station } from '../Station';
-import { STRIP, figureLayer, floorLayer, stateCss, wallLayer } from '../office';
+import { STRIP, figureLayer, floorLayer, wallLayer } from '../office';
 
 /*
   Station `03` — The Filing Cabinet (DesignRules.md §2.2, §4.5 `03`), midday,
   seen from slightly above with the top drawer pulled open. One hanging folder
   per role, oldest at the back, newest in front; each tab carries the role's
-  start year. Opening a ledger row lifts its folder (CSS :has, no JS), and the
-  Organisation tab swaps the folder set. The same cabinet, emptied, is the 404.
+  start year. Each role's sheet comes out of its own folder, which lifts while
+  that beat is on; reaching the organisation roles swaps the folder set
+  (scene.css). The same cabinet, emptied, is the 404.
 */
 
 export const CABINET_FRAMES: Frames = { desktop: STRIP, mobile: { x: 380, y: 60, w: 900, h: 580 } };
@@ -53,18 +54,36 @@ function drawerInside(k: Kit) {
   );
 }
 
+const TAB_W = 92;
+
+/** Where folder `i` of `n` hangs (0 = newest, in front): its top edge, side edges and tab. */
+function folderAt(n: number, i: number) {
+  const t = n === 1 ? 1 : 1 - i / (n - 1);
+  const top = 180 + t * 92;
+  const inset = 40 - t * 44;
+  const x0 = C.x + inset;
+  const x1 = C.x + C.w - inset;
+  const tabX = x0 + 24 + ((n - 1 - i) % 4) * ((x1 - x0 - TAB_W - 48) / 3);
+  return { top, x0, x1, tabX };
+}
+
+/**
+ * The mouth of folder `i` of `n`, in world coordinates, for an Emerge origin (§4.1): the sheet
+ * starts inside the folder under its tab and comes up past the drawer front.
+ */
+export function folderMouth(n: number, i: number) {
+  const { top, tabX } = folderAt(n, i);
+  const x = Math.round(tabX + TAB_W / 2);
+  return { from: [x, Math.round(top + 58)] as const, via: [x, Math.round(top - 100)] as const };
+}
+
 /** Hanging folders of one set, back (oldest) to front (newest). */
 function folders(k: Kit, set: FolderSet) {
   const n = set.years.length;
   const out = [];
   for (let i = n - 1; i >= 0; i -= 1) {
-    const t = n === 1 ? 1 : 1 - i / (n - 1);
-    const top = 180 + t * 92;
-    const inset = 40 - t * 44;
-    const x0 = C.x + inset;
-    const x1 = C.x + C.w - inset;
-    const tabW = 92;
-    const tabX = x0 + 24 + ((n - 1 - i) % 4) * ((x1 - x0 - tabW - 48) / 3);
+    const { top, x0, x1, tabX } = folderAt(n, i);
+    const tabW = TAB_W;
     const fill = i % 2 === 0 ? 'var(--ill-folder)' : 'var(--ill-kraft)';
     out.push(
       <g key={`${set.name}-${i}`} data-obj={`${set.name}-${i}`}>
@@ -186,12 +205,10 @@ export function CabinetStation({
     },
   ];
 
-  const css = stateCss(
-    'experience',
-    sets.flatMap((set) =>
-      set.years.map((_, i) => ({ when: `details[data-row="${set.name}-${i}"][open]`, key: `${set.name}-${i}`, transform: 'translateY(-34px)' })),
-    ),
-  );
+  // The folder a role sheet is coming out of lifts while its beat is on (cue state, §4.4 v3.4).
+  const css = sets
+    .flatMap((set) => set.years.map((_, i) => `#experience[data-beat="${set.name}-${i}"] [data-obj="${set.name}-${i}"]{transform:translateY(-58px)}`))
+    .join('');
 
   return <Station name={name} layers={layers} frames={CABINET_FRAMES} light="midday" css={sets.length ? css : undefined} only={only} />;
 }

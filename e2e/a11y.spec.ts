@@ -26,6 +26,8 @@ test.describe('axe (WCAG 2.2 AA, serious + critical)', () => {
     await revealAll(page);
     await page.locator('#projects .stretched').first().click();
     await page.locator('dialog[open]').waitFor();
+    // The frame → sheet morph (View Transition) must finish before axe measures targets.
+    await page.locator('html:not(.is-morphing)').waitFor();
     await expectNoSeriousA11yIssues(page, 'dialog[open]');
   });
 

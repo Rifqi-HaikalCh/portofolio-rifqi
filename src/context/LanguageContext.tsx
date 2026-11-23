@@ -24,7 +24,10 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   const [language, setLanguage] = useState<Language>('en');
 
   useEffect(() => {
-    document.documentElement.lang = language;
+    // Write only on a real change (§9.6, v3.5): any write to <html lang>, even the same value,
+    // makes Blink restyle every element for :lang(); on hydration that was ~0.95 s at 4× CPU.
+    const root = document.documentElement;
+    if (root.lang !== language) root.lang = language;
   }, [language]);
 
   const toggleLanguage = useCallback(() => setLanguage((prev) => (prev === 'en' ? 'id' : 'en')), []);

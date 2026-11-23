@@ -9,6 +9,7 @@ export const pageSections = [
   { id: 'about', index: '02', en: 'About', idn: 'Tentang' },
   { id: 'experience', index: '03', en: 'Experience', idn: 'Pengalaman' },
   { id: 'services', index: '04', en: 'Services', idn: 'Layanan' },
+  { id: 'projects', index: '04b', en: 'Projects', idn: 'Proyek' },
   { id: 'certificates', index: '05', en: 'Certificates', idn: 'Sertifikat' },
   { id: 'contact', index: '06', en: 'Contact', idn: 'Kontak' },
 ] as const;

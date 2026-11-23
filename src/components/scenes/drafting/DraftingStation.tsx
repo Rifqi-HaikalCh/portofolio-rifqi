@@ -10,7 +10,8 @@ import { STRIP, bar, figureLayer, floorLayer, wallLayer } from '../office';
   describes), a ruler, a set square and the pencil in the figure's hand.
 */
 
-const FRAMES: Frames = { desktop: STRIP, mobile: { x: 240, y: 40, w: 1040, h: 600 } };
+export const DRAFTING_FRAMES: Frames = { desktop: STRIP, mobile: { x: 240, y: 40, w: 1040, h: 600 } };
+const FRAMES = DRAFTING_FRAMES;
 
 /* Board corners: tilted away, so the top edge is shorter. */
 const TL = [530, 140] as const;
@@ -26,7 +27,11 @@ function on(u: number, v: number): [number, number] {
 }
 const quad = (u0: number, v0: number, u1: number, v1: number) => poly([on(u0, v0), on(u1, v0), on(u1, v1), on(u0, v1)]);
 
-export function DraftingStation() {
+/*
+  As a chapter stage (§4.5): `wide` bleeds the wall and floor for the fullscreen
+  cover fit; `only` renders a subset of layers (the occluder copy).
+*/
+export function DraftingStation({ wide = false, only }: { wide?: boolean; only?: readonly string[] } = {}) {
   const k = paperKit('draft');
 
   /* The blueprint: grid, three entity boxes, key lines. */
@@ -40,8 +45,8 @@ export function DraftingStation() {
   ];
 
   const layers: SceneLayer[] = [
-    wallLayer(k, { beam: 'M-40 60L120 60L660 566L-40 566Z' }),
-    floorLayer(k),
+    wallLayer(k, { beam: 'M-40 60L120 60L660 566L-40 566Z', wide }),
+    floorLayer(k, undefined, wide),
     {
       id: 'shelf',
       band: 'back',
@@ -120,6 +125,23 @@ export function DraftingStation() {
         </>
       ),
     },
+    ...(wide
+      ? [
+          {
+            id: 'cover',
+            band: 'mid' as const,
+            className: 'theatre-only',
+            z: -90,
+            box: { x: 520, y: 150, w: 700, h: 330 },
+            art: (
+              <>
+                {k.sheet({ d: quad(0.05, 0.04, 0.95, 0.93), fill: 'var(--ill-page)', gap: 14, edge: 2 })}
+                <path d={`M${on(0.12, 0.14).join(' ')}L${on(0.5, 0.14).join(' ')}M${on(0.12, 0.2).join(' ')}L${on(0.36, 0.2).join(' ')}`} stroke="var(--color-muted)" strokeWidth="3" opacity="0.4" />
+              </>
+            ),
+          },
+        ]
+      : []),
     {
       id: 'tools',
       band: 'mid',
@@ -169,6 +191,7 @@ export function DraftingStation() {
       ),
     },
     figureLayer('draw', 250, 92, 500),
+    ...(wide ? [{ ...figureLayer('reach', 250, 92, 500, 0, 'figure-alt'), className: 'station-fig pose-alt' }] : []),
     {
       id: 'stool',
       band: 'front',
@@ -190,5 +213,5 @@ export function DraftingStation() {
     },
   ];
 
-  return <Station name="drafting" layers={layers} frames={FRAMES} light="midday" />;
+  return <Station name="drafting" layers={layers} frames={FRAMES} light="midday" only={only} />;
 }

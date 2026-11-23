@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useDeferredValue, useId, useState } from 'react';
+import { flushSync } from 'react-dom';
 import { ArrowLeft, ArrowRight, Search } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
 import { PaperDialog } from '../ui/PaperDialog';
@@ -11,9 +12,13 @@ import { kindCopy, kindLabel, type ShelfKind, type ShelfProject } from './shelf-
 
 export type { ShelfProject } from './shelf-types';
 
-/* A taped print of the project: the whole card opens the case study. */
-function ProjectCard({ project, onOpen, tilt }: { project: ShelfProject; onOpen: () => void; tilt: string }) {
+/*
+  A taped print of the project: the whole card opens the case study. `level`: h3 on the shelf
+  (under the chapter's h2), h4 in the archive (under its h3).
+*/
+function ProjectCard({ project, onOpen, tilt, level = 3 }: { project: ShelfProject; onOpen: (from: HTMLElement) => void; tilt: string; level?: 3 | 4 }) {
   const label = kindLabel(project);
+  const Title = level === 3 ? 'h3' : 'h4';
   return (
     <article className="paper-card flex h-full flex-col border border-line">
       <ProjectShadowBox
@@ -27,11 +32,11 @@ function ProjectCard({ project, onOpen, tilt }: { project: ShelfProject; onOpen:
         <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-accent">
           <T en={label.en} id={label.id} />
         </p>
-        <h4 className="mt-2 font-serif text-xl font-medium leading-snug text-ink">
-          <button type="button" onClick={onOpen} aria-haspopup="dialog" className="stretched text-left">
+        <Title className="mt-2 font-serif text-xl font-medium leading-snug text-ink">
+          <button type="button" onClick={(event) => onOpen(event.currentTarget)} aria-haspopup="dialog" className="stretched text-left">
             {project.title}
           </button>
-        </h4>
+        </Title>
         <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-muted">
           <T en={project.en} id={project.idn} />
         </p>
@@ -57,7 +62,7 @@ function ProjectCard({ project, onOpen, tilt }: { project: ShelfProject; onOpen:
 const tilts = ['-2deg', '1.5deg', '-1deg', '2deg'];
 
 /* Full-screen drawer with every project: filter, search, open a case study. */
-function Archive({ projects, onClose, onOpen }: { projects: ShelfProject[]; onClose: () => void; onOpen: (p: ShelfProject) => void }) {
+function Archive({ projects, onClose, onOpen }: { projects: ShelfProject[]; onClose: () => void; onOpen: (p: ShelfProject, from: HTMLElement) => void }) {
   const { language, say } = useLanguage();
   const [kind, setKind] = useState<ShelfKind | 'all'>('all');
   const [query, setQuery] = useState('');
@@ -137,7 +142,7 @@ function Archive({ projects, onClose, onOpen }: { projects: ShelfProject[]; onCl
           <ul className="mt-6 grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
             {shown.map((project, i) => (
               <li key={project.id}>
-                <ProjectCard project={project} onOpen={() => onOpen(project)} tilt={tilts[i % tilts.length]} />
+                <ProjectCard project={project} onOpen={(from) => onOpen(project, from)} tilt={tilts[i % tilts.length]} level={4} />
               </li>
             ))}
           </ul>
@@ -166,14 +171,35 @@ export function ProjectShelf({ projects, featured }: { projects: ShelfProject[];
   const [archive, setArchive] = useState(false);
   const close = useCallback(() => setOpen(null), []);
   const closeArchive = useCallback(() => setArchive(false), []);
+  /*
+    Frame → sheet morph (§10.2): the clicked frame and the case-study sheet share the
+    view-transition name `case-sheet`, so the sheet grows out of the frame. The frame
+    gives up the name inside the update, so the two never hold it at once.
+  */
+  const openCase = useCallback((project: ShelfProject, from: HTMLElement) => {
+    const frame = from.closest('article')?.querySelector<HTMLElement>('.psb');
+    if (!frame || !('startViewTransition' in document) || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setOpen(project);
+      return;
+    }
+    const root = document.documentElement;
+    frame.style.viewTransitionName = 'case-sheet';
+    root.classList.add('is-morphing');
+    const morph = document.startViewTransition(() => {
+      frame.style.viewTransitionName = '';
+      flushSync(() => setOpen(project));
+    });
+    morph.finished.finally(() => root.classList.remove('is-morphing'));
+  }, []);
   const picks = featured.map((id) => projects.find((p) => p.id === id)).filter((p): p is ShelfProject => Boolean(p));
 
   return (
     <>
       <ul className="grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
         {picks.map((project, i) => (
-          <li key={project.id}>
-            <ProjectCard project={project} onOpen={() => setOpen(project)} tilt={tilts[i % tilts.length]} />
+          // Hung two at a time on the gallery wall (§4.5 `04b`).
+          <li key={project.id} data-step={Math.floor(i / 2)}>
+            <ProjectCard project={project} onOpen={(from) => openCase(project, from)} tilt={tilts[i % tilts.length]} />
           </li>
         ))}
       </ul>
@@ -188,7 +214,7 @@ export function ProjectShelf({ projects, featured }: { projects: ShelfProject[];
         </p>
       </div>
 
-      {archive && <Archive projects={projects} onClose={closeArchive} onOpen={setOpen} />}
+      {archive && <Archive projects={projects} onClose={closeArchive} onOpen={openCase} />}
       {open && <CaseStudy key={open.id} project={open} onClose={close} />}
     </>
   );

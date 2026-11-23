@@ -102,6 +102,8 @@
   --figure-rim: drop-shadow(calc(-1.5px * var(--light-x)) 0 0 var(--ill-figure-rim));
 
   --paper-edge-flat: 0 0 0 1px rgb(var(--rgb-line));
+  /* The lit top edge of a reading sheet. */
+  --leaf-lip: inset 0 1px 0 rgb(255 255 255 / 0.6);
   --paper-edge-cut:
     0 0 0 1px rgb(var(--rgb-line)),
     calc(2px * var(--light-x)) 2px 0 rgb(var(--rgb-recess));
@@ -114,6 +116,7 @@
 }
 
 .dark {
+  --leaf-lip: inset 0 1px 0 rgb(255 255 255 / 0.05);
   --rgb-paper: 19 18 17;
   --rgb-raised: 28 26 23;
   --rgb-recess: 36 33 29;

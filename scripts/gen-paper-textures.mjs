@@ -86,6 +86,9 @@ async function write(name, f, dark, light) {
   const file = `${OUT}/tex-${name}.webp`;
   await sharp(px, { raw: { width: N, height: N, channels: 4 } }).webp({ quality: 82, alphaQuality: 80, effort: 6 }).toFile(file);
   console.log(file);
+  // CSS uses image-set() (§9.6): the cardstock tile under every reading sheet also ships as AVIF.
+  // SVG <pattern> images (paper-kit) cannot negotiate formats, so the other tiles stay WebP only.
+  if (name === 'cardstock') await sharp(file).avif({ quality: 60, effort: 6 }).toFile(`${OUT}/tex-${name}.avif`);
 }
 
 const DARK = [52, 38, 26];

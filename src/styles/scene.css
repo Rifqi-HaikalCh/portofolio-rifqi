@@ -47,6 +47,16 @@
     calc(14px * var(--light-x)) 20px 36px rgb(var(--rgb-shadow) / 0.2);
 }
 
+/*
+  Stations far off screen are not laid out or painted (§9.6, v3.5): on load the
+  stacked studio holds every chapter's scene, and painting them all was most of
+  the main-thread work Lighthouse measured. Safe for anchors, unlike R2's
+  section-wide rule: the viewport's height comes from its aspect-ratio, not its
+  content. Inside the theatre the stage carries content-visibility instead
+  (chapter.css), because there the scene overflows its box.
+*/
+.scene-lazy { content-visibility: auto; }
+
 .scene-layer {
   position: absolute;
   left: var(--l);
@@ -100,21 +110,6 @@
   .shadowbox.is-looking .scene-layer { will-change: translate; }
 }
 
-/* Hero push: while the About sheet slides over, far layers rise and near ones drop. */
-@supports (animation-timeline: scroll()) {
-  @media (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
-    #home .scene-layer {
-      animation: scene-push linear both;
-      animation-timeline: scroll(root);
-      animation-range: 0 100vh;
-    }
-  }
-}
-
-@keyframes scene-push {
-  to { transform: translateY(calc(var(--k) * 26cqw)); }
-}
-
 /* Workday light arc (§2.3): the sun moves as the visitor walks; the lamp at night is constant. */
 :root:not(.dark) .shadowbox[data-light="midday"] { --light-len: 0.7; }
 :root:not(.dark) .shadowbox[data-light="afternoon"] { --light-len: 1.2; }
@@ -127,10 +122,11 @@
   transition: transform var(--dur-sheet) var(--ease-paper);
 }
 
-/* Organisation folders replace the work folders when that tab is selected. */
+/* Organisation folders replace the work folders once the walk reaches the organisation roles (§4.5 `03`, v3.4). */
+[data-set] { transition: opacity var(--dur-act) var(--ease-leaf); }
 [data-set="organization"] { opacity: 0; }
-#experience:has(#experience-panel-organization:not([hidden])) [data-set="work"] { opacity: 0; }
-#experience:has(#experience-panel-organization:not([hidden])) [data-set="organization"] { opacity: 1; }
+#experience[data-reached~="organization-0"] [data-set="work"] { opacity: 0; }
+#experience[data-reached~="organization-0"] [data-set="organization"] { opacity: 1; }
 
 /* The postmark lands on the envelope only after a real send (§4.5 `06`). */
 .scene-postmark {
@@ -218,10 +214,67 @@
   vertical-align: 0.08em;
 }
 
-/* The hero stays put while the About sheet slides over it (§4 `01`). */
-@media (min-width: 1280px) and (min-height: 800px) {
-  #home.hero-sticky {
-    position: sticky;
-    top: 0;
+/*
+  `01 → 02` handoff (§4.3, §4.5 `01`): over the hero's exit (one viewport of
+  scroll) the camera first pushes in to the laptop while the title column
+  steps aside, then pans right to the pinboard; the About stage arrives from
+  the right on the same scroll (chapter-css.ts `pan-right`). The hero is
+  counter-translated so it holds still while it moves. Only where the hero is
+  one screen tall; elsewhere it scrolls away and the pinboard slides in.
+*/
+@supports (animation-timeline: view()) {
+  @media (min-width: 1280px) and (min-height: 800px) and (prefers-reduced-motion: no-preference) {
+    #home.hero-sticky {
+      view-timeline: --ch-home;
+      animation: home-pan linear forwards;
+      animation-timeline: --ch-home;
+      animation-range: exit 0% exit 100%;
+    }
+    #home .hero-desk {
+      transform-origin: 58% 48%;
+      animation: home-push linear forwards;
+      animation-timeline: --ch-home;
+      animation-range: exit 0% exit 40%;
+    }
+    #home .hero-title {
+      animation: home-title-off linear forwards;
+      animation-timeline: --ch-home;
+      animation-range: exit 0% exit 40%;
+    }
+    /*
+      `01` Proof (§4.5): the four metric tickets come out of the notebook on the desk, once,
+      when the page loads (time, not scroll: they are first-screen facts and land within ~1.2 s).
+    */
+    #home .ticket {
+      transform-origin: 100% 100%;
+      animation: ticket-emerge var(--dur-leaf-in) var(--ease-leaf) calc(380ms + var(--i, 0) * 110ms) both;
+    }
   }
 }
+
+@keyframes ticket-emerge {
+  0% { transform: translate(24vw, 20svh) scale(0.3) rotate(-9deg); opacity: 0; }
+  18% { opacity: 1; }
+  68% { transform: translate(-0.3vw, -0.8svh) scale(1.02) rotate(0.8deg); }
+  86% { transform: translate(0, 0.2svh) rotate(-0.25deg); }
+  to { transform: none; opacity: 1; }
+}
+
+/* `06` envelope flap: hinged on the envelope's top edge (mail/beats.ts folds it with `scale`). */
+.env-flap {
+  transform-box: fill-box;
+  transform-origin: 50% 0;
+}
+
+@keyframes home-pan {
+  0% { transform: none; }
+  40% { transform: translateY(40svh); }
+  100% { transform: translate(-100%, 100svh); }
+}
+@keyframes home-push {
+  to { transform: scale(1.14); }
+}
+@keyframes home-title-off {
+  to { transform: translateX(-8vw); opacity: 0; }
+}
+
