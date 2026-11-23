@@ -5,6 +5,7 @@ import { SectionTitle } from '../ui/SectionTitle';
 import { T } from '../ui/T';
 import { ContactForm } from './ContactForm';
 import { CopyEmail } from './CopyEmail';
+import { MailStation } from '../scenes/mail/MailStation';
 
 const channels = [
   { href: contactInfo.linkedin, label: 'LinkedIn', icon: LinkedinIcon },
@@ -13,7 +14,8 @@ const channels = [
 ];
 
 /*
-  06 Contact — a letterpress card and a letter to send (DesignRules.md §4 `06`).
+  06 Contact — the Mail Tray station, then the letterpress card and the letter
+  to send laid over it (DesignRules.md §4.5 `06`).
   Server component; the form and the copy button are the client leaves.
 */
 export function Contact() {
@@ -35,7 +37,9 @@ export function Contact() {
           />
         </div>
 
-        <div className="grid gap-8 lg:grid-cols-[minmax(0,22rem)_1fr] lg:items-start">
+        <MailStation />
+
+        <div className="station-sheet grid gap-8 sm:mx-6 lg:mx-10 lg:grid-cols-[minmax(0,22rem)_1fr] lg:items-start">
           <address className="paper-sheet border border-line p-6 not-italic md:p-8">
             <p className="letterpress font-serif text-3xl leading-tight">Rifqi Haikal Chairiansyah</p>
             <p className="mt-1 text-sm text-muted">Software Engineer</p>

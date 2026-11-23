@@ -14,6 +14,9 @@ import { TabbedPanels } from '../ui/TabbedPanels';
 import { T } from '../ui/T';
 import { AdditionalSkillsLauncher } from './AdditionalSkillsLauncher';
 import { ProjectShelf, type ShelfProject } from './ProjectShelf';
+import { DraftingStation } from '../scenes/drafting/DraftingStation';
+import { motifArt } from '../scenes/gallery/motifs';
+import { GalleryStation } from '../scenes/gallery/GalleryStation';
 
 type Capability = { en: string; id: string; bodyEn: string; bodyId: string; points: Array<[string, string]> };
 
@@ -112,6 +115,7 @@ function toShelf(project: Project, kind: ShelfProject['kind']): ShelfProject {
     links: project.links,
     kind,
     mobile: project.id.includes('mobile') || project.type === 'mobile',
+    art: project.motif ? motifArt(project.id, project.motif) : undefined,
   };
 }
 
@@ -261,15 +265,19 @@ export function Services() {
           }
         />
 
-        <TabbedPanels
-          idBase="services"
-          eqbot="services-tabs"
-          label={{ en: 'Service area', id: 'Bidang layanan' }}
-          tabs={[
-            { id: 'development', en: 'Development', idn: 'Pengembangan', panel: <DevelopmentPanel /> },
-            { id: 'design', en: 'Interface design', idn: 'Desain antarmuka', panel: <DesignPanel /> },
-          ]}
-        />
+        <DraftingStation />
+
+        <div className="station-sheet paper-sheet border border-line bg-raised p-4 sm:mx-6 sm:p-6 lg:mx-10">
+          <TabbedPanels
+            idBase="services"
+            eqbot="services-tabs"
+            label={{ en: 'Service area', id: 'Bidang layanan' }}
+            tabs={[
+              { id: 'development', en: 'Development', idn: 'Pengembangan', panel: <DevelopmentPanel /> },
+              { id: 'design', en: 'Interface design', idn: 'Desain antarmuka', panel: <DesignPanel /> },
+            ]}
+          />
+        </div>
 
         <div id="projects" className="mt-20 scroll-mt-24 md:mt-28">
           <div className="mb-10 flex flex-col gap-2">
@@ -280,7 +288,8 @@ export function Services() {
               <T en="Selected work" id="Karya pilihan" />
             </h3>
           </div>
-          <div data-eqbot="projects-filters" data-eqbot-at="above">
+          <GalleryStation />
+          <div data-eqbot="projects-filters" data-eqbot-at="above" className="station-sheet gallery-wall border border-line p-5 sm:mx-6 sm:p-8 lg:mx-10">
             <ProjectShelf projects={projects} featured={featured} />
           </div>
         </div>

@@ -3,9 +3,11 @@ import { certificateCategories } from '../../data/portfolio';
 import { displayCase } from '../../lib/display-case';
 import { SectionTitle } from '../ui/SectionTitle';
 import { T } from '../ui/T';
+import { ArchiveStation } from '../scenes/archive/ArchiveStation';
 
 /*
-  05 Certificates — folios in a filing drawer (DesignRules.md §4 `05`).
+  05 Certificates — the Archive Shelf station and its folios (DesignRules.md
+  §4.5 `05`). Each folio is tagged `data-binder` so its binder pulls out.
   Each folio is a native <details>: keyboard and screen readers get the
   expanded state for free and the section ships no JS. The first folio is open.
 */
@@ -17,7 +19,7 @@ export function Certificates() {
       <div className="mx-auto max-w-6xl px-5 lg:px-8">
         <SectionTitle
           index="05"
-          eyebrow={<T en="Filing drawer" id="Laci arsip" />}
+          eyebrow={<T en="Archive shelf" id="Rak arsip" />}
           title={<T en="Certificates" id="Sertifikat" />}
           titleId="certificates-title"
           lede={
@@ -28,10 +30,15 @@ export function Certificates() {
           }
         />
 
+        <ArchiveStation
+          binders={certificateCategories.map((category) => ({ label: category.id.toUpperCase(), count: category.certificates.length }))}
+        />
+
+        <div className="station-sheet sm:mx-6 lg:mx-10">
         <ul data-eqbot="certificates-list" data-eqbot-at="above" className="grid gap-3">
           {certificateCategories.map((category, index) => (
             <li key={category.id}>
-              <details className="folio paper-sheet border border-line" open={index === 0}>
+              <details className="folio paper-sheet border border-line" open={index === 0} data-binder={index}>
                 <summary className="flex min-h-11 items-center gap-4 px-5 py-4 sm:px-6">
                   <span className="stamp text-xs" aria-hidden="true">
                     {String(index + 1).padStart(2, '0')}
@@ -79,6 +86,7 @@ export function Certificates() {
             </li>
           ))}
         </ul>
+        </div>
       </div>
     </section>
   );

@@ -1,12 +1,12 @@
 'use client';
 
-import { useCallback, useDeferredValue, useId, useState, type CSSProperties } from 'react';
-import Image from 'next/image';
+import { useCallback, useDeferredValue, useId, useState } from 'react';
 import { ArrowLeft, ArrowRight, Search } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
 import { PaperDialog } from '../ui/PaperDialog';
 import { T } from '../ui/T';
 import { CaseStudy } from './CaseStudy';
+import { ProjectShadowBox } from '../scenes/ProjectShadowBox';
 import { kindCopy, kindLabel, type ShelfKind, type ShelfProject } from './shelf-types';
 
 export type { ShelfProject } from './shelf-types';
@@ -16,16 +16,13 @@ function ProjectCard({ project, onOpen, tilt }: { project: ShelfProject; onOpen:
   const label = kindLabel(project);
   return (
     <article className="paper-card flex h-full flex-col border border-line">
-      <div className="relative aspect-[16/10] border-b border-line bg-recess">
-        <span className="tape z-scene-front" style={{ '--tape-rotate': tilt } as CSSProperties} aria-hidden="true" />
-        <Image
-          src={project.image}
-          alt=""
-          fill
-          sizes="(min-width: 1024px) 360px, (min-width: 640px) 45vw, 92vw"
-          className="object-cover"
-        />
-      </div>
+      <ProjectShadowBox
+        image={project.image}
+        art={project.art}
+        mobile={project.mobile}
+        tilt={tilt}
+        sizes="(min-width: 1024px) 240px, (min-width: 640px) 30vw, 60vw"
+      />
       <div className="flex flex-1 flex-col p-5">
         <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-accent">
           <T en={label.en} id={label.id} />
@@ -186,7 +183,7 @@ export function ProjectShelf({ projects, featured }: { projects: ShelfProject[];
           <T en={`Open the archive (${projects.length})`} id={`Buka arsip (${projects.length})`} />
           <ArrowRight size={16} aria-hidden="true" />
         </button>
-        <p className="text-sm text-muted">
+        <p className="text-sm text-ink">
           <T en="Every project, with filters and search." id="Semua proyek, dengan saringan dan pencarian." />
         </p>
       </div>

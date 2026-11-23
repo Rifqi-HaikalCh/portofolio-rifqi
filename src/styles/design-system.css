@@ -59,25 +59,10 @@ footer[data-studio="colophon"]::after {
 }
 
 /*
-  Sections settle into place as they enter the viewport: a scroll-driven
-  animation, no observers and no JS. The hero is the LCP and never waits.
+  No scroll-driven settle on sections (§9.6): every section now carries a
+  station, and an active view() animation held each one (up to 3,400 px of
+  SVG) as a permanent composited layer, which cost 150–600 ms frames on scroll.
 */
-@supports (animation-timeline: view()) {
-  @media (prefers-reduced-motion: no-preference) {
-    main > section[data-studio]:not(#home) > div {
-      animation: section-settle linear both;
-      animation-timeline: view();
-      animation-range: entry 0% entry 35%;
-    }
-  }
-}
-
-@keyframes section-settle {
-  from {
-    opacity: 0;
-    transform: translateY(16px);
-  }
-}
 
 .field:focus {
   border-color: rgb(var(--rgb-accent));

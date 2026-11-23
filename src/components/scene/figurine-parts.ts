@@ -393,7 +393,7 @@ export const PARTS: readonly Part[] = [
 /* ---- Poses: joint angles in degrees [rx, ry, rz] ------------------------- */
 
 export type Angles = readonly [number, number, number];
-export type PoseId = 'stand' | 'wave' | 'think' | 'seated' | 'peer';
+export type PoseId = 'stand' | 'wave' | 'think' | 'seated' | 'peer' | 'pin' | 'folder' | 'draw' | 'hang' | 'binder' | 'seal' | 'reach';
 
 export type Pose = {
   joints: Partial<Record<JointId, Angles>>;
@@ -452,6 +452,90 @@ export const POSES: Record<PoseId, Pose> = {
       shoulderL: [0, 0, 10],
       shoulderR: [0, 0, -46],
       elbowR: [0, 0, -10],
+    },
+  },
+  /* Station poses (DesignRules.md §2.2, §2.7): static posters, one job per station. */
+  // 02 Pinboard: pressing a card to the board on the viewer's left, above shoulder height.
+  pin: {
+    expression: 'smile',
+    joints: {
+      head: [0, 10, 5],
+      shoulderL: [0, 0, 112],
+      elbowL: [0, 0, 28],
+      wristL: [0, 0, 12],
+      shoulderR: [0, 0, -4],
+      elbowR: [0, 0, 4],
+    },
+  },
+  // 02 Pinboard, stop-motion partner of `pin` (§10.2): the arm out at shoulder height, handing a card to the board.
+  reach: {
+    expression: 'smile',
+    joints: {
+      head: [0, 12, 3],
+      shoulderL: [0, 0, 84],
+      elbowL: [0, 0, 6],
+      wristL: [0, 0, 4],
+      shoulderR: [0, 0, -6],
+      elbowR: [0, 0, 4],
+    },
+  },
+  // 03 Filing Cabinet: a folder held against the chest, leaning on the cabinet.
+  folder: {
+    expression: 'neutral',
+    joints: {
+      body: [0, 0, -3],
+      head: [0, 8, 3],
+      shoulderL: [0, 0, 16],
+      elbowL: [0, 0, -118],
+      shoulderR: [0, 0, -18],
+      elbowR: [0, 0, 6],
+    },
+  },
+  // 04 Drafting Table: pencil on the board at his right, head down to the sheet.
+  draw: {
+    expression: 'thinking',
+    joints: {
+      body: [0, 0, -4],
+      head: [12, -8, -8],
+      shoulderL: [0, 0, 8],
+      elbowL: [0, 0, -10],
+      shoulderR: [0, 0, -52],
+      elbowR: [0, 0, -44],
+      wristR: [0, 0, 18],
+    },
+  },
+  // 04 Gallery: both hands up, hanging a frame on the rail.
+  hang: {
+    expression: 'neutral',
+    joints: {
+      head: [-8, 0, 0],
+      shoulderL: [0, 0, 150],
+      elbowL: [0, 0, -18],
+      shoulderR: [0, 0, -150],
+      elbowR: [0, 0, 18],
+    },
+  },
+  // 05 Archive Shelf: one arm reaching to the shelf, pulling a binder out.
+  binder: {
+    expression: 'smile',
+    joints: {
+      head: [0, -6, -6],
+      shoulderL: [0, 0, 6],
+      elbowL: [0, 0, -6],
+      shoulderR: [0, 0, -96],
+      elbowR: [0, 0, 4],
+      wristR: [0, 0, 6],
+    },
+  },
+  // 06 Mail Tray: both hands at waist height, sealing an envelope.
+  seal: {
+    expression: 'smile',
+    joints: {
+      head: [10, 0, 0],
+      shoulderL: [0, 0, 22],
+      elbowL: [0, 0, -86],
+      shoulderR: [0, 0, -22],
+      elbowR: [0, 0, 86],
     },
   },
 };

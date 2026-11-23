@@ -3,6 +3,14 @@ import { notFound } from 'next/navigation';
 import { RifqiFigurine } from '../../components/scene/RifqiFigurine';
 import { FigurineSlot } from '../../components/scene/FigurineSlot';
 import { DeskStation } from '../../components/scenes/desk/DeskStation';
+import { PinboardStation } from '../../components/scenes/pinboard/PinboardStation';
+import { CabinetStation } from '../../components/scenes/cabinet/CabinetStation';
+import { DraftingStation } from '../../components/scenes/drafting/DraftingStation';
+import { GalleryStation } from '../../components/scenes/gallery/GalleryStation';
+import { ArchiveStation } from '../../components/scenes/archive/ArchiveStation';
+import { MailStation } from '../../components/scenes/mail/MailStation';
+import { FrameBack } from '../../components/scenes/FrameBack';
+import { aboutHighlights, certificateCategories, organizationExperience, workExperience } from '../../data/portfolio';
 import { PaperDefs, paperKit, rect, type Material } from '../../lib/paper-kit';
 import { EXPRESSIONS, POSES, type PoseId } from '../../components/scene/figurine-parts';
 import { heroScreen } from '../../lib/hero-screen';
@@ -31,8 +39,8 @@ export default function PapercraftPage() {
     <main id="main" className="mx-auto max-w-6xl px-5 py-12 lg:px-8">
       <header className="mb-10 flex flex-wrap items-end justify-between gap-4 border-b border-line pb-6">
         <div>
-          <Label>P6.1 · paper puppet review</Label>
-          <h1 className="font-serif text-4xl font-medium tracking-tight text-ink">The Architect&apos;s Paper Desk</h1>
+          <Label>R2 · Paper Studio review</Label>
+          <h1 className="font-serif text-4xl font-medium tracking-tight text-ink">The Paper Studio</h1>
           <p className="mt-2 max-w-xl text-muted">
             One set of parts (figurine-parts.ts) draws every view. Switch the theme to move the light from the window to
             the lamp; the fold planes follow it.
@@ -95,6 +103,23 @@ export default function PapercraftPage() {
       <section aria-label="Desk station" className="mb-14">
         <Label>Station 01 · The Desk · 14 layers in depth bands · move the pointer for the camera look · scroll for the push</Label>
         <DeskStation screen={heroScreen()} poster={<RifqiFigurine crop="stage" pose="seated" className="h-full w-full" />} />
+      </section>
+
+      <section aria-label="Stations" className="mb-14 grid gap-10">
+        <Label>R2 stations · 1600 × 640 strips · workday light: midday → afternoon → golden hour (light theme)</Label>
+        <PinboardStation icons={aboutHighlights.map((item) => item.icon)} />
+        <CabinetStation
+          sets={[
+            { name: 'work', years: workExperience.map((entry) => entry.period.match(/\d{4}/)?.[0] ?? '') },
+            { name: 'organization', years: organizationExperience.map((entry) => entry.period.match(/\d{4}/)?.[0] ?? '') },
+          ]}
+        />
+        <DraftingStation />
+        <GalleryStation />
+        <ArchiveStation binders={certificateCategories.map((c) => ({ label: c.id.toUpperCase(), count: c.certificates.length }))} />
+        <MailStation />
+        <CabinetStation sets={[]} pose="peer" name="drawer404" />
+        <FrameBack />
       </section>
 
       <section aria-label="Poster and 3D" className="grid gap-8 md:grid-cols-2">

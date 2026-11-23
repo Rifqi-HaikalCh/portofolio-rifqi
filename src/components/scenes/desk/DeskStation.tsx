@@ -6,9 +6,10 @@ import { LaptopScreenUI, type ScreenData } from '../../scene/LaptopScreenUI';
 import { FIGURINE, LAMP, SCREEN, STAGE } from '../../scene/stage-geometry';
 import { PaperScene, frameVars, type Frames, type SceneLayer } from '../PaperScene';
 import { ShadowBox } from '../ShadowBox';
+import { FAR_TOWERS, NEAR_TOWERS, bar, day, keyRow, lineMuted, night, skyline, windows } from '../office';
 
 /*
-  Station `01` — The Desk (DesignRules.md §2.2, §4.3 `01`).
+  Station `01` — The Desk (DesignRules.md §2.2, §4.5 `01`).
   14 layers in depth bands (§2.5), back to front: sky, far skyline, near skyline
   with Monas, wall, window, shelf + pinboard, floor, desk, lamp, laptop (z = 0,
   the HTML screen sits on it), lamp light, figurine, props, chair back.
@@ -20,65 +21,6 @@ const FRAMES: Frames = {
   mobile: { x: 150, y: 60, w: 1350, h: 940 },
 };
 
-type P = readonly [number, number];
-
-/** A straight bar between two points as a polygon (lamp arms). */
-function bar([x1, y1]: P, [x2, y2]: P, w: number) {
-  const len = Math.hypot(x2 - x1, y2 - y1);
-  const nx = (-(y2 - y1) / len) * (w / 2);
-  const ny = ((x2 - x1) / len) * (w / 2);
-  return poly([
-    [x1 + nx, y1 + ny],
-    [x2 + nx, y2 + ny],
-    [x2 - nx, y2 - ny],
-    [x1 - nx, y1 - ny],
-  ]);
-}
-
-/** Step outline of a row of towers standing on `base`. */
-function skyline(base: number, towers: readonly (readonly [number, number, number])[]) {
-  const pts: [number, number][] = [[towers[0][0], base]];
-  for (const [x, w, h] of towers) {
-    pts.push([x, base - h], [x + w, base - h]);
-  }
-  const last = towers[towers.length - 1];
-  pts.push([last[0] + last[1], base]);
-  return poly(pts);
-}
-
-const FAR_TOWERS = [
-  [40, 34, 150], [74, 22, 186], [96, 40, 128], [136, 26, 212], [162, 46, 158], [208, 30, 196],
-  [238, 44, 140], [282, 24, 230], [306, 40, 170], [346, 30, 204], [376, 46, 150], [422, 38, 188],
-] as const;
-const NEAR_TOWERS = [
-  [40, 52, 96], [92, 36, 132], [128, 56, 84], [184, 30, 118], [300, 44, 104], [344, 58, 140], [402, 58, 92],
-] as const;
-
-/** Lit window grid for one tower (night only). */
-function windows(x: number, w: number, top: number, base: number, seed: number) {
-  let d = '';
-  let n = seed;
-  for (let y = top + 10; y < base - 8; y += 12) {
-    for (let wx = x + 6; wx < x + w - 6; wx += 10) {
-      n = (n * 9301 + 49297) % 233280;
-      if (n / 233280 < 0.34) d += `M${wx} ${y}h4v5h-4z`;
-    }
-  }
-  return d;
-}
-
-/** One keyboard row: n keys between x0 and x1 at y, height h. */
-function keyRow(x0: number, x1: number, y: number, h: number, n: number) {
-  const gap = 3;
-  const w = (x1 - x0 - gap * (n - 1)) / n;
-  let d = '';
-  for (let i = 0; i < n; i += 1) d += rect(Math.round((x0 + i * (w + gap)) * 10) / 10, y, Math.round(w * 10) / 10, h, 1.5);
-  return d;
-}
-
-const night: CSSProperties = { opacity: 'var(--night-opacity)' };
-const day: CSSProperties = { opacity: 'var(--beam-opacity)' };
-
 export function DeskStation({
   screen,
   poster,
@@ -89,7 +31,6 @@ export function DeskStation({
   className?: string;
 }) {
   const k = paperKit('desk');
-  const lineMuted = { stroke: 'var(--color-muted)', strokeWidth: 2, opacity: 0.45 } as const;
 
   const layers: SceneLayer[] = [
     {

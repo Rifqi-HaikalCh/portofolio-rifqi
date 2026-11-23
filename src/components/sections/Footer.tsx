@@ -2,9 +2,11 @@ import { pageSections } from '../../data/sections';
 import { BrandLockup } from '../shared/BrandLockup';
 import { T } from '../ui/T';
 import { FooterControls } from './FooterControls';
+import { FrameBack } from '../scenes/FrameBack';
 
 /*
-  Colophon in ink (DesignRules.md §4 Footer). Server component: the year is
+  The back of the frame (DesignRules.md §4.3 Footer): kraft backing board with
+  its hanging wire, then the colophon in ink. Server component: the year is
   rendered at build/revalidate time, and the stack line names what this page
   is actually built with.
 */
@@ -13,6 +15,7 @@ export function Footer() {
 
   return (
     <footer data-studio="colophon" className="bg-ink text-paper">
+      <FrameBack />
       <div className="mx-auto max-w-6xl px-5 pb-8 pt-16 lg:px-8">
         <p className="mb-12">
           <BrandLockup variant="horizontal" surface="ink" className="h-auto w-full max-w-md" label="Rifqi Haikal" />

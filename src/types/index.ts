@@ -50,7 +50,11 @@ export interface Project {
   category: 'individual' | 'group';
   slides?: string[];
   type?: 'web' | 'mobile' | 'design';
+  /** Domain sheets inside the project's shadow box (DesignRules.md §4.5 `04`), chosen from what the project does. */
+  motif?: ProjectMotif;
 }
+
+export type ProjectMotif = 'api' | 'route' | 'market' | 'hiring' | 'delivery' | 'sport';
 
 export interface Certificate {
   id: string;

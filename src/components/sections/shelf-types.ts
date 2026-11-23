@@ -1,5 +1,7 @@
 /* Project data as the shelf receives it from the server section. */
 
+import type { MotifArt } from '../scenes/gallery/motifs';
+
 export type ShelfKind = 'individual' | 'group' | 'design';
 
 export interface ShelfProject {
@@ -13,6 +15,8 @@ export interface ShelfProject {
   links: { demo?: string; github?: string; prototype?: string; needToKnow?: string };
   kind: ShelfKind;
   mobile: boolean;
+  /** Server-made domain sheets for the shadow box (featured projects only). */
+  art?: MotifArt;
 }
 
 export const kindCopy: Record<ShelfKind | 'all', { en: string; id: string }> = {

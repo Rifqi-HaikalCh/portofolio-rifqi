@@ -16,17 +16,20 @@ export function ShadowBox({
   after,
   className = '',
   style,
+  light,
 }: {
   children: ReactNode;
   after?: ReactNode;
   className?: string;
   style?: CSSProperties;
+  /** Workday light at this station (§2.3): shadow length by time of day, light theme only. */
+  light?: 'morning' | 'midday' | 'afternoon' | 'golden';
 }) {
   const ref = useRef<HTMLDivElement>(null);
   useParallaxStage(ref);
 
   return (
-    <div ref={ref} className={`shadowbox relative isolate ${className}`} style={style}>
+    <div ref={ref} className={`shadowbox relative isolate ${className}`} style={style} data-light={light}>
       {children}
       {after}
     </div>

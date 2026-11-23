@@ -241,3 +241,69 @@
   border-bottom: 0;
   border-radius: 6px 6px 0 0;
 }
+
+/*
+  ProjectShadowBox (DesignRules.md §4.5 `04`): framed layers that separate on
+  hover / keyboard focus. Layers move with translate only; each device's cast
+  shadow stays on the backing, so the shadow lengthens as the layer lifts.
+*/
+.psb-layer {
+  transition: translate var(--dur-ui) var(--ease-paper);
+}
+.paper-card:is(:hover, :focus-within) .psb-layer {
+  translate: calc(var(--d) * -3px * var(--light-x)) calc(var(--d) * -4px);
+}
+.psb-device,
+.psb-cast {
+  position: absolute;
+}
+.psb-laptop { left: 30%; top: 24%; width: 62%; }
+.psb-phone { left: 62%; top: 10%; width: 25%; }
+.psb-device {
+  padding: 2.5%;
+  background: var(--ill-bezel);
+  border-radius: 3px;
+  box-shadow: 0 0 0 1px rgb(var(--rgb-shadow) / 0.25), calc(1px * var(--light-x)) 1.5px 0 rgb(var(--rgb-shadow) / 0.35);
+}
+.psb-phone.psb-device { padding: 4% 3%; border-radius: 4px; }
+.psb-glass {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  aspect-ratio: 16 / 10;
+  background: var(--ill-screen);
+}
+.psb-phone .psb-glass { aspect-ratio: 9 / 19; }
+.psb-deck {
+  position: absolute;
+  left: -7%;
+  right: -7%;
+  bottom: -8%;
+  height: 8%;
+  background: var(--ill-laptop);
+  clip-path: polygon(5% 0, 95% 0, 100% 100%, 0 100%);
+}
+.psb-cast {
+  aspect-ratio: 16 / 11;
+  background: rgb(var(--rgb-shadow) / 0.34);
+  filter: blur(7px);
+  translate: calc(5px * var(--light-x)) 7px;
+}
+.psb-cast.psb-phone { aspect-ratio: 9 / 20; }
+.psb-lip {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border: 7px solid var(--ill-frame);
+  box-shadow:
+    inset calc(2px * var(--light-x)) 3px 3px rgb(var(--rgb-shadow) / 0.3),
+    inset calc(8px * var(--light-x)) 10px 18px rgb(var(--rgb-shadow) / 0.22);
+}
+
+/* The gallery wall under the Gallery station: the frames hang on the wall colour, not on a white sheet. */
+.gallery-wall {
+  background: var(--ill-wall);
+  box-shadow:
+    calc(3px * var(--light-x)) 4px 6px rgb(var(--rgb-shadow) / 0.18),
+    calc(10px * var(--light-x)) 16px 30px rgb(var(--rgb-shadow) / 0.14);
+}

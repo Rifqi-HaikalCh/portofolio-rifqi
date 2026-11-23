@@ -41,11 +41,9 @@ const blurId = (sigma: number) => {
   return `pk-blur-${best}`;
 };
 
-const lit = (x: number, y: number): CSSProperties => ({
-  transform: `translate(calc(${x}px * var(--light-x) * var(--light-len)), calc(${y}px * var(--light-len)))`,
-});
-const DAY: CSSProperties = { opacity: 'calc((1 + var(--light-x)) / 2)' };
-const NIGHT: CSSProperties = { opacity: 'calc((1 - var(--light-x)) / 2)' };
+/* Offsets travel as two small custom properties; scene.css turns them into a lit transform (.pk-*). */
+const r2 = (v: number) => Math.round(v * 100) / 100;
+const lit = (x: number, y: number) => ({ '--x': r2(x), '--y': r2(y) }) as CSSProperties;
 
 export type SheetOptions = {
   d: string;
@@ -102,25 +100,15 @@ export function paperKit(scope: string): Kit {
         </defs>
         {gap > 0 && (
           <>
-            <use href={href} fill="var(--pk-shadow)" filter={`url(#${blurId(sigma)})`} style={{ ...lit(off, off * 1.25), opacity: 'var(--pk-penumbra)' }} />
-            <use href={href} fill="var(--pk-shadow)" filter={`url(#${blurId(sigma / 4)})`} style={{ ...lit(off * 0.3, off * 0.4), opacity: 'var(--pk-contact)' }} />
+            <use href={href} className="pk-pen" filter={`url(#${blurId(sigma)})`} style={lit(off, off * 1.25)} />
+            <use href={href} className="pk-con" filter={`url(#${blurId(sigma / 4)})`} style={lit(off * 0.3, off * 0.4)} />
           </>
         )}
-        {edge > 0 && <use href={href} fill={edgeOf(fill)} style={lit(edge * 0.55, edge)} />}
+        {edge > 0 && <use href={href} className="pk-edge" fill={edgeOf(fill)} style={lit(edge * 0.55, edge)} />}
         <use href={href} fill={fill} />
-        {falloff && (
-          <>
-            <use href={href} fill="url(#pk-fall-day)" style={DAY} />
-            <use href={href} fill="url(#pk-fall-night)" style={NIGHT} />
-          </>
-        )}
-        {material !== 'none' && <use href={href} fill={`url(#pk-grain-${material})`} style={{ opacity: 'var(--pk-grain)' }} />}
-        {rim && (
-          <>
-            <use href={href} fill="none" stroke="url(#pk-rim-day)" strokeWidth="1.6" style={DAY} />
-            <use href={href} fill="none" stroke="url(#pk-rim-night)" strokeWidth="1.6" style={NIGHT} />
-          </>
-        )}
+        {falloff && <use href={href} className="pk-fall" />}
+        {material !== 'none' && <use href={href} className="pk-grain" fill={`url(#pk-grain-${material})`} />}
+        {rim && <use href={href} className="pk-rim" />}
         {children}
       </g>
     );

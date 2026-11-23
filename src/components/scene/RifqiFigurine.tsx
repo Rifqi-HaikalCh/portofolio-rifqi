@@ -12,11 +12,13 @@ import { placeParts, type PlacedPart } from './figurine-rig';
   (left) by day, the lamp (right) at night, cross-faded by --light-x.
 */
 
-export type FigurineCrop = 'stage' | 'full' | 'bust' | 'head';
+export type FigurineCrop = 'stage' | 'full' | 'wide' | 'bust' | 'head';
 
 const VIEWBOX: Record<FigurineCrop, string> = {
   stage: `${STAGE_FRAME.x} ${STAGE_FRAME.y} ${STAGE_FRAME.w} ${STAGE_FRAME.h}`,
   full: '0 0 200 460',
+  /** Station posters: room for raised and reaching arms (DesignRules.md §2.2). */
+  wide: '-70 -10 340 470',
   bust: '24 8 152 152',
   head: '44 10 112 112',
 };
@@ -67,7 +69,7 @@ export function RifqiFigurine({
 }) {
   const decorative = !title;
   const parts = placeParts(pose, expression);
-  const grounded = crop === 'full' && pose !== 'seated';
+  const grounded = (crop === 'full' || crop === 'wide') && pose !== 'seated';
   const seated = (crop === 'full' || crop === 'stage') && pose === 'seated';
 
   return (

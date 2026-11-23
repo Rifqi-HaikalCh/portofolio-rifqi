@@ -5,6 +5,7 @@
 @import "../styles/design-system.css";
 @import "../styles/scene.css";
 @import "../styles/paper.css";
+@import "../styles/chapter.css";
 
 @custom-variant dark (&:where(.dark, .dark *));
 

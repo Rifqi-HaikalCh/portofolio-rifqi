@@ -87,6 +87,16 @@
   --ill-cork: #b68b5e;
   --ill-chair: #3b4850;
   --ill-sun: #fff1d0;
+  /* R2 stations (DesignRules.md §2.2, §5.2). */
+  --ill-kraft: #b99a72;
+  --ill-kraft-dark: #9c7d58;
+  --ill-cabinet: #7f8f8c;
+  --ill-cabinet-shade: #687673;
+  --ill-folder: #d9b77a;
+  --ill-envelope: #efe5d2;
+  --ill-board: #ced7d6;
+  --ill-dusk: #f2c99a;
+  --ill-dusk-low: #e7a77c;
   /* Lamp-side rim on the figurine at night, so he never sinks into the wall (P6.2). */
   --ill-figure-rim: transparent;
   --figure-rim: drop-shadow(calc(-1.5px * var(--light-x)) 0 0 var(--ill-figure-rim));
@@ -174,6 +184,15 @@
   --ill-cork: #6c5136;
   --ill-chair: #2b353c;
   --ill-sun: #ffd696;
+  --ill-kraft: #5e4c37;
+  --ill-kraft-dark: #4a3b2a;
+  --ill-cabinet: #3e4a49;
+  --ill-cabinet-shade: #313b3a;
+  --ill-folder: #7b6643;
+  --ill-envelope: #4a443b;
+  --ill-board: #2e3638;
+  --ill-dusk: #1f2a3a;
+  --ill-dusk-low: #2a3346;
   --paper-cut: rgb(255 255 255 / 0.13);
   --paper-fold: rgb(0 0 0 / 0.22);
   --ill-figure-rim: rgb(255 214 150 / 0.55);

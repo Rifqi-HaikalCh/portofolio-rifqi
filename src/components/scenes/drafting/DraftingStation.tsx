@@ -1,0 +1,194 @@
+import { circle, ellipse, paperKit, poly, rect } from '../../../lib/paper-kit';
+import type { Frames, SceneLayer } from '../PaperScene';
+import { Station } from '../Station';
+import { STRIP, bar, figureLayer, floorLayer, wallLayer } from '../office';
+
+/*
+  Station `04` — The Drafting Table (DesignRules.md §2.2, §4.5 `04` services),
+  midday. An angled board under a clamp lamp; on it a blueprint of a small
+  data model (three tables and their keys: the SQL Server work the section
+  describes), a ruler, a set square and the pencil in the figure's hand.
+*/
+
+const FRAMES: Frames = { desktop: STRIP, mobile: { x: 240, y: 40, w: 1040, h: 600 } };
+
+/* Board corners: tilted away, so the top edge is shorter. */
+const TL = [530, 140] as const;
+const TR = [1170, 140] as const;
+const BR = [1224, 468] as const;
+const BL = [476, 468] as const;
+
+/** A point on the board from (u, v) in 0..1 (left→right, top→bottom). */
+function on(u: number, v: number): [number, number] {
+  const x0 = TL[0] + (BL[0] - TL[0]) * v;
+  const x1 = TR[0] + (BR[0] - TR[0]) * v;
+  return [Math.round(x0 + (x1 - x0) * u), Math.round(TL[1] + (BL[1] - TL[1]) * v)];
+}
+const quad = (u0: number, v0: number, u1: number, v1: number) => poly([on(u0, v0), on(u1, v0), on(u1, v1), on(u0, v1)]);
+
+export function DraftingStation() {
+  const k = paperKit('draft');
+
+  /* The blueprint: grid, three entity boxes, key lines. */
+  const grid = [];
+  for (let u = 0.12; u < 0.9; u += 0.04) grid.push(`M${on(u, 0.1).join(' ')}L${on(u, 0.86).join(' ')}`);
+  for (let v = 0.1; v < 0.88; v += 0.06) grid.push(`M${on(0.1, v).join(' ')}L${on(0.9, v).join(' ')}`);
+  const tables = [
+    { u: 0.16, v: 0.18, w: 0.2, rows: 4 },
+    { u: 0.46, v: 0.3, w: 0.2, rows: 5 },
+    { u: 0.66, v: 0.14, w: 0.18, rows: 3 },
+  ];
+
+  const layers: SceneLayer[] = [
+    wallLayer(k, { beam: 'M-40 60L120 60L660 566L-40 566Z' }),
+    floorLayer(k),
+    {
+      id: 'shelf',
+      band: 'back',
+      z: -240,
+      box: { x: 1260, y: 80, w: 330, h: 200 },
+      desktopOnly: true,
+      art: (
+        <>
+          {/* Rolled drawings in a holder and two reference books. */}
+          {[0, 1, 2, 3].map((i) => (
+            <g key={i} transform={`rotate(${-8 + i * 5} ${1330 + i * 18} 230)`}>
+              {k.sheet({ d: rect(1318 + i * 18, 110 + (i % 2) * 14, 20, 120, 9), fill: i % 2 ? 'var(--color-blueprint)' : 'var(--ill-page)', gap: 14, edge: 2 })}
+            </g>
+          ))}
+          {k.sheet({ d: rect(1300, 186, 96, 46, 2), fill: 'var(--ill-kraft)', gap: 10, edge: 3, material: 'kraft' })}
+          {k.sheet({ d: rect(1430, 126, 34, 106, 2), fill: 'var(--color-accent)', gap: 12, edge: 3 })}
+          {k.sheet({ d: rect(1468, 140, 30, 92, 2), fill: 'var(--color-sage)', gap: 12, edge: 3 })}
+          {k.sheet({ d: rect(1280, 232, 290, 16, 1), fill: 'var(--color-wood-dark)', gap: 30, edge: 5, material: 'wood' })}
+        </>
+      ),
+    },
+    {
+      id: 'stand',
+      band: 'back',
+      z: -160,
+      box: { x: 520, y: 300, w: 640, h: 300 },
+      art: (
+        <>
+          {k.sheet({ d: bar([620, 420], [560, 592], 18), fill: 'var(--color-wood-dark)', gap: 60, edge: 3, material: 'wood' })}
+          {k.sheet({ d: bar([1080, 420], [1140, 592], 18), fill: 'var(--color-wood-dark)', gap: 60, edge: 3, material: 'wood' })}
+          {k.sheet({ d: bar([850, 320], [850, 592], 22), fill: 'var(--color-wood-dark)', gap: 60, edge: 3, material: 'wood' })}
+          {k.sheet({ d: rect(580, 540, 540, 14, 2), fill: 'var(--color-wood-dark)', gap: 40, edge: 3, material: 'wood' })}
+        </>
+      ),
+    },
+    {
+      id: 'board',
+      band: 'mid',
+      z: -120,
+      box: { x: 460, y: 130, w: 780, h: 370 },
+      art: (
+        <>
+          {k.sheet({ d: poly([TL, TR, BR, BL]), fill: 'var(--ill-board)', gap: 80, edge: 6 })}
+          {k.sheet({ d: poly([[BL[0] - 8, BL[1]], [BR[0] + 8, BR[1]], [BR[0] + 8, BR[1] + 18], [BL[0] - 8, BL[1] + 18]]), fill: 'var(--color-wood)', gap: 30, edge: 4, material: 'wood' })}
+        </>
+      ),
+    },
+    {
+      id: 'blueprint',
+      band: 'mid',
+      z: -100,
+      box: { x: 540, y: 160, w: 640, h: 300 },
+      art: (
+        <>
+          {k.sheet({ d: quad(0.08, 0.07, 0.92, 0.9), fill: 'var(--color-blueprint)', gap: 10, edge: 1.5 })}
+          <path d={grid.join('')} stroke="var(--ill-page)" strokeWidth="1" opacity="0.14" />
+          {tables.map((t) => (
+            <g key={t.u}>
+              <path d={quad(t.u, t.v, t.u + t.w, t.v + 0.06 + t.rows * 0.05)} fill="none" stroke="var(--ill-page)" strokeWidth="2" opacity="0.85" />
+              <path d={quad(t.u, t.v, t.u + t.w, t.v + 0.06)} fill="var(--ill-page)" opacity="0.3" />
+              {Array.from({ length: t.rows }, (_, r) => (
+                <path key={r} d={`M${on(t.u + 0.02, t.v + 0.09 + r * 0.05).join(' ')}L${on(t.u + t.w * (r % 2 ? 0.6 : 0.8), t.v + 0.09 + r * 0.05).join(' ')}`} stroke="var(--ill-page)" strokeWidth="1.5" opacity="0.6" />
+              ))}
+            </g>
+          ))}
+          <path
+            d={`M${on(0.36, 0.26).join(' ')}H${on(0.42, 0.26)[0]}V${on(0.46, 0.4)[1]}H${on(0.46, 0.4)[0]}M${on(0.66, 0.24).join(' ')}H${on(0.6, 0.24)[0]}V${on(0.6, 0.3)[1]}`}
+            fill="none"
+            stroke="var(--ill-page)"
+            strokeWidth="1.5"
+            strokeDasharray="5 4"
+            opacity="0.8"
+          />
+          {/* Title block, bottom right. */}
+          <path d={quad(0.7, 0.74, 0.9, 0.88)} fill="none" stroke="var(--ill-page)" strokeWidth="1.5" opacity="0.7" />
+        </>
+      ),
+    },
+    {
+      id: 'tools',
+      band: 'mid',
+      z: -80,
+      box: { x: 480, y: 200, w: 760, h: 300 },
+      art: (
+        <>
+          <g transform="rotate(-9 900 440)">
+            {k.sheet({ d: rect(660, 430, 470, 22, 1), fill: 'var(--ill-frame)', gap: 10, edge: 2.5 })}
+            <path d={Array.from({ length: 24 }, (_, i) => `M${674 + i * 19} 430v${i % 4 === 0 ? 10 : 6}`).join('')} stroke="var(--color-ink)" strokeWidth="1.2" opacity="0.55" />
+          </g>
+          {k.sheet({ d: `${poly([[1040, 250], [1040, 400], [1160, 400]])}${poly([[1060, 300], [1060, 382], [1124, 382]])}`, fillRule: 'evenodd', fill: 'var(--color-sage)', gap: 12, edge: 2, opacity: 0.92 })}
+          <g transform="rotate(28 620 330)">
+            {k.sheet({ d: rect(560, 324, 120, 9, 1), fill: 'var(--ill-note)', gap: 14, edge: 1.5 })}
+            {k.sheet({ d: poly([[680, 324], [696, 328.5], [680, 333]]), fill: 'var(--ill-skin)', gap: 6, edge: 0.8 })}
+          </g>
+        </>
+      ),
+    },
+    {
+      id: 'lamp',
+      band: 'mid',
+      z: -40,
+      box: { x: 1080, y: 20, w: 240, h: 200 },
+      art: (
+        <>
+          {k.sheet({ d: rect(1172, 126, 28, 22, 2), fill: 'var(--ill-lamp)', gap: 10, edge: 3 })}
+          {k.sheet({ d: bar([1186, 128], [1250, 54], 12), fill: 'var(--ill-lamp)', gap: 50, edge: 2.5 })}
+          {k.sheet({ d: bar([1250, 54], [1150, 40], 10), fill: 'var(--ill-lamp)', gap: 50, edge: 2.5 })}
+          {k.sheet({ d: circle(1250, 54, 10), fill: 'var(--ill-lamp)', gap: 40, edge: 2 })}
+          {k.sheet({ d: poly([[1100, 50], [1160, 26], [1176, 82], [1112, 106]]), fill: 'var(--ill-lamp)', gap: 50, edge: 4 })}
+          <polygon points="1104,104 1176,82 1180,92 1108,114" fill="var(--ill-bulb)" />
+        </>
+      ),
+    },
+    {
+      id: 'lamp-light',
+      band: 'mid',
+      z: 10,
+      box: { x: 560, y: 80, w: 640, h: 400 },
+      className: 'lamp-glow',
+      art: (
+        <g style={{ opacity: 'var(--glow-opacity)' }}>
+          <polygon points="1106,108 1180,88 1060,460 640,460" fill="var(--ill-lamp-light)" />
+          <path d={ellipse(860, 400, 260, 60)} fill="var(--ill-bulb)" opacity="0.08" />
+        </g>
+      ),
+    },
+    figureLayer('draw', 250, 92, 500),
+    {
+      id: 'stool',
+      band: 'front',
+      z: 120,
+      box: { x: 1270, y: 330, w: 280, h: 310 },
+      desktopOnly: true,
+      art: (
+        <>
+          {k.sheet({ d: bar([1330, 460], [1300, 630], 14), fill: 'var(--ill-chair)', gap: 60, edge: 3 })}
+          {k.sheet({ d: bar([1490, 460], [1520, 630], 14), fill: 'var(--ill-chair)', gap: 60, edge: 3 })}
+          {k.sheet({ d: rect(1300, 540, 220, 10, 2), fill: 'var(--ill-chair)', gap: 40, edge: 2 })}
+          {k.stack({ d: rect(1290, 440, 240, 30, 10), fill: 'var(--ill-chair)', layers: 2, step: 5, gap: 70, edge: 3, material: 'kraft' })}
+          {/* A mug on the stool. */}
+          {k.sheet({ d: `${rect(1414, 386, 30, 30, 13)}${rect(1422, 394, 14, 14, 6)}`, fillRule: 'evenodd', fill: 'var(--ill-mug)', gap: 10, edge: 2 })}
+          {k.sheet({ d: rect(1360, 372, 66, 70, 3), fill: 'var(--ill-mug)', gap: 12, edge: 3 })}
+          {k.sheet({ d: ellipse(1393, 377, 28, 4), fill: 'var(--ill-coffee)', edge: 0, rim: false, material: 'none' })}
+        </>
+      ),
+    },
+  ];
+
+  return <Station name="drafting" layers={layers} frames={FRAMES} light="midday" />;
+}

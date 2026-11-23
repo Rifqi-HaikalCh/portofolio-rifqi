@@ -7,6 +7,30 @@
   Only translate / transform move; layers are promoted only while they do.
 */
 
+/*
+  paper-kit sheet parts (§2.4, §9.3). Each <use> carries only its class and
+  --x / --y offsets; light direction, length and theme come from tokens here,
+  which keeps the server HTML and its RSC copy small.
+*/
+:root {
+  --pk-fall-ref: url(#pk-fall-day);
+  --pk-rim-ref: url(#pk-rim-day);
+}
+.dark {
+  --pk-fall-ref: url(#pk-fall-night);
+  --pk-rim-ref: url(#pk-rim-night);
+}
+.pk-pen,
+.pk-con,
+.pk-edge {
+  transform: translate(calc(var(--x) * 1px * var(--light-x) * var(--light-len)), calc(var(--y) * 1px * var(--light-len)));
+}
+.pk-pen { fill: var(--pk-shadow); opacity: var(--pk-penumbra); }
+.pk-con { fill: var(--pk-shadow); opacity: var(--pk-contact); }
+.pk-fall { fill: var(--pk-fall-ref); }
+.pk-grain { opacity: var(--pk-grain); }
+.pk-rim { fill: none; stroke: var(--pk-rim-ref); stroke-width: 1.6; }
+
 .shadowbox {
   --px: 0;
   --py: 0;
@@ -89,6 +113,48 @@
 
 @keyframes scene-push {
   to { transform: translateY(calc(var(--k) * 26cqw)); }
+}
+
+/* Workday light arc (§2.3): the sun moves as the visitor walks; the lamp at night is constant. */
+:root:not(.dark) .shadowbox[data-light="midday"] { --light-len: 0.7; }
+:root:not(.dark) .shadowbox[data-light="afternoon"] { --light-len: 1.2; }
+:root:not(.dark) .shadowbox[data-light="golden"] { --light-len: 1.65; }
+
+/* Scene objects tied to HTML controls (folders, binders): transforms set by the station's :has() rules. */
+[data-obj] {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  transition: transform var(--dur-sheet) var(--ease-paper);
+}
+
+/* Organisation folders replace the work folders when that tab is selected. */
+[data-set="organization"] { opacity: 0; }
+#experience:has(#experience-panel-organization:not([hidden])) [data-set="work"] { opacity: 0; }
+#experience:has(#experience-panel-organization:not([hidden])) [data-set="organization"] { opacity: 1; }
+
+/* The postmark lands on the envelope only after a real send (§4.5 `06`). */
+.scene-postmark {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scale(1.4) rotate(-14deg);
+  transition: opacity var(--dur-ui) var(--ease-paper), transform var(--dur-sheet) var(--ease-paper);
+}
+#contact:has(.postmark) .scene-postmark {
+  opacity: 1;
+  transform: scale(1) rotate(-8deg);
+}
+
+.station-fig svg { filter: var(--figure-rim); }
+
+/* Content sheets overlap the scene's lower edge and cast their shadow onto it (§4.4). */
+.station-sheet {
+  position: relative;
+  z-index: var(--z-content-ui);
+  margin-top: -2.5rem;
+}
+@media (min-width: 768px) {
+  .station-sheet { margin-top: -4.5rem; }
 }
 
 /* Desk lamp: the head tilts and the light pool fades when the lamp turns on. */

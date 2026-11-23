@@ -306,6 +306,7 @@ export const organizationExperience: Experience[] = [
 export const individualProjects: Project[] = [
   {
     id: 'shipment-tracker',
+    motif: 'route',
     title: 'Shipment – Transport Tracker',
     description: 'Web-based application used for logistic company to track delivery. Developed a responsive Shipment Management SPA using Vue 3 (Composition API) and TypeScript, delivering a seamless user experience across desktop and mobile devices with a built-in Dark/Light mode via Tailwind CSS. Engineered a real-time tracking and filtering system utilizing Pinia for state management. Built a fully simulated REST API environment using Mirage.js to mimic realistic network latency, HTTP status codes, and real-time shipment route simulations with automated status transitions.',
     descriptionId: 'Aplikasi berbasis web yang dipakai perusahaan logistik untuk melacak pengiriman. Dikembangkan sebagai SPA manajemen pengiriman yang responsif memakai Vue 3 (Composition API) dan TypeScript, dengan pengalaman yang mulus di desktop dan ponsel serta mode gelap/terang lewat Tailwind CSS. Sistem pelacakan dan penyaringan waktu nyata memakai Pinia untuk state. Lingkungan REST API yang disimulasikan penuh memakai Mirage.js meniru latensi jaringan, kode status HTTP, dan simulasi rute pengiriman waktu nyata dengan transisi status otomatis.',
@@ -321,6 +322,7 @@ export const individualProjects: Project[] = [
   },
     {
     id: 'marketplace-influencer',
+    motif: 'market',
     title: 'Marketplace Influencer Platform',
     description: 'Simplifies influencer discovery and collaboration for brands. Engineered a full-stack marketplace from scratch using a modern tech stack (Next.js 14, TypeScript, Supabase) to connect brands with influencers. Designed and implemented a pixel-perfect, responsive UI/UX with Tailwind CSS, featuring separate, optimized views for desktop and mobile to ensure a seamless user journey.',
     descriptionId: 'Menyederhanakan pencarian influencer dan kolaborasi untuk merek. Marketplace full-stack dibangun dari awal memakai Next.js 14, TypeScript, dan Supabase untuk menghubungkan merek dengan influencer. Antarmuka responsif dengan Tailwind CSS memiliki tampilan terpisah yang dioptimalkan untuk desktop dan ponsel.',
@@ -334,6 +336,7 @@ export const individualProjects: Project[] = [
   },
   {
     id: 'hiring-platform',
+    motif: 'hiring',
     title: 'Hiring Platform for Jobseeker',
     description: 'Modern hiring platform enabling administrators to manage job listings and candidates to browse/apply. Implemented secure user authentication and role-based access control (RBAC) leveraging Supabase Auth. Designed and built reusable, responsive UI components using Tailwind CSS and Headless UI, ensuring an intuitive user experience across desktop and mobile platforms.',
     descriptionId: 'Platform perekrutan yang memungkinkan administrator mengelola lowongan dan kandidat menelusuri serta melamar. Otentikasi pengguna dan kontrol akses berbasis peran memakai Supabase Auth. Komponen antarmuka yang dapat dipakai ulang dan responsif memakai Tailwind CSS dan Headless UI, untuk desktop dan ponsel.',
@@ -375,6 +378,7 @@ export const individualProjects: Project[] = [
   },
   {
     id: 'api-central',
+    motif: 'api',
     title: 'API Central',
     description: 'Centralization and standardization of API documentation with Postman-to-Swagger converter tool.',
     descriptionId: 'Sentralisasi dan standardisasi dokumentasi API dengan alat konverter Postman-ke-Swagger.',
@@ -434,6 +438,7 @@ export const individualProjects: Project[] = [
 export const designProjects: Project[] = [
   {
     id: 'sportainment-app',
+    motif: 'sport',
     title: 'Sportainment App',
     description: 'A platform for sports enthusiasts to easily find activities, events, and track their progress. Complete with features for booking sports facilities, joining community events, and monitoring personal fitness achievements.',
     descriptionId: 'Platform bagi penggemar olahraga untuk menemukan aktivitas, acara, dan memantau progres. Dilengkapi pemesanan fasilitas olahraga, keikutsertaan pada acara komunitas, dan pemantauan pencapaian kebugaran pribadi.',
@@ -566,6 +571,7 @@ export const designProjects: Project[] = [
 export const groupProjects: Project[] = [
   {
     id: 'del-pick',
+    motif: 'delivery',
     title: 'Del-Pick Delivery App',
     description: 'Mobile delivery system designed to overcome logistics and transportation problems. Led a 3-person team through the entire product lifecycle, from initial concept to a fully functional mobile delivery application. Translated high-fidelity Figma UI/UX designs into 20+ polished and intuitive screens using Flutter. Built and integrated 30+ RESTful APIs with Express.js to power real-time order processing, driver matching, and route optimization.',
     descriptionId: 'Sistem Layanan Antar yang dirancang untuk mengatasi masalah logistik dan transportasi. Memimpin tim 3 orang melalui seluruh siklus produk, dari konsep awal hingga aplikasi pengiriman mobile yang berfungsi penuh.',

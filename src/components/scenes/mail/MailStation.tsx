@@ -1,0 +1,133 @@
+import { circle, ellipse, paperKit, poly, rect } from '../../../lib/paper-kit';
+import type { Frames, SceneLayer } from '../PaperScene';
+import { Station } from '../Station';
+import { STRIP, bar, figureLayer, floorLayer, wallLayer, windowHole, windowLayers } from '../office';
+
+/*
+  Station `06` — The Mail Tray (DesignRules.md §2.2, §4.5 `06`): the desk
+  corner by the window at the end of the day (golden hour in light theme,
+  lamp-on night in dark). A letter tray, the letterpress card, and the figure
+  sealing an envelope. The postmark lands on that envelope only after the
+  contact form reports a real send (`#contact:has(.postmark)`, scene.css).
+*/
+
+const FRAMES: Frames = { desktop: STRIP, mobile: { x: 420, y: 40, w: 1000, h: 600 } };
+const WIN = { x: 100, y: 56, w: 320, h: 330 };
+const ENV = { x: 694, y: 362, w: 142, h: 90 };
+
+export function MailStation() {
+  const k = paperKit('mail');
+
+  const layers: SceneLayer[] = [
+    ...windowLayers(k, 'mail', WIN, 'dusk').map((l) => ({ ...l, desktopOnly: true })),
+    wallLayer(k, { hole: windowHole(WIN), beam: 'M150 400L420 400L1040 566L640 566Z' }),
+    floorLayer(k),
+    figureLayer('seal', 572, 72, 520, -70),
+    {
+      id: 'desk',
+      band: 'mid',
+      z: -40,
+      box: { x: 320, y: 410, w: 1320, h: 230 },
+      art: (
+        <>
+          {/* Modesty panel: the desk's back board hides the space under the top. */}
+          {k.sheet({ d: rect(470, 496, 720, 86), fill: 'var(--color-wood-dark)', gap: 80, edge: 0, material: 'wood' })}
+          {k.sheet({ d: rect(420, 500, 64, 100), fill: 'var(--color-wood-dark)', gap: 60, edge: 3, material: 'wood' })}
+          {k.sheet({ d: rect(1180, 500, 300, 96, 2), fill: 'var(--color-wood)', gap: 60, edge: 4, material: 'wood' })}
+          {k.sheet({ d: rect(1300, 530, 60, 14, 6), fill: 'var(--color-wood-dark)', gap: 6, edge: 2 })}
+          {k.sheet({ d: poly([[380, 420], [1640, 420], [1660, 468], [348, 468]]), fill: 'var(--color-wood)', gap: 120, edge: 0, material: 'wood' })}
+          {k.sheet({ d: rect(348, 468, 1312, 34), fill: 'var(--color-wood-dark)', gap: 100, edge: 0, material: 'wood' })}
+          <path d="M348 469.5H1660" stroke="var(--paper-cut)" strokeWidth="3" />
+        </>
+      ),
+    },
+    {
+      id: 'tray',
+      band: 'mid',
+      z: -24,
+      box: { x: 1060, y: 280, w: 320, h: 180 },
+      art: (
+        <>
+          {/* Two-tier letter tray with letters waiting. */}
+          {k.sheet({ d: rect(1104, 330, 220, 10, 1), fill: 'var(--ill-page)', gap: 6, edge: 1.5 })}
+          {k.sheet({ d: rect(1110, 316, 210, 14, 1), fill: 'var(--ill-envelope)', gap: 6, edge: 1.5 })}
+          {k.sheet({ d: poly([[1092, 336], [1336, 336], [1328, 356], [1100, 356]]), fill: 'var(--ill-lamp)', gap: 30, edge: 3 })}
+          {k.sheet({ d: bar([1108, 356], [1100, 430], 8), fill: 'var(--ill-lamp)', gap: 30, edge: 2 })}
+          {k.sheet({ d: bar([1320, 356], [1328, 430], 8), fill: 'var(--ill-lamp)', gap: 30, edge: 2 })}
+          {k.sheet({ d: rect(1096, 404, 236, 12, 1), fill: 'var(--ill-envelope)', gap: 6, edge: 1.5 })}
+          {k.sheet({ d: poly([[1080, 412], [1348, 412], [1340, 432], [1088, 432]]), fill: 'var(--ill-lamp)', gap: 20, edge: 3 })}
+        </>
+      ),
+    },
+    {
+      id: 'letters',
+      band: 'mid',
+      z: -10,
+      box: { x: 400, y: 330, w: 640, h: 150 },
+      art: (
+        <>
+          {/* The letterpress card, flat on the desk. */}
+          {k.sheet({ d: poly([[440, 436], [600, 436], [610, 462], [432, 462]]), fill: 'var(--ill-page)', gap: 6, edge: 2 })}
+          <path d="M462 446H560M466 454H528" stroke="var(--color-muted)" strokeWidth="2" opacity="0.5" />
+          {/* The envelope in his hands: flap, stamp, and the postmark (after a real send). */}
+          {k.sheet({ d: rect(ENV.x, ENV.y, ENV.w, ENV.h, 2), fill: 'var(--ill-envelope)', gap: 40, edge: 2 })}
+          {k.sheet({ d: poly([[ENV.x, ENV.y], [ENV.x + ENV.w, ENV.y], [ENV.x + ENV.w / 2, ENV.y + 50]]), fill: 'var(--ill-envelope)', gap: 6, edge: 1.5 })}
+          {k.sheet({ d: rect(ENV.x + ENV.w - 40, ENV.y + 52, 28, 30, 1), fill: 'var(--color-accent)', gap: 3, edge: 1, rim: false })}
+          <g className="scene-postmark">
+            <path d={`${circle(ENV.x + ENV.w - 34, ENV.y + 64, 20)}`} fill="none" stroke="var(--color-ink)" strokeWidth="2.5" opacity="0.75" />
+            <path d={`M${ENV.x + ENV.w - 66} ${ENV.y + 58}h52M${ENV.x + ENV.w - 66} ${ENV.y + 66}h52M${ENV.x + ENV.w - 66} ${ENV.y + 74}h52`} stroke="var(--color-ink)" strokeWidth="2" opacity="0.6" />
+          </g>
+        </>
+      ),
+    },
+    {
+      id: 'lamp',
+      band: 'mid',
+      z: -30,
+      box: { x: 1360, y: 160, w: 260, h: 280 },
+      desktopOnly: true,
+      art: (
+        <>
+          {k.sheet({ d: poly([[1440, 432], [1560, 432], [1552, 414], [1448, 414]]), fill: 'var(--ill-lamp)', gap: 10, edge: 4 })}
+          {k.sheet({ d: bar([1500, 416], [1540, 260], 12), fill: 'var(--ill-lamp)', gap: 50, edge: 3 })}
+          {k.sheet({ d: bar([1540, 260], [1440, 200], 11), fill: 'var(--ill-lamp)', gap: 50, edge: 3 })}
+          {k.sheet({ d: circle(1540, 260, 11), fill: 'var(--ill-lamp)', gap: 40, edge: 2 })}
+          {k.sheet({ d: poly([[1420, 176], [1472, 202], [1456, 270], [1382, 236]]), fill: 'var(--ill-lamp)', gap: 50, edge: 4 })}
+          <polygon points="1384,238 1456,270 1450,278 1380,248" fill="var(--ill-bulb)" />
+        </>
+      ),
+    },
+    {
+      id: 'lamp-light',
+      band: 'mid',
+      z: 10,
+      box: { x: 900, y: 230, w: 580, h: 250 },
+      className: 'lamp-glow',
+      desktopOnly: true,
+      art: (
+        <g style={{ opacity: 'var(--glow-opacity)' }}>
+          <polygon points="1382,244 1452,276 1300,440 960,440" fill="var(--ill-lamp-light)" />
+          <path d={ellipse(1150, 440, 260, 30)} fill="var(--ill-bulb)" opacity="0.1" />
+        </g>
+      ),
+    },
+    {
+      id: 'chair',
+      band: 'front',
+      z: 160,
+      box: { x: 160, y: 440, w: 360, h: 200 },
+      desktopOnly: true,
+      art: k.stack({
+        d: 'M190 650V520Q190 476 236 476H440Q486 476 486 520V650Z',
+        fill: 'var(--ill-chair)',
+        layers: 3,
+        step: 6,
+        gap: 90,
+        edge: 4,
+        material: 'kraft',
+      }),
+    },
+  ];
+
+  return <Station name="mail" layers={layers} frames={FRAMES} light="golden" />;
+}

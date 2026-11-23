@@ -1,0 +1,198 @@
+/*
+  Chapter Theatre (DesignRules.md §4, §8, §9.7). The static half of every
+  chapter; chapter-css.ts writes the timelines, beats, acts and handoffs.
+
+  Default = the stacked studio (no scroll-driven support, reduced motion,
+  short screens, data-stacked): the station as a framed box, then the sheets.
+  Inside the @supports/@media block = the theatre: a sticky fullscreen stage
+  (split stage under 768 px) with the beats scrolling over it.
+*/
+
+/* ---- Stacked studio ------------------------------------------------------ */
+.chapter {
+  position: relative;
+  padding-block: 4rem;
+}
+@media (min-width: 768px) {
+  .chapter { padding-block: 6rem; }
+}
+
+.chapter .stage,
+.chapter .flow {
+  max-width: 72rem;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+}
+@media (min-width: 1024px) {
+  .chapter .stage,
+  .chapter .flow { padding-inline: 2rem; }
+}
+
+.chapter .stage-front,
+.chapter .beat-arrive { display: none; }
+
+.chapter .flow {
+  position: relative;
+  z-index: var(--z-content-ui);
+  display: grid;
+  gap: 1.5rem;
+  margin-top: -2.5rem;
+}
+@media (min-width: 768px) {
+  .chapter .flow { margin-top: -4.5rem; padding-inline: 3.5rem; }
+}
+
+.chapter .beat-sheet { padding: 1.5rem; }
+@media (min-width: 640px) {
+  .chapter .beat-sheet { padding: 2.25rem; }
+}
+
+/* Alternate stop-motion poses are hidden until their beat swaps them in. */
+.chapter .pose-alt > * { opacity: 0; }
+.chapter .stage-front .scene-layer { opacity: 0; }
+
+.skip-chapter:focus {
+  position: absolute;
+  z-index: var(--z-chrome);
+  top: 1rem;
+  left: 1rem;
+  padding: 0.5rem 0.75rem;
+  background: var(--color-raised);
+  border: 1px solid var(--color-line);
+}
+
+/* ---- Theatre ------------------------------------------------------------- */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) and (min-height: 561px) {
+    .chapter:not([data-stacked]) {
+      --beat-top: 18svh;
+      --lane-pad: 5cqw;
+      --lane-w: min(34rem, 40cqw);
+      --lane-w-flow: min(60rem, 64cqw);
+      container-type: inline-size;
+      padding-block: 0;
+      /* In-page links land with the first beat composed: arrival + its entry. */
+      scroll-margin-top: calc(-1 * (200svh - var(--beat-top)));
+    }
+
+    .chapter:not([data-stacked]) .stage {
+      position: sticky;
+      top: 0;
+      z-index: 0;
+      height: 100svh;
+      max-width: none;
+      padding: 0;
+      overflow: clip;
+      container-type: size;
+      background: var(--ill-wall);
+    }
+    /* The shadow-box lip on the viewport edges. */
+    .chapter:not([data-stacked]) .stage::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      border: clamp(6px, 1cqw, 14px) solid var(--ill-frame);
+      box-shadow:
+        inset calc(3px * var(--light-x)) 4px 3px rgb(var(--rgb-shadow) / 0.3),
+        inset calc(14px * var(--light-x)) 18px 30px rgb(var(--rgb-shadow) / 0.24);
+    }
+
+    .chapter:not([data-stacked]) .stage-front {
+      display: block;
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      height: 100svh;
+      margin-top: -100svh;
+      overflow: clip;
+      container-type: size;
+      pointer-events: none;
+    }
+
+    /* Cover fit of the theatre rect: --s is pixels per world unit. */
+    .chapter:not([data-stacked]) .stage-canvas {
+      --s: max(calc(100cqw / var(--tw)), calc(100cqh / var(--th)));
+      position: absolute;
+      width: calc(var(--fw) * var(--s));
+      left: calc((100cqw - var(--tw) * var(--s)) / 2 - var(--tx) * var(--s));
+      top: calc((100cqh - var(--th) * var(--s)) / 2 - var(--ty) * var(--s));
+    }
+    .chapter:not([data-stacked]) .stage-canvas .scene-viewport {
+      overflow: visible;
+      background: none;
+      box-shadow: none;
+    }
+    .chapter:not([data-stacked]) .stage-canvas .shadowbox-frame { display: none; }
+
+    .chapter:not([data-stacked]) .flow {
+      position: relative;
+      z-index: 1;
+      display: block;
+      max-width: none;
+      margin-top: -100svh;
+      padding: 0;
+      pointer-events: none;
+    }
+    .chapter:not([data-stacked]) .beat-arrive { display: block; height: 100svh; }
+
+    .chapter:not([data-stacked]) .beat { height: calc(100svh + var(--hold, 40) * 1svh); }
+    .chapter:not([data-stacked]) .beat[data-flow] { height: auto; padding-bottom: 24svh; }
+
+    .chapter:not([data-stacked]) .beat-sheet {
+      position: sticky;
+      top: var(--beat-top);
+      width: var(--lane-w);
+      margin-inline-start: var(--lane-pad);
+      pointer-events: auto;
+      box-shadow: var(--sheet-shadow);
+    }
+    .chapter:not([data-stacked])[data-lane="right"] .beat-sheet {
+      margin-inline-start: calc(100cqw - var(--lane-pad) - var(--lane-w));
+    }
+    .chapter:not([data-stacked]) .beat[data-flow] .beat-sheet {
+      position: relative;
+      top: auto;
+      width: var(--lane-w-flow);
+    }
+    .chapter:not([data-stacked])[data-lane="right"] .beat[data-flow] .beat-sheet {
+      margin-inline-start: calc(100cqw - var(--lane-pad) - var(--lane-w-flow));
+    }
+
+    /* A focused or targeted beat is always composed (§4.4 step 8). */
+    .chapter .beat:is(:focus-within, :target) > .beat-sheet,
+    .chapter .beat:is(:focus-within, :target) [data-step] {
+      animation: none !important;
+    }
+
+    /* Tablet: a wider lane. */
+    @media (min-width: 768px) and (max-width: 1023px) {
+      .chapter:not([data-stacked]) { --lane-w: min(34rem, 56cqw); --lane-w-flow: 90cqw; }
+    }
+
+    /* Split stage: the station pinned in the top 46svh, beats at reading pace below it. */
+    @media (max-width: 767px) {
+      .chapter:not([data-stacked]) {
+        --tw: var(--twm);
+        --th: var(--thm);
+        --tx: var(--txm);
+        --ty: var(--tym);
+        --fw: var(--fwm);
+        scroll-margin-top: 0;
+      }
+      .chapter:not([data-stacked]) .stage { z-index: 2; height: 46svh; }
+      .chapter:not([data-stacked]) .stage-front,
+      .chapter:not([data-stacked]) .beat-arrive { display: none; }
+      .chapter:not([data-stacked]) .flow { margin-top: 0; padding: 1.5rem 1.25rem 4rem; display: grid; gap: 1.25rem; }
+      .chapter:not([data-stacked]) .beat,
+      .chapter:not([data-stacked]) .beat[data-flow] { height: auto; padding: 0; }
+      .chapter:not([data-stacked]) .beat-sheet,
+      .chapter:not([data-stacked]) .beat[data-flow] .beat-sheet {
+        position: relative;
+        top: auto;
+        width: auto;
+        margin: 0;
+      }
+    }
+  }
+}

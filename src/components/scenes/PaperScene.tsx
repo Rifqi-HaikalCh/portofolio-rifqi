@@ -1,5 +1,6 @@
 import type { CSSProperties, ReactNode } from 'react';
 import type { Band } from '../../lib/paper-kit';
+import { svgString } from '../../lib/paper-kit/svg-string';
 
 /*
   PaperScene — 2D paper layers at real depths (DesignRules.md §9.1–§9.2).
@@ -13,7 +14,8 @@ import type { Band } from '../../lib/paper-kit';
   preserve-3d flattening, and the flat fallback is the authored composition.
 
   Layer boxes are cropped to their art (GPU memory, §9.2) and placed in % of
-  the active frame: `desktop` ≥ 768 px, `mobile` below.
+  the active frame: `desktop` ≥ 768 px, `mobile` below. Layer art is static,
+  so it ships as markup (svgString) that React never hydrates.
 */
 
 export const PERSPECTIVE = 1400;
@@ -53,6 +55,11 @@ export function frameVars(r: Rect, frames: Frames): CSSProperties {
   } as CSSProperties;
 }
 
+/** Static markup for server-made art inside HTML (station figures): painted, never hydrated (§9.6). */
+export function StaticArt({ node, className }: { node: ReactNode; className?: string }) {
+  return <div className={className} aria-hidden="true" dangerouslySetInnerHTML={{ __html: svgString(node) }} />;
+}
+
 export function depthFactor(z: number) {
   return Math.round((z / (PERSPECTIVE - z)) * 10000) / 10000;
 }
@@ -62,12 +69,15 @@ export function PaperScene({
   frames,
   children,
   label,
+  lazy = false,
 }: {
   layers: SceneLayer[];
   frames: Frames;
   /** HTML at the z = 0 plane (buttons over art), placed with frameVars. */
   children?: ReactNode;
   label?: string;
+  /** Skip painting while far off screen (content-visibility, §9.2). Not for the hero. */
+  lazy?: boolean;
 }) {
   const style = {
     '--aspect': `${frames.desktop.w} / ${frames.desktop.h}`,
@@ -75,12 +85,13 @@ export function PaperScene({
   } as CSSProperties;
 
   return (
-    <div className="scene-viewport" style={style} data-scene={label}>
+    <div className={`scene-viewport ${lazy ? 'scene-lazy' : ''}`} style={style} data-scene={label}>
       {layers.map((layer) => (
         <div
           key={layer.id}
           className={`scene-layer ${layer.desktopOnly ? 'scene-desktop-only' : ''} ${layer.className ?? ''}`}
           data-band={layer.band}
+          data-layer={layer.id}
           style={{ ...frameVars(layer.box, frames), '--k': depthFactor(layer.z) } as CSSProperties}
           aria-hidden={layer.html ? undefined : true}
         >
@@ -90,9 +101,8 @@ export function PaperScene({
               className="absolute inset-0 h-full w-full overflow-visible"
               aria-hidden="true"
               focusable="false"
-            >
-              {layer.art}
-            </svg>
+              dangerouslySetInnerHTML={{ __html: svgString(layer.art) }}
+            />
           )}
           {layer.html}
         </div>
