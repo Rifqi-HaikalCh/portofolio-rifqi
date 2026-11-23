@@ -2,37 +2,55 @@
 
 import { Component, useEffect, useState, type ReactNode } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { FigurineModel, type FigurinePalette } from './figurine-model';
+import { FigurineModel, type FigurinePalette, type Swatch } from './figurine-model';
 
 /*
-  R3F view of the figurine (DesignRules.md §9.3). Loaded only through
+  R3F view of the paper puppet (DesignRules.md §9.3). Loaded only through
   next/dynamic after the capability gate passes. Renders on demand: a frame is
-  drawn when the theme changes or during the one-off head turn, never in a loop.
+  drawn when the theme changes or while a clip runs, never in a loop.
   Any error or a lost WebGL context calls onFail, and the poster stays.
 */
 
+const INKS: Record<keyof FigurinePalette, string> = {
+  skin: '--ill-skin',
+  'skin-shade': '--ill-skin-shade',
+  hair: '--ill-hair',
+  'hair-hi': '--ill-hair-hi',
+  shirt: '--ill-shirt',
+  denim: '--ill-denim',
+  'denim-fade': '--ill-denim-fade',
+  sneaker: '--ill-sneaker',
+  sole: '--ill-sole',
+  page: '--ill-page',
+  fold: '--paper-fold',
+  cut: '--paper-cut',
+  shadow: '--paper-shadow',
+};
+
+/*
+  Token value → colour + alpha. Browsers may serialise a token as #rrggbb,
+  #rrggbbaa (Chrome does this for rgb(… / a)) or rgb(r g b / a).
+*/
+function swatch(value: string): Swatch {
+  const hex = value.match(/^#([\da-f]{3,8})$/i)?.[1];
+  if (hex && (hex.length === 4 || hex.length === 8)) {
+    const full = hex.length === 4 ? [...hex].map((c) => c + c).join('') : hex;
+    return { color: `#${full.slice(0, 6)}`, alpha: parseInt(full.slice(6, 8), 16) / 255 };
+  }
+  const rgb = value.match(/rgba?\(\s*([\d.]+)[\s,]+([\d.]+)[\s,]+([\d.]+)(?:\s*[/,]\s*([\d.]+%?))?/);
+  if (rgb) {
+    const alpha = rgb[4] ? (rgb[4].endsWith('%') ? parseFloat(rgb[4]) / 100 : Number(rgb[4])) : 1;
+    return { color: `rgb(${rgb[1]}, ${rgb[2]}, ${rgb[3]})`, alpha };
+  }
+  return { color: value || 'black', alpha: 1 };
+}
+
 function readPalette(): { palette: FigurinePalette; lightX: number } {
   const css = getComputedStyle(document.documentElement);
-  const v = (name: string) => css.getPropertyValue(name).trim();
-  const dark = document.documentElement.classList.contains('dark');
-  return {
-    lightX: Number(v('--light-x')) || 1,
-    palette: {
-      skin: v('--ill-skin'),
-      skinShade: v('--ill-skin-shade'),
-      hair: v('--ill-hair'),
-      hairHi: v('--ill-hair-hi'),
-      shirt: v('--ill-shirt'),
-      denim: v('--ill-denim'),
-      denimFade: v('--ill-denim-fade'),
-      sneaker: v('--ill-sneaker'),
-      sole: v('--ill-sole'),
-      page: v('--ill-page'),
-      shadow: v('--ill-hair'),
-      shadowOpacity: dark ? 0.5 : 0.18,
-      light: dark ? v('--ill-bulb') : v('--ill-frame'),
-    },
-  };
+  const palette = Object.fromEntries(
+    Object.entries(INKS).map(([key, token]) => [key, swatch(css.getPropertyValue(token).trim())]),
+  ) as FigurinePalette;
+  return { lightX: Number(css.getPropertyValue('--light-x').trim()) || 1, palette };
 }
 
 /* Re-reads the token palette whenever the theme class on <html> changes. */
@@ -73,7 +91,7 @@ export default function PaperDeskCanvas({ onReady, onFail }: { onReady: () => vo
         frameloop="demand"
         dpr={[1, 1.5]}
         gl={{ antialias: true, alpha: true, powerPreference: 'low-power' }}
-        camera={{ near: 1, far: 2000, position: [0, 230, 600] }}
+        camera={{ near: 1, far: 2000, position: [140, -200, 600] }}
         aria-hidden="true"
         onCreated={({ gl }) => {
           gl.domElement.addEventListener('webglcontextlost', onFail, { once: true });

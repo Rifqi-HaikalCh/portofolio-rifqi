@@ -21,12 +21,16 @@ export interface ContactState {
 
 const MIN_FILL_MS = 3000;
 
+// Control characters (except tab and newline) never belong in a letter.
+const clean = (value: string) => value.replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, '');
+
 const text = (max: number) =>
   z
     .string()
-    .trim()
+    .transform(clean)
+    .pipe(z.string().trim()
     .min(1, { message: 'required' })
-    .max(max, { message: 'long' });
+    .max(max, { message: 'long' }));
 
 const schema = z.object({
   name: text(120),
@@ -50,9 +54,6 @@ export async function sendMessage(_previous: ContactState, form: FormData): Prom
   // Bots fill every field they find; people never see this one.
   if (String(form.get('website') ?? '') !== '') return { status: 'sent' };
 
-  const startedAt = Number(form.get('startedAt') ?? 0);
-  if (startedAt > 0 && Date.now() - startedAt < MIN_FILL_MS) return { status: 'too-fast', values: raw };
-
   const parsed = schema.safeParse(raw);
   if (!parsed.success) {
     const issues: ContactState['issues'] = {};
@@ -62,6 +63,10 @@ export async function sendMessage(_previous: ContactState, form: FormData): Prom
     }
     return { status: 'invalid', issues, values: raw };
   }
+
+  // A complete letter in under 3 s is a script, not a person.
+  const startedAt = Number(form.get('startedAt') ?? 0);
+  if (startedAt > 0 && Date.now() - startedAt < MIN_FILL_MS) return { status: 'too-fast', values: raw };
 
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) return { status: 'failed', values: raw };

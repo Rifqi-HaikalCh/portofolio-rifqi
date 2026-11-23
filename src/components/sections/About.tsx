@@ -38,7 +38,7 @@ export function About() {
               <span className="paper-clip" aria-hidden="true" />
               <div className="crop-marks relative aspect-square max-w-64 border border-line bg-(--ill-wall)">
                 <i /><i /><i /><i />
-                <RifqiFigurine crop="head" className="h-full w-full" />
+                <RifqiFigurine crop="bust" className="h-full w-full" />
               </div>
               <figcaption className="mt-3 font-mono text-[11px] uppercase tracking-[0.14em] text-muted">
                 Rifqi Haikal Chairiansyah
@@ -54,8 +54,8 @@ export function About() {
               </p>
               <p className="mt-4 max-w-[62ch] text-base leading-relaxed text-muted">
                 <T
-                  en="I've shipped for telecommunications, oil and gas, research and financial services, and I also work in React, Angular and Spring Boot when a project needs it."
-                  id="Saya sudah mengirim sistem untuk telekomunikasi, minyak dan gas, riset, dan jasa keuangan, dan juga bekerja dengan React, Angular, dan Spring Boot bila proyek membutuhkannya."
+                  en="I've built systems for telecommunications, oil and gas, research and financial services, and I also work in React, Angular and Spring Boot when a project needs it."
+                  id="Saya pernah membangun sistem untuk sektor telekomunikasi, minyak dan gas, riset, dan jasa keuangan, serta bekerja dengan React, Angular, dan Spring Boot bila proyek membutuhkannya."
                 />
               </p>
 

@@ -52,7 +52,7 @@ export function LaptopScreenUI({ className = '', screen }: { className?: string;
             <p className="screen-company font-mono text-[11px] leading-snug text-muted">{screen.company}</p>
           </div>
 
-          <ul aria-label={say('Core stack', 'Stack utama')} className="flex max-h-[17px] flex-wrap gap-1 overflow-hidden">
+          <ul aria-label={say('Core stack', 'Stack inti')} className="flex max-h-[17px] flex-wrap gap-1 overflow-hidden">
             {screen.stack.map((name) => (
               <li key={name} className="border border-line px-1.5 py-0.5 font-mono text-[11px] leading-none text-muted">
                 {name}
@@ -65,7 +65,7 @@ export function LaptopScreenUI({ className = '', screen }: { className?: string;
               href="#projects"
               className="inline-flex min-h-7 flex-1 items-center justify-center border border-ink bg-ink px-2 text-[13px] font-medium text-paper hover:border-accent hover:bg-accent"
             >
-              {t('Open projects', 'Buka projek')}
+              {t('Open projects', 'Buka proyek')}
             </a>
             <button
               type="button"

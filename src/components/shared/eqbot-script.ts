@@ -33,7 +33,7 @@ const sections: EqbotChoice[] = [
   { id: 'go-services', en: 'Services', idn: 'Layanan', to: 'services' },
   { id: 'go-certificates', en: 'Certificates', idn: 'Sertifikat', to: 'certificates' },
   { id: 'go-contact', en: 'Contact', idn: 'Kontak', to: 'contact' },
-  { id: 'go-projects', en: 'Projects', idn: 'Projek', to: 'projects' },
+  { id: 'go-projects', en: 'Projects', idn: 'Proyek', to: 'projects' },
   { id: 'go-start', en: 'Where should I start?', idn: 'Dari mana sebaiknya?', to: 'start' },
   { id: 'go-meta', en: 'What are you?', idn: 'Kamu ini apa?', to: 'meta' },
 ];
@@ -62,7 +62,7 @@ const placeLabel: Record<EqbotPlace, { en: string; idn: string }> = {
   services: { en: 'Services', idn: 'Layanan' },
   certificates: { en: 'Certificates', idn: 'Sertifikat' },
   contact: { en: 'Contact', idn: 'Kontak' },
-  projects: { en: 'Projects', idn: 'Projek' },
+  projects: { en: 'Projects', idn: 'Proyek' },
 };
 
 export function eqbotPlaceOf(id: string, node: EqbotNode): EqbotPlace | undefined {
@@ -965,7 +965,7 @@ export const eqbotNodes: Record<string, EqbotNode> = {
   'home-buttons': reply(
     {
       en: 'Get in Touch leads to the contact form, where the email is r.haikal1610@gmail.com and the phone is +62 853-6278-4585. View Projects leads to the project list, which holds the web, design, and group work.',
-      idn: 'Hubungi Saya menuju formulir kontak, tempat emailnya r.haikal1610@gmail.com dan teleponnya +62 853-6278-4585. Lihat Projek menuju daftar proyek, yang menyimpan kerja web, desain, dan kelompok.',
+      idn: 'Hubungi Saya menuju formulir kontak, tempat emailnya r.haikal1610@gmail.com dan teleponnya +62 853-6278-4585. Lihat Proyek menuju daftar proyek, yang menyimpan kerja web, desain, dan kelompok.',
     },
     { en: 'One button writes to him. The other opens the projects.', idn: 'Satu tombol menulis kepadanya. Satunya membuka proyek.' },
     'home',

@@ -2,7 +2,7 @@
 
 # Design System, UX Blueprint & Engineering Guardrails — 3D Paper Craft Developer Portfolio
 
-> **Status:** Single Source of Truth (v1.4). Replaces `PORTFOLIO_STANDARDS.md` and `.cursor/rules/portfolio-standards.mdc` (both deleted 2026-11-22).
+> **Status:** Single Source of Truth (v1.6). Replaces `PORTFOLIO_STANDARDS.md` and `.cursor/rules/portfolio-standards.mdc` (both deleted 2026-11-22).
 > **Owner:** Rifqi Haikal Chairiansyah (`portofolio-rifqi`)
 > **Approved Concept:** *The Architect's Paper Desk — Lamp & Sheet edition* (final score 91.5 / 100, see §1)
 > **Rendering Strategy:** Hybrid 2D + 3D — tokenized SVG paper layers for 80%+ of the scene, one lazy React Three Fiber figurine on capable desktops
@@ -145,11 +145,11 @@ Shadow direction is a token (`--light-x`), not hand-tuned per component (§5.4).
 | Layer role | Approved objects | Purpose |
 | --- | --- | --- |
 | Back wall (L1) | Window + light beam, small pinboard, one wall shelf | Office atmosphere, depth |
-| Desk (L2) | Wood-grain paper desk plane, desk mat | Grounds the scene |
+| Desk (L2) | Wood-grain paper desk plane, desk mat, folded notebook with one sticky note (the figurine's seat) | Grounds the scene |
 | Focal object (L2) | Open paper laptop + live HTML screen | Identity, role, live status |
-| Character (L2) | Paper figurine of Rifqi (GLB or poster) | Personal brand, links Hero to EQbot |
+| Character (L2) | Paper puppet of Rifqi (3D sheets or SVG poster), seated on the notebook, near hand on the laptop | Personal brand, links Hero to EQbot |
 | Lamp (L2) | Articulated paper desk lamp | Theme switch, light source |
-| Foreground (L3) | Mug, paper plant, folded notebook, one sticky note | Parallax depth, warmth |
+| Foreground (L3) | Mug, paper plant | Parallax depth, warmth |
 
 - Full props appear in `#home` only. Lower sections use **at most 1–2 edge props** with `pointer-events: none`.
 - Every object needs a compositional reason. No clutter to fill whitespace.
@@ -168,7 +168,7 @@ Derived from the owner's turnaround reference (front, ¾, side, back, ¾-back, p
 
 | Feature | Reference | Paper translation |
 | --- | --- | --- |
-| Build & pose | Average athletic build, relaxed standing pose, arms down | ~5 heads tall miniature, relaxed A-pose for rigging; idle pose seated or standing beside the laptop |
+| Build & pose | Average athletic build, relaxed standing pose, arms down | ~4.5 heads tall paper puppet (flat cut-out sheets on joints, `figurine-parts.ts`); hero pose seated on the notebook, near hand on the laptop |
 | Hair | Black tight curls on top, low taper fade on sides and back | **Quilled paper curls** (coiled paper strips) on top; short flat-cut paper planes for the fade |
 | Face | Warm light-brown skin, dark almond eyes, straight brows, calm slight smile | Flat-shaded planes; eyes as small dark almond cut-outs, brows as thin paper strips, mouth as a single subtle fold. No realistic skin, no open mouth, no teeth |
 | Top | Fitted black crew-neck t-shirt | Charcoal cardstock (`--ill-shirt`), never pure black |
@@ -177,9 +177,9 @@ Derived from the owner's turnaround reference (front, ¾, side, back, ¾-back, p
 
 Rules:
 
-- One character identity everywhere: Hero (GLB or poster), EQbot avatar (head crop of the same poster), 404 page.
-- Never photoreal, never uncanny. Low-poly folded planes (≤ 15k triangles total).
-- Non-blocking: no cursor-chasing, no walking across text, no gating navigation. Idle motion is limited to one blink or head turn, on demand (§10).
+- One character identity everywhere, drawn from one set of parts (`figurine-parts.ts`): Hero (3D sheets or poster), About bust, EQbot avatar (head crop with expression parts), 404 page.
+- Never photoreal, never uncanny. Flat paper sheets with real thickness (≤ 15k triangles total; about 3.4k today).
+- Non-blocking: no cursor-chasing, no walking across text, no gating navigation. Motion is limited to the clips in §10.2, all on demand: one wave per session, look at the laptop, a glance at the lamp on theme change, a thinking pose while EQbot is open, and a 120 ms blink every 4–7 s only while the stage is on screen.
 - The reference photos are personal data. They MUST NOT be committed to `public/` or the repo; keep them in private storage.
 
 ---
@@ -456,10 +456,10 @@ One component per section, made responsive with Tailwind breakpoints. **No separ
 
 - `PaperDeskCanvas.tsx` (`"use client"`) loads via `next/dynamic(() => import(…), { ssr: false })` from `FigurineSlot`, which keeps the `RifqiFigurine` poster underneath until the first frame is drawn.
 - **Capability gate** (`hooks/useCapabilityGate.ts`), checked after hydration inside `requestIdleCallback`: width ≥ 1024, `matchMedia('(pointer: fine)')`, not `prefers-reduced-motion`, no `navigator.connection.saveData`, `deviceMemory ≥ 4` and `hardwareConcurrency ≥ 4` when exposed, and WebGL2 available. Otherwise the poster stays. `?webgl=off` forces the poster for testing.
-- `dpr={[1, 1.5]}`, `frameloop="demand"`, `flat` (no tone mapping, so token colours stay true), `gl={{ antialias: true, alpha: true, powerPreference: 'low-power' }}`, orthographic camera fitted to the `FIGURINE` box (200 × 460 units).
-- With `frameloop="demand"` nothing renders while idle: frames are drawn only on theme change, resize, or during the one-off head turn. No `IntersectionObserver` pause is needed.
-- Lighting: one hemisphere fill from tokens (`--ill-sole` / `--ill-page`) plus one directional key positioned by `--light-x` and coloured by `--ill-frame` (day) or `--ill-bulb` (lamp). Colours are read from CSS tokens on every theme change. No shadow maps; a flat contact-shadow ellipse matches the poster.
-- **Model:** procedural low-poly mesh in `scene/figurine-model.tsx`, built from primitives in poster coordinates (`X = x − 100`, `Y = 460 − y`). Flat-shaded, `roughness 0.9`, `metalness 0`, under 4k triangles, no asset download. A Blender GLB may replace it later only if it keeps this framing and the §9.5 budget; it would then load with `useGLTF` + Meshopt.
+- `dpr={[1, 1.5]}`, `frameloop="demand"`, `flat` (no tone mapping, so token colours stay true), `gl={{ antialias: true, alpha: true, powerPreference: 'low-power' }}`, orthographic camera fitted to `STAGE_FRAME` (280 × 400 poster units), which is also the poster's `crop="stage"` viewBox and the `FIGURINE` stage box at 1:1.
+- With `frameloop="demand"` nothing renders while idle: frames are drawn only on theme change, resize, or while a clip runs (`figurine-clips.ts`). The blink is scheduled only while the canvas intersects the viewport and the tab is visible. `e2e/figurine.spec.ts` asserts zero draw calls while idle.
+- No lights: unlit `MeshBasicMaterial` in token colours, so the front view equals the poster. Light direction comes from the same fold planes as the poster, cross-faded by `--light-x`; the cut edge is `--paper-cut` on the sheet sides and outline. Tokens are read on every theme change (browsers may serialise them as `#rrggbbaa`). At night `--figure-rim` adds a lamp-side rim to poster and canvas alike. No shadow maps; a flat contact-shadow ellipse under the seat matches the poster.
+- **Model:** the paper puppet. `figurine-mesh.ts` extrudes each cut part of `figurine-parts.ts` into a 1.6-unit sheet (details stay flat, lines become flat strokes); `figurine-rig.ts` poses the joints and each sheet takes its joint's matrix flipped to Y-up (`S · M · S`). About 3.4k triangles, no asset download. `e2e/figurine.spec.ts` keeps the 3D front view within 2 % of the poster's pixels (measured 0.06 % dark, 1.5 % light; the rest is line antialiasing). No Blender GLB.
 - R3F disposes declared geometries and materials on unmount.
 - Wrapped in an error boundary and listening for `webglcontextlost`. On failure the canvas unmounts and the poster stays, with identical framing, so there is zero layout shift.
 - three.js loads as its own lazy chunk (≈ 240 KB gzip), never in first-load JS.
@@ -469,16 +469,16 @@ One component per section, made responsive with Tailwind breakpoints. **No separ
 | Asset | Tool | Output | Optimization |
 | --- | --- | --- | --- |
 | Scene layers, props, laptop, lamp | Figma or Inkscape, hand-drawn | Inline SVG React components | SVGO (`multipass`, keep `viewBox`), fills replaced with tokens |
-| Figurine 3D | Procedural R3F primitives from the poster coordinates (§9.3); optional later: Blender 4.x GLB | `src/components/scene/figurine-model.tsx` | No download; < 4k triangles. A GLB must pass `gltf-transform optimize --compress meshopt` and §9.5 |
-| Figurine poster | Hand-drawn inline SVG, `RifqiFigurine` (front view, tokenized, light/dark from the same file) | `src/components/scene/RifqiFigurine.tsx` | ≤ 8 KB source. The 3D view matches its framing in `FIGURINE` |
-| EQbot avatar | Same component, `crop="head"` (a different viewBox, not a second drawing) | — | — |
+| Figurine 3D | Paper puppet extruded at runtime from `figurine-parts.ts` (§9.3) | `src/components/scene/figurine-model.tsx`, `figurine-mesh.ts` | No download; ≤ 15k triangles |
+| Figurine poster | The same parts drawn flat by `RifqiFigurine` (server-rendered, tokenized, light/dark from one file); poses and expressions in `figurine-parts.ts` | `src/components/scene/RifqiFigurine.tsx` | Rendered on the server and passed into the client stage, so the parts never enter first-load JS |
+| EQbot avatar | Same component, `crop="head"` with `expression` (neutral, smile, thinking, wink) mapped to the chat state | — | — |
 | Project screenshots | Real captures | `.webp` | ≤ 150 KB, explicit width/height |
 
 ### 9.5 Asset Budgets
 
 | Category | Target | Hard limit |
 | --- | --- | --- |
-| Figurine GLB | ≤ 1.5 MB | 3 MB |
+| Figurine 3D | 0 bytes downloaded, ≤ 12k triangles | 15k triangles |
 | Optional decorative GLB | ≤ 300 KB | 500 KB |
 | 3D textures | ≤ 1024² | never above 2048² |
 | SVG scene layer | ≤ 40 KB | 80 KB |
@@ -504,7 +504,7 @@ Naming: lowercase kebab-case with a domain prefix in `public/assets/papercraft/`
 
 ### 10.2 Allowed & Forbidden Motion
 
-**Allowed:** one reveal per section on first view (`opacity` + `translateY(12px → 0)`), visible by default in SSR HTML (progressive enhancement, no `opacity: 0` trap); 2 px hover lift on cards; tab and dialog transitions; the hero caret; lamp tilt; one figurine head turn on demand; the postmark stamp (once).
+**Allowed:** one reveal per section on first view (`opacity` + `translateY(12px → 0)`), visible by default in SSR HTML (progressive enhancement, no `opacity: 0` trap); 2 px hover lift on cards; tab and dialog transitions; the hero caret; lamp tilt; the postmark stamp (once); the figurine clips (§2.6): one wave per session, look at the laptop, glance at the lamp, thinking while EQbot is open, and the blink. The blink is the only repeating motion on the page: a single 120 ms frame change every 4–7 s, paused off screen and in hidden tabs.
 
 **Forbidden:** splash or loading screens; scroll hijacking, Lenis or any smooth-scroll override; continuous loops on multiple props; physics engines; falling or flying cards; 3D tilt; particles, aurora, shimmer; `transition: all`; animating layout properties.
 
@@ -627,7 +627,7 @@ src/
 ### 14.3 Security & Privacy
 
 - Never commit secrets (`RESEND_API_KEY`) or expose them through `NEXT_PUBLIC_*`. `.env.local` stays ignored.
-- The contact Server Action validates with `zod` (length limits, email format), strips control characters, rejects honeypot fills and submissions faster than 3 s, verifies BotID, and is behind a Vercel Firewall rate-limit rule.
+- The contact Server Action validates with `zod` (length limits, email format), strips control characters, rejects honeypot fills and submissions faster than 3 s, verifies BotID, and is behind a Vercel Firewall rate-limit rule. *Status (v1.5): validation, control-character stripping, honeypot and fill time are implemented; BotID and the Firewall rule are pending — they need the owner's Vercel project.*
 - External links: `target="_blank" rel="noopener noreferrer"`.
 - No third-party trackers without explicit owner approval. Vercel Web Analytics MAY be enabled (cookieless).
 - Personal reference photos never ship in the repo (§2.6).
@@ -643,10 +643,12 @@ src/
 | Build | `npm run build` | ✅ |
 | Design rules | `npm run check:design` → `scripts/check-design-rules.mjs` greps `src/` for: hex/rgb literals in `.tsx`, `rounded-(xl|2xl|3xl)`, `rounded-full` outside the allowlist, `backdrop-blur`, `bg-gradient`/`bg-clip-text`, `dark:` outside the hero allowlist, `z-[`, `font-black|font-extrabold`, `transition-all`, `truncate`, and orphan files in `public/` | ✅ |
 | Data integrity | Same script: asset paths exist, certificate counts match, EN/ID pairs non-empty | ✅ |
-| E2E + a11y | `npx playwright test`: 390 px and 1440 px, light and dark, reduced motion, WebGL disabled (`--disable-webgl`), keyboard tour, axe with zero serious/critical issues | ✅ |
-| Performance | Lighthouse CI on the Vercel preview: Performance ≥ 90 mobile, Accessibility = 100 | ⚠️ warn |
+| E2E + a11y | `npm run test:e2e` (`playwright.config.ts`, specs in `e2e/`): projects `desktop-light`/`desktop-dark` at 1440 px, `mobile-light`/`mobile-dark` at 390 px, `fallback` (reduced motion, `--disable-webgl --disable-3d-apis`); section order, anchors, keyboard tabs/dialogs/menu trap, contact validation, language switch, 404, axe (`@axe-core/playwright`, WCAG 2.2 AA) with zero serious/critical issues | ✅ |
+| Performance | Lighthouse CI (`lighthouserc.json`, `npx -y @lhci/cli@0.15.1 autorun`; locally set `CHROME_PATH`): mobile, 3 runs — Performance ≥ 90, Accessibility = 100, Best Practices ≥ 90, SEO ≥ 90, LCP ≤ 2.5 s, CLS ≤ 0.1. Runs against `next start` in CI until a Vercel preview URL is wired | ⚠️ warn |
 
-All checks run in GitHub Actions on every pull request.
+All checks run in GitHub Actions (`.github/workflows/ci.yml`) on every pull request: `verify` (lint, types, design rules, build) → `e2e` (blocks merge) and `lighthouse` (`continue-on-error`).
+
+Do not put `content-visibility: auto` on sections: placeholder heights make in-page anchors land in the wrong place (`e2e/interaction.spec.ts` guards this).
 
 ---
 
@@ -659,7 +661,7 @@ All checks run in GitHub Actions on every pull request.
 | **P2 — Assets** ✅ (pending owner approval of the figurine) | SVG wall, desk, laptop, lamp, props (light/dark via tokens); SVG figurine poster; EQbot avatar; brand icons; global paper grain; dev-only review sheet at `/papercraft` (404 in production) | Budgets in §9.5 met; owner approves the figurine against the turnaround |
 | **P3 — Hero stage** ✅ | Procedural 3D figurine matching the SVG poster; `PaperDeskStage`, `LaptopScreenUI`, `DeskLamp`, `useParallaxStage`, `PaperDeskCanvas` with capability gate and fallback; hero moved out of the mount gate and the section reveal | LCP ≤ 2.5 s (measured 1.0–1.7 s at 4× CPU, slow 4G), WebGL-off test passes |
 | **P4 — Sections** ✅ | Replace `ResponsiveLayout` and `mobile/*` with one responsive component per section (§8); About, Experience, Services + case-study dialog, Project Archive, Certificates, Contact (Server Action), Footer, Navbar, StudioRail, EQbot reskin, 404; fix `navLinks` order; About sheet lifted top edge; bring first-load JS for `/` under 220 KB gzip (244 KB after P3: every section and `portfolio.ts` ship as client code, so move sections to Server Components with client leaves) | Every section meets §4 and passes the authenticity tests (§3.3). Measured: 160.6 KB gzip, no horizontal overflow at 390/768/1280/1440, keyboard tabs, dialogs and focus return verified |
-| **P5 — QA & launch** | Playwright/axe suite, Lighthouse CI, copy review EN/ID, Vercel preview review by owner | DoD (§17.3) fully checked |
+| **P5 — QA & launch** ✅ (pending owner: Vercel preview review, BotID + Firewall rule) | Playwright/axe suite, Lighthouse CI, copy review EN/ID, Vercel preview review by owner | DoD (§17.3) fully checked. Measured: Playwright 97 passed / 6 skipped by design; axe clean; Lighthouse (localhost, simulated mobile) Performance 0.87–0.88, Accessibility / Best Practices / SEO 1.00, CLS 0; real LCP 1.1–1.8 s at 4× CPU, slow 4G; first-load JS 160.8 KB gzip |
 
 ---
 
@@ -682,15 +684,15 @@ All checks run in GitHub Actions on every pull request.
 
 ### 17.3 Definition of Done
 
-- [ ] Matches *The Architect's Paper Desk* (matte cardstock, one light source per theme, crisp edges, no glass/neon).
-- [ ] Passes the five authenticity tests (§3.3) and contains no banned pattern (§3.2).
-- [ ] Uses tokens only; light and dark verified; shadows follow `--light-x`.
-- [ ] EN/ID parity and `portfolio.ts` integrity preserved; no invented facts.
-- [ ] Hero renders without a splash; 3D is lazy, capability-gated, with a pixel-matched poster fallback.
-- [ ] Parallax uses `translate3d` only and is off on touch, < 1024 px, and reduced motion.
-- [ ] No truncated meaningful copy; no horizontal overflow at 390 px.
-- [ ] Keyboard, focus rings, semantics, and ARIA verified; axe clean.
-- [ ] `npm run lint`, `npx tsc --noEmit`, `npm run build`, `npm run check:design`, and Playwright pass.
+- [ ] *(owner review on the Vercel preview)* Matches *The Architect's Paper Desk* (matte cardstock, one light source per theme, crisp edges, no glass/neon).
+- [x] Passes the five authenticity tests (§3.3) and contains no banned pattern (§3.2).
+- [x] Uses tokens only; light and dark verified; shadows follow `--light-x`.
+- [x] EN/ID parity and `portfolio.ts` integrity preserved; no invented facts.
+- [x] Hero renders without a splash; 3D is lazy, capability-gated, with a pixel-matched poster fallback.
+- [x] Parallax uses `translate3d` only and is off on touch, < 1024 px, and reduced motion.
+- [x] No truncated meaningful copy (card descriptions clamp; the full text is in the case study); no horizontal overflow at 390 px.
+- [x] Keyboard, focus rings, semantics, and ARIA verified; axe clean.
+- [x] `npm run lint`, `npx tsc --noEmit`, `npm run build`, `npm run check:design`, and Playwright pass.
 
 ---
 
@@ -711,3 +713,5 @@ All checks run in GitHub Actions on every pull request.
 | 2026-11-22 | v1.2 — Phase 2. Hand-drawn, token-only inline SVG assets in `src/components/scene/`: `WallLayer` (window with day beam / night moon, shelf with `.NET` / `SQL` / `C#` binders), `DeskLayer` (desk, drawer pedestal labelled `01`–`03`, mat, laptop with an empty glass area at `SCREEN`), `LampArt` (dark-mode light cone), `FrontLayer` (mug, notebook with sticky note, paper plant), `RifqiFigurine` (quilled curls, taper fade, charcoal tee, two-tone denim, unbranded sneakers). Shared geometry in `stage-geometry.ts`. Paper depth tokens and the scene palette added. EQbot avatar now uses the figurine head crop. Global paper grain on `body::before`. The figurine poster became inline SVG instead of a raster render, so one file serves both themes; the GLB moves to Phase 3. |
 | 2026-11-22 | v1.3 — Phase 3. Hero rebuilt as one responsive `Hero` (`MobileHero` deleted) around `PaperDeskStage`: SVG layers, `LaptopScreenUI` as real HTML on the glass (compact laptop card under 768 px), `DeskLamp` theme switch with 6° head tilt, `useParallaxStage` (pointer, rAF, CSS variables) and scroll-driven depth in `scene.css`. 3D figurine: `FigurineSlot` → capability gate → lazy `PaperDeskCanvas` with a procedural low-poly model (Blender is not available in this toolchain, and a procedural mesh needs no download); poster stays on any failure. Theme flip unified in `useThemeToggle` (fixes the toggle reading `theme` instead of `resolvedTheme` under `system`). New data: `heroIntro`, `cvFile`, `contactInfo.availability`; `typingTexts` removed. Hero excluded from the section reveal and rendered outside the `mounted` gate, which moved LCP from the EQbot notice (3.2–4.0 s) to the hero text (1.0–1.7 s). Rule changes: 5/7 grid and sticky from 1280 px, tablet keeps the full static stage, figurine stands left of the laptop. |
 | 2026-11-22 | v1.4 — Phase 4. `ResponsiveLayout`, `mobile/*`, `hocs/`, `AnimatedSectionTitle`, `Projects`, `ViewAllProjects`, `PortfolioFigmaCard`, `ProjectDetailDialog`, `Portal`, `FloatingNavigation`, `useLedgerRise`, `useMediaQuery`, `api/contact` and `lib/submit-contact` deleted; `public/assets/me.png` deleted (About now uses the figurine head crop with a paper clip, per §2.6). `page.tsx` and every section are Server Components; bilingual copy via `<T>` + CSS on `<html lang>`. Section order lives in `data/sections.ts` (`navLinks` removed). Experience is a folder-tab ledger of `<details>` rows; Certificates are `<details>` folios; Services is a blueprint board plus a Selected work shelf (`#projects`) whose case study and archive drawer are native dialogs with filters, labelled search and a live count. Contact posts to a Server Action (zod, honeypot, 3 s minimum fill) and shows the postmark only after Resend accepts. StudioRail/Provider use one IntersectionObserver and a CSS scroll-driven progress rule; the JS section reveal was replaced by a CSS `view()` timeline. Navbar and BrandLockup render on the server (theme swap via `dark:`). EQbot and the additional-skills dialog load lazily. First-load JS for `/`: 244 → 160.6 KB gzip. |
+| 2026-11-23 | v1.6 — P6.1–P6.2 (`docs/art-motion-upgrade.md`). The figurine is a paper puppet: `figurine-parts.ts` (parts, joints, poses, expressions), `figurine-rig.ts` (joint solver, projection), `figurine-mesh.ts` (extruded sheets), `figurine-clips.ts` (on-demand clips). Poster, About bust, EQbot expressions, 404 pose and the 3D view all draw from it; the primitive mesh and `figurine-geometry.ts` are gone. Hero pose is seated on the notebook (moved from L3 to L2) with the near hand on the laptop; the mug moved beside the lamp. Dark mode: `--ill-shirt` lifted to `#45413c` plus a `--figure-rim` lamp-side rim. Clips allowed in §2.6 / §10.2. New `e2e/figurine.spec.ts`: poster ↔ 3D match, zero draws while idle, look clip stops. |
+| 2026-11-23 | v1.5 — Phase 5. Playwright suite (`playwright.config.ts`, `e2e/`: page, interaction, contact, a11y, fallback) with `@axe-core/playwright`; `npm run test:e2e`; `lighthouserc.json`; CI split into `verify` → `e2e` (blocking) + `lighthouse` (warn). Fixes found by the suite: `content-visibility` removed from sections (broke anchor scrolling), contact action strips control characters and validates before the fill-time check, blueprint list no longer has non-`li` children, capability headings h4 → h3, footer text contrast raised to `/75`, theme button gets `aria-pressed`, mobile menu traps Tab and closes on Escape and at ≥ 1024 px. EN/ID copy review: natural Indonesian (`proyek`, `Stack inti`), clearer About and Contact copy, no invented facts. Results: lint, types, design rules, build green; Playwright 97 passed / 6 skipped; Lighthouse a11y/BP/SEO 1.00, Performance 0.87–0.88 on localhost (warn only; real LCP 1.1–1.8 s); first-load JS 160.8 KB gzip. Pending owner: BotID and the Firewall rate-limit rule (§14.3), Vercel preview review. |

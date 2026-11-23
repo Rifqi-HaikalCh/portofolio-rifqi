@@ -60,10 +60,7 @@ export function ContactForm() {
             <T en="Your letter is on its way." id="Surat Anda sedang dikirim." />
           </p>
           <p className="mt-2 max-w-[52ch] text-muted">
-            <T
-              en="I'll reply to the email address you gave, usually within two working days."
-              id="Saya akan membalas ke alamat email yang Anda berikan, biasanya dalam dua hari kerja."
-            />
+            <T en="I'll reply to the email address you gave." id="Saya akan membalas ke alamat email yang Anda berikan." />
           </p>
         </div>
       </div>
@@ -121,7 +118,7 @@ export function ContactForm() {
             'Pesan gagal dikirim. Coba lagi, atau kirim email langsung.'
           )}
         {state.status === 'too-fast' &&
-          say('That was quick. Give it a second look, then send again.', 'Cepat sekali. Periksa sekali lagi, lalu kirim ulang.')}
+          say('That was quick. Give it a second look, then send again.', 'Terlalu cepat. Periksa sekali lagi, lalu kirim ulang.')}
       </p>
 
       <div>

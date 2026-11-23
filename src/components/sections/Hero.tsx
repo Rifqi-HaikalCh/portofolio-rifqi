@@ -2,6 +2,7 @@ import { cvFile, heroHighlights, heroIntro, workExperience } from '../../data/po
 import { displayCase } from '../../lib/display-case';
 import { heroScreen } from '../../lib/hero-screen';
 import { PaperDeskStage } from '../scene/PaperDeskStage';
+import { RifqiFigurine } from '../scene/RifqiFigurine';
 import { T } from '../ui/T';
 
 /*
@@ -49,7 +50,7 @@ export function Hero() {
 
           <div className="mt-7 flex flex-col gap-3 sm:flex-row">
             <a href="#projects" className="btn-primary-custom min-h-11">
-              <T en="View projects" id="Lihat projek" />
+              <T en="View projects" id="Lihat proyek" />
             </a>
             {cvFile && (
               <a href={cvFile} download className="btn-outline-custom min-h-11">
@@ -60,7 +61,7 @@ export function Hero() {
         </div>
 
         <div className="xl:col-span-7">
-          <PaperDeskStage screen={heroScreen()} />
+          <PaperDeskStage screen={heroScreen()} poster={<RifqiFigurine crop="stage" pose="seated" className="h-full w-full" />} />
         </div>
       </div>
     </section>

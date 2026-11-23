@@ -6,7 +6,8 @@ import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
 import { RifqiFigurine } from '../scene/RifqiFigurine';
-import { EQBOT_OPEN_EVENT } from '../scene/scene-events';
+import type { Expression } from '../scene/figurine-parts';
+import { EQBOT_OPEN_EVENT, emitEqbotState } from '../scene/scene-events';
 import { scrollToStudioSection, useStudio } from './StudioProvider';
 import {
   eqbotCopy,
@@ -27,9 +28,10 @@ function reducedMotion() {
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
-function EqbotFace() {
-  // Head crop of the same paper figurine as the hero (DesignRules §2.6).
-  return <RifqiFigurine crop="head" className="h-full w-full" />;
+function EqbotFace({ expression = 'neutral' }: { expression?: Expression }) {
+  // Head crop of the same paper puppet as the hero (DesignRules §2.6); the
+  // expression swaps face parts only (docs/art-motion-upgrade.md §4).
+  return <RifqiFigurine crop="head" expression={expression} className="h-full w-full" />;
 }
 
 function downloadCv() {
@@ -183,6 +185,12 @@ export function EqbotCompanion() {
     setPhase(reducedMotion() ? 'shut' : 'shrink');
   };
 
+  // The hero figurine holds a "thinking" pose while the sheet is open.
+  const sheetOpen = phase !== 'shut';
+  useEffect(() => {
+    emitEqbotState(sheetOpen);
+  }, [sheetOpen]);
+
   // Escape closes to the tab. useEffectEvent reads the latest closeToTab without re-subscribing.
   const onEscape = useEffectEvent(() => closeToTab());
 
@@ -257,6 +265,9 @@ export function EqbotCompanion() {
 
   const choices = choicesFor(nodeId);
   const panelOpen = phase === 'grow' || phase === 'open';
+  const lastTurn = log[log.length - 1];
+  const mood: Expression =
+    phase === 'shrink' ? 'wink' : waiting ? 'thinking' : log.length > 1 && lastTurn?.who === 'bot' ? 'smile' : 'neutral';
   const showFace = phase !== 'fly';
 
   if (!ready) return null;
@@ -317,7 +328,7 @@ export function EqbotCompanion() {
               <span className="eqbot-avatar" ref={avatarRef}>
                 {showFace && (
                   <span className="eqbot-face-clip">
-                    <EqbotFace />
+                    <EqbotFace expression={mood} />
                   </span>
                 )}
                 <i className="eqbot-presence" />

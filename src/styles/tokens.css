@@ -66,6 +66,9 @@
   --paper-fold: rgb(27 25 22 / 0.12);
   --paper-drop-sm: drop-shadow(calc(2px * var(--light-x)) 2px 0 var(--paper-shadow));
   --paper-drop: drop-shadow(calc(4px * var(--light-x)) 4px 0 var(--paper-shadow));
+  /* Lamp-side rim on the figurine at night, so he never sinks into the wall (P6.2). */
+  --ill-figure-rim: transparent;
+  --figure-rim: drop-shadow(calc(-1.5px * var(--light-x)) 0 0 var(--ill-figure-rim));
 
   --paper-edge-flat: 0 0 0 1px rgb(var(--rgb-line));
   --paper-edge-cut:
@@ -96,7 +99,7 @@
   --ill-skin: #96694f;
   --ill-skin-shade: #78533e;
   --ill-hair: #161413;
-  --ill-shirt: #34312e;
+  --ill-shirt: #45413c;
   --ill-denim: #344862;
   --ill-denim-fade: #4e647e;
   --ill-sneaker: #70706e;
@@ -134,6 +137,7 @@
   --paper-shadow: rgb(0 0 0 / 0.5);
   --paper-cut: rgb(255 255 255 / 0.13);
   --paper-fold: rgb(0 0 0 / 0.22);
+  --ill-figure-rim: rgb(255 214 150 / 0.55);
 
   color-scheme: dark;
 }

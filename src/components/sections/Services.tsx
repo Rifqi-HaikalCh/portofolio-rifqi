@@ -83,7 +83,7 @@ const designServices: Capability[] = [
     bodyId: 'Tampilan dan nuansa yang dijaga aplikasi di setiap layar.',
     points: [
       ['Identity design', 'Desain identitas'],
-      ['Colour palettes', 'Palet warna'],
+      ['Color palettes', 'Palet warna'],
       ['Logos and icons', 'Logo dan ikon'],
     ],
   },
@@ -117,14 +117,15 @@ function toShelf(project: Project, kind: ShelfProject['kind']): ShelfProject {
 
 function CapabilityBoard({ items }: { items: Capability[] }) {
   return (
-    <ol className="blueprint crop-marks grid md:grid-cols-3">
+    <div className="blueprint crop-marks">
       <i /><i /><i /><i />
+      <ol className="grid md:grid-cols-3">
       {items.map((item, index) => (
         <li key={item.en} className="border-line p-6 md:p-8 [&:not(:last-child)]:border-b md:[&:not(:last-child)]:border-b-0 md:[&:not(:last-child)]:border-r">
           <p className="stamp text-xs">{String(index + 1).padStart(2, '0')}</p>
-          <h4 className="mt-3 font-serif text-2xl font-medium leading-snug text-ink">
+          <h3 className="mt-3 font-serif text-2xl font-medium leading-snug text-ink">
             <T en={item.en} id={item.id} />
-          </h4>
+          </h3>
           <p className="mt-3 leading-relaxed text-muted">
             <T en={item.bodyEn} id={item.bodyId} />
           </p>
@@ -138,7 +139,8 @@ function CapabilityBoard({ items }: { items: Capability[] }) {
           </ul>
         </li>
       ))}
-    </ol>
+      </ol>
+    </div>
   );
 }
 
@@ -167,9 +169,9 @@ function DevelopmentPanel() {
     <div className="grid gap-12 pt-8">
       <CapabilityBoard items={developerServices} />
       <div>
-        <h4 className="font-serif text-2xl font-medium text-ink">
+        <h3 className="font-serif text-2xl font-medium text-ink">
           <T en="Core stack" id="Stack inti" />
-        </h4>
+        </h3>
         <div className="mt-6 grid gap-8 sm:grid-cols-3">
           {coreGroups.map((group) => (
             <div key={group.en}>
@@ -208,9 +210,9 @@ function DesignPanel() {
       <CapabilityBoard items={designServices} />
       <div className="grid gap-10 lg:grid-cols-[1fr_1.4fr] lg:items-start">
         <div>
-          <h4 className="font-serif text-2xl font-medium text-ink">
+          <h3 className="font-serif text-2xl font-medium text-ink">
             <T en="Design tools" id="Alat desain" />
-          </h4>
+          </h3>
           <ul className="mt-6 grid grid-cols-2 gap-2">
             {designSkills.map((skill) => (
               <SkillChip key={skill.name} name={skill.name} image={skill.image} />

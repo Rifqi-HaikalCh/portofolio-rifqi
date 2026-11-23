@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, type CSSProperties } from 'react';
+import { useRef, type CSSProperties, type ReactNode } from 'react';
 import { useLanguage } from '../../context/LanguageContext';
 import { useParallaxStage } from '../../hooks/useParallaxStage';
 import { DeskLamp } from './DeskLamp';
@@ -28,7 +28,7 @@ const screenVars = {
   '--screen-h': pct(SCREEN.h, STAGE.height),
 } as CSSProperties;
 
-export function PaperDeskStage({ screen }: { screen: ScreenData }) {
+export function PaperDeskStage({ screen, poster }: { screen: ScreenData; poster: ReactNode }) {
   const stageRef = useRef<HTMLDivElement>(null);
   const { language } = useLanguage();
   useParallaxStage(stageRef);
@@ -44,7 +44,10 @@ export function PaperDeskStage({ screen }: { screen: ScreenData }) {
           <DeskLayer className="stage-layer" />
           <div className="stage-layer stage-fig">
             <div className="absolute" style={stageBox(FIGURINE)}>
-              <FigurineSlot title={language === 'en' ? 'Paper figurine of Rifqi at his desk' : 'Figur kertas Rifqi di mejanya'} />
+              <FigurineSlot
+                title={language === 'en' ? 'Paper figurine of Rifqi at his desk' : 'Figur kertas Rifqi di mejanya'}
+                poster={poster}
+              />
             </div>
           </div>
           <LampArt className="stage-layer" />

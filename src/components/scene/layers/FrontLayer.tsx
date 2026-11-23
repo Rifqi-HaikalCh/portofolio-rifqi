@@ -1,8 +1,9 @@
 import { STAGE_VIEWBOX } from '../stage-geometry';
 
 /*
-  L3 — foreground props (DesignRules.md §2.4): mug, notebook with a sticky note,
-  and a paper plant. They carry the largest parallax amplitude (±10 px) in
+  L3 — foreground props (DesignRules.md §2.4): mug and a paper plant. The
+  notebook moved to L2 in P6.2: the figurine sits on it, so it must share his
+  parallax depth. They carry the largest parallax amplitude (±10 px) in
   Phase 3, so they sit at the stage edges and never cover the laptop screen.
 */
 
@@ -28,25 +29,13 @@ export function FrontLayer({ className = '' }: { className?: string }) {
       focusable="false"
       preserveAspectRatio="xMidYMid slice"
     >
-      {/* Notebook lying on the front edge, with a sticky note */}
+      {/* Mug, between the laptop and the lamp: the figurine's hand rests where it used to stand (P6.2) */}
       <g style={drop}>
-        <polygon points="96,690 334,690 356,734 76,734" fill="var(--ill-notebook)" {...cut} />
-        <polygon points="76,734 356,734 356,744 76,744" fill="var(--ill-page)" />
-        <path d="M296 690L310 734" stroke="var(--ill-bezel)" strokeWidth="4" opacity="0.6" />
-      </g>
-      <g style={{ filter: 'var(--paper-drop-sm)' }}>
-        <polygon points="150,676 218,668 226,706 158,714" fill="var(--ill-note)" {...cut} />
-        <polygon points="214,700 226,706 218,712" fill="var(--paper-fold)" />
-        <path d="M164 686l40-5M166 696l30-4" stroke="var(--ill-bezel)" strokeWidth="2" opacity="0.45" />
-      </g>
-
-      {/* Mug */}
-      <g style={drop}>
-        <path d="M454 616h20a16 16 0 0 1 0 40h-20" fill="none" stroke="var(--ill-mug)" strokeWidth="10" />
-        <rect x="370" y="598" width="88" height="96" rx="3" fill="var(--ill-mug)" {...cut} />
-        <rect x="370" y="598" width="88" height="10" fill="var(--paper-cut)" />
-        <rect x="378" y="602" width="72" height="5" fill="var(--ill-coffee)" />
-        <rect x="370" y="640" width="88" height="14" fill="var(--paper-fold)" />
+        <path d="M1218 616h-20a16 16 0 0 0 0 40h20" fill="none" stroke="var(--ill-mug)" strokeWidth="10" />
+        <rect x="1214" y="598" width="88" height="96" rx="3" fill="var(--ill-mug)" {...cut} />
+        <rect x="1214" y="598" width="88" height="10" fill="var(--paper-cut)" />
+        <rect x="1222" y="602" width="72" height="5" fill="var(--ill-coffee)" />
+        <rect x="1214" y="640" width="88" height="14" fill="var(--paper-fold)" />
       </g>
 
       {/* Paper plant in a terracotta pot */}

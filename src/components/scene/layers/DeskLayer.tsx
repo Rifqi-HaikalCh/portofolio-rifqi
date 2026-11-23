@@ -65,6 +65,18 @@ export function DeskLayer({ className = '' }: { className?: string }) {
       {/* Desk mat */}
       <polygon points="372,648 1228,648 1262,694 338,694" fill="var(--ill-mat)" {...cut} />
 
+      {/* Notebook on the front edge: the figurine's seat (P6.2), with a sticky note */}
+      <g style={drop}>
+        <polygon points="96,690 334,690 356,734 76,734" fill="var(--ill-notebook)" {...cut} />
+        <polygon points="76,734 356,734 356,744 76,744" fill="var(--ill-page)" />
+        <path d="M296 690L310 734" stroke="var(--ill-bezel)" strokeWidth="4" opacity="0.6" />
+      </g>
+      <g style={dropSm}>
+        <polygon points="92,676 160,668 168,706 100,714" fill="var(--ill-note)" {...cut} />
+        <polygon points="156,700 168,706 160,712" fill="var(--paper-fold)" />
+        <path d="M106 686l40-5M108 696l30-4" stroke="var(--ill-bezel)" strokeWidth="2" opacity="0.45" />
+      </g>
+
       {/* Laptop lid with bezel and glass */}
       <g style={drop}>
         <rect x="470" y="150" width="660" height="422" rx="8" fill="var(--ill-bezel)" stroke="var(--ill-laptop)" strokeWidth="5" />

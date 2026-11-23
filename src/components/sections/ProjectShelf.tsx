@@ -91,7 +91,7 @@ function Archive({ projects, onClose, onOpen }: { projects: ShelfProject[]; onCl
         </div>
 
         <h3 id="archive-title" className="mt-8 font-serif text-4xl font-medium tracking-tight text-ink md:text-5xl">
-          <T en="Every project" id="Semua projek" />
+          <T en="Every project" id="Semua proyek" />
         </h3>
 
         <div className="mt-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
@@ -133,7 +133,7 @@ function Archive({ projects, onClose, onOpen }: { projects: ShelfProject[]; onCl
         </div>
 
         <p className="mt-6 font-mono text-xs text-muted" role="status" aria-live="polite">
-          {say(`${shown.length} of ${projects.length} projects`, `${shown.length} dari ${projects.length} projek`)}
+          {say(`${shown.length} of ${projects.length} projects`, `${shown.length} dari ${projects.length} proyek`)}
         </p>
 
         {shown.length > 0 ? (
@@ -187,7 +187,7 @@ export function ProjectShelf({ projects, featured }: { projects: ShelfProject[];
           <ArrowRight size={16} aria-hidden="true" />
         </button>
         <p className="text-sm text-muted">
-          <T en="Every project, with filters and search." id="Semua projek, dengan saringan dan pencarian." />
+          <T en="Every project, with filters and search." id="Semua proyek, dengan saringan dan pencarian." />
         </p>
       </div>
 

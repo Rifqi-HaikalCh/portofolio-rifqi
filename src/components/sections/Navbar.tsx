@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, type MouseEvent } from 'react';
+import { useEffect, useRef, useState, type KeyboardEvent, type MouseEvent } from 'react';
+import { useHydrated } from '../../hooks/useHydrated';
 import { Menu, X, Sun, Moon } from 'lucide-react';
 import { useThemeToggle } from '../shared/Providers';
 import { useLanguage } from '../../context/LanguageContext';
@@ -16,7 +17,41 @@ import { T } from '../ui/T';
 */
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const { toggleTheme } = useThemeToggle();
+  const { isDark, toggleTheme } = useThemeToggle();
+  const hydrated = useHydrated();
+  const headerRef = useRef<HTMLElement>(null);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+
+  // Escape closes the menu; Tab cycles inside the bar and the open menu (§14.2).
+  const onMenuKeyDown = (event: KeyboardEvent<HTMLElement>) => {
+    if (!menuOpen) return;
+    if (event.key === 'Escape') {
+      setMenuOpen(false);
+      menuButtonRef.current?.focus();
+      return;
+    }
+    if (event.key !== 'Tab' || !headerRef.current) return;
+    const stops = Array.from(
+      headerRef.current.querySelectorAll<HTMLElement>('a[href], button:not([disabled])'),
+    ).filter((node) => node.offsetParent !== null);
+    const first = stops[0];
+    const last = stops[stops.length - 1];
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  };
+
+  useEffect(() => {
+    if (!menuOpen) return undefined;
+    const close = () => setMenuOpen(false);
+    const wide = window.matchMedia('(min-width: 1024px)');
+    wide.addEventListener('change', close);
+    return () => wide.removeEventListener('change', close);
+  }, [menuOpen]);
   const { language, toggleLanguage, say } = useLanguage();
   const { activeId } = useStudio();
 
@@ -30,7 +65,7 @@ export default function Navbar() {
   const links = pageSections.slice(1);
 
   return (
-    <header className="fixed inset-x-0 top-0 z-chrome border-b border-line bg-paper">
+    <header ref={headerRef} onKeyDown={onMenuKeyDown} className="fixed inset-x-0 top-0 z-chrome border-b border-line bg-paper">
       <div className="relative mx-auto flex h-16 max-w-6xl items-center px-5 lg:px-8">
         <a href="#home" onClick={(event) => go(event, 'home')} aria-label="Rifqi Haikal, home" className="inline-flex min-h-11 items-center">
           <BrandLockup variant="mark" label="" className="h-8 w-auto sm:h-9" />
@@ -61,7 +96,8 @@ export default function Navbar() {
             <button
               type="button"
               onClick={toggleTheme}
-              aria-label={say('Toggle dark mode', 'Ganti mode gelap')}
+              aria-label={say('Dark mode', 'Mode gelap')}
+              aria-pressed={hydrated ? isDark : undefined}
               className="inline-flex h-11 w-11 items-center justify-center border-r border-line text-ink hover:bg-ink hover:text-paper"
             >
               <Moon size={16} className="dark:hidden" aria-hidden="true" />
@@ -77,6 +113,7 @@ export default function Navbar() {
             </button>
           </div>
           <button
+            ref={menuButtonRef}
             type="button"
             onClick={() => setMenuOpen((open) => !open)}
             aria-label={menuOpen ? say('Close menu', 'Tutup menu') : say('Open menu', 'Buka menu')}

@@ -61,7 +61,7 @@ export default function AdditionalSkillsDialog({
             <p className="mt-2 max-w-xl leading-relaxed text-muted">
               {text(
                 'Languages and frameworks from the work and projects already listed on this page.',
-                'Bahasa dan framework dari kerja dan projek yang sudah tercantum di halaman ini.'
+                'Bahasa dan framework dari kerja dan proyek yang sudah tercantum di halaman ini.'
               )}
             </p>
           </div>
@@ -117,7 +117,7 @@ export default function AdditionalSkillsDialog({
                     </div>
                     <div className="p-5">
                       <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-accent">
-                        {card.source === 'work' ? text('Work', 'Kerja') : text('Project', 'Projek')}
+                        {card.source === 'work' ? text('Work', 'Kerja') : text('Project', 'Proyek')}
                       </p>
                       <h4 className="mt-2 font-serif text-xl font-medium leading-snug text-ink">
                         {idn && card.titleId ? card.titleId : card.title}
@@ -139,7 +139,7 @@ export default function AdditionalSkillsDialog({
               <p className="max-w-xl leading-relaxed text-muted">
                 {text(
                   'Counted once for each work or project outside the enterprise core. Choose a row to see those works.',
-                  'Dihitung sekali untuk tiap kerja atau projek di luar inti enterprise. Pilih baris untuk melihat karya itu.'
+                  'Dihitung sekali untuk tiap kerja atau proyek di luar inti enterprise. Pilih baris untuk melihat karya itu.'
                 )}
               </p>
               {(['lead', 'repeat', 'once'] as const).map((tier) => {

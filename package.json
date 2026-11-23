@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "check:design": "node scripts/check-design-rules.mjs"
+    "check:design": "node scripts/check-design-rules.mjs",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@react-three/fiber": "^9.8.2",
@@ -23,6 +24,7 @@
     "zod": "^4.6.7"
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.13",
     "@playwright/test": "^1.65.1",
     "@tailwindcss/postcss": "^4.3.5",
     "@types/node": "^24.19.2",

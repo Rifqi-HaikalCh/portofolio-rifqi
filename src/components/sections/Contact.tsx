@@ -28,8 +28,8 @@ export function Contact() {
             titleId="contact-title"
             lede={
               <T
-                en="A role, a project, or a question about something on this desk. I read every message."
-                id="Sebuah posisi, projek, atau pertanyaan tentang apa pun di meja ini. Saya membaca setiap pesan."
+                en="A role, a project, or a question about something on this desk."
+                id="Sebuah posisi, proyek, atau pertanyaan tentang apa pun di meja ini."
               />
             }
           />

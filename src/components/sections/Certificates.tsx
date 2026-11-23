@@ -22,7 +22,7 @@ export function Certificates() {
           titleId="certificates-title"
           lede={
             <T
-              en={`${total} certificates from courses, events, organisations and internships. Each one opens the original.`}
+              en={`${total} certificates from courses, events, organizations and internships. Each one opens the original.`}
               id={`${total} sertifikat dari kursus, kegiatan, organisasi, dan magang. Masing-masing membuka dokumen aslinya.`}
             />
           }

@@ -32,14 +32,14 @@ export function Footer() {
           </div>
 
           <nav aria-labelledby="footer-index">
-            <h2 id="footer-index" className="mb-4 font-mono text-[11px] uppercase tracking-[0.2em] text-paper/60">
+            <h2 id="footer-index" className="mb-4 font-mono text-[11px] uppercase tracking-[0.2em] text-paper/75">
               <T en="Index" id="Indeks" />
             </h2>
             <ol className="grid gap-1">
               {pageSections.map((section) => (
                 <li key={section.id}>
                   <a href={`#${section.id}`} className="inline-flex min-h-11 items-center gap-3 text-sm text-paper/85 hover:text-paper">
-                    <span className="font-mono text-[11px] text-paper/50">{section.index}</span>
+                    <span className="font-mono text-[11px] text-paper/75">{section.index}</span>
                     <T en={section.en} id={section.idn} />
                   </a>
                 </li>
@@ -48,7 +48,7 @@ export function Footer() {
           </nav>
 
           <div>
-            <h2 className="mb-4 font-mono text-[11px] uppercase tracking-[0.2em] text-paper/60">
+            <h2 className="mb-4 font-mono text-[11px] uppercase tracking-[0.2em] text-paper/75">
               <T en="Colophon" id="Kolofon" />
             </h2>
             <p className="text-sm leading-relaxed text-paper/80">
@@ -60,7 +60,7 @@ export function Footer() {
           </div>
         </div>
 
-        <p className="mt-14 border-t border-paper/15 pt-6 text-xs text-paper/60">
+        <p className="mt-14 border-t border-paper/15 pt-6 text-xs text-paper/75">
           © {year} Rifqi Haikal Chairiansyah
         </p>
       </div>
