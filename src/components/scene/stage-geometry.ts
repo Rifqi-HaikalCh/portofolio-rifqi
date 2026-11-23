@@ -26,11 +26,21 @@ export const LAMP: StageRect = { x: 1120, y: 240, w: 360, h: 420 };
 /** Top surface of the desk, used for contact shadows. */
 export const DESK_TOP_Y = 640;
 
-export function stageBox(rect: StageRect) {
+/*
+  Mobile diorama (< 768 px, P6.3): a square 800 × 800 stage, static and
+  server-rendered. Same figurine poster at 1:1, seated on the notebook with
+  his near hand on the laptop base; the lamp stays the theme switch.
+*/
+export const MOBILE_STAGE = { width: 800, height: 800 } as const;
+export const MOBILE_VIEWBOX = `0 0 ${MOBILE_STAGE.width} ${MOBILE_STAGE.height}`;
+export const MOBILE_FIGURINE: StageRect = { x: 64, y: 296, w: 280, h: 400 };
+export const MOBILE_LAMP: StageRect = { x: 620, y: 260, w: 180, h: 280 };
+
+export function stageBox(rect: StageRect, stage: { width: number; height: number } = STAGE) {
   return {
-    left: `${(rect.x / STAGE.width) * 100}%`,
-    top: `${(rect.y / STAGE.height) * 100}%`,
-    width: `${(rect.w / STAGE.width) * 100}%`,
-    height: `${(rect.h / STAGE.height) * 100}%`,
+    left: `${(rect.x / stage.width) * 100}%`,
+    top: `${(rect.y / stage.height) * 100}%`,
+    width: `${(rect.w / stage.width) * 100}%`,
+    height: `${(rect.h / stage.height) * 100}%`,
   } as const;
 }

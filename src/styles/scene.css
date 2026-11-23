@@ -61,6 +61,22 @@
 .stage-marks > i:nth-child(3) { bottom: -6px; left: -6px; border-bottom-width: 1px; border-left-width: 1px; }
 .stage-marks > i:nth-child(4) { bottom: -6px; right: -6px; border-bottom-width: 1px; border-right-width: 1px; }
 
+/* Paper fibre over the whole stage (P6.3): one 4 KB tile, multiplied so it
+   only darkens. Below the HTML screen and the lamp button. */
+.stage-fibre {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: url("/assets/papercraft/desk-fibre.webp");
+  background-size: 256px 256px;
+  mix-blend-mode: multiply;
+  opacity: 0.07;
+}
+.dark .stage-fibre {
+  mix-blend-mode: screen;
+  opacity: 0.025;
+}
+
 /* Desk lamp: the head tilts and the light pool fades when the lamp turns on. */
 .lamp-head {
   transform-box: view-box;

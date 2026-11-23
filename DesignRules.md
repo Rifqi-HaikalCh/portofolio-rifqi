@@ -2,7 +2,7 @@
 
 # Design System, UX Blueprint & Engineering Guardrails — 3D Paper Craft Developer Portfolio
 
-> **Status:** Single Source of Truth (v1.6). Replaces `PORTFOLIO_STANDARDS.md` and `.cursor/rules/portfolio-standards.mdc` (both deleted 2026-11-22).
+> **Status:** Single Source of Truth (v1.7). Replaces `PORTFOLIO_STANDARDS.md` and `.cursor/rules/portfolio-standards.mdc` (both deleted 2026-11-22).
 > **Owner:** Rifqi Haikal Chairiansyah (`portofolio-rifqi`)
 > **Approved Concept:** *The Architect's Paper Desk — Lamp & Sheet edition* (final score 91.5 / 100, see §1)
 > **Rendering Strategy:** Hybrid 2D + 3D — tokenized SVG paper layers for 80%+ of the scene, one lazy React Three Fiber figurine on capable desktops
@@ -144,12 +144,12 @@ Shadow direction is a token (`--light-x`), not hand-tuned per component (§5.4).
 
 | Layer role | Approved objects | Purpose |
 | --- | --- | --- |
-| Back wall (L1) | Window + light beam, small pinboard, one wall shelf | Office atmosphere, depth |
-| Desk (L2) | Wood-grain paper desk plane, desk mat, folded notebook with one sticky note (the figurine's seat) | Grounds the scene |
+| Back wall (L1) | Window + light beam (3 stacked paper trapezoids), paper moon and cloud at night, small pinboard under the shelf (3 ruled cards, no text), one wall shelf | Office atmosphere, depth |
+| Desk (L2) | Wood-grain paper desk plane, desk mat, folded notebook with one sticky note (the figurine's seat); under it the drawer unit, a skirting strip, the floor and a rug edge | Grounds the scene |
 | Focal object (L2) | Open paper laptop + live HTML screen | Identity, role, live status |
 | Character (L2) | Paper puppet of Rifqi (3D sheets or SVG poster), seated on the notebook, near hand on the laptop | Personal brand, links Hero to EQbot |
 | Lamp (L2) | Articulated paper desk lamp | Theme switch, light source |
-| Foreground (L3) | Mug, paper plant | Parallax depth, warmth |
+| Foreground (L3) | Mug, paper plant, back of a paper desk chair (bottom, cropped by the frame) | Parallax depth, warmth |
 
 - Full props appear in `#home` only. Lower sections use **at most 1–2 edge props** with `pointer-events: none`.
 - Every object needs a compositional reason. No clutter to fill whitespace.
@@ -412,7 +412,7 @@ Every component is a token consumer. Names are fixed; do not create look-alikes.
 | `SectionTitle` | `ui/SectionTitle.tsx` | `header` with `h2` | — | Eyebrow + title + optional lede |
 | `Field` | inside `sections/ContactForm.tsx` | `label` + `input`/`textarea` | rest, focus, invalid, disabled | Error text linked via `aria-describedby`; first invalid field takes focus |
 | `Folio` | `.folio` on `<details>` | `details`/`summary` | closed, open | Ledger rows and certificate folders: native expanded state, no JS |
-| `PaperDeskStage` | `scene/PaperDeskStage.tsx` | `div` | static, parallax | SVG layers + one `LaptopScreenUI`; under 768 px only the screen card renders |
+| `PaperDeskStage` | `scene/PaperDeskStage.tsx` | `div` | static, parallax | SVG layers + one `LaptopScreenUI`; under 768 px the `MobileDiorama` (passed in from the server) and the screen card render |
 | `LaptopScreenUI` | `scene/LaptopScreenUI.tsx` | `section aria-label` | — | Client leaf; positioned by `--screen-*` |
 | `DeskLamp` | `scene/DeskLamp.tsx` | `button` | on / off | Theme switch over `LampArt` |
 | `FigurineSlot` | `scene/FigurineSlot.tsx` | `div role="img"` | poster, 3D, failed | Poster first, then the capability-gated canvas fades in over it |
@@ -429,7 +429,7 @@ Every component is a token consumer. Names are fixed; do not create look-alikes.
 | --- | --- |
 | **Desktop ≥ 1024 px** | Full 5-layer stage, pointer parallax, text beside the stage from 1280 px, sticky slide-over (≥ 1280 px wide and ≥ 800 px tall), R3F figurine if the capability gate passes, StudioRail at ≥ 1440 px, 2-column dossiers and grids |
 | **Tablet 768–1023 px** | Full stage, static: no parallax, no sticky, poster figurine, 2-column grids. (The stage is one composition; removing props left holes, so the earlier 3-layer cut was dropped in v1.3.) |
-| **Mobile < 768 px** | Text first: eyebrow, name, role, value prop, CTAs, metrics. Then a compact laptop card (screen UI in a paper frame, no wall or props). **No WebGL**, no parallax, no horizontal overflow, touch targets ≥ 44 px, no forced `min-h-screen` |
+| **Mobile < 768 px** | Text first: eyebrow, name, role, value prop, CTAs, metrics. Then a static square diorama (`MobileDiorama`, `viewBox 0 0 800 800`, server-rendered, `aria-hidden` except the lamp theme switch) and below it the compact laptop card (real HTML screen UI). **No WebGL**, no parallax, no horizontal overflow, touch targets ≥ 44 px, no forced `min-h-screen` |
 
 One component per section, made responsive with Tailwind breakpoints. **No separate `mobile/*` component tree and no `if (!mounted)` blank render.** Device-only behavior (parallax, R3F) is decided in CSS media queries or inside client leaves after mount, never by swapping the whole layout.
 
@@ -482,6 +482,8 @@ One component per section, made responsive with Tailwind breakpoints. **No separ
 | Optional decorative GLB | ≤ 300 KB | 500 KB |
 | 3D textures | ≤ 1024² | never above 2048² |
 | SVG scene layer | ≤ 40 KB | 80 KB |
+| Mobile diorama (SVG + figurine poster, as rendered HTML) | ≤ 30 KB | 40 KB |
+| Stage paper fibre tile (`desk-fibre.webp`, 256²) | ≤ 12 KB | 20 KB |
 | Raster scene layer (if ever needed) | ≤ 120 KB | 200 KB |
 | Project screenshot | ≤ 150 KB | 250 KB |
 | Total JS on first load (route `/`) | ≤ 170 KB gzip | 220 KB gzip (three.js excluded; it loads after idle) |
@@ -713,5 +715,6 @@ Do not put `content-visibility: auto` on sections: placeholder heights make in-p
 | 2026-11-22 | v1.2 — Phase 2. Hand-drawn, token-only inline SVG assets in `src/components/scene/`: `WallLayer` (window with day beam / night moon, shelf with `.NET` / `SQL` / `C#` binders), `DeskLayer` (desk, drawer pedestal labelled `01`–`03`, mat, laptop with an empty glass area at `SCREEN`), `LampArt` (dark-mode light cone), `FrontLayer` (mug, notebook with sticky note, paper plant), `RifqiFigurine` (quilled curls, taper fade, charcoal tee, two-tone denim, unbranded sneakers). Shared geometry in `stage-geometry.ts`. Paper depth tokens and the scene palette added. EQbot avatar now uses the figurine head crop. Global paper grain on `body::before`. The figurine poster became inline SVG instead of a raster render, so one file serves both themes; the GLB moves to Phase 3. |
 | 2026-11-22 | v1.3 — Phase 3. Hero rebuilt as one responsive `Hero` (`MobileHero` deleted) around `PaperDeskStage`: SVG layers, `LaptopScreenUI` as real HTML on the glass (compact laptop card under 768 px), `DeskLamp` theme switch with 6° head tilt, `useParallaxStage` (pointer, rAF, CSS variables) and scroll-driven depth in `scene.css`. 3D figurine: `FigurineSlot` → capability gate → lazy `PaperDeskCanvas` with a procedural low-poly model (Blender is not available in this toolchain, and a procedural mesh needs no download); poster stays on any failure. Theme flip unified in `useThemeToggle` (fixes the toggle reading `theme` instead of `resolvedTheme` under `system`). New data: `heroIntro`, `cvFile`, `contactInfo.availability`; `typingTexts` removed. Hero excluded from the section reveal and rendered outside the `mounted` gate, which moved LCP from the EQbot notice (3.2–4.0 s) to the hero text (1.0–1.7 s). Rule changes: 5/7 grid and sticky from 1280 px, tablet keeps the full static stage, figurine stands left of the laptop. |
 | 2026-11-22 | v1.4 — Phase 4. `ResponsiveLayout`, `mobile/*`, `hocs/`, `AnimatedSectionTitle`, `Projects`, `ViewAllProjects`, `PortfolioFigmaCard`, `ProjectDetailDialog`, `Portal`, `FloatingNavigation`, `useLedgerRise`, `useMediaQuery`, `api/contact` and `lib/submit-contact` deleted; `public/assets/me.png` deleted (About now uses the figurine head crop with a paper clip, per §2.6). `page.tsx` and every section are Server Components; bilingual copy via `<T>` + CSS on `<html lang>`. Section order lives in `data/sections.ts` (`navLinks` removed). Experience is a folder-tab ledger of `<details>` rows; Certificates are `<details>` folios; Services is a blueprint board plus a Selected work shelf (`#projects`) whose case study and archive drawer are native dialogs with filters, labelled search and a live count. Contact posts to a Server Action (zod, honeypot, 3 s minimum fill) and shows the postmark only after Resend accepts. StudioRail/Provider use one IntersectionObserver and a CSS scroll-driven progress rule; the JS section reveal was replaced by a CSS `view()` timeline. Navbar and BrandLockup render on the server (theme swap via `dark:`). EQbot and the additional-skills dialog load lazily. First-load JS for `/`: 244 → 160.6 KB gzip. |
+| 2026-11-23 | v1.7 — P6.3 (`docs/art-motion-upgrade.md` §3). Scene materiality: lit cut lines on the desk edge, drawer fronts and key rows; one paper fibre tile over the stage (`.stage-fibre`, 3.9 KB, multiply by day / screen at night). Composition: floor, skirting and rug under the desk, desk-chair back in L3, pinboard under the shelf. Laptop: lid thickness, two-tone hinge, embossed key rows. Light: the beam is 3 stacked trapezoids and the lamp pool 3 ellipses (the radial gradient is gone), paper cloud by the moon. Mobile: a static square diorama above the laptop card (§8); `stageBox` and `DeskLamp` take a rect and stage. `RifqiFigurine` tightens path strings and inherits caps/joins (−20 % bytes). |
 | 2026-11-23 | v1.6 — P6.1–P6.2 (`docs/art-motion-upgrade.md`). The figurine is a paper puppet: `figurine-parts.ts` (parts, joints, poses, expressions), `figurine-rig.ts` (joint solver, projection), `figurine-mesh.ts` (extruded sheets), `figurine-clips.ts` (on-demand clips). Poster, About bust, EQbot expressions, 404 pose and the 3D view all draw from it; the primitive mesh and `figurine-geometry.ts` are gone. Hero pose is seated on the notebook (moved from L3 to L2) with the near hand on the laptop; the mug moved beside the lamp. Dark mode: `--ill-shirt` lifted to `#45413c` plus a `--figure-rim` lamp-side rim. Clips allowed in §2.6 / §10.2. New `e2e/figurine.spec.ts`: poster ↔ 3D match, zero draws while idle, look clip stops. |
 | 2026-11-23 | v1.5 — Phase 5. Playwright suite (`playwright.config.ts`, `e2e/`: page, interaction, contact, a11y, fallback) with `@axe-core/playwright`; `npm run test:e2e`; `lighthouserc.json`; CI split into `verify` → `e2e` (blocking) + `lighthouse` (warn). Fixes found by the suite: `content-visibility` removed from sections (broke anchor scrolling), contact action strips control characters and validates before the fill-time check, blueprint list no longer has non-`li` children, capability headings h4 → h3, footer text contrast raised to `/75`, theme button gets `aria-pressed`, mobile menu traps Tab and closes on Escape and at ≥ 1024 px. EN/ID copy review: natural Indonesian (`proyek`, `Stack inti`), clearer About and Contact copy, no invented facts. Results: lint, types, design rules, build green; Playwright 97 passed / 6 skipped; Lighthouse a11y/BP/SEO 1.00, Performance 0.87–0.88 on localhost (warn only; real LCP 1.1–1.8 s); first-load JS 160.8 KB gzip. Pending owner: BotID and the Firewall rate-limit rule (§14.3), Vercel preview review. |

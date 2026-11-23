@@ -38,6 +38,19 @@ export function FrontLayer({ className = '' }: { className?: string }) {
         <rect x="1214" y="640" width="88" height="14" fill="var(--paper-fold)" />
       </g>
 
+      {/* Desk chair back, pushed in under the desk (P6.3): fills the floor area
+          and gives L3 depth below the desk edge. One sheet, a folded half, a seam. */}
+      <g style={drop}>
+        <path d="M1064 1000V830Q1064 784 1110 784H1314Q1360 784 1360 830V1000Z" fill="var(--ill-lamp)" {...cut} />
+        <path
+          d="M1212 784H1314Q1360 784 1360 830V1000H1212Z"
+          fill="var(--paper-fold)"
+          style={{ transform: 'scaleX(var(--light-x))', transformOrigin: '1212px 0px', transformBox: 'view-box' }}
+        />
+        <path d="M1096 830H1328" stroke="var(--paper-cut)" strokeWidth="2" />
+        <path d="M1096 876H1328" stroke="var(--ill-bezel)" strokeWidth="1.5" strokeDasharray="6 6" opacity="0.35" />
+      </g>
+
       {/* Paper plant in a terracotta pot */}
       <g style={drop}>
         {leaves.map(({ tip, ctrl, bend }) => (

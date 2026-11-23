@@ -15,7 +15,8 @@ import { FIGURINE, SCREEN, STAGE, stageBox } from './stage-geometry';
 /*
   The front-desk diorama (DesignRules.md §4 `01`, §9).
   ≥ 768 px: the full 16/10 stage, L1 wall → L2 desk, laptop, figurine, lamp → L3 props.
-  < 768 px: only the laptop screen renders, as a compact paper laptop card.
+  < 768 px: a static square diorama (MobileDiorama), then the laptop screen as
+  a compact paper laptop card below it.
   One LaptopScreenUI element in both cases; CSS decides where it sits.
 */
 
@@ -28,7 +29,16 @@ const screenVars = {
   '--screen-h': pct(SCREEN.h, STAGE.height),
 } as CSSProperties;
 
-export function PaperDeskStage({ screen, poster }: { screen: ScreenData; poster: ReactNode }) {
+export function PaperDeskStage({
+  screen,
+  poster,
+  mobile,
+}: {
+  screen: ScreenData;
+  poster: ReactNode;
+  /** Static < 768 px diorama (MobileDiorama), rendered on the server. */
+  mobile?: ReactNode;
+}) {
   const stageRef = useRef<HTMLDivElement>(null);
   const { language } = useLanguage();
   useParallaxStage(stageRef);
@@ -52,9 +62,11 @@ export function PaperDeskStage({ screen, poster }: { screen: ScreenData; poster:
           </div>
           <LampArt className="stage-layer" />
           <FrontLayer className="stage-layer stage-l3" />
+          <div className="stage-fibre" aria-hidden="true" />
         </div>
         <DeskLamp />
       </div>
+      {mobile}
 
       <LaptopScreenUI
         screen={screen}

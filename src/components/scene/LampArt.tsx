@@ -19,17 +19,15 @@ export function LampArt({ className = '' }: { className?: string }) {
       focusable="false"
       preserveAspectRatio="xMidYMid slice"
     >
-      <defs>
-        <radialGradient id="lamp-pool" cx="0.5" cy="0.5" r="0.5">
-          <stop offset="0" stopColor="var(--ill-bulb)" stopOpacity="0.32" />
-          <stop offset="1" stopColor="var(--ill-bulb)" stopOpacity="0" />
-        </radialGradient>
-      </defs>
-
-      {/* Lamp light: cone and pool, dark theme only. */}
+      {/* Lamp light: cone and a pool of three stacked paper ellipses (P6.3),
+          dark theme only. */}
       <g className="lamp-glow" style={{ opacity: 'var(--glow-opacity)' }}>
         <polygon points="1138,334 1226,374 1080,652 560,652" fill="var(--ill-lamp-light)" />
-        <ellipse cx="860" cy="652" rx="380" ry="46" fill="url(#lamp-pool)" />
+        <g fill="var(--ill-bulb)">
+          <ellipse cx="860" cy="652" rx="380" ry="46" opacity="0.07" />
+          <ellipse cx="860" cy="652" rx="260" ry="32" opacity="0.09" />
+          <ellipse cx="860" cy="652" rx="140" ry="18" opacity="0.12" />
+        </g>
       </g>
 
       {/* Base, arms, joints, head */}

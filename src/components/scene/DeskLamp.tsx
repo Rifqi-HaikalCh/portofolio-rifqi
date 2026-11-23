@@ -3,7 +3,7 @@
 import { useLanguage } from '../../context/LanguageContext';
 import { useHydrated } from '../../hooks/useHydrated';
 import { useThemeToggle } from '../shared/Providers';
-import { LAMP, stageBox } from './stage-geometry';
+import { LAMP, STAGE, stageBox, type StageRect } from './stage-geometry';
 
 /*
   The desk lamp is the theme switch (DesignRules.md §2.2, §4 `01`).
@@ -11,7 +11,13 @@ import { LAMP, stageBox } from './stage-geometry';
   Same action as the navbar toggle.
 */
 
-export function DeskLamp() {
+export function DeskLamp({
+  rect = LAMP,
+  stage = STAGE,
+}: {
+  rect?: StageRect;
+  stage?: { width: number; height: number };
+} = {}) {
   const { language } = useLanguage();
   const say = (en: string, id: string) => (language === 'en' ? en : id);
   const { isDark, toggleTheme } = useThemeToggle();
@@ -29,7 +35,7 @@ export function DeskLamp() {
       }
       onClick={toggleTheme}
       className="desk-lamp absolute z-scene-front bg-transparent"
-      style={stageBox(LAMP)}
+      style={stageBox(rect, stage)}
     />
   );
 }

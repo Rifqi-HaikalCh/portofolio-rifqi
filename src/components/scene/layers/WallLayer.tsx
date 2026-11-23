@@ -32,12 +32,13 @@ export function WallLayer({ className = '' }: { className?: string }) {
       {/* Wall made of three paper sheets: faint vertical seams. */}
       <path d="M533 0V640M1066 0V640" stroke="var(--ill-wall-shade)" strokeWidth="2" />
 
-      {/* Daylight beam falling from the window onto the desk. */}
-      <polygon
-        points="240,412 404,412 1010,640 600,640"
-        fill="var(--ill-beam)"
-        style={{ opacity: 'var(--beam-opacity)' }}
-      />
+      {/* Daylight beam falling from the window onto the desk: three stacked
+          paper trapezoids, brightest at the core (P6.3; no gradient, §5.3). */}
+      <g fill="var(--ill-beam)" style={{ opacity: 'var(--beam-opacity)' }}>
+        <polygon points="220,412 420,412 1060,640 560,640" opacity="0.3" />
+        <polygon points="232,412 412,412 1036,640 580,640" opacity="0.6" />
+        <polygon points="248,412 396,412 990,640 620,640" />
+      </g>
 
       {/* Window */}
       <g style={drop}>
@@ -54,6 +55,9 @@ export function WallLayer({ className = '' }: { className?: string }) {
       <g style={{ opacity: 'var(--night-opacity)' }}>
         <circle cx="338" cy="146" r="24" fill="var(--ill-frame)" />
         <circle cx="328" cy="138" r="22" fill="var(--ill-window)" />
+        {/* Paper cloud drifting past the moon: two cut layers. */}
+        <path d="M262 196q0-16 16-16q6-14 22-12q12-10 26 0q18-2 20 14q14 2 14 14z" fill="var(--ill-frame)" opacity="0.55" />
+        <path d="M282 196q2-10 14-10q8-8 18-2q12 0 14 12z" fill="var(--ill-frame)" opacity="0.85" />
         <path d="M150 128l3 7 7 3-7 3-3 7-3-7-7-3 7-3z" fill="var(--ill-frame)" />
         <path d="M206 196l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="var(--ill-frame)" />
         <path d="M318 300l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="var(--ill-frame)" />
@@ -98,6 +102,31 @@ export function WallLayer({ className = '' }: { className?: string }) {
         <rect x="1458" y="184" width="70" height="14" fill="var(--ill-frame)" {...cut} />
         <rect x="1448" y="212" width="88" height="18" fill="var(--color-accent)" {...cut} />
       </g>
+      {/* Pinboard under the shelf, clear of the lamp arm (P6.3): cork sheet, three pinned
+          cards with ruled lines only (no text), accent pins. */}
+      <g style={drop}>
+        <rect x="1392" y="290" width="174" height="128" fill="var(--color-wood)" {...cut} />
+        <rect x="1392" y="290" width="174" height="128" fill="var(--paper-fold)" opacity="0.4" />
+      </g>
+      <g style={dropSm}>
+        {[
+          { x: 1404, y: 304, w: 52, h: 72, r: -4, pin: 'var(--color-accent)' },
+          { x: 1464, y: 312, w: 44, h: 60, r: 3, pin: 'var(--color-blueprint)' },
+          { x: 1516, y: 302, w: 40, h: 96, r: -2, pin: 'var(--color-sage)' },
+        ].map((c) => (
+          <g key={c.x} transform={`rotate(${c.r} ${c.x + c.w / 2} ${c.y})`}>
+            <rect x={c.x} y={c.y} width={c.w} height={c.h} fill="var(--ill-page)" {...cut} />
+            <path
+              d={[0, 1, 2, 3].map((i) => `M${c.x + 7} ${c.y + 20 + i * 12}H${c.x + c.w - 8 - (i % 2) * 10}`).join('')}
+              stroke="var(--color-muted)"
+              strokeWidth="2"
+              opacity="0.5"
+            />
+            <circle cx={c.x + c.w / 2} cy={c.y + 7} r="5" fill={c.pin} />
+          </g>
+        ))}
+      </g>
+
       <g style={dropSm}>
         <rect x="1200" y="230" width="350" height="16" fill="var(--color-wood-dark)" {...cut} />
         <path d="M1236 246h22l-22 26z M1498 246h22v26z" fill="var(--color-wood-dark)" />

@@ -24,24 +24,25 @@ const VIEWBOX: Record<FigurineCrop, string> = {
 const DAY = { opacity: 'calc((1 + var(--light-x)) / 2)' } as CSSProperties;
 const NIGHT = { opacity: 'calc((1 - var(--light-x)) / 2)' } as CSSProperties;
 
+/** Drops the spaces around path commands: same path, about a third fewer bytes. */
+const tight = (d: string) => d.replace(/\s*([A-Za-z])\s*/g, '$1');
+
 function Sheet({ part }: { part: PlacedPart }) {
   const transform = part.matrix || undefined;
   const line = !part.fill;
   return (
     <g transform={transform}>
       <path
-        d={part.d}
+        d={tight(part.d)}
         fill={part.fill ? inkVar(part.fill) : 'none'}
         stroke={line ? inkVar(part.stroke ?? 'hair') : part.cut ? 'var(--paper-cut)' : undefined}
         strokeWidth={line ? (part.strokeWidth ?? 1.5) : part.cut ? 1.2 : undefined}
-        strokeLinecap={line ? 'round' : undefined}
-        strokeLinejoin="round"
         opacity={part.opacity}
       />
       {part.shade && (
         <>
-          <path d={part.shade.day} fill="var(--paper-fold)" style={DAY} />
-          <path d={part.shade.night} fill="var(--paper-fold)" style={NIGHT} />
+          <path d={tight(part.shade.day)} fill="var(--paper-fold)" style={DAY} />
+          <path d={tight(part.shade.night)} fill="var(--paper-fold)" style={NIGHT} />
         </>
       )}
     </g>
@@ -83,7 +84,8 @@ export function RifqiFigurine({
       {/* Contact shadow on the desk */}
       {grounded && <ellipse cx="100" cy="451" rx="66" ry="6" fill="var(--paper-shadow)" />}
       {seated && <ellipse cx={SEAT.x} cy={SEAT.y} rx={SEAT.rx} ry={SEAT.ry} fill="var(--paper-shadow)" />}
-      <g style={{ filter: 'var(--paper-drop-sm)' }}>
+      {/* Round caps and joins inherit to every sheet; cut outlines are closed, so caps only touch line parts. */}
+      <g style={{ filter: 'var(--paper-drop-sm)' }} strokeLinecap="round" strokeLinejoin="round">
         {parts.map((part) => (
           <Sheet key={part.id} part={part} />
         ))}

@@ -1,6 +1,7 @@
 import { cvFile, heroHighlights, heroIntro, workExperience } from '../../data/portfolio';
 import { displayCase } from '../../lib/display-case';
 import { heroScreen } from '../../lib/hero-screen';
+import { MobileDiorama } from '../scene/MobileDiorama';
 import { PaperDeskStage } from '../scene/PaperDeskStage';
 import { RifqiFigurine } from '../scene/RifqiFigurine';
 import { T } from '../ui/T';
@@ -61,7 +62,9 @@ export function Hero() {
         </div>
 
         <div className="xl:col-span-7">
-          <PaperDeskStage screen={heroScreen()} poster={<RifqiFigurine crop="stage" pose="seated" className="h-full w-full" />} />
+          <PaperDeskStage screen={heroScreen()} poster={<RifqiFigurine crop="stage" pose="seated" className="h-full w-full" />}
+            mobile={<MobileDiorama />}
+          />
         </div>
       </div>
     </section>
