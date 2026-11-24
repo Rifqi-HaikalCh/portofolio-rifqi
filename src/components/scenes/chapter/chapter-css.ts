@@ -14,7 +14,8 @@ import type { Act, BeatSpec, ChapterSpec, Handoff, Origin } from './spec';
   (chapter.css holds the static part and the shared leaf keyframes).
 */
 
-const THEATRE = '@supports (animation-timeline: view()) { @media (prefers-reduced-motion: no-preference) and (min-height: 561px) {';
+// From 768 px only (v3.6): below that the page is the folio, the v1 layout without stages (chapter.css).
+const THEATRE = '@supports (animation-timeline: view()) { @media (prefers-reduced-motion: no-preference) and (min-height: 561px) and (min-width: 768px) {';
 const DESKTOP = '@media (min-width: 768px) {';
 
 /** Time a sheet takes to land (in) and to be lifted away (out). */
@@ -72,11 +73,10 @@ function sheetIn(spec: ChapterSpec, beat: BeatSpec, name: string) {
         `to{transform:none;opacity:1}`,
     );
   }
-  // Emerge: out of an object in the stage (world coordinates → viewport through the cover fit).
-  const t = spec.theatre;
-  const cs = `max(calc(100cqw / ${t.w}), calc(100svh / ${t.h}))`;
-  const vx = (x: number) => `((100cqw - ${t.w} * ${cs}) / 2 + ${n(x - t.x)} * ${cs})`;
-  const vy = (y: number) => `((100svh - ${t.h} * ${cs}) / 2 + ${n(y - t.y)} * ${cs})`;
+  // Emerge: out of an object in the stage (world coordinates → viewport through the stage fit, chapter.css).
+  const f = spec.frames.desktop;
+  const vx = (x: number) => `(50cqw + ${n(x - f.x)} * var(--s) - var(--cxs))`;
+  const vy = (y: number) => `(50svh + ${n(y - f.y)} * var(--s) - var(--cys))`;
   const centre =
     spec.lane === 'right' ? '(100cqw - var(--lane-pad) - var(--lane-w) / 2)' : '(var(--lane-pad) + var(--lane-w) / 2)';
   const at = ([x, y]: readonly [number, number]) => `translate(calc(${vx(x)} - ${centre}),calc(${vy(y)} - var(--beat-top)))`;
@@ -127,7 +127,7 @@ function actCss(sel: string, beat: BeatSpec, act: Act, name: string) {
   // The stage and its occluder copy (stage-front) act together, so an occluding envelope opens with the real one.
   const target = `:is(.stage, .stage-front) ${'layer' in act.target ? `[data-layer="${act.target.layer}"] > *` : `[data-obj="${act.target.obj}"]`}`;
   const prop = act.property ?? 'transform';
-  const rest = prop === 'transform' ? 'none' : prop === 'scale' ? '1' : '0 0';
+  const rest = prop === 'transform' ? 'none' : prop === 'scale' || prop === 'opacity' ? '1' : '0 0';
   const delay = `${act.delay ?? 0}ms`;
   const origin = act.origin ? `transform-origin:${act.origin};` : '';
   if (act.mode === 'pulse') {
@@ -233,6 +233,69 @@ function handoffCss(sel: string, spec: ChapterSpec) {
   );
 }
 
+/*
+  Groups (§4.4 v3.6): beats that keep one composition while any of them is on.
+  Written after the beats, with one more attribute in each selector, so they
+  override the single-sheet flights inside the group and leave the flights in
+  and out of the group to them.
+
+  stack — one pile. `--d` is a sheet's depth under the active one; the pile
+  steps up and back. Advancing tucks the front sheet: lifted off the pile,
+  then slid under it (z-index drops at the top of the lift). Going back plays
+  the tuck reversed. Only the top three sheets of the pile show.
+
+  rail — one wire. `--x` is a segment's place from the active one; the wire
+  slides sideways, in time, to the segment the scroll has reached. Before the
+  group the wire waits one segment to the right, after it one to the left.
+*/
+function groupCss(sel: string, spec: ChapterSpec, group: NonNullable<ChapterSpec['groups']>[number], gi: number) {
+  const ids = group.beats;
+  const N = ids.length;
+  const on = (id: string) => `${sel}[data-beat="${id}"]`;
+  // `[data-state][data-dir]` (always set together once cued) lifts these to the specificity of the flights they replace.
+  const sheet = (id: string) => `[data-beat="${id}"][data-state][data-dir] > .beat-sheet`;
+  const any = `:is(${ids.map((id) => `[data-beat="${id}"]`).join(',')})`;
+  const name = `g-${spec.id}-${gi}`;
+  let css = '';
+
+  if (group.layout === 'stack') {
+    const pose = `translate(calc(var(--d) * 1.1cqw), calc(var(--d) * -1.6svh)) rotate(calc(var(--d) * .9deg))`;
+    css += `@keyframes ${name}-tuck{0%{transform:none;z-index:${N + 2}}38%{transform:translate(-3cqw,-26svh) rotate(-4deg);z-index:${N + 2}}40%{z-index:0}100%{transform:translate(${n((N - 1) * 1.1)}cqw,${n((N - 1) * -1.6)}svh) rotate(${n((N - 1) * 0.9)}deg);z-index:0}}`;
+    css += `${sel} ${any} > .beat-sheet{transition:transform var(--dur-leaf-in) var(--ease-leaf),opacity var(--dur-act) var(--ease-paper);transform-origin:50% 100%}`;
+    ids.forEach((a, ai) => {
+      ids.forEach((id, i) => {
+        const d = (i - ai + N) % N;
+        css += `${on(a)} ${sheet(id)}{--d:${d};z-index:${N - d};transform:${d ? pose : 'none'};opacity:${d < 3 ? 1 : 0};animation:none}`;
+      });
+      // Tucked: the sheet that was on top a moment ago (the beat before a).
+      if (ai > 0) css += `${on(a)} [data-beat="${ids[ai - 1]}"][data-state="after"][data-dir="fwd"] > .beat-sheet{animation:${name}-tuck calc(var(--dur-leaf-in) * 1.25) var(--ease-leaf)}`;
+      // Back from the next sheet: this one comes out from under the pile.
+      if (ai < N - 1) css += `${on(a)} [data-beat="${a}"][data-state="in"][data-dir="back"] > .beat-sheet{animation:${name}-tuck calc(var(--dur-leaf-in) * 1.25) var(--ease-leaf) reverse}`;
+    });
+    // Into the group from before it, and back into it from after it: the single-sheet flights.
+    const first = `b-${spec.id}-${ids[0]}`;
+    const last = `b-${spec.id}-${ids[N - 1]}`;
+    css += `${on(ids[0])} [data-beat="${ids[0]}"][data-state="in"][data-dir="fwd"] > .beat-sheet{animation:${first}-in ${IN} ${EASE} both}`;
+    css += `${on(ids[N - 1])} [data-beat="${ids[N - 1]}"][data-state="in"][data-dir="back"] > .beat-sheet{animation:${last}-out-r ${OUT} ${EASE} reverse both}`;
+    return css;
+  }
+
+  // rail
+  const slide = `translateX(calc(var(--x) * (var(--rail-w) + var(--rail-gap))))`;
+  css += `${sel} ${any} > .beat-sheet{left:calc(var(--rail-cx, 50cqw) - var(--rail-w) / 2);right:auto;width:var(--rail-w);transform:${slide};transition:transform calc(var(--dur-leaf-in) * 1.2) var(--ease-leaf),opacity var(--dur-act) var(--ease-paper)}`;
+  css += `${sel} ${any}[data-state][data-dir] > .beat-sheet{animation:none}`;
+  ids.forEach((id, i) => {
+    css += `${sel} [data-beat="${id}"][data-state="before"] > .beat-sheet{--x:${i + 1}}`;
+    css += `${sel} [data-beat="${id}"][data-state="after"] > .beat-sheet{--x:${i - N}}`;
+  });
+  ids.forEach((a, ai) => {
+    ids.forEach((id, i) => {
+      css += `${on(a)} ${sheet(id)}{--x:${i - ai};opacity:${Math.abs(i - ai) < 2 ? 1 : 0}}`;
+    });
+  });
+  return css;
+}
+
 export function chapterCss(spec: ChapterSpec) {
   const sel = `#${spec.id}[data-cue]:not([data-stacked])`;
   let all = `${sel}{view-timeline:--ch-${spec.id}}`;
@@ -268,7 +331,7 @@ export function chapterCss(spec: ChapterSpec) {
     desktop += `${b}[data-state="after"][data-dir="fwd"] > .beat-sheet{animation:${name}-out ${OUT} ${EASE} both}`;
     desktop += `${b}[data-state="before"][data-dir="back"] > .beat-sheet{animation:${name}-in-r ${OUT} ${EASE} reverse both}`;
 
-    if (beat.occluder) {
+    if (beat.occluder?.length) {
       desktop += `@keyframes ${name}-occlude{0%,62%{opacity:1}to{opacity:0}}`;
       desktop += beat.occluder
         .map((l) => `${sel}:has([data-beat="${beat.id}"][data-state="in"][data-dir="fwd"]) .stage-front [data-layer="${l}"]{animation:${name}-occlude ${IN} linear both}`)
@@ -283,6 +346,10 @@ export function chapterCss(spec: ChapterSpec) {
       }
     }
   }
+
+  (spec.groups ?? []).forEach((group, gi) => {
+    desktop += groupCss(sel, spec, group, gi);
+  });
 
   return `${THEATRE}${all}${handoffCss(sel, spec)}${DESKTOP}${desktop}}}}`;
 }

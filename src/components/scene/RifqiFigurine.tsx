@@ -35,6 +35,7 @@ function Sheet({ part }: { part: PlacedPart }) {
   return (
     <g transform={transform}>
       <path
+        className={[part.look && 'fig-look', part.lid && 'fig-lid'].filter(Boolean).join(' ') || undefined}
         d={tight(part.d)}
         fill={part.fill ? inkVar(part.fill) : 'none'}
         stroke={line ? inkVar(part.stroke ?? 'hair') : part.cut ? 'var(--paper-cut)' : undefined}
@@ -82,6 +83,7 @@ export function RifqiFigurine({
       aria-label={title}
       focusable="false"
       data-pose={pose}
+      data-gaze=""
     >
       {/* Contact shadow on the desk */}
       {grounded && <ellipse cx="100" cy="451" rx="66" ry="6" fill="var(--paper-shadow)" />}

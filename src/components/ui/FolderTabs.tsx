@@ -57,7 +57,7 @@ export function FolderTabs<Id extends string>({
           >
             {tab.label}
             {typeof tab.count === 'number' && (
-              <span className="ml-2 font-mono text-[11px] text-accent">{String(tab.count).padStart(2, '0')}</span>
+              <span className="ml-2 font-mono text-[0.6875rem] text-accent">{String(tab.count).padStart(2, '0')}</span>
             )}
           </button>
         );

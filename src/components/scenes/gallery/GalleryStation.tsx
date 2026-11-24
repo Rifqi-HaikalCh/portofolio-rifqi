@@ -1,4 +1,6 @@
 import { circle, paperKit, poly, rect, type Kit } from '../../../lib/paper-kit';
+import type { ProjectMotif } from '../../../types';
+import { motifNodes } from './motifs';
 import type { Frames, SceneLayer } from '../PaperScene';
 import { Station } from '../Station';
 import { STRIP, bar, figureLayer, floorLayer, wallLayer } from '../office';
@@ -8,6 +10,9 @@ import { STRIP, bar, figureLayer, floorLayer, wallLayer } from '../office';
   projects), midday. A picture rail with frames already hung, the figure on
   a step ladder hanging one more, and frames leaning on the floor. The
   project frames themselves are the ProjectShadowBox cards below the scene.
+  As the chapter stage (v3.7, `hung`): the rail carries the six featured
+  projects, each framed with its motif, and slides sideways with the wire of
+  cards (`wire-*` beats); the pair in front swings on its nails.
 */
 
 export const GALLERY_FRAMES: Frames = { desktop: STRIP, mobile: { x: 380, y: 0, w: 900, h: 640 } };
@@ -29,10 +34,67 @@ function hungFrame(k: Kit, x: number, y: number, w: number, h: number, fills: [s
 }
 
 /*
+  The featured projects on the rail (v3.7): hung in pairs, one pair per `wire-*`
+  segment, a 4:3 window so a 400 × 300 motif fits at 0.69. The pair centres sit
+  SEG apart and each frame PAIR from its pair's centre; `chapter.css` sizes the
+  wire of cards from the same numbers (840 + 140 = SEG), so a label card hangs
+  under its frame and both slide together.
+*/
+export type HungWork = { id: string; motif?: ProjectMotif; image?: string; mobile?: boolean };
+
+/** The photo through the Next image optimiser (the stage art is a static SVG, so no <Image>). */
+const optimised = (src: string) => `/_next/image?url=${encodeURIComponent(src)}&w=640&q=75`;
+const WORK = { w: 300, h: 232, y: [84, 96] } as const;
+const SEG = 980;
+const PAIR = 230;
+const RAIL_BOX = { x: -40, y: 20, w: 1680, h: 360 } as const;
+/** World x of the first pair's centre: the middle of the gallery's theatre rect. */
+const FIRST = 840;
+/** Rail offset (in % of the rail box) for segment `s`; s = -0.47 is the title beat, the pair waiting to the right. */
+export const railShift = (s: number) => Math.round(((-s * SEG) / RAIL_BOX.w) * 10000) / 100;
+
+function workFrame(k: Kit, work: HungWork, i: number) {
+  const { w, h } = WORK;
+  const cx = FIRST + Math.floor(i / 2) * SEG + (i % 2 ? PAIR : -PAIR);
+  const x = cx - w / 2;
+  const y = WORK.y[i % 2];
+  const art = !work.image && work.motif ? motifNodes(work.id, work.motif) : null;
+  return (
+    <g key={work.id} data-obj={`work-${i}`} className="hung-work">
+      <path d={`M${cx - w * 0.3} ${y + 4}L${cx} ${RAIL_Y + 8}L${cx + w * 0.3} ${y + 4}`} fill="none" stroke="var(--ill-bezel)" strokeWidth="1.5" opacity="0.65" />
+      {k.sheet({ d: circle(cx, RAIL_Y + 8, 5), fill: 'var(--color-wood-dark)', gap: 4, edge: 1, rim: false })}
+      {k.sheet({ d: `${rect(x, y, w, h, 2)}${rect(x + 12, y + 12.5, w - 24, h - 25)}`, fillRule: 'evenodd', fill: 'var(--ill-frame)', gap: 30, edge: 5 })}
+      {k.sheet({ d: rect(x + 12, y + 12.5, w - 24, h - 25), fill: 'var(--color-recess)', edge: 0, rim: false })}
+      {work.image ? (
+        // v3.7 owner request: the project's own photo in the frame; a phone screen shows its top.
+        <image
+          href={optimised(work.image)}
+          x={x + 12}
+          y={y + 12.5}
+          width={w - 24}
+          height={h - 25}
+          preserveAspectRatio={work.mobile ? 'xMidYMin slice' : 'xMidYMid slice'}
+          className="work-photo"
+        />
+      ) : (
+        art && (
+          <g transform={`translate(${x + 12} ${y + 12.5}) scale(0.69)`}>
+            {art.back}
+            {art.mid}
+          </g>
+        )
+      )}
+      {/* Glass: a faint sheen over the photo, so it reads as framed paper and not a screen. */}
+      <path d={`M${x + 12} ${y + 12.5}h${(w - 24) * 0.45}L${x + 12} ${y + 12.5 + (h - 25) * 0.6}Z`} fill="var(--ill-page)" opacity="0.08" />
+    </g>
+  );
+}
+
+/*
   As a chapter stage (§4.5): `wide` bleeds the wall and floor for the fullscreen
   cover fit; `only` renders a subset of layers (the occluder copy).
 */
-export function GalleryStation({ wide = false, only }: { wide?: boolean; only?: readonly string[] } = {}) {
+export function GalleryStation({ wide = false, only, hung }: { wide?: boolean; only?: readonly string[]; hung?: readonly HungWork[] } = {}) {
   const k = paperKit('gallery');
 
   const layers: SceneLayer[] = [
@@ -42,8 +104,14 @@ export function GalleryStation({ wide = false, only }: { wide?: boolean; only?: 
       id: 'rail',
       band: 'back',
       z: -240,
-      box: { x: -40, y: 20, w: 1680, h: 360 },
-      art: (
+      box: RAIL_BOX,
+      className: hung?.length ? 'work-rail' : undefined,
+      art: hung?.length ? (
+        <>
+          {k.sheet({ d: rect(-1000, RAIL_Y, 6600, 12, 1), fill: 'var(--color-wood-dark)', gap: 20, edge: 4, material: 'wood' })}
+          {hung.map((work, i) => workFrame(k, work, i))}
+        </>
+      ) : (
         <>
           {k.sheet({ d: rect(-40, RAIL_Y, 1680, 12, 1), fill: 'var(--color-wood-dark)', gap: 20, edge: 4, material: 'wood' })}
           {hungFrame(k, 120, 120, 190, 150, ['var(--color-sage)', 'var(--color-accent)'])}
@@ -103,5 +171,14 @@ export function GalleryStation({ wide = false, only }: { wide?: boolean; only?: 
     },
   ];
 
-  return <Station name="gallery" layers={layers} frames={FRAMES} light="midday" only={only} />;
+  // The rail follows the wire (§4.5 `04b`): waiting to the right on the title, one offset per segment, kept after the last; the pair in front swings.
+  const segments = Math.ceil((hung?.length ?? 0) / 2);
+  const on = '#projects[data-cue]:not([data-stacked])';
+  let css = segments ? `${on} [data-layer="rail"] > *{transform:translateX(${railShift(-0.47)}%)}` : '';
+  for (let s = 0; s < segments; s += 1) {
+    css += `${on}:is([data-beat="wire-${s}"]${s === segments - 1 ? ',[data-beat="archive"]' : ''}) [data-layer="rail"] > *{transform:translateX(${railShift(s)}%)}`;
+    css += `${on}[data-beat="wire-${s}"] :is([data-obj="work-${2 * s}"],[data-obj="work-${2 * s + 1}"]){animation:work-swing 1.6s var(--ease-leaf) 0.7s both}`;
+  }
+
+  return <Station name="gallery" layers={layers} frames={FRAMES} light="midday" css={segments ? `@media (prefers-reduced-motion: no-preference) and (min-width: 768px) and (min-height: 561px){${css}}` : undefined} only={only} />;
 }

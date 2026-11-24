@@ -1,21 +1,24 @@
+import { PhotoPrint } from '../../ui/PhotoPrint';
 import type { ReactNode } from 'react';
 import { circle, cut, paperKit, poly, rect } from '../../../lib/paper-kit';
-import { RifqiFigurine } from '../../scene/RifqiFigurine';
-import { StaticArt, type Frames, type SceneLayer } from '../PaperScene';
+import type { Frames, SceneLayer } from '../PaperScene';
 import { Station } from '../Station';
 import { STRIP, figureLayer, floorLayer, lineMuted, wallLayer, windowHole, windowLayers } from '../office';
 
 /*
   Station `02` — The Pinboard (DesignRules.md §2.2, §4.5 `02`), midday.
   The cork board on the wall by the window: pinned sheets at two depths, the
-  bust "photo" card, four index cards cut with the About highlights' icons,
-  and the figure pressing a card to the board's edge.
+  owner's photograph pinned as a print (v3.6, owner request: the photo, not
+  the bust), four index cards cut with the About highlights' icons, and the
+  figure pressing a card to the board's edge.
 */
 
 export const PINBOARD_FRAMES: Frames = { desktop: STRIP, mobile: { x: 490, y: 40, w: 930, h: 600 } };
 const WIN = { x: 90, y: 64, w: 300, h: 310 };
 const BOARD = { x: 520, y: 70, w: 700, h: 400 };
-const PHOTO = { x: 790, y: 104, w: 170, h: 196 };
+const PHOTO = { x: 790, y: 96, w: 170, h: 204 };
+/** The index cards on the board (world units): the About sheets for them lift off these (beats.ts). */
+export const PIN_CARDS = [0, 1, 2, 3].map((i) => ({ x: 560 + i * 158, y: 318 + (i % 2) * 14, w: 132, h: 112, tilt: [-1.5, 1.2, -0.8, 1.5][i] }));
 
 type Icon = 'graduation-cap' | 'briefcase' | 'trophy' | 'users' | string;
 
@@ -88,25 +91,11 @@ export function PinboardStation({ icons, wide = false, only }: { icons: readonly
             <path d="M1010 146Q1060 180 1092 168T1168 228" fill="none" stroke="var(--color-accent)" strokeWidth="3" strokeDasharray="7 6" />
             {k.sheet({ d: 'M1092 168q-10-14 0-22q10 8 0 22z', fill: 'var(--color-accent)', gap: 6, edge: 1 })}
           </g>
-          {/* The photo card holding the bust (the bust itself is the HTML layer above). */}
-          <g transform="rotate(-1.5 875 104)">
-            {k.sheet({ d: rect(PHOTO.x, PHOTO.y, PHOTO.w, PHOTO.h), fill: 'var(--ill-page)', gap: 18, edge: 2 })}
-            {k.sheet({ d: rect(PHOTO.x + 12, PHOTO.y + 12, PHOTO.w - 24, PHOTO.w - 24), fill: 'var(--ill-wall)', gap: 0, edge: 0, rim: false })}
-            <path d={`M${PHOTO.x + 30} ${PHOTO.y + PHOTO.h - 20}H${PHOTO.x + PHOTO.w - 40}`} {...lineMuted} />
-          </g>
           {[[650, 112], [1088, 120]].map(([x, y]) => (
             <g key={x}>{k.sheet({ d: circle(x, y, 5), fill: 'var(--color-ink)', gap: 8, edge: 1.5, material: 'none' })}</g>
           ))}
         </>
       ),
-    },
-    {
-      id: 'photo',
-      band: 'mid',
-      z: -126,
-      box: { x: PHOTO.x + 12, y: PHOTO.y + 12, w: PHOTO.w - 24, h: PHOTO.w - 24 },
-      className: 'pin-photo',
-      html: <StaticArt className="h-full w-full" node={<RifqiFigurine crop="bust" className="h-full w-full" />} />,
     },
     {
       id: 'cards',
@@ -116,11 +105,9 @@ export function PinboardStation({ icons, wide = false, only }: { icons: readonly
       art: (
         <>
           {icons.slice(0, 4).map((icon, i) => {
-            const x = 560 + i * 158;
-            const y = 318 + (i % 2) * 14;
-            const tilt = [-1.5, 1.2, -0.8, 1.5][i];
+            const { x, y, tilt } = PIN_CARDS[i];
             return (
-              <g key={icon + i} transform={`rotate(${tilt} ${x + 66} ${y})`}>
+              <g key={icon + i} data-obj={`card-${i}`} transform={`rotate(${tilt} ${x + 66} ${y})`}>
                 {k.sheet({ d: rect(x, y, 132, 112, 1), fill: 'var(--ill-page)', gap: 22, edge: 2 })}
                 {k.sheet({ d: iconPath(icon, x + 66, y + 46), fill: pins[i], gap: 6, edge: 1.5, rim: false })}
                 <path d={`M${x + 18} ${y + 88}H${x + 114}M${x + 18} ${y + 100}H${x + 84}`} {...lineMuted} />
@@ -129,6 +116,18 @@ export function PinboardStation({ icons, wide = false, only }: { icons: readonly
             );
           })}
         </>
+      ),
+    },
+    {
+      // The print itself is HTML (a real photograph cannot be paper-kit art); the About dossier beat
+      // carries it off the board to beside the bio and back (beats.ts). After the cards in paint
+      // order, so it passes in front of them on the way.
+      id: 'photo',
+      band: 'mid',
+      z: -126,
+      box: PHOTO,
+      html: (
+        <PhotoPrint sizes="(min-width: 1024px) 320px, 40vw" />
       ),
     },
     figureLayer('pin', 1150, 92, 520),

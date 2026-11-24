@@ -10,6 +10,10 @@ import { StudioProvider } from '../components/shared/StudioProvider';
 import { StudioRail } from '../components/shared/StudioRail';
 import { ChapterBar } from '../components/shared/ChapterBar';
 import { EqbotLoader } from '../components/shared/EqbotLoader';
+import { FigureGaze } from '../components/shared/FigureGaze';
+import { SectionHints } from '../components/shared/SectionHints';
+import { StagePoke } from '../components/shared/StagePoke';
+import { WelcomeTour } from '../components/shared/WelcomeTour';
 import { PaperDefs } from '../lib/paper-kit';
 
 /*
@@ -37,6 +41,10 @@ export default function Home() {
       </main>
       <Footer />
       <EqbotLoader />
+      <FigureGaze />
+      <SectionHints />
+      <StagePoke />
+      <WelcomeTour />
     </StudioProvider>
   );
 }

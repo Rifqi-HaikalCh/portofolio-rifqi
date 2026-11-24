@@ -25,7 +25,7 @@ export function StudioRail() {
                 href={`#${section.id}`}
                 aria-current={here ? 'location' : undefined}
                 aria-label={language === 'en' ? section.en : section.idn}
-                className={`font-mono text-[11px] tracking-[0.14em] ${here ? 'text-accent' : 'text-muted hover:text-ink'}`}
+                className={`font-mono text-[0.6875rem] tracking-[0.14em] ${here ? 'text-accent' : 'text-muted hover:text-ink'}`}
               >
                 {section.index}
               </a>

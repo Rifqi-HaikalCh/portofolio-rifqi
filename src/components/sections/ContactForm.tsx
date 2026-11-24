@@ -48,7 +48,7 @@ export function ContactForm() {
   if (state.status === 'sent') {
     return (
       <div className="flex flex-col items-start gap-6 p-6 md:p-10" role="status">
-        <span className="postmark font-mono text-[10px] uppercase leading-tight tracking-[0.12em]" aria-hidden="true">
+        <span className="postmark font-mono text-[0.625rem] uppercase leading-tight tracking-[0.12em]" aria-hidden="true">
           <span className="text-center">
             <T en="Sent" id="Terkirim" />
             <br />

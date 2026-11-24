@@ -6,7 +6,8 @@ import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
 import { RifqiFigurine } from '../scene/RifqiFigurine';
-import type { Expression } from '../scene/figurine-parts';
+import type { Expression, PoseId } from '../scene/figurine-parts';
+import { play } from '../../lib/sound/control';
 import { EQBOT_OPEN_EVENT, emitEqbotState } from '../scene/scene-events';
 import { scrollToStudioSection, useStudio } from './StudioProvider';
 import {
@@ -253,6 +254,7 @@ export function EqbotCompanion() {
     waitTimer.current = window.setTimeout(() => {
       setLog((prev) => [...prev, ...notes, reply, ...(see ? [see] : [])]);
       setWaiting(false);
+      play('pop');
       if (choice.download) downloadCv();
     }, reducedMotion() ? 0 : 900);
   };
@@ -269,6 +271,11 @@ export function EqbotCompanion() {
   const mood: Expression =
     phase === 'shrink' ? 'wink' : waiting ? 'thinking' : log.length > 1 && lastTurn?.who === 'bot' ? 'smile' : 'neutral';
   const showFace = phase !== 'fly';
+  // The host beside the chat (v3.9): waves hello, thinks while "typing", opens a hand toward the answer.
+  const botTurns = log.filter((turn) => turn.who === 'bot').length;
+  const lastBot = log.reduce((at, turn, index) => (turn.who === 'bot' ? index : at), -1);
+  const hostPose: PoseId = waiting ? 'think' : log.length <= 1 ? 'wave' : lastTurn?.who === 'bot' ? 'explain' : 'stand';
+  const hostAct = waiting ? 'think' : log.length <= 1 ? 'wave' : 'say';
 
   if (!ready) return null;
 
@@ -322,6 +329,23 @@ export function EqbotCompanion() {
         )}
       </div>
       {phase !== 'shut' && (
+        <div className={`eqbot-scrim${panelOpen ? ' is-open' : ''}`} aria-hidden="true" onClick={closeToTab} />
+      )}
+      {phase !== 'shut' && (
+        <div className={`eqbot-host${panelOpen ? ' is-open' : ''}`} aria-hidden="true">
+          <div key={`${hostAct}-${botTurns}`} className="eqbot-host-figure" data-act={hostAct}>
+            <RifqiFigurine crop="wide" pose={hostPose} expression={mood === 'wink' ? 'wink' : undefined} className="h-full w-full" />
+          </div>
+          {waiting && (
+            <span className="eqbot-thought">
+              <span />
+              <span />
+              <span />
+            </span>
+          )}
+        </div>
+      )}
+      {phase !== 'shut' && (
         <div className={`eqbot-panel${panelOpen ? ' is-open' : ''}`} role="dialog" aria-label="EQbot">
           <div className="eqbot-panel-bar">
             <div className="eqbot-id">
@@ -353,13 +377,13 @@ export function EqbotCompanion() {
                 <button
                   key={`${turn.who}-${index}`}
                   type="button"
-                  className="eqbot-bot eqbot-jump"
+                  className={`eqbot-bot eqbot-jump${index === lastBot ? ' is-new' : ''}`}
                   onClick={() => jumpTo(turn.place as EqbotPlace)}
                 >
                   {text(turn.en, turn.idn)}
                 </button>
               ) : (
-                <p key={`${turn.who}-${index}`} className={turn.who === 'you' ? 'eqbot-you' : 'eqbot-bot'}>
+                <p key={`${turn.who}-${index}`} className={turn.who === 'you' ? 'eqbot-you' : `eqbot-bot${index === lastBot ? ' is-new' : ''}`}>
                   {text(turn.en, turn.idn)}
                 </p>
               )
@@ -370,7 +394,9 @@ export function EqbotCompanion() {
               </p>
             )}
           </div>
+          {/* v3.12 (owner): the choices are one scrolling row, so the messages get the height. */}
           <div className="eqbot-options">
+            <div className="eqbot-choices" role="group" aria-label={text('Questions', 'Pertanyaan')}>
             {choices.map((choice) => (
               <button
                 key={choice.id}
@@ -382,6 +408,7 @@ export function EqbotCompanion() {
                 {text(choice.en, choice.idn)}
               </button>
             ))}
+            </div>
             <p className="eqbot-hint">{text(eqbotCopy.hint.en, eqbotCopy.hint.idn)}</p>
           </div>
         </div>

@@ -69,8 +69,20 @@ function install() {
   installed = true;
   window.addEventListener('studio:cue', (event) => {
     const { chapter, beat, dir } = (event as CustomEvent<{ chapter: string; beat: string; dir: 'fwd' | 'back' }>).detail;
+    // v3.9: richer cues — the camera arriving at a station, the push-in to the board, the wire sliding.
     if (chapter === 'experience' && beat === 'title' && dir === 'fwd') play('drawer');
+    else if (chapter === 'services' && beat === 'svc-0' && dir === 'fwd') play('zoom');
+    else if (chapter === 'projects' && beat.startsWith('wire-')) play('swish');
+    else if (chapter === 'certificates' && beat.startsWith('book-')) {
+      // v3.11: the book comes off the shelf, then its cover turns.
+      play('swish');
+      window.setTimeout(() => play('leaf-in'), 1650);
+    }
     else play(dir === 'fwd' ? 'leaf-in' : 'leaf-out');
+    if (beat === 'title' && dir === 'fwd') {
+      play('whoosh');
+      window.setTimeout(() => play('chime'), 380);
+    }
   });
   document.addEventListener(
     'click',

@@ -18,9 +18,9 @@ export function Hero() {
 
   return (
     <section id="home" data-studio="folio" aria-labelledby="home-title" className="hero-sticky border-b border-line bg-paper">
-      <div className="mx-auto grid max-w-7xl gap-10 px-5 pb-12 pt-24 lg:px-8 xl:min-h-svh xl:grid-cols-12 xl:items-center xl:gap-12 xl:pt-24">
-        <div className="hero-title xl:col-span-5">
-          <p className="mb-5 font-mono text-[11px] uppercase tracking-[0.22em] text-accent">
+      <div className="mx-auto grid max-w-7xl gap-10 px-5 pb-12 pt-24 min-[1680px]:max-w-[min(92vw,100rem)] lg:min-h-svh lg:grid-cols-12 lg:items-center lg:gap-10 lg:px-8 lg:pt-24 xl:gap-12">
+        <div className="hero-title lg:col-span-5">
+          <p className="mb-5 font-mono text-[0.6875rem] uppercase tracking-[0.22em] text-accent">
             <span className="stamp">01</span> — Software Engineer
           </p>
           <h1 id="home-title" className="font-serif text-6xl font-medium leading-[0.92] tracking-tight text-ink sm:text-7xl">
@@ -43,7 +43,7 @@ export function Hero() {
             {heroHighlights.map((item, i) => (
               <li key={item.label} className="ticket border border-line bg-raised px-5 py-3" style={{ '--i': i } as CSSProperties}>
                 <p className="font-serif text-2xl leading-none text-ink">{item.value}</p>
-                <p className="mt-1.5 font-mono text-[11px] uppercase tracking-[0.1em] text-muted">
+                <p className="mt-1.5 font-mono text-[0.6875rem] uppercase tracking-[0.1em] text-muted">
                   <T en={item.label} id={item.labelId} />
                 </p>
               </li>
@@ -62,7 +62,7 @@ export function Hero() {
           </div>
         </div>
 
-        <div className="hero-desk xl:col-span-7">
+        <div className="hero-desk lg:col-span-7">
           <DeskStation screen={heroScreen()} poster={<RifqiFigurine crop="stage" pose="seated" className="h-full w-full" />} />
         </div>
       </div>

@@ -165,7 +165,7 @@ export function windowHole(win: Rect) {
   hole and daylight beam, the shade under furniture, skirting, and the floor.
 */
 /** World extent of wall and floor: the strip, or (`wide`) enough bleed for a fullscreen chapter stage (§9.1 stage fit). */
-const extent = (wide?: boolean) => (wide ? { x: -400, y: -400, w: 2400 } : { x: -40, y: -40, w: 1680 });
+const extent = (wide?: boolean) => (wide ? { x: -1100, y: -700, w: 3800 } : { x: -40, y: -40, w: 1680 });
 
 export function wallLayer(
   k: Kit,
@@ -202,7 +202,7 @@ export function wallLayer(
 
 export function floorLayer(k: Kit, extra?: SceneLayer['art'], wide?: boolean): SceneLayer {
   const e = extent(wide);
-  const deep = wide ? 420 : 90;
+  const deep = wide ? 760 : 90;
   return {
     id: 'floor',
     band: 'back',

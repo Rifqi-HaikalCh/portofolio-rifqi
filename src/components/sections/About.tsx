@@ -6,19 +6,21 @@ import { PINBOARD_CHAPTER } from '../scenes/pinboard/beats';
 import { PinboardStation } from '../scenes/pinboard/PinboardStation';
 import { SectionTitle } from '../ui/SectionTitle';
 import { T } from '../ui/T';
+import { PhotoPrint } from '../ui/PhotoPrint';
 
 const glyphs: Record<string, ReactNode> = {
-  'graduation-cap': <GraduationCap size={18} aria-hidden="true" />,
-  briefcase: <Briefcase size={18} aria-hidden="true" />,
-  trophy: <Trophy size={18} aria-hidden="true" />,
-  users: <Users size={18} aria-hidden="true" />,
+  'graduation-cap': <GraduationCap size={22} aria-hidden="true" />,
+  briefcase: <Briefcase size={22} aria-hidden="true" />,
+  trophy: <Trophy size={22} aria-hidden="true" />,
+  users: <Users size={22} aria-hidden="true" />,
 };
 
 /*
-  02 About — the Pinboard chapter (DesignRules.md §4.5 `02`): three beats over
-  the fullscreen board. The title drops onto a pin, the dossier unfolds out of
-  the photo card, and the four index cards are handed to the board one by one.
-  Server component; the bust on the board is the hero figurine, not a photo.
+  02 About — the Pinboard chapter (DesignRules.md §4.5 `02`, v3.6). The title
+  drops onto a pin; the dossier unfolds while the photograph comes off the
+  board to stand beside it; then each index card on the board comes forward in
+  turn as its own sheet. Server component. Where there is no stage (mobile),
+  the photograph is printed at the top of the dossier instead.
 */
 export function About() {
   return (
@@ -40,6 +42,9 @@ export function About() {
       </Beat>
 
       <Beat id="dossier">
+        <div className="mb-8 max-w-[16rem] md:hidden">
+          <PhotoPrint flat alt="Rifqi Haikal" sizes="80vw" />
+        </div>
         <p className="text-base leading-relaxed text-ink md:text-lg">
           <T
             en="I'm a software engineer with three years of hands-on development. Most of my work is C#, ASP.NET MVC and .NET Core for enterprise web and data systems: backend services, REST APIs, monitoring dashboards, and secure access with SQL Server, Entity Framework, RBAC, SSO and MFA."
@@ -64,21 +69,21 @@ export function About() {
         </div>
       </Beat>
 
-      <Beat id="cards" className="bg-paper">
-        <dl className="grid gap-3 sm:grid-cols-2">
-          {aboutHighlights.map((item, index) => (
-            <div key={item.title} data-step={index} className="index-card border border-line bg-raised p-4">
-              <dt className="flex items-center gap-2.5 font-mono text-[11px] uppercase tracking-[0.14em] text-ink">
-                <span className="text-accent">{glyphs[item.icon]}</span>
-                <T en={item.title} id={item.titleId} />
-              </dt>
-              <dd className="mt-2 text-[15px] leading-relaxed text-muted">
-                <T en={item.description} id={item.descriptionId} />
-              </dd>
-            </div>
-          ))}
-        </dl>
-      </Beat>
+      {aboutHighlights.map((item, index) => (
+        <Beat key={item.title} id={`card-${index}`} className="index-sheet">
+          <p className="flex items-center justify-between font-mono text-[0.6875rem] uppercase tracking-[0.16em] text-muted">
+            <T en={`Pinned ${String(index + 1).padStart(2, '0')} / ${String(aboutHighlights.length).padStart(2, '0')}`} id={`Kartu ${String(index + 1).padStart(2, '0')} / ${String(aboutHighlights.length).padStart(2, '0')}`} />
+            <span className="text-accent">{glyphs[item.icon]}</span>
+          </p>
+          <h3 className="mt-4 font-serif text-3xl font-medium leading-tight tracking-tight text-ink">
+            <T en={item.title} id={item.titleId} />
+          </h3>
+          <p className="mt-3 text-base leading-relaxed text-muted md:text-lg">
+            <T en={item.description} id={item.descriptionId} />
+          </p>
+        </Beat>
+      ))
+      }
     </Chapter>
   );
 }

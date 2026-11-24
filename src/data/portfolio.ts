@@ -176,7 +176,8 @@ export const workExperience: Experience[] = [
     descriptionId: '• Merancang ulang aplikasi enterprise monolitik menjadi 8 aplikasi mandiri, memisahkan basis kode dan deployment agar perubahan atau kegagalan di satu modul tidak memengaruhi modul lain.\n• Mengembangkan 3 dashboard pemantauan enterprise untuk Payout, Business Projects, dan HSE memakai C#, ASP.NET MVC, dan Telerik, sehingga manajemen mendapat visibilitas operasional yang terpusat.\n• Mengoptimalkan pemrosesan data SQL Server dengan stored procedure, kueri set-based, indexing, dan logika transaksional pada 8 aplikasi dan 3 dashboard.\n• Berkolaborasi dengan manajer proyek dan pengguna bisnis dari analisis kebutuhan, desain sistem, pengembangan, pengujian, deployment, hingga pemeliharaan.',
     techStack: ['C#', 'ASP.NET MVC', '.NET Core', 'Telerik', 'SQL Server', 'Stored Procedure'],
     type: 'work',
-    image: '/assets/Logo-TBG.png',
+    image: '/assets/tbg-desk.webp',
+    photos: ['/assets/tbg-office.webp'],
     logo: '/assets/logo-tower-bersama.png'
   },
   {
@@ -304,6 +305,49 @@ export const organizationExperience: Experience[] = [
 ];
 
 export const individualProjects: Project[] = [
+  {
+    id: 'mejascalp',
+    motif: 'market',
+    title: 'MejaScalp – AI Crypto Scalping Assistant',
+    description: 'A web app that records crypto scalping positions and watches their prices around the clock. A Node.js worker reads Binance and DEX prices every few seconds and sends a Telegram alert the moment a position reaches its target, so no target is missed while the trader is away. The dashboard shows active positions with live WebSocket prices, a target ticket, a market watchlist, candlestick charts and a market news digest. AI analysis (Gemini, with Groq as fallback) reads the candles, SMA and volume and answers BUY or DO NOT BUY with its reasons. Supabase Auth and Postgres keep each trader’s data; the layout works on desktop and mobile.',
+    descriptionId: 'Aplikasi web untuk mencatat posisi scalping kripto dan memantau harganya sepanjang waktu. Worker Node.js membaca harga Binance dan DEX setiap beberapa detik dan mengirim notifikasi Telegram begitu posisi menyentuh target, sehingga tidak ada target yang terlewat saat pengguna tidak di depan layar. Dasbor menampilkan posisi aktif dengan harga WebSocket langsung, tiket target, daftar pantauan pasar, grafik candlestick, dan ringkasan berita pasar. Analisis AI (Gemini, dengan cadangan Groq) membaca candle, SMA, dan volume lalu menjawab BELI atau JANGAN BELI beserta alasannya. Supabase Auth dan Postgres menyimpan data tiap pengguna; tampilannya berjalan di desktop dan ponsel.',
+    image: '/assets/mejascalp-cover.webp',
+    techStack: ['Next.js 16', 'React 19', 'TypeScript', 'Tailwind CSS', 'Supabase', 'Node.js', 'Binance WebSocket', 'Gemini', 'Groq', 'Telegram Bot API'],
+    links: {},
+    category: 'individual',
+    type: 'web',
+    slides: [
+      '/assets/mejascalp-01.webp',
+      '/assets/mejascalp-02.webp',
+      '/assets/mejascalp-03.webp',
+      '/assets/mejascalp-04.webp',
+      '/assets/mejascalp-05.webp',
+      '/assets/mejascalp-06.webp',
+      '/assets/mejascalp-07.webp'
+    ]
+  },
+  {
+    id: 'buku-dompet',
+    motif: 'market',
+    title: 'BukuDompet – Family Money Journal',
+    description: 'A cash journal that helps a whole family understand money, with one app and three roles. Teens and adults record spending item by item (with a check for odd amounts), split money into wallets and savings jars, and find small leaks with streaks, points and a pet that grows. Primary-school children learn through a story journal, 49 learning games and a savings goal. Parents get a portal to approve requests, scan the day’s journal and set weekly budgets, and the whole family shares a home feed to cheer each other on. Built with Next.js, React 19, Supabase, Zustand and Motion, mobile first.',
+    descriptionId: 'Jurnal kas yang membuat satu keluarga melek uang, dengan satu aplikasi dan tiga peran. Remaja dan dewasa mencatat belanja per barang (dengan pengecekan nominal janggal), membagi uang ke dompet dan celengan, dan menemukan kebocoran kecil lewat streak, poin, dan hewan peliharaan yang tumbuh. Anak SD belajar lewat jurnal cerita, 49 permainan belajar, dan celengan impian. Orang tua mendapat portal untuk menyetujui permintaan, memindai jurnal hari itu, dan mengatur anggaran mingguan, dan seluruh keluarga berbagi beranda untuk saling menyemangati. Dibangun dengan Next.js, React 19, Supabase, Zustand, dan Motion, mengutamakan ponsel.',
+    image: '/assets/bukudompet-01.webp',
+    techStack: ['Next.js 15', 'React 19', 'TypeScript', 'Tailwind CSS', 'Supabase', 'Zustand', 'Motion', 'Radix UI'],
+    links: {},
+    category: 'individual',
+    type: 'web',
+    slides: [
+      '/assets/bukudompet-01.webp',
+      '/assets/bukudompet-02.webp',
+      '/assets/bukudompet-03.webp',
+      '/assets/bukudompet-04.webp',
+      '/assets/bukudompet-05.webp',
+      '/assets/bukudompet-06.webp',
+      '/assets/bukudompet-07.webp',
+      '/assets/bukudompet-08.webp'
+    ]
+  },
   {
     id: 'shipment-tracker',
     motif: 'route',

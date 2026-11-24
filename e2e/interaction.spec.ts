@@ -56,16 +56,16 @@ test.describe('interaction', () => {
     await opener.click();
     const drawer = page.locator('dialog[open]');
     const status = drawer.getByRole('status');
-    await expect(status).toHaveText('22 of 22 projects');
+    await expect(status).toHaveText('24 of 24 projects');
 
     await drawer.getByRole('button', { name: /^Design/ }).click();
-    await expect(status).toHaveText('7 of 22 projects');
+    await expect(status).toHaveText('7 of 24 projects');
 
     await drawer.getByRole('button', { name: /^All/ }).click();
     await drawer.getByLabel('Search by name or tool').fill('spring');
-    await expect(status).not.toHaveText('22 of 22 projects');
+    await expect(status).not.toHaveText('24 of 24 projects');
     await drawer.getByLabel('Search by name or tool').fill('zzzz');
-    await expect(status).toHaveText('0 of 22 projects');
+    await expect(status).toHaveText('0 of 24 projects');
     await expect(drawer.getByText('This drawer is empty.')).toBeVisible();
 
     await drawer.getByRole('button', { name: /Back to desk/ }).click();
@@ -73,7 +73,52 @@ test.describe('interaction', () => {
     await expect(opener).toBeFocused();
   });
 
-  test('certificate folios open and link out safely', async ({ page }) => {
+  test('the welcome tour shows on a first visit, two pages, and is remembered (v3.11)', async ({ page }) => {
+    test.setTimeout(60_000);
+    // Automation never sees it on its own (navigator.webdriver); `?welcome` asks for it.
+    await page.goto('/?welcome');
+    const dialog = page.locator('dialog[open].welcome-dialog');
+    await expect(dialog).toBeVisible({ timeout: 5000 });
+    await expect(dialog.getByRole('heading', { level: 3 })).toContainText(/welcome/i);
+    await dialog.getByRole('button', { name: /Show me how/ }).click();
+    await expect(dialog.locator('.welcome-demo')).toBeVisible();
+    await dialog.getByRole('button', { name: /Start scrolling/ }).click();
+    await expect(page.locator('dialog[open]')).toHaveCount(0);
+    expect(await page.evaluate(() => localStorage.getItem('studio-welcome'))).toBe('1');
+  });
+
+  test('certificate books open in the theatre and link out safely (v3.11)', async ({ page, isMobile }) => {
+    test.skip(isMobile, 'the books are a theatre layout; the folio page keeps the folios');
+    await page.goto('/');
+    await page.evaluate(() => (document.documentElement.style.scrollBehavior = 'auto'));
+    const chapter = page.locator('#certificates');
+    await expect(chapter.locator('[data-eqbot="certificates-list"]')).toBeHidden();
+    await expect(chapter.locator('.book-sheet')).toHaveCount(4);
+    await chapter.locator('.beat-track[data-track="book-1"]').evaluate((el) => {
+      const r = el.getBoundingClientRect();
+      scrollTo(0, r.top + scrollY + r.height / 2 - innerHeight / 2);
+    });
+    const beat = chapter.locator('.beat-deck > [data-beat="book-1"]');
+    await expect(beat).toHaveAttribute('data-state', 'in');
+    await page.waitForTimeout(2800);
+    const links = beat.locator('a.book-entry');
+    await expect(links).toHaveCount(5);
+    for (const link of await links.all()) {
+      await expect(link).toHaveAttribute('target', '_blank');
+      await expect(link).toHaveAttribute('rel', /noopener/);
+    }
+    // The open pages take the pointer: the middle of every entry hits the entry itself.
+    const hits = await links.evaluateAll((els) =>
+      els.map((el) => {
+        const r = el.getBoundingClientRect();
+        return el.contains(document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2));
+      }),
+    );
+    expect(hits).toEqual([true, true, true, true, true]);
+  });
+
+  test('certificate folios open and link out safely', async ({ page, isMobile }) => {
+    test.skip(!isMobile, 'the theatre shows the books instead (covered above)');
     await page.goto('/');
     const folios = page.locator('[data-eqbot="certificates-list"] details');
     await expect(folios).toHaveCount(4);

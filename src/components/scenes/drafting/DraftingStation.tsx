@@ -1,4 +1,6 @@
 import { circle, ellipse, paperKit, poly, rect } from '../../../lib/paper-kit';
+import { BL, BR, TL, TR, on, quad } from './board';
+import { PLAN_BOX, planCss, planSheets } from './plans';
 import type { Frames, SceneLayer } from '../PaperScene';
 import { Station } from '../Station';
 import { STRIP, bar, figureLayer, floorLayer, wallLayer } from '../office';
@@ -8,24 +10,13 @@ import { STRIP, bar, figureLayer, floorLayer, wallLayer } from '../office';
   midday. An angled board under a clamp lamp; on it a blueprint of a small
   data model (three tables and their keys: the SQL Server work the section
   describes), a ruler, a set square and the pencil in the figure's hand.
+  As the chapter stage (v3.7) a pile of six service blueprints lands on the
+  board: each `svc-*` beat tucks the front sheet under the pile and the next
+  drawing inks itself in (`plans.tsx`).
 */
 
 export const DRAFTING_FRAMES: Frames = { desktop: STRIP, mobile: { x: 240, y: 40, w: 1040, h: 600 } };
 const FRAMES = DRAFTING_FRAMES;
-
-/* Board corners: tilted away, so the top edge is shorter. */
-const TL = [530, 140] as const;
-const TR = [1170, 140] as const;
-const BR = [1224, 468] as const;
-const BL = [476, 468] as const;
-
-/** A point on the board from (u, v) in 0..1 (left→right, top→bottom). */
-function on(u: number, v: number): [number, number] {
-  const x0 = TL[0] + (BL[0] - TL[0]) * v;
-  const x1 = TR[0] + (BR[0] - TR[0]) * v;
-  return [Math.round(x0 + (x1 - x0) * u), Math.round(TL[1] + (BL[1] - TL[1]) * v)];
-}
-const quad = (u0: number, v0: number, u1: number, v1: number) => poly([on(u0, v0), on(u1, v0), on(u1, v1), on(u0, v1)]);
 
 /*
   As a chapter stage (§4.5): `wide` bleeds the wall and floor for the fullscreen
@@ -128,6 +119,14 @@ export function DraftingStation({ wide = false, only }: { wide?: boolean; only?:
     ...(wide
       ? [
           {
+            id: 'plans',
+            band: 'mid' as const,
+            className: 'theatre-only',
+            z: -95,
+            box: PLAN_BOX,
+            html: planSheets(k),
+          },
+          {
             id: 'cover',
             band: 'mid' as const,
             className: 'theatre-only',
@@ -153,7 +152,8 @@ export function DraftingStation({ wide = false, only }: { wide?: boolean; only?:
             {k.sheet({ d: rect(660, 430, 470, 22, 1), fill: 'var(--ill-frame)', gap: 10, edge: 2.5 })}
             <path d={Array.from({ length: 24 }, (_, i) => `M${674 + i * 19} 430v${i % 4 === 0 ? 10 : 6}`).join('')} stroke="var(--color-ink)" strokeWidth="1.2" opacity="0.55" />
           </g>
-          {k.sheet({ d: `${poly([[1040, 250], [1040, 400], [1160, 400]])}${poly([[1060, 300], [1060, 382], [1124, 382]])}`, fillRule: 'evenodd', fill: 'var(--color-sage)', gap: 12, edge: 2, opacity: 0.92 })}
+          {/* v3.7: the set square sits on the board's right edge, clear of the drawing. */}
+          {k.sheet({ d: `${poly([[1170, 310], [1170, 450], [1282, 450]])}${poly([[1188, 358], [1188, 432], [1248, 432]])}`, fillRule: 'evenodd', fill: 'var(--color-sage)', gap: 12, edge: 2, opacity: 0.92 })}
           <g transform="rotate(28 620 330)">
             {k.sheet({ d: rect(560, 324, 120, 9, 1), fill: 'var(--ill-note)', gap: 14, edge: 1.5 })}
             {k.sheet({ d: poly([[680, 324], [696, 328.5], [680, 333]]), fill: 'var(--ill-skin)', gap: 6, edge: 0.8 })}
@@ -213,5 +213,5 @@ export function DraftingStation({ wide = false, only }: { wide?: boolean; only?:
     },
   ];
 
-  return <Station name="drafting" layers={layers} frames={FRAMES} light="midday" only={only} />;
+  return <Station name="drafting" layers={layers} frames={FRAMES} light="midday" css={wide ? planCss('services', (i) => `svc-${i}`) : undefined} only={only} />;
 }

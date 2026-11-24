@@ -19,7 +19,7 @@ export default function NotFound() {
       <PaperDefs />
       <CabinetStation sets={[]} pose="peer" name="drawer404" />
       <div className="station-sheet paper-sheet border border-line bg-raised p-6 sm:mx-6 sm:p-10 lg:mx-10">
-        <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-accent">
+        <p className="font-mono text-[0.6875rem] uppercase tracking-[0.22em] text-accent">
           <span className="stamp">404</span> — Empty drawer
         </p>
         <h1 className="mt-4 font-serif text-4xl font-medium tracking-tight text-ink md:text-5xl">Nothing is filed here.</h1>

@@ -18,20 +18,25 @@ const SHELF_2 = 520;
 
 export type BinderData = { label: string; count: number };
 
+/** Binder colours and widths, shared with the v3.11 certificate books (Certificates.tsx). */
+export const BINDER_FILLS = ['var(--color-accent)', 'var(--color-blueprint)', 'var(--color-sage)', 'var(--ill-kraft)'];
+const WIDTHS = [86, 78, 70, 64];
+
+/** Binder i on the upper shelf, in world units: left edge, width, height, and its centre. */
+export function binderSpine(i: number) {
+  const w = WIDTHS[i % WIDTHS.length];
+  const x = CASE.x + 52 + WIDTHS.slice(0, i).reduce((sum, v) => sum + v + 8, 0);
+  const h = 178 - (i % 2) * 12;
+  return { x, w, h, cx: x + w / 2, cy: SHELF_1 - h / 2 };
+}
+
 /*
   As a chapter stage (§4.5): `wide` bleeds the wall and floor for the fullscreen
   cover fit; `only` renders a subset of layers (the occluder copy).
 */
 export function ArchiveStation({ binders, wide = false, only }: { binders: BinderData[]; wide?: boolean; only?: readonly string[] }) {
   const k = paperKit('archive');
-  const fills = ['var(--color-accent)', 'var(--color-blueprint)', 'var(--color-sage)', 'var(--ill-kraft)'];
-  const widths = [86, 78, 70, 64];
-
-  const spines = binders.map((b, i) => {
-    const w = widths[i % widths.length];
-    const x = CASE.x + 52 + widths.slice(0, i).reduce((sum, v) => sum + v + 8, 0);
-    return { ...b, x, w, h: 178 - (i % 2) * 12, fill: fills[i % fills.length] };
-  });
+  const spines = binders.map((b, i) => ({ ...b, ...binderSpine(i), fill: BINDER_FILLS[i % BINDER_FILLS.length] }));
 
   const layers: SceneLayer[] = [
     wallLayer(k, { beam: 'M-40 20L180 20L760 566L-40 566Z', wide }),

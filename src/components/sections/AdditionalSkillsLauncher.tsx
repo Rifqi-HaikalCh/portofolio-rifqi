@@ -22,7 +22,7 @@ export function AdditionalSkillsLauncher() {
         className="index-card group flex min-h-11 w-full items-center justify-between gap-4 border border-line p-5 text-left"
       >
         <span>
-          <span className="block font-mono text-[11px] uppercase tracking-[0.16em] text-accent">
+          <span className="block font-mono text-[0.6875rem] uppercase tracking-[0.16em] text-accent">
             <T en="Language · Framework" id="Bahasa · Framework" />
           </span>
           <span className="mt-1 block font-serif text-xl text-ink">

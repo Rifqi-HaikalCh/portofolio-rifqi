@@ -83,7 +83,7 @@ export default function Navbar() {
                 aria-current={here ? 'location' : undefined}
                 className={`inline-flex min-h-11 items-center gap-1.5 whitespace-nowrap text-sm ${here ? 'nav-current' : 'text-muted hover:text-ink'}`}
               >
-                <span className="font-mono text-[10px] text-accent" aria-hidden="true">
+                <span className="font-mono text-[0.625rem] text-accent" aria-hidden="true">
                   {section.index}
                 </span>
                 <T en={section.en} id={section.idn} />
@@ -110,7 +110,7 @@ export default function Navbar() {
               type="button"
               onClick={toggleLanguage}
               aria-label={say('Baca dalam Bahasa Indonesia', 'Read in English')}
-              className="inline-flex h-11 min-w-11 items-center justify-center px-2.5 font-mono text-[11px] tracking-[0.14em] text-ink hover:bg-ink hover:text-paper"
+              className="inline-flex h-11 min-w-11 items-center justify-center px-2.5 font-mono text-[0.6875rem] tracking-[0.14em] text-ink hover:bg-ink hover:text-paper"
             >
               {language === 'en' ? 'ID' : 'EN'}
             </button>

@@ -1,13 +1,17 @@
-import type { ChapterSpec } from '../chapter/spec';
+import type { BeatSpec, ChapterSpec } from '../chapter/spec';
 import { GALLERY_FRAMES } from './GalleryStation';
 
 /*
-  Chapter `04b` — The Shadow-Box Gallery (DesignRules.md §4.5 `04b`). Arrives
+  Chapter `04b` — The Shadow-Box Gallery (DesignRules.md §4.5 `04b`, v3.6). Arrives
   by a pan right along the wall from the drafting table. The title rises while
   the figure hangs the new frame on the rail (stop-motion `hang` ↔ `reach`) →
-  the project frames rise as one long in-flow sheet. Leaves by the dolly out
-  and pan to the archive shelf.
+  the six featured projects hang as cards on one wire, two per segment (a
+  `rail` group): each beat slides the wire sideways to the next pair → the
+  archive drawer rises in flow. Leaves by the dolly out and pan to the shelf.
 */
+// v3.7: the illustrated rail on the stage slides with the wire (GalleryStation `hung`), and the figure turns to the frames once per segment.
+const wire: BeatSpec[] = [0, 1, 2, 3].map((i) => ({ id: `wire-${i}`, hold: 30, origin: 'rise', poses: { base: 'figure', alt: 'figure-alt', swaps: 1 } }));
+
 export const GALLERY_CHAPTER: ChapterSpec = {
   id: 'projects',
   lane: 'left',
@@ -16,6 +20,7 @@ export const GALLERY_CHAPTER: ChapterSpec = {
   theatreMobile: { x: 500, y: 0, w: 640, h: 620 },
   handoffIn: 'pan-right',
   handoffOut: 'dolly-out',
+  groups: [{ layout: 'rail', beats: wire.map((b) => b.id) }],
   beats: [
     {
       id: 'title',
@@ -24,7 +29,7 @@ export const GALLERY_CHAPTER: ChapterSpec = {
       acts: [{ target: { layer: 'new-frame' }, moved: 'translateY(70%) rotate(-9deg)', mode: 'in' }],
       poses: { base: 'figure', alt: 'figure-alt', swaps: 2 },
     },
-    // W3: the six frames are hung two at a time once the shelf shows (`data-step` = row pair).
-    { id: 'shelf', hold: 'flow', origin: 'rise', steps: 3 },
+    ...wire,
+    { id: 'archive', hold: 'flow', origin: 'rise' },
   ],
 };

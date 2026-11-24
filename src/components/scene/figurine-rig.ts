@@ -110,7 +110,7 @@ export function placeParts(pose: PoseId | JointAngles, expression?: Expression):
   const face = expression ?? (typeof pose === 'string' ? POSES[pose].expression : 'neutral');
   const world = solveJoints(joints);
 
-  return PARTS.filter((part) => !part.only || part.only.includes(face))
+  const placed = PARTS.filter((part) => !part.only || part.only.includes(face))
     .map((part, index) => {
       const m = world[part.joint];
       // A joint's sheets keep their z order (they share one matrix, as in 3D);
@@ -123,7 +123,12 @@ export function placeParts(pose: PoseId | JointAngles, expression?: Expression):
         ? ''
         : `matrix(${r4(m[0])} ${r4(m[4])} ${r4(m[1])} ${r4(m[5])} ${r4(m[3] + m[2] * part.z)} ${r4(m[7] + m[6] * part.z)})`;
       return { part: { ...part, matrix }, depth, index };
-    })
-    .sort((a, b) => a.depth - b.depth || a.index - b.index)
-    .map(({ part }) => part);
+    });
+  // v3.12 (owner: "the neck was in front of the head in Services"): a head pitched down
+  // (`draw`) moved its centre back past the neck. The neck always sits behind the head.
+  const headFront = Math.min(...placed.filter(({ part }) => part.joint === 'head').map((p) => p.depth));
+  placed.forEach((p) => {
+    if (p.part.joint === 'neck' && p.depth >= headFront) p.depth = headFront - 0.01;
+  });
+  return placed.sort((a, b) => a.depth - b.depth || a.index - b.index).map(({ part }) => part);
 }

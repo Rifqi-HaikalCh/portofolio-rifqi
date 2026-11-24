@@ -22,6 +22,7 @@ const INKS: Record<keyof FigurinePalette, string> = {
   sneaker: '--ill-sneaker',
   sole: '--ill-sole',
   page: '--ill-page',
+  eye: '--ill-eye',
   fold: '--paper-fold',
   cut: '--paper-cut',
   shadow: '--paper-shadow',

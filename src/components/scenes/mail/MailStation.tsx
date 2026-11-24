@@ -1,6 +1,7 @@
 import { circle, ellipse, paperKit, poly, rect } from '../../../lib/paper-kit';
-import type { Frames, SceneLayer } from '../PaperScene';
+import { frameVars, type Frames, type SceneLayer } from '../PaperScene';
 import { Station } from '../Station';
+import { DeskLamp } from '../../scene/DeskLamp';
 import { STRIP, bar, figureLayer, floorLayer, wallLayer, windowHole, windowLayers } from '../office';
 
 /*
@@ -138,5 +139,10 @@ export function MailStation({ wide = false, only }: { wide?: boolean; only?: rea
     },
   ];
 
-  return <Station name="mail" layers={layers} frames={FRAMES} light="golden" only={only} />;
+  return (
+    <Station name="mail" layers={layers} frames={FRAMES} light="golden" only={only}>
+      {/* v3.10 (owner): the Mail Tray lamp is a theme switch too, like the desk lamp in `01`. */}
+      <DeskLamp pointerOnly className="scene-desktop-only mail-lamp" style={frameVars({ x: 1372, y: 168, w: 196, h: 272 }, FRAMES)} />
+    </Station>
+  );
 }

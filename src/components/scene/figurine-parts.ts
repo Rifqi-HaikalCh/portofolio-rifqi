@@ -23,6 +23,7 @@ export type Ink =
   | 'sneaker'
   | 'sole'
   | 'page'
+  | 'eye'
   | 'fold';
 
 export const inkVar = (ink: Ink) => (ink === 'fold' ? 'var(--paper-fold)' : `var(--ill-${ink})`);
@@ -82,6 +83,10 @@ export type Part = {
   shade?: { day: string; night: string };
   /** Only drawn for these expressions. */
   only?: readonly Expression[];
+  /** Follows the visitor's pointer in 2D views (pupil and glint, v3.9). */
+  look?: boolean;
+  /** Closes in the 2D blink (eye white, pupil, glint, lash; v3.9). */
+  lid?: boolean;
 };
 
 /* ---- Path helpers --------------------------------------------------------- */
@@ -322,10 +327,14 @@ const face: Part[] = [
   ...pair({ id: 'brow', joint: 'head', z: 12, d: 'M79 71 L95 69 L95 72.5 L79 74 Z', fill: 'hair', only: ['neutral', 'smile', 'wink', 'blink'] }),
   ...pair({ id: 'brow-up', joint: 'head', z: 12, d: 'M79 67 Q87 62 95 65 L95 68.5 Q87 66 79 70.5 Z', fill: 'hair', only: ['thinking'] }),
 
-  // Eyes: open almond cut-outs with a highlight dot
-  ...pair({ id: 'eye', joint: 'head', z: 12, d: 'M80 85 Q88 74 96 85 Q88 91 80 85 Z', fill: 'hair', only: ['neutral', 'thinking'] }),
-  ...pair({ id: 'eye-glint', joint: 'head', z: 12.1, d: circle(90.5, 82.5, 1.5), fill: 'page', only: ['neutral'] }),
-  ...pair({ id: 'eye-glint-up', joint: 'head', z: 12.1, d: circle(91, 80.8, 1.5), fill: 'page', only: ['thinking'] }),
+  // Eyes (v3.9, owner): a white almond, a lash line on top, a dark pupil with a
+  // white glint. Pupil and glint follow the pointer in 2D (`look`).
+  ...pair({ id: 'eye', joint: 'head', z: 12, d: 'M80 85 Q88 74 96 85 Q88 91 80 85 Z', fill: 'eye', only: ['neutral', 'thinking'], lid: true }),
+  ...pair({ id: 'pupil', joint: 'head', z: 12.05, d: circle(88, 83.6, 3.7), fill: 'hair', only: ['neutral'], look: true, lid: true }),
+  ...pair({ id: 'pupil-up', joint: 'head', z: 12.05, d: circle(88.4, 81.6, 3.5), fill: 'hair', only: ['thinking'], look: true, lid: true }),
+  ...pair({ id: 'eye-glint', joint: 'head', z: 12.1, d: circle(89.4, 82.2, 1.3), fill: 'eye', only: ['neutral'], look: true, lid: true }),
+  ...pair({ id: 'eye-glint-up', joint: 'head', z: 12.1, d: circle(89.7, 80.3, 1.2), fill: 'eye', only: ['thinking'], look: true, lid: true }),
+  ...pair({ id: 'lash', joint: 'head', z: 12.15, d: 'M79.5 85 Q88 73.6 96.5 85', stroke: 'hair', strokeWidth: 1.8, only: ['neutral', 'thinking'], lid: true }),
   // Smiling eyes: a crescent
   ...pair({ id: 'eye-happy', joint: 'head', z: 12, d: 'M80 86 Q88 75 96 86 Q88 81 80 86 Z', fill: 'hair', only: ['smile'] }),
   // Closed eyes: a fold line (blink both, wink the viewer's left)
@@ -393,7 +402,7 @@ export const PARTS: readonly Part[] = [
 /* ---- Poses: joint angles in degrees [rx, ry, rz] ------------------------- */
 
 export type Angles = readonly [number, number, number];
-export type PoseId = 'stand' | 'wave' | 'think' | 'seated' | 'peer' | 'pin' | 'folder' | 'draw' | 'hang' | 'binder' | 'seal' | 'reach' | 'hand';
+export type PoseId = 'stand' | 'wave' | 'think' | 'seated' | 'peer' | 'pin' | 'folder' | 'draw' | 'hang' | 'binder' | 'seal' | 'reach' | 'hand' | 'explain';
 
 export type Pose = {
   joints: Partial<Record<JointId, Angles>>;
@@ -540,6 +549,18 @@ export const POSES: Record<PoseId, Pose> = {
   },
   // 06 Mail Tray, stop-motion partner of `seal` (§10.2): the card held out to the visitor on his
   // right (the viewer's left, where the letterpress card lands); the other hand keeps the envelope.
+  // EQbot host (v3.9): standing beside the chat, the near hand opened toward it while he answers.
+  explain: {
+    expression: 'smile',
+    joints: {
+      head: [0, -10, -3],
+      shoulderL: [0, 0, 4],
+      elbowL: [0, 0, -3],
+      shoulderR: [0, 0, -48],
+      elbowR: [0, 0, -38],
+      wristR: [0, 0, -12],
+    },
+  },
   hand: {
     expression: 'smile',
     joints: {

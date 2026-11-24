@@ -53,7 +53,7 @@ export function Contact() {
           <p className="mt-1 text-sm text-muted">Software Engineer</p>
 
           <div className="mt-8 border-t border-line pt-6">
-            <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted">Email</p>
+            <p className="font-mono text-[0.6875rem] uppercase tracking-[0.16em] text-muted">Email</p>
             <div className="mt-2 flex items-center gap-2">
               <a href={`mailto:${contactInfo.email}`} className="link-mark min-w-0 flex-1 break-all text-ink">
                 {contactInfo.email}

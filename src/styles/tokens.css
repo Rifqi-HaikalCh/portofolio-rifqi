@@ -20,8 +20,8 @@
   --rgb-scrim: 27 25 22;
 
   /* Illustration palette: SVG scene, figurine, props only (§5.2). */
-  --ill-skin: #c4916f;
-  --ill-skin-shade: #a87658;
+  --ill-skin: #e9c4a3;
+  --ill-skin-shade: #cf9f7f;
   --ill-hair: #211d1b;
   --ill-shirt: #2b2927;
   --ill-denim: #466080;
@@ -50,6 +50,7 @@
   --ill-note: #e9d99f;
   --ill-notebook: #8c3a2f;
   --ill-page: #fbf8f2;
+  --ill-eye: #fbf8f2;
   --ill-beam: rgb(255 252 240 / 0.38);
 
   /* Day/night scene switches (opacity only, never display). */
@@ -130,8 +131,8 @@
   --rgb-sage: 142 163 135;
   --rgb-scrim: 8 7 6;
 
-  --ill-skin: #96694f;
-  --ill-skin-shade: #78533e;
+  --ill-skin: #c39878;
+  --ill-skin-shade: #a37a5e;
   --ill-hair: #161413;
   --ill-shirt: #45413c;
   --ill-denim: #344862;
@@ -160,6 +161,7 @@
   --ill-note: #7d7148;
   --ill-notebook: #6e3027;
   --ill-page: #3a3631;
+  --ill-eye: #e6dfd2;
   --ill-beam: transparent;
 
   --beam-opacity: 0;

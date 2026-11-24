@@ -31,6 +31,8 @@ export interface Experience {
   techStack?: string[];
   type: 'work' | 'organization';
   image?: string;
+  /** More photographs for the file dialog (v3.9). */
+  photos?: string[];
   logo?: string;
 }
 

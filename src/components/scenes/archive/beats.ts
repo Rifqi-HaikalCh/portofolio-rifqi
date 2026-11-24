@@ -4,8 +4,9 @@ import { ARCHIVE_FRAMES } from './ArchiveStation';
 /*
   Chapter `05` — The Archive Shelf (DesignRules.md §4.5 `05`). Arrives by the
   dolly out and pan from the gallery. The title rises as the binders settle
-  onto their shelf → the folios rise as one in-flow sheet; opening a folio
-  pulls its binder (the station's :has() rule). Lane on the right, over the
+  onto their shelf → four books, one per category, come off the shelf and
+  open (v3.11). Stacked and folio layouts keep the in-flow folios; opening a
+  folio pulls its binder (the station's :has() rule). Lane on the right, over the
   paper stack; the bookcase and figure stay in view.
 */
 export const ARCHIVE_CHAPTER: ChapterSpec = {
@@ -33,6 +34,19 @@ export const ARCHIVE_CHAPTER: ChapterSpec = {
         })),
       ],
     },
+    /*
+      v3.11 (owner): one book per category. Its binder leaves the shelf, the book
+      flies to the middle of the stage closed and opens on its pages of
+      certificates; scrolling on closes it and puts it back, and the next book
+      comes out; scrolling back does the same in reverse (scene.css `.book`).
+    */
+    ...[0, 1, 2, 3].map((i) => ({
+      id: `book-${i}`,
+      hold: 40,
+      origin: 'rise' as const,
+      acts: [{ target: { obj: `binder-${i}` }, moved: '0', mode: 'out' as const, property: 'opacity' as const, delay: 450 }],
+    })),
+    // The folios stay for the stacked studio and the folio page (< 768 px); the theatre shows the books instead.
     { id: 'folios', hold: 'flow', origin: 'rise' },
   ],
 };

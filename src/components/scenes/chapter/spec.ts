@@ -27,8 +27,11 @@ export type Act = {
    * `pulse`: authored → moved → authored once each time the beat comes on (a binder pulled and put back).
    */
   mode: 'in' | 'out' | 'off' | 'pulse';
-  /** The CSS property animated: `transform` on layers, `translate` / `scale` on objects that also have :has() state. */
-  property?: 'transform' | 'translate' | 'scale';
+  /**
+   * The CSS property animated: `transform` on layers, `translate` / `scale` on objects that also have :has() state,
+   * `opacity` for an object that hands its place to a sheet (an index card lifted off the board, v3.6).
+   */
+  property?: 'transform' | 'translate' | 'scale' | 'opacity';
   /** Start delay in ms, for acts that follow one another (binders pulled one by one). */
   delay?: number;
   /** transform-origin of the target, when it must turn about a point other than its centre (a light pool about its lamp). */
@@ -47,7 +50,10 @@ export type BeatSpec = {
   hold: number | 'flow';
   origin: Origin;
   acts?: Act[];
-  /** Stage layers copied above the sheet while it emerges (§4.4 step 7). */
+  /**
+   * Stage layers copied above the sheet while it emerges (§4.4 step 7). Required for an Emerge beat;
+   * `[]` when the object it comes off sits in front of everything (a card lifted off the board, v3.6).
+   */
   occluder?: readonly string[];
   /** Children (`[data-step]`) that arrive one by one once the sheet has landed (pinned) or shows (flow). */
   steps?: number;
@@ -61,8 +67,14 @@ export type ChapterSpec = {
   id: string;
   lane: 'left' | 'right';
   frames: Frames;
-  /** The part of the world that fills the viewport (cover fit); mobile uses the split-stage crop. */
+  /** The part of the world that fills the viewport when the screen's ratio allows (cover fit). */
   theatre: Rect;
+  /**
+   * The part that must always stay in view (v3.7, §9.1): on a screen wider or taller than the
+   * theatre's ratio the fit zooms out just enough to keep it, and the camera slides to it, so a
+   * slightly different ratio never crops the lamp or the figure. Defaults to `safeOf(theatre)`.
+   */
+  safe?: Rect;
   theatreMobile: Rect;
   handoffIn: Handoff;
   handoffOut: Handoff;
@@ -71,6 +83,13 @@ export type ChapterSpec = {
    * in-flow list. Its track may run to 800 svh, with every entry held at the minimum.
    */
   records?: boolean;
+  /**
+   * Beats that share one composition while any of them is on (§4.4 v3.6). `stack`: their sheets
+   * lie in one pile and the front sheet is tucked under the back as the next comes up (the
+   * service blueprints). `rail`: their sheets are segments of one wire, side by side, and the
+   * wire slides sideways to the active one (the gallery). Each group is a record run (§4.6).
+   */
+  groups?: Array<{ layout: 'stack' | 'rail'; beats: readonly string[] }>;
   beats: BeatSpec[];
 };
 
@@ -86,7 +105,7 @@ export function validateChapter(spec: ChapterSpec) {
   const poses = new Set<string>();
   for (const beat of spec.beats) {
     if (typeof beat.origin === 'string' && !ORIGINS.has(beat.origin)) fail(`beat ${beat.id} has an unknown origin`);
-    if (typeof beat.origin === 'object' && !beat.occluder?.length) fail(`emerge beat ${beat.id} needs an occluder`);
+    if (typeof beat.origin === 'object' && !beat.occluder) fail(`emerge beat ${beat.id} needs an occluder (or [] in front of the scene)`);
     if (beat.hold !== 'flow') {
       if (beat.hold < 30 || beat.hold > 60) fail(`beat ${beat.id} holds ${beat.hold} svh, outside 30–60`);
       track += 40 + beat.hold;
@@ -98,7 +117,24 @@ export function validateChapter(spec: ChapterSpec) {
   // Each pinned beat is a cue track of 40 svh plus its hold (v3.3: sheets no longer travel with the scroll).
   const cap = spec.records ? 800 : 600;
   if (track > cap) fail(`track is ${track} svh, max ${cap}`);
-  if (spec.records && spec.beats.slice(1).some((beat) => beat.hold !== 30)) fail('record entries hold 30 svh');
+  if (spec.records && spec.beats.slice(1).some((beat) => beat.hold !== 30 && beat.hold !== 'flow')) fail('record entries hold 30 svh');
+  for (const group of spec.groups ?? []) {
+    if (group.beats.length < 2) fail('a group needs two beats or more');
+    group.beats.forEach((id, i) => {
+      const at = spec.beats.findIndex((b) => b.id === id);
+      if (at < 0) fail(`group beat ${id} is not in the spec`);
+      if (spec.beats[at].hold !== 30) fail(`group beat ${id} holds 30 svh`);
+      if (i > 0 && spec.beats[at - 1]?.id !== group.beats[i - 1]) fail(`group beats ${group.beats.join(', ')} are not consecutive`);
+    });
+  }
   if (actors.size > 6) fail(`${actors.size} actors, max 6`);
   if (poses.size > 4) fail(`${poses.size} poses, max 4`);
+}
+
+/**
+  Default safe rect: the theatre without 8 % at each side, and from just above the furniture
+  (world y -40) to just under the skirting (FLOOR_Y 590 + 60): every station stands on the same floor.
+*/
+export function safeOf(t: Rect): Rect {
+  return { x: Math.round(t.x + t.w * 0.08), y: -40, w: Math.round(t.w * 0.84), h: 690 };
 }

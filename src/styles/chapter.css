@@ -4,8 +4,10 @@
 
   Default = the stacked studio (no scroll-driven support, reduced motion,
   short screens, data-stacked): the station as a framed box, then the sheets.
-  Inside the @supports/@media block = the theatre: a sticky fullscreen stage
-  (split stage under 768 px) with the beats scrolling over it.
+  Inside the @supports/@media block = the theatre (768 px and wider): a sticky
+  fullscreen stage with the beats cued over it. Under 768 px = the folio
+  (v3.6, owner request): the v1 page as it was on `main`, no stages, no paper
+  craft, every chapter a plain section of text and cards.
 */
 
 /* ---- Stacked studio ------------------------------------------------------ */
@@ -73,6 +75,68 @@
   box-shadow: var(--leaf-lip), var(--paper-edge-cut);
 }
 .paper-leaf.bg-paper { --leaf-tone: var(--color-paper); }
+/* A blueprint sheet (`04` services pile, v3.6): the leaf under a blueprint grid. */
+.paper-leaf.blueprint-leaf {
+  --leaf-tone: color-mix(in oklab, var(--color-blueprint) 7%, var(--color-raised));
+  background-image:
+    linear-gradient(rgb(var(--rgb-blueprint) / 0.13) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(var(--rgb-blueprint) / 0.13) 1px, transparent 1px),
+    linear-gradient(color-mix(in oklab, var(--leaf-tone) 80%, transparent) 0 0),
+    image-set(url("/assets/papercraft/tex-cardstock.avif") type("image/avif"), url("/assets/papercraft/tex-cardstock.webp") type("image/webp"));
+  background-size: 22px 22px, 22px 22px, auto, 256px 256px;
+  border-color: rgb(var(--rgb-blueprint) / 0.35);
+}
+
+/*
+  The gallery wire (`04b`, v3.6): a segment is not a sheet but a length of wire
+  with two cards hung from it by a string and a clip. The wire sags a little
+  and runs on past both ends, so neighbouring segments read as one wire.
+*/
+.chapter .beat-sheet.rail-seg {
+  padding: 3rem 0 0;
+  border: 0;
+  background: none;
+  box-shadow: none;
+}
+.chapter .beat-sheet.rail-seg::before,
+.chapter .beat-sheet.rail-seg::after { display: none; }
+.rail-row {
+  position: relative;
+  display: grid;
+  gap: 3.5rem 2.5rem;
+}
+.rail-row::before {
+  content: "";
+  position: absolute;
+  top: -2.6rem;
+  left: calc(var(--rail-gap, 2rem) / -2 - 1px);
+  right: calc(var(--rail-gap, 2rem) / -2 - 1px);
+  height: 1.1rem;
+  border-bottom: 2px solid var(--color-muted);
+  border-radius: 0 0 50% 50% / 0 0 100% 100%;
+  pointer-events: none;
+}
+@media (min-width: 640px) {
+  .rail-row { grid-template-columns: 1fr 1fr; }
+}
+.rail-card {
+  position: relative;
+  transform-origin: 50% -2rem;
+}
+.rail-card::before {
+  /* The string and the wooden clip it hangs from. */
+  content: "";
+  position: absolute;
+  top: -1.75rem;
+  left: calc(50% - 7px);
+  width: 14px;
+  height: 2.2rem;
+  background:
+    linear-gradient(var(--color-wood), var(--color-wood)) 50% 100% / 14px 20px no-repeat,
+    linear-gradient(var(--color-muted), var(--color-muted)) 50% 0 / 2px 100% no-repeat;
+  box-shadow: 0 2px 0 rgb(var(--rgb-shadow) / 0.12);
+  z-index: 1;
+}
 .paper-leaf::before {
   content: "";
   position: absolute;
@@ -111,9 +175,9 @@
   stays the stacked studio, fully readable.
 */
 @supports (animation-timeline: view()) {
-  @media (prefers-reduced-motion: no-preference) and (min-height: 561px) {
+  @media (prefers-reduced-motion: no-preference) and (min-height: 561px) and (min-width: 768px) {
     .chapter[data-cue]:not([data-stacked]) {
-      --beat-top: 18svh;
+      --beat-top: var(--beat-top-fit, 18svh);
       --lane-pad: 5cqw;
       --lane-w: min(34rem, 40cqw);
       --lane-w-flow: min(60rem, 64cqw);
@@ -125,6 +189,9 @@
       padding-block: 0;
       /* In-page links land on the composed stage; the first cue is already on there. */
       scroll-margin-top: 0;
+      /* The gallery wire (a `rail` group, chapter-css.ts): one segment's width and the gap between two. */
+      --rail-w: min(50rem, 58cqw);
+      --rail-gap: 6cqw;
     }
 
     /* Stage moves slide whole stages sideways; nothing may widen the page. */
@@ -172,13 +239,42 @@
       pointer-events: none;
     }
 
-    /* Cover fit of the theatre rect: --s is pixels per world unit. */
+    /*
+      The stage fit (§9.1, v3.7): --s is pixels per world unit. It covers the
+      theatre rect when the screen's ratio allows, and zooms out just enough to
+      keep the safe rect (--sx … --sh) in view when it does not; the camera
+      centre (--cxs, --cys, in px) sits on the theatre's centre and slides
+      toward the safe rect when that would crop it. The navbar's band at the
+      top does not count as view. Declared on the chapter, resolved where used
+      (the stage canvas, emerge flights, sheets placed in world coordinates).
+    */
+    .chapter[data-cue]:not([data-stacked]) {
+      --nav-band: 4rem;
+      --s: min(
+        max(calc(100cqw / var(--tw)), calc(100svh / var(--th))),
+        min(calc(100cqw / var(--sw)), calc((100svh - var(--nav-band)) / var(--sh)))
+      );
+      --cxs: clamp(
+        calc((var(--sx) + var(--sw)) * var(--s) - 50cqw),
+        calc((var(--tx) + var(--tw) / 2) * var(--s)),
+        calc(var(--sx) * var(--s) + 50cqw)
+      );
+      /* …and never shows more than --floor-room world units below the safe rect (tall screens: wall, not floor). */
+      --floor-room: 150;
+      --cys: clamp(
+        calc((var(--sy) + var(--sh)) * var(--s) - 50svh),
+        calc((var(--ty) + var(--th) / 2) * var(--s)),
+        min(
+          calc(var(--sy) * var(--s) + 50svh - var(--nav-band)),
+          calc((var(--sy) + var(--sh) + var(--floor-room)) * var(--s) - 50svh)
+        )
+      );
+    }
     .chapter[data-cue]:not([data-stacked]) .stage-canvas {
-      --s: max(calc(100cqw / var(--tw)), calc(100cqh / var(--th)));
       position: absolute;
       width: calc(var(--fw) * var(--s));
-      left: calc((100cqw - var(--tw) * var(--s)) / 2 - var(--tx) * var(--s));
-      top: calc((100cqh - var(--th) * var(--s)) / 2 - var(--ty) * var(--s));
+      left: calc(50cqw - var(--cxs));
+      top: calc(50svh - var(--cys));
     }
     .chapter[data-cue]:not([data-stacked]) .stage-canvas .scene-viewport {
       content-visibility: visible;
@@ -280,61 +376,70 @@
       animation: none !important;
     }
 
+    /* A pair of cards swings on its clips when the wire brings it in, then hangs still. */
+    .chapter[data-cue]:not([data-stacked]) .beat[data-state="in"]:is([data-dir="fwd"], [data-dir="back"]) .rail-card {
+      animation: rail-sway calc(var(--dur-leaf-in) * 1.6) var(--ease-leaf) both;
+    }
+    .chapter[data-cue]:not([data-stacked]) .beat[data-state="in"] .rail-card:nth-child(2) { animation-delay: 90ms; }
+
     /* Tablet: a wider lane. */
     @media (min-width: 768px) and (max-width: 1023px) {
       .chapter[data-cue]:not([data-stacked]) { --lane-w: min(34rem, 56cqw); --lane-w-flow: 90cqw; }
     }
-
-    /* Split stage: the station pinned in the top 46svh, sheets in flow below it, each rising once. */
-    @media (max-width: 767px) {
-      .chapter[data-cue]:not([data-stacked]) {
-        --tw: var(--twm);
-        --th: var(--thm);
-        --tx: var(--txm);
-        --ty: var(--tym);
-        --fw: var(--fwm);
-      }
-      /* Pinned below the navbar and chapter bar, so the whole 46svh crop is seen. */
-      .chapter[data-cue]:not([data-stacked]) .stage { z-index: 2; top: var(--chrome-h); height: 46svh; }
-      .chapter[data-cue]:not([data-stacked]) .stage-front,
-      .chapter[data-cue]:not([data-stacked]) .beat-lead,
-      .chapter[data-cue]:not([data-stacked]) .beat-track,
-      .chapter[data-cue]:not([data-stacked]) .beat-tail { display: none; }
-      .chapter[data-cue]:not([data-stacked]) .flow { margin-top: 0; padding: 1.5rem 1.25rem 4rem; display: grid; gap: 1.25rem; }
-      .chapter[data-cue]:not([data-stacked]) .beat-pins,
-      .chapter[data-cue]:not([data-stacked]) .beat-deck {
-        position: static;
-        height: auto;
-        margin: 0;
-        display: grid;
-        gap: 1.25rem;
-      }
-      .chapter[data-cue]:not([data-stacked]) .beat,
-      .chapter[data-cue]:not([data-stacked]) .beat[data-flow] { padding: 0; }
-      .chapter[data-cue]:not([data-stacked]) .beat-deck > .beat > .beat-sheet,
-      .chapter[data-cue]:not([data-stacked]) .beat[data-flow] > .beat-sheet,
-      .chapter[data-cue]:not([data-stacked])[data-lane="right"] .beat-deck > .beat > .beat-sheet,
-      .chapter[data-cue]:not([data-stacked])[data-lane="right"] .beat[data-flow] > .beat-sheet {
-        position: relative;
-        top: auto;
-        left: auto;
-        right: auto;
-        width: auto;
-        margin: 0;
-        opacity: 1;
-        pointer-events: auto;
-        animation: none;
-      }
-      .chapter[data-cue]:not([data-stacked]) .beat:not([data-shown]) > .beat-sheet { opacity: 0; }
-      .chapter[data-cue]:not([data-stacked]) .beat[data-shown=""] > .beat-sheet {
-        transform-origin: 50% 100%;
-        animation: leaf-rise var(--dur-leaf-in) var(--ease-leaf) both;
-      }
-      .chapter[data-cue]:not([data-stacked]) .beat[data-shown=""] > .beat-sheet::before {
-        animation: leaf-shade var(--dur-leaf-in) var(--ease-leaf) both;
-      }
-    }
   }
+}
+
+/*
+  The folio (< 768 px, v3.6, owner request): the mobile page as it was on
+  `main` before the paper studio. No stage and no figurine; each chapter is a
+  plain section on the page's paper, sheets lose their leaf, edges and fold,
+  and cards are ruled boxes. Same markup, chosen in CSS (§8).
+*/
+@media (max-width: 767px) {
+  .chapter {
+    padding-block: 4rem;
+    border-bottom: 1px solid var(--color-line);
+    background: var(--color-paper);
+  }
+  .chapter .stage,
+  .chapter .stage-front { display: none; }
+  .chapter .flow {
+    margin-top: 0;
+    padding-inline: 1.25rem;
+    gap: 2rem;
+  }
+  .chapter .beat-pins,
+  .chapter .beat-deck { gap: 2rem; }
+  .chapter .beat-sheet,
+  .chapter .beat-sheet.paper-leaf {
+    padding: 0;
+    border: 0;
+    background: none;
+    box-shadow: none;
+  }
+  .chapter .beat-sheet::before,
+  .chapter .beat-sheet.fold-tr::after { display: none; }
+  .chapter .beat-sheet.index-sheet,
+  .chapter .beat-sheet.blueprint-leaf {
+    padding: 1.25rem;
+    border: 1px solid var(--color-line);
+    background: var(--color-raised);
+  }
+  .chapter .beat-sheet.rail-seg { padding-top: 0; }
+  .rail-row::before,
+  .rail-card::before { display: none; }
+  .rail-row { gap: 1.5rem; }
+  .chapter .paper-card { box-shadow: none; }
+  .chapter .role-photo { rotate: none; box-shadow: none; }
+  .chapter .role-photo::before { display: none; }
+  #home .hero-desk { display: none; }
+}
+
+@keyframes rail-sway {
+  0% { rotate: var(--sway, -2deg); }
+  40% { rotate: calc(var(--sway, -2deg) * -0.5); }
+  70% { rotate: calc(var(--sway, -2deg) * 0.2); }
+  to { rotate: 0deg; }
 }
 
 /* Leaf motion shared by every chapter (the per-origin flights are generated). */

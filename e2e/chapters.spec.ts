@@ -16,7 +16,8 @@ test.describe('chapter theatre', () => {
 
   test('every pinned beat is cued, composed and still during its track', async ({ page, isMobile }) => {
     test.skip(isMobile, 'pinned sheets are a desktop layout; the split stage keeps sheets in flow');
-    test.setTimeout(120_000);
+    // v3.11: four certificate books joined the walk.
+    test.setTimeout(180_000);
     await page.goto('/');
     await page.evaluate(() => (document.documentElement.style.scrollBehavior = 'auto'));
 
@@ -44,22 +45,61 @@ test.describe('chapter theatre', () => {
           sheet.evaluate((el) => {
             const r = el.getBoundingClientRect();
             const cs = getComputedStyle(el);
-            return { top: r.top, bottom: r.bottom, transform: cs.transform, opacity: Number(cs.opacity), vh: innerHeight };
+            return { top: r.top, bottom: r.bottom, transform: cs.transform, opacity: Number(cs.opacity), vh: innerHeight, label: el.classList.contains('rail-seg'), board: el.classList.contains('svc-sheet'), book: el.classList.contains('book-sheet') };
           });
         const state = await read();
-        expect(state.transform === 'none' || state.transform === 'matrix(1, 0, 0, 1, 0, 0)', `${where} lies flat (${state.transform})`).toBe(true);
+        // A service is written on the drafting board (v3.7): it lies in the board's tilted plane, not flat on the deck.
+        if (!state.board) expect(state.transform === 'none' || state.transform === 'matrix(1, 0, 0, 1, 0, 0)', `${where} lies flat (${state.transform})`).toBe(true);
         expect(state.opacity, `${where} opacity`).toBe(1);
-        expect(state.top, `${where} sits at --beat-top`).toBeCloseTo(state.vh * 0.18, -1);
+        // The gallery's label cards hang under their frames on the stage rail (v3.7), lower than --beat-top.
+        if (state.label) expect(state.top, `${where} hangs under the frames`).toBeGreaterThan(state.vh * 0.4);
+        else if (state.board) expect(state.top, `${where} is on the board, under the navbar`).toBeGreaterThan(64);
+        // A certificate book (v3.11) opens in the middle of the stage, under the navbar.
+        else if (state.book) expect(state.top, `${where} is open under the navbar`).toBeGreaterThan(64);
+        else expect(state.top, `${where} sits at --beat-top`).toBeCloseTo(state.vh * 0.18, -1);
         expect(state.bottom, `${where} fits the viewport`).toBeLessThanOrEqual(state.vh);
         // The wheel moves inside the track: the text does not (§4.4 v3.3).
         await centre(0.12);
         await page.waitForTimeout(150);
         expect((await read()).top, `${where} holds still while scrolling`).toBeCloseTo(state.top, 0);
-        // Exactly one pinned sheet is showing.
-        const shown = await chapter.locator('.beat-deck > .beat > .beat-sheet').evaluateAll((els) => els.filter((e) => Number(getComputedStyle(e).opacity) > 0).length);
-        expect(shown, `${where}: one sheet at a time`).toBe(1);
+        // Exactly one pinned sheet is showing, or one group (a pile of blueprints, a wire of cards, v3.6).
+        const shown = await chapter
+          .locator('.beat-deck > .beat')
+          .evaluateAll((beats, on) => {
+            const active = beats.find((b) => (b as HTMLElement).dataset.beat === on) as HTMLElement;
+            return beats
+              .filter((b) => Number(getComputedStyle(b.querySelector('.beat-sheet')!).opacity) > 0)
+              .filter((b) => b !== active && (!active.dataset.group || (b as HTMLElement).dataset.group !== active.dataset.group)).length;
+          }, beat);
+        expect(shown, `${where}: one sheet (or one group) at a time`).toBe(0);
       }
     }
+  });
+
+  test('the gallery wire moves sideways too: a drag, the arrow buttons (v3.7)', async ({ page, isMobile }) => {
+    test.skip(isMobile, 'the wire is a theatre layout');
+    await page.goto('/');
+    await page.evaluate(() => (document.documentElement.style.scrollBehavior = 'auto'));
+    const chapter = page.locator('#projects');
+    await page.locator('#projects .beat-track[data-track="wire-0"]').evaluate((el) => {
+      const r = el.getBoundingClientRect();
+      scrollTo(0, r.top + scrollY + r.height / 2 - innerHeight / 2);
+    });
+    await expect(chapter).toHaveAttribute('data-beat', 'wire-0');
+    await page.waitForTimeout(1500);
+    // Drag the pair to the left: the next pair comes in (the page scrolls to its track).
+    const card = page.locator('#projects .beat[data-beat="wire-0"] .rail-card').first();
+    const box = (await card.boundingBox())!;
+    await page.mouse.move(box.x + box.width / 2, box.y + 40);
+    await page.mouse.down();
+    await page.mouse.move(box.x + box.width / 2 - 200, box.y + 44, { steps: 8 });
+    await page.mouse.up();
+    await expect(chapter).toHaveAttribute('data-beat', 'wire-1', { timeout: 5000 });
+    // The drag did not open a case study.
+    await expect(page.locator('dialog[open]')).toHaveCount(0);
+    await page.waitForTimeout(1500);
+    await page.locator('#projects .beat[data-beat="wire-1"] .rail-nav-prev').click();
+    await expect(chapter).toHaveAttribute('data-beat', 'wire-0', { timeout: 5000 });
   });
 
   test('no stage shows before its chapter arrives', async ({ page, isMobile }) => {
@@ -150,5 +190,20 @@ test.describe('chapter theatre', () => {
       expect(await page.locator(`#${id} .stage`).evaluate((el) => getComputedStyle(el).position), id).not.toBe('sticky');
       await expect(page.locator(`#${id} .beat-sheet`).first(), id).toBeVisible();
     }
+  });
+});
+
+test.describe('folio (mobile, v3.6)', () => {
+  test('under 768 px every chapter is a plain section: no stage, the photograph in the dossier', async ({ page, isMobile }) => {
+    test.skip(!isMobile, 'mobile layout');
+    await page.goto('/');
+    for (const id of chapters) {
+      expect(await page.locator(`#${id} .stage`).evaluate((el) => getComputedStyle(el).display), `${id} stage`).toBe('none');
+    }
+    await expect(page.locator('#home .hero-desk')).toBeHidden();
+    const photo = page.locator('#about [data-beat="dossier"] img[alt="Rifqi Haikal"]');
+    await photo.scrollIntoViewIfNeeded();
+    await expect(photo).toBeVisible();
+    expect(await photo.evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0)).toBe(true);
   });
 });

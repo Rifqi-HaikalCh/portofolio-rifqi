@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import type { CSSProperties } from 'react';
 import { ArrowUpRight } from 'lucide-react';
 import {
   designProjects,
@@ -10,10 +11,10 @@ import {
 import { listedAdditionalGroups, stackLogo } from '../../lib/additional-skills';
 import type { Project } from '../../types';
 import { SectionTitle } from '../ui/SectionTitle';
-import { TabbedPanels } from '../ui/TabbedPanels';
 import { T } from '../ui/T';
 import { AdditionalSkillsLauncher } from './AdditionalSkillsLauncher';
-import { ProjectShelf, type ShelfProject } from './ProjectShelf';
+import { RailNav } from './RailNav';
+import { ProjectCard, ProjectShelf, tilts, type ShelfProject } from './ProjectShelf';
 import { DraftingStation } from '../scenes/drafting/DraftingStation';
 import { DRAFTING_CHAPTER } from '../scenes/drafting/beats';
 import { GALLERY_CHAPTER } from '../scenes/gallery/beats';
@@ -104,7 +105,7 @@ const coreGroups: Array<{ en: string; id: string; names: string[] }> = [
 const figmaWorkspace =
   'https://www.figma.com/proto/tfuZv6wJ89rcjMHj62C8px/Portfolio?page-id=0%3A1&node-id=1-2&p=f&viewport=412%2C255%2C0.04&t=6zl8vTjnEZzdUhRC-1&scaling=contain&content-scaling=fixed&starting-point-node-id=1%3A2';
 
-const featured = ['api-central', 'shipment-tracker', 'marketplace-influencer', 'hiring-platform', 'del-pick', 'sportainment-app'];
+const featured = ['mejascalp', 'buku-dompet', 'api-central', 'shipment-tracker', 'marketplace-influencer', 'hiring-platform', 'del-pick', 'sportainment-app'];
 
 function toShelf(project: Project, kind: ShelfProject['kind']): ShelfProject {
   return {
@@ -122,32 +123,45 @@ function toShelf(project: Project, kind: ShelfProject['kind']): ShelfProject {
   };
 }
 
-function CapabilityBoard({ items }: { items: Capability[] }) {
+type Area = 'development' | 'design';
+const AREAS: Record<Area, { en: string; id: string }> = {
+  development: { en: 'Development', id: 'Pengembangan' },
+  design: { en: 'Interface design', id: 'Desain antarmuka' },
+};
+const services: Array<Capability & { area: Area }> = [
+  ...developerServices.map((item) => ({ ...item, area: 'development' as const })),
+  ...designServices.map((item) => ({ ...item, area: 'design' as const })),
+];
+
+/* One service as a blueprint sheet of the pile on the drafting table (§4.5 `04`, v3.6). */
+function ServiceSheet({ item, index }: { item: Capability & { area: Area }; index: number }) {
   return (
-    <div className="blueprint crop-marks">
-      <i /><i /><i /><i />
-      <ol className="grid md:grid-cols-3">
-      {items.map((item, index) => (
-        <li key={item.en} className="border-line p-6 md:p-8 [&:not(:last-child)]:border-b md:[&:not(:last-child)]:border-b-0 md:[&:not(:last-child)]:border-r">
-          <p className="stamp text-xs">{String(index + 1).padStart(2, '0')}</p>
-          <h3 className="mt-3 font-serif text-2xl font-medium leading-snug text-ink">
-            <T en={item.en} id={item.id} />
-          </h3>
-          <p className="mt-3 leading-relaxed text-muted">
-            <T en={item.bodyEn} id={item.bodyId} />
-          </p>
-          <ul className="mt-5 space-y-2 text-sm text-ink">
-            {item.points.map(([en, id]) => (
-              <li key={en} className="grid grid-cols-[1rem_1fr]">
-                <span className="text-accent" aria-hidden="true">—</span>
-                <T en={en} id={id} />
-              </li>
-            ))}
-          </ul>
-        </li>
-      ))}
-      </ol>
-    </div>
+    <>
+      <p className="flex items-baseline justify-between gap-4 font-mono text-[0.6875rem] uppercase tracking-[0.16em] text-blueprint">
+        <span>
+          <T en={AREAS[item.area].en} id={AREAS[item.area].id} />
+        </span>
+        <span className="stamp">
+          {String(index + 1).padStart(2, '0')} / {String(services.length).padStart(2, '0')}
+        </span>
+      </p>
+      <h3 className="mt-5 font-serif text-3xl font-medium leading-tight tracking-tight text-ink">
+        <T en={item.en} id={item.id} />
+      </h3>
+      <p className="mt-3 leading-relaxed text-muted">
+        <T en={item.bodyEn} id={item.bodyId} />
+      </p>
+      <ul className="mt-6 grid gap-2 border-t border-dashed border-line pt-5 text-sm text-ink">
+        {item.points.map(([en, id]) => (
+          <li key={en} className="grid grid-cols-[1.25rem_1fr]">
+            <span className="text-accent" aria-hidden="true">
+              —
+            </span>
+            <T en={en} id={id} />
+          </li>
+        ))}
+      </ul>
+    </>
   );
 }
 
@@ -168,50 +182,38 @@ function SkillChip({ name, image, imageDark }: { name: string; image?: string; i
   );
 }
 
-const groupLabel = 'mb-3 font-mono text-[11px] uppercase tracking-[0.16em] text-muted';
+const groupLabel = 'mb-3 font-mono text-[0.6875rem] uppercase tracking-[0.16em] text-muted';
 
-function DevelopmentPanel() {
+/* After the pile: the tools behind the services, the additional skills index and the Figma workspace. */
+function ToolsSheet() {
   const tooling = listedAdditionalGroups.flatMap((group) => group.skills);
   return (
-    <div className="grid gap-12 pt-8">
-      <CapabilityBoard items={developerServices} />
+    <div data-eqbot="services-tabs" data-eqbot-at="above" className="grid gap-12 lg:grid-cols-2 lg:items-start">
       <div>
-        <div>
-          <p className={groupLabel}>
-            <T en="Tooling" id="Perkakas" />
-          </p>
-          <ul className="flex flex-wrap gap-2">
-            {tooling.map((skill) => (
-              <SkillChip key={skill.name} name={skill.name} image={skill.image} imageDark={'imageDark' in skill ? (skill.imageDark as string) : undefined} />
-            ))}
-          </ul>
-        </div>
+        <h3 className="font-serif text-2xl font-medium text-ink">
+          <T en="Tooling" id="Perkakas" />
+        </h3>
+        <ul className="mt-5 flex flex-wrap gap-2">
+          {tooling.map((skill) => (
+            <SkillChip key={skill.name} name={skill.name} image={skill.image} imageDark={'imageDark' in skill ? (skill.imageDark as string) : undefined} />
+          ))}
+        </ul>
         <div className="mt-8 max-w-xl">
           <AdditionalSkillsLauncher />
         </div>
       </div>
-    </div>
-  );
-}
-
-function DesignPanel() {
-  return (
-    <div className="grid gap-12 pt-8">
-      <CapabilityBoard items={designServices} />
-      <div className="grid gap-10 lg:grid-cols-[1fr_1.4fr] lg:items-start">
-        <div>
-          <h3 className="font-serif text-2xl font-medium text-ink">
-            <T en="Design tools" id="Alat desain" />
-          </h3>
-          <ul className="mt-6 grid grid-cols-2 gap-2">
-            {designSkills.map((skill) => (
-              <SkillChip key={skill.name} name={skill.name} image={skill.image} />
-            ))}
-          </ul>
-        </div>
-        <a href={figmaWorkspace} target="_blank" rel="noopener noreferrer" className="paper-card block border border-line">
+      <div>
+        <h3 className="font-serif text-2xl font-medium text-ink">
+          <T en="Design tools" id="Alat desain" />
+        </h3>
+        <ul className="mt-5 grid grid-cols-2 gap-2">
+          {designSkills.map((skill) => (
+            <SkillChip key={skill.name} name={skill.name} image={skill.image} />
+          ))}
+        </ul>
+        <a href={figmaWorkspace} target="_blank" rel="noopener noreferrer" className="paper-card mt-8 block border border-line">
           <span className="relative block aspect-[3/2] border-b border-line bg-recess">
-            <Image src="/assets/my portfolio.webp" alt="" fill sizes="(min-width: 1024px) 560px, 92vw" className="object-cover" />
+            <Image src="/assets/my portfolio.webp" alt="" fill sizes="(min-width: 1024px) 480px, 92vw" className="object-cover" />
           </span>
           <span className="flex items-center justify-between gap-4 px-5 py-4 text-sm text-ink">
             <T en="Open my Figma workspace for this portfolio" id="Buka ruang kerja Figma untuk portofolio ini" />
@@ -224,11 +226,12 @@ function DesignPanel() {
 }
 
 /*
-  04 Services — the Drafting Table chapter (DesignRules.md §4.5 `04`): the
+  04 Services — the Drafting Table chapter (DesignRules.md §4.5 `04`, v3.6): the
   title drops as the lamp swings, the core stack lands as three tracing
-  overlays once the cover sheet slides off the blueprint, then the service
-  boards rise in flow. Server component; the tabs and the skills dialog are
-  the only client leaves.
+  overlays once the cover sheet slides off the blueprint, then the services
+  come off the board as one pile of blueprints: each scroll tucks the front
+  sheet under the pile and the next one is read. The tools follow in flow.
+  Server component; the skills dialog is the only client leaf.
 */
 export function Services() {
   return (
@@ -274,25 +277,25 @@ export function Services() {
         </div>
       </Beat>
 
-      <Beat id="services" flow>
-        <TabbedPanels
-          idBase="services"
-          eqbot="services-tabs"
-          label={{ en: 'Service area', id: 'Bidang layanan' }}
-          tabs={[
-            { id: 'development', en: 'Development', idn: 'Pengembangan', panel: <DevelopmentPanel /> },
-            { id: 'design', en: 'Interface design', idn: 'Desain antarmuka', panel: <DesignPanel /> },
-          ]}
-        />
+      {services.map((item, index) => (
+        <Beat key={item.en} id={`svc-${index}`} className="blueprint-leaf svc-sheet stage-sheet">
+          <ServiceSheet item={item} index={index} />
+        </Beat>
+      ))}
+
+      <Beat id="tools" flow>
+        <ToolsSheet />
       </Beat>
     </Chapter>
   );
 }
 
 /*
-  04b Selected work — the Shadow-Box Gallery chapter (DesignRules.md §4.5
-  `04b`): the title rises while the figure hangs a new frame, then the project
-  frames rise in flow with the archive drawer behind them.
+  04b Selected work — the Shadow-Box Gallery chapter (DesignRules.md §4.5 `04b`,
+  v3.6): the title rises while the figure hangs a new frame; then the featured
+  projects hang as cards on one wire, two per segment, and the wire slides
+  sideways as the visitor scrolls (a `rail` group: the scroll only picks the
+  segment, the slide plays in time). The archive drawer follows in flow.
 */
 export function Projects() {
   const projects = [
@@ -300,6 +303,12 @@ export function Projects() {
     ...groupProjects.map((project) => toShelf(project, 'group')),
     ...designProjects.map((project) => toShelf(project, 'design')),
   ];
+  const picks = featured.map((id) => projects.find((p) => p.id === id)).filter((p): p is ShelfProject => Boolean(p));
+  const hung = featured.flatMap((id) => {
+    const raw = [...individualProjects, ...groupProjects, ...designProjects].find((p) => p.id === id);
+    return raw ? [{ id, motif: raw.motif, image: raw.image, mobile: raw.id.includes('mobile') || raw.type === 'mobile' }] : [];
+  });
+  const segments = Array.from({ length: Math.ceil(picks.length / 2) }, (_, i) => picks.slice(i * 2, i * 2 + 2));
 
   return (
     <Chapter
@@ -307,7 +316,7 @@ export function Projects() {
       labelledBy="projects-title"
       studio="gallery"
       next={{ id: 'certificates', en: 'Certificates', idn: 'Sertifikat' }}
-      stage={<GalleryStation wide />}
+      stage={<GalleryStation wide hung={hung} />}
     >
       <Beat id="title" className="[&_header]:mb-0">
         <div data-eqbot="projects-title" data-eqbot-at="above">
@@ -318,17 +327,30 @@ export function Projects() {
             titleId="projects-title"
             lede={
               <T
-                en="Six projects framed, the rest in the archive drawer. Open a frame for the case study."
-                id="Enam proyek dibingkai, sisanya di laci arsip. Buka bingkai untuk melihat studi kasusnya."
+                en="Eight projects hung on the wire, the rest in the archive drawer. Scroll down or swipe sideways to walk along it; open a card for the case study."
+                id="Delapan proyek digantung di kawat, sisanya di laci arsip. Gulir ke bawah atau geser ke samping untuk menyusurinya; buka kartu untuk melihat studi kasusnya."
               />
             }
           />
         </div>
       </Beat>
 
-      <Beat id="shelf" flow className="gallery-wall">
+      {segments.map((pair, s) => (
+        <Beat key={pair[0].id} id={`wire-${s}`} className="rail-seg">
+          <ul className="rail-row">
+            {pair.map((project, i) => (
+              <li key={project.id} className="rail-card" style={{ '--sway': tilts[(s * 2 + i) % tilts.length] } as CSSProperties}>
+                <ProjectCard project={project} tilt={tilts[(s * 2 + i) % tilts.length]} />
+              </li>
+            ))}
+          </ul>
+          <RailNav segment={s} count={segments.length} />
+        </Beat>
+      ))}
+
+      <Beat id="archive" flow>
         <div data-eqbot="projects-filters" data-eqbot-at="above">
-          <ProjectShelf projects={projects} featured={featured} />
+          <ProjectShelf projects={projects} />
         </div>
       </Beat>
     </Chapter>

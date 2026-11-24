@@ -1,8 +1,8 @@
 'use client';
 
-import { useCallback, useDeferredValue, useId, useState } from 'react';
+import { useCallback, useDeferredValue, useEffect, useId, useState } from 'react';
 import { flushSync } from 'react-dom';
-import { ArrowLeft, ArrowRight, Search } from 'lucide-react';
+import { ArrowRight, Search } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
 import { PaperDialog } from '../ui/PaperDialog';
 import { T } from '../ui/T';
@@ -12,11 +12,28 @@ import { kindCopy, kindLabel, type ShelfKind, type ShelfProject } from './shelf-
 
 export type { ShelfProject } from './shelf-types';
 
+/** Asks the shelf (the one ProjectShelf on the page) to open a case study; the cards on the wire are separate beats. */
+const OPEN = 'shelf:open';
+type OpenDetail = { id: string; from: HTMLElement };
+
 /*
-  A taped print of the project: the whole card opens the case study. `level`: h3 on the shelf
-  (under the chapter's h2), h4 in the archive (under its h3).
+  A taped print of the project: the whole card opens the case study. `level`: h3 on the gallery
+  wire (under the chapter's h2), h4 in the archive (under its h3). Without `onOpen` the card asks
+  the shelf through a window event, so it can be rendered inside any beat.
 */
-function ProjectCard({ project, onOpen, tilt, level = 3 }: { project: ShelfProject; onOpen: (from: HTMLElement) => void; tilt: string; level?: 3 | 4 }) {
+export function ProjectCard({
+  project,
+  onOpen,
+  tilt,
+  level = 3,
+}: {
+  project: ShelfProject;
+  onOpen?: (from: HTMLElement) => void;
+  tilt: string;
+  level?: 3 | 4;
+}) {
+  const open = (from: HTMLElement) =>
+    onOpen ? onOpen(from) : window.dispatchEvent(new CustomEvent<OpenDetail>(OPEN, { detail: { id: project.id, from } }));
   const label = kindLabel(project);
   const Title = level === 3 ? 'h3' : 'h4';
   return (
@@ -29,15 +46,15 @@ function ProjectCard({ project, onOpen, tilt, level = 3 }: { project: ShelfProje
         sizes="(min-width: 1024px) 240px, (min-width: 640px) 30vw, 60vw"
       />
       <div className="flex flex-1 flex-col p-5">
-        <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-accent">
+        <p className="font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-accent">
           <T en={label.en} id={label.id} />
         </p>
         <Title className="mt-2 font-serif text-xl font-medium leading-snug text-ink">
-          <button type="button" onClick={(event) => onOpen(event.currentTarget)} aria-haspopup="dialog" className="stretched text-left">
+          <button type="button" onClick={(event) => open(event.currentTarget)} aria-haspopup="dialog" className="stretched text-left">
             {project.title}
           </button>
         </Title>
-        <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-muted">
+        <p className={`mt-2 text-sm leading-relaxed text-muted ${level === 3 ? 'line-clamp-2' : 'line-clamp-3'}`}>
           <T en={project.en} id={project.idn} />
         </p>
         <ul className="mt-4 flex flex-wrap gap-1.5" aria-label="Stack">
@@ -59,7 +76,7 @@ function ProjectCard({ project, onOpen, tilt, level = 3 }: { project: ShelfProje
   );
 }
 
-const tilts = ['-2deg', '1.5deg', '-1deg', '2deg'];
+export const tilts = ['-2deg', '1.5deg', '-1deg', '2deg'];
 
 /* Full-screen drawer with every project: filter, search, open a case study. */
 function Archive({ projects, onClose, onOpen }: { projects: ShelfProject[]; onClose: () => void; onOpen: (p: ShelfProject, from: HTMLElement) => void }) {
@@ -78,25 +95,21 @@ function Archive({ projects, onClose, onOpen }: { projects: ShelfProject[]; onCl
   const count = (value: ShelfKind | 'all') => (value === 'all' ? projects.length : projects.filter((p) => p.kind === value).length);
 
   return (
-    <PaperDialog open onClose={onClose} labelledBy="archive-title" drawer>
-      <div data-studio="sheet" className="mx-auto max-w-6xl px-5 py-8 lg:px-8 lg:py-12">
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          <form method="dialog">
-            <button type="submit" className="btn-outline-custom">
-              <ArrowLeft size={16} aria-hidden="true" />
-              <T en="Back to desk" id="Kembali ke meja" />
-            </button>
-          </form>
-          <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted">
-            <span className="stamp">04</span> — <T en="Archive drawer" id="Laci arsip" />
-          </p>
-        </div>
-
-        <h3 id="archive-title" className="mt-8 font-serif text-4xl font-medium tracking-tight text-ink md:text-5xl">
-          <T en="Every project" id="Semua proyek" />
-        </h3>
-
-        <div className="mt-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+    <PaperDialog
+      open
+      onClose={onClose}
+      labelledBy="archive-title"
+      size="drawer"
+      eyebrow={
+        <>
+          <span className="stamp">04</span> — <T en="Archive drawer" id="Laci arsip" />
+        </>
+      }
+      title={<T en="Every project" id="Semua proyek" />}
+      closeLabel={<T en="Back to desk" id="Kembali ke meja" />}
+    >
+      <div data-studio="sheet">
+        <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <fieldset>
             <legend className="sr-only">{say('Filter by kind', 'Saring menurut jenis')}</legend>
             <div className="flex flex-wrap gap-2">
@@ -111,13 +124,13 @@ function Archive({ projects, onClose, onOpen }: { projects: ShelfProject[]; onCl
                   }`}
                 >
                   {language === 'en' ? kindCopy[value].en : kindCopy[value].id}
-                  <span className="font-mono text-[11px] opacity-70">{String(count(value)).padStart(2, '0')}</span>
+                  <span className="font-mono text-[0.6875rem] opacity-70">{String(count(value)).padStart(2, '0')}</span>
                 </button>
               ))}
             </div>
           </fieldset>
           <div className="w-full md:w-80">
-            <label htmlFor={searchId} className="mb-1 block font-mono text-[11px] uppercase tracking-[0.14em] text-muted">
+            <label htmlFor={searchId} className="mb-1 block font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-muted">
               <T en="Search by name or tool" id="Cari nama atau alat" />
             </label>
             <div className="flex min-h-11 items-center gap-2 border border-line bg-raised px-3 focus-within:border-accent">
@@ -162,11 +175,12 @@ function Archive({ projects, onClose, onOpen }: { projects: ShelfProject[]; onCl
 }
 
 /*
-  Selected work on the desk plus the archive drawer (DesignRules.md §4 `04`).
-  Data arrives as props from the server section, so this leaf never imports
-  portfolio.ts.
+  The shelf behind the gallery wire (DesignRules.md §4.5 `04b`, v3.6): the archive
+  drawer button, and the one place the case study and the archive open. The cards
+  on the wire ask for a case study with the `shelf:open` event. Data arrives as
+  props from the server section, so this leaf never imports portfolio.ts.
 */
-export function ProjectShelf({ projects, featured }: { projects: ShelfProject[]; featured: string[] }) {
+export function ProjectShelf({ projects }: { projects: ShelfProject[] }) {
   const [open, setOpen] = useState<ShelfProject | null>(null);
   const [archive, setArchive] = useState(false);
   const close = useCallback(() => setOpen(null), []);
@@ -191,20 +205,20 @@ export function ProjectShelf({ projects, featured }: { projects: ShelfProject[];
     });
     morph.finished.finally(() => root.classList.remove('is-morphing'));
   }, []);
-  const picks = featured.map((id) => projects.find((p) => p.id === id)).filter((p): p is ShelfProject => Boolean(p));
+
+  useEffect(() => {
+    const onOpen = (event: Event) => {
+      const { id, from } = (event as CustomEvent<OpenDetail>).detail;
+      const project = projects.find((p) => p.id === id);
+      if (project) openCase(project, from);
+    };
+    window.addEventListener(OPEN, onOpen);
+    return () => window.removeEventListener(OPEN, onOpen);
+  }, [projects, openCase]);
 
   return (
     <>
-      <ul className="grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
-        {picks.map((project, i) => (
-          // Hung two at a time on the gallery wall (§4.5 `04b`).
-          <li key={project.id} data-step={Math.floor(i / 2)}>
-            <ProjectCard project={project} onOpen={(from) => openCase(project, from)} tilt={tilts[i % tilts.length]} />
-          </li>
-        ))}
-      </ul>
-
-      <div className="mt-12 flex flex-wrap items-center gap-4">
+      <div className="flex flex-wrap items-center gap-4">
         <button type="button" onClick={() => setArchive(true)} aria-haspopup="dialog" className="btn-primary-custom">
           <T en={`Open the archive (${projects.length})`} id={`Buka arsip (${projects.length})`} />
           <ArrowRight size={16} aria-hidden="true" />

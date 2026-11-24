@@ -1,11 +1,10 @@
 import Image from 'next/image';
-import { X } from 'lucide-react';
 import { workExperience, organizationExperience } from '../../data/portfolio';
 import type { Experience as ExperienceEntry } from '../../types';
 import { calculateTotalExperience } from '../../lib/experience-utils';
 import { displayCase } from '../../lib/display-case';
 import { SectionTitle } from '../ui/SectionTitle';
-import { Tag } from '../ui/Tag';
+import { stackLogo } from '../../lib/additional-skills';
 import { T } from '../ui/T';
 import { CabinetStation, type FolderSet } from '../scenes/cabinet/CabinetStation';
 import { CABINET_CHAPTER } from '../scenes/cabinet/beats';
@@ -20,40 +19,55 @@ const bullets = (text?: string) =>
     .map((line) => line.replace(/^[•\-\s]+/, '').trim())
     .filter(Boolean);
 
+/** Initials for a company without a logo file (v3.12, the file's header mark). */
+const monogram = (company: string) =>
+  company
+    .replace(/\(.*?\)/g, '')
+    .split(/\s+/)
+    .filter((w) => /^[A-Za-z]/.test(w))
+    .slice(0, 2)
+    .map((w) => w[0].toUpperCase())
+    .join('');
+
 const SETS = {
   work: { en: 'Work', idn: 'Kerja' },
   organization: { en: 'Organization', idn: 'Organisasi' },
 } as const;
 
-/* The full entry, opened from the sheet as a paper dialog: what was shipped, the stack. */
-function FileBody({ entry, titleId }: { entry: ExperienceEntry; titleId: string }) {
+/* A photograph of the place, taped to the sheet (v3.6, owner request; from the v1 data). Logos sit on paper. */
+function RolePhoto({ entry, src = entry.image, wide = false, className = '' }: { entry: ExperienceEntry; src?: string; wide?: boolean; className?: string }) {
+  if (!src) return null;
+  const logo = src.endsWith('.png');
+  return (
+    <span className={`role-photo ${className}`}>
+      <span className="role-photo-image" style={wide ? { aspectRatio: '16 / 9' } : undefined}>
+        <Image
+          src={src}
+          alt=""
+          fill
+          sizes="(min-width: 768px) 360px, 40vw"
+          className={logo ? 'object-contain p-[12%]' : 'object-cover'}
+        />
+      </span>
+    </span>
+  );
+}
+
+/*
+  The full entry, opened from the sheet in the standard paper dialog: what was
+  shipped, then the tools with their logos under it (v3.9, owner: "tools under
+  the description, not under the photo"); photographs on the side. v3.12: the
+  company's logo moved to the far left of the dialog header (`mark`).
+*/
+function FileBody({ entry }: { entry: ExperienceEntry }) {
   const en = bullets(entry.description);
   const id = bullets(entry.descriptionId);
+  const stack = entry.techStack ?? [];
   return (
-    <div className="fold-tr max-h-[calc(100dvh-2rem)] overflow-y-auto">
-      <header className="flex items-start justify-between gap-6 border-b border-line p-6 md:p-8">
-        <div className="min-w-0">
-          <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-accent">{entry.period}</p>
-          <h3 id={titleId} className="mt-2 font-serif text-3xl font-medium leading-tight text-ink">
-            <T en={displayCase(entry.title)} id={displayCase(entry.titleId ?? entry.title)} />
-          </h3>
-          <p className="mt-1 text-ink">
-            {displayCase(entry.company)}
-            {entry.location ? <span className="text-muted"> · {entry.location}</span> : null}
-          </p>
-        </div>
-        <form method="dialog">
-          <button type="submit" className="flex h-11 w-11 shrink-0 items-center justify-center border border-line text-ink hover:bg-ink hover:text-paper">
-            <X size={18} aria-hidden="true" />
-            <span className="sr-only">
-              <T en="Close the file" id="Tutup berkas" />
-            </span>
-          </button>
-        </form>
-      </header>
-      <div className="grid gap-8 p-6 md:grid-cols-[1fr_13rem] md:p-8">
+    <div className="grid gap-8 md:grid-cols-[1fr_14rem]">
+      <div>
         {en.length > 0 && (
-          <ul className="max-w-[68ch] space-y-2 text-[15px] leading-relaxed text-ink">
+          <ul className="max-w-[68ch] space-y-2 text-[0.9375rem] leading-relaxed text-ink">
             {en.map((line, i) => (
               <li key={line} className="grid grid-cols-[1rem_1fr]">
                 <span className="text-accent" aria-hidden="true">
@@ -66,16 +80,30 @@ function FileBody({ entry, titleId }: { entry: ExperienceEntry; titleId: string 
             ))}
           </ul>
         )}
-        <div className="space-y-4">
-          {entry.logo && <Image src={entry.logo} alt="" width={128} height={28} className="h-7 w-auto max-w-32 object-contain object-left" />}
-          {entry.techStack && entry.techStack.length > 0 && (
-            <ul aria-label="Stack" className="flex flex-wrap content-start gap-1.5">
-              {entry.techStack.map((tech) => (
-                <Tag key={tech}>{tech}</Tag>
-              ))}
+        {stack.length > 0 && (
+          <>
+            <h4 className="mt-8 mb-3 font-mono text-[0.6875rem] uppercase tracking-[0.16em] text-accent">
+              <T en="Tools" id="Tools" />
+            </h4>
+            <ul aria-label="Stack" className="flex flex-wrap content-start gap-2">
+              {stack.map((tech) => {
+                const logo = stackLogo(tech);
+                return (
+                  <li key={tech} className="inline-flex items-center gap-2 border border-line bg-raised px-2.5 py-1.5 font-mono text-xs leading-none text-ink">
+                    {logo && <Image src={logo} alt="" width={16} height={16} className="h-4 w-4 object-contain" />}
+                    {tech}
+                  </li>
+                );
+              })}
             </ul>
-          )}
-        </div>
+          </>
+        )}
+      </div>
+      <div className="space-y-6">
+        <RolePhoto entry={entry} className="w-full" />
+        {(entry.photos ?? []).map((photo) => (
+          <RolePhoto key={photo} entry={entry} src={photo} wide className="w-full -rotate-1" />
+        ))}
       </div>
     </div>
   );
@@ -86,7 +114,8 @@ function RoleSheet({ entry, set, index, count }: { entry: ExperienceEntry; set: 
   const titleId = `experience-${set}-${index}-file`;
   return (
     <article aria-labelledby={`experience-${set}-${index}-role`} data-eqbot={set === 'work' && index === 0 ? 'experience-files' : undefined}>
-      <p className="flex flex-wrap items-baseline gap-x-3 font-mono text-[11px] uppercase tracking-[0.2em] text-accent">
+      <RolePhoto entry={entry} className="float-right ml-5 w-28 sm:w-36" />
+      <p className="flex flex-wrap items-baseline gap-x-3 font-mono text-[0.6875rem] uppercase tracking-[0.2em] text-accent">
         <span className="stamp">{startYear(entry.period)}</span>
         <span className="text-muted">
           <T en={SETS[set].en} id={SETS[set].idn} /> · {String(index + 1).padStart(2, '0')}/{String(count).padStart(2, '0')}
@@ -96,15 +125,34 @@ function RoleSheet({ entry, set, index, count }: { entry: ExperienceEntry; set: 
         <T en={displayCase(entry.title)} id={displayCase(entry.titleId ?? entry.title)} />
       </h3>
       <p className="mt-1 text-ink">{displayCase(entry.company)}</p>
-      <p className="mt-2 font-mono text-[11px] uppercase tracking-[0.12em] text-muted">
+      <p className="mt-2 font-mono text-[0.6875rem] uppercase tracking-[0.12em] text-muted">
         {entry.period}
         {entry.location ? ` · ${entry.location}` : ''}
       </p>
-      <p className="mt-4 text-[15px] leading-relaxed text-muted">
+      <p className="mt-4 clear-right text-[0.9375rem] leading-relaxed text-muted sm:clear-none">
         <T en={entry.shortDescription} id={entry.shortDescriptionId} />
       </p>
       <ExperienceFile
         titleId={titleId}
+        eyebrow={
+          <>
+            <T en={SETS[set].en} id={SETS[set].idn} /> · {entry.period}
+          </>
+        }
+        title={<T en={displayCase(entry.title)} id={displayCase(entry.titleId ?? entry.title)} />}
+        mark={
+          entry.logo ? (
+            <Image src={entry.logo} alt="" width={80} height={80} />
+          ) : (
+            <span className="pd-mark-monogram">{monogram(entry.company)}</span>
+          )
+        }
+        lede={
+          <>
+            {displayCase(entry.company)}
+            {entry.location ? ` · ${entry.location}` : ''}
+          </>
+        }
         label={
           <>
             <T en="Open the file" id="Buka berkas" />
@@ -112,7 +160,7 @@ function RoleSheet({ entry, set, index, count }: { entry: ExperienceEntry; set: 
           </>
         }
       >
-        <FileBody entry={entry} titleId={titleId} />
+        <FileBody entry={entry} />
       </ExperienceFile>
     </article>
   );
@@ -161,7 +209,7 @@ export function Experience() {
           }
         />
         <p data-eqbot="experience-total" data-eqbot-at="above" className="mt-6 border-l-2 border-accent pl-4">
-          <span className="block font-mono text-[11px] uppercase tracking-[0.18em] text-muted">
+          <span className="block font-mono text-[0.6875rem] uppercase tracking-[0.18em] text-muted">
             <T en="Total work experience" id="Total pengalaman kerja" />
           </span>
           <span className="mt-1 block font-serif text-3xl text-ink">

@@ -1,9 +1,9 @@
-import { Children, isValidElement, type CSSProperties, type ReactElement, type ReactNode } from 'react';
+import { Children, cloneElement, isValidElement, type CSSProperties, type ReactElement, type ReactNode } from 'react';
 import { T } from '../../ui/T';
 import { chapterCss } from './chapter-css';
 import { ChapterCue } from './ChapterCue';
 import { ChapterFit } from './ChapterFit';
-import { validateChapter, type ChapterSpec } from './spec';
+import { safeOf, validateChapter, type ChapterSpec } from './spec';
 
 /*
   Chapter — one section as a scroll track (DesignRules.md §4.1, §9.7).
@@ -26,7 +26,7 @@ import { validateChapter, type ChapterSpec } from './spec';
   lays out as the stacked studio: framed station, then the sheets.
 */
 
-type BeatProps = { id: string; flow?: boolean; children: ReactNode; className?: string };
+type BeatProps = { id: string; flow?: boolean; children: ReactNode; className?: string; group?: string };
 
 export function Chapter({
   spec,
@@ -49,7 +49,12 @@ export function Chapter({
 }) {
   validateChapter(spec);
   const { frames: f, theatre: t, theatreMobile: m } = spec;
+  const safe = spec.safe ?? safeOf(t);
   const vars = {
+    '--sx': safe.x - f.desktop.x,
+    '--sy': safe.y - f.desktop.y,
+    '--sw': safe.w,
+    '--sh': safe.h,
     '--tw': t.w,
     '--th': t.h,
     '--tx': t.x - f.desktop.x,
@@ -65,7 +70,12 @@ export function Chapter({
   const beats = Children.toArray(children).filter(
     (c): c is ReactElement<BeatProps> => isValidElement(c) && c.type === Beat,
   );
-  const pinned = beats.filter((b) => !b.props.flow);
+  // Beats of a stack or rail group (§4.4 v3.6) carry the group's name, so a group reads as one composition.
+  const groupOf = (id: string) => {
+    const at = (spec.groups ?? []).findIndex((g) => g.beats.includes(id));
+    return at < 0 ? undefined : `${spec.groups![at].layout}-${at}`;
+  };
+  const pinned = beats.filter((b) => !b.props.flow).map((b) => (groupOf(b.props.id) ? cloneElement(b, { group: groupOf(b.props.id) }) : b));
   const flowing = beats.filter((b) => b.props.flow);
   const holdOf = (id: string) => {
     const hold = spec.beats.find((b) => b.id === id)?.hold;
@@ -123,9 +133,9 @@ export function Chapter({
 }
 
 /** One beat: a small paper sheet (§4.4). `steps` children carry `data-step`. */
-export function Beat({ id, flow = false, children, className = '' }: BeatProps) {
+export function Beat({ id, flow = false, children, className = '', group }: BeatProps) {
   return (
-    <div className="beat" data-beat={id} data-flow={flow || undefined}>
+    <div className="beat" data-beat={id} data-flow={flow || undefined} data-group={group}>
       <div className={`beat-sheet paper-sheet paper-leaf border border-line bg-raised ${className}`}>{children}</div>
     </div>
   );

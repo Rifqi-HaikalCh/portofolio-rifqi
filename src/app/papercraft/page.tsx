@@ -27,7 +27,7 @@ export const metadata: Metadata = {
 };
 
 function Label({ children }: { children: React.ReactNode }) {
-  return <p className="mb-3 font-mono text-[11px] uppercase tracking-[0.2em] text-accent">{children}</p>;
+  return <p className="mb-3 font-mono text-[0.6875rem] uppercase tracking-[0.2em] text-accent">{children}</p>;
 }
 
 const poses = Object.keys(POSES) as PoseId[];

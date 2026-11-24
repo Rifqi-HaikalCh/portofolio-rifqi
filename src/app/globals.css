@@ -25,6 +25,14 @@
   }
 
   html {
+    /*
+      v3.12 (owner: "the theatre on any desktop ratio"): on large screens the
+      type and every rem-sized sheet, lane, navbar and dialog grow with the
+      viewport, as the stage already does; the smaller of the width and the
+      height decides, so a 21:9 screen does not blow the type up. Never below
+      the visitor's own default size, at most 137.5 % of it.
+    */
+    font-size: min(max(100%, min(0.84vw, 1.5vh)), 137.5%);
     scroll-behavior: smooth;
     background-color: var(--color-paper);
     color: var(--color-ink);

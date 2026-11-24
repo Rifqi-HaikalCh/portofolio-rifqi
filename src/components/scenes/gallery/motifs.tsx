@@ -161,6 +161,11 @@ const MOTIFS: Record<ProjectMotif, (k: Kit) => MotifNodes> = {
   }),
 };
 
+/** The motif as SVG nodes in its 400 × 300 box, for art drawn inside a station (the hung frames, §4.5 `04b`). */
+export function motifNodes(id: string, motif: ProjectMotif): MotifNodes {
+  return MOTIFS[motif](paperKit(`h-${id}`));
+}
+
 export function motifArt(id: string, motif: ProjectMotif): MotifArt {
   const art = MOTIFS[motif](paperKit(`m-${id}`));
   return { back: svgString(art.back), mid: svgString(art.mid) };

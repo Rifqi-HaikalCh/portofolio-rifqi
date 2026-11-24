@@ -2,7 +2,6 @@
 
 import { useMemo, useState } from 'react';
 import Image from 'next/image';
-import { X } from 'lucide-react';
 import { PaperDialog } from '../ui/PaperDialog';
 import { FolderTabs } from '../ui/FolderTabs';
 import {
@@ -48,34 +47,19 @@ export default function AdditionalSkillsDialog({
   };
 
   return (
-    <PaperDialog open onClose={onClose} labelledBy="additional-skills-title" className="max-w-5xl">
-      <div className="flex max-h-[calc(100dvh-2rem)] flex-col">
-        <div className="flex items-start justify-between gap-6 border-b border-line p-6 md:p-8">
-          <div>
-            <p className="mb-2 font-mono text-[11px] uppercase tracking-[0.16em] text-accent">
-              {text('Outside the enterprise core', 'Di luar inti enterprise')}
-            </p>
-            <h3 id="additional-skills-title" className="font-serif text-3xl font-medium leading-tight md:text-4xl">
-              {text('Additional skills', 'Keterampilan tambahan')}
-            </h3>
-            <p className="mt-2 max-w-xl leading-relaxed text-muted">
-              {text(
-                'Languages and frameworks from the work and projects already listed on this page.',
-                'Bahasa dan framework dari kerja dan proyek yang sudah tercantum di halaman ini.'
-              )}
-            </p>
-          </div>
-          <form method="dialog">
-            <button
-              type="submit"
-              aria-label={text('Close', 'Tutup')}
-              className="flex h-11 w-11 shrink-0 items-center justify-center border border-line hover:border-ink hover:bg-ink hover:text-paper"
-            >
-              <X size={18} aria-hidden="true" />
-            </button>
-          </form>
-        </div>
-
+    <PaperDialog
+      open
+      onClose={onClose}
+      labelledBy="additional-skills-title"
+      size="lg"
+      bodyClassName="flex flex-col !p-0"
+      eyebrow={text('Outside the enterprise core', 'Di luar inti enterprise')}
+      title={text('Additional skills', 'Keterampilan tambahan')}
+      lede={text(
+        'Languages and frameworks from the work and projects already listed on this page.',
+        'Bahasa dan framework dari kerja dan proyek yang sudah tercantum di halaman ini.'
+      )}
+    >
         <div className="px-6 pt-6 md:px-8">
           <FolderTabs<TabId>
             idBase="additional-skills"
@@ -94,7 +78,7 @@ export default function AdditionalSkillsDialog({
           id={`additional-skills-panel-${tab}`}
           role="tabpanel"
           aria-labelledby={`additional-skills-tab-${tab}`}
-          className="ledger-panel flex-1 overflow-y-auto p-6 md:p-8"
+          className="ledger-panel p-6 md:p-8"
         >
           {tab === 'all' ? (
             <div>
@@ -116,7 +100,7 @@ export default function AdditionalSkillsDialog({
                       <Image src={card.image} alt="" fill sizes="360px" className="object-contain" />
                     </div>
                     <div className="p-5">
-                      <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-accent">
+                      <p className="font-mono text-[0.6875rem] uppercase tracking-[0.16em] text-accent">
                         {card.source === 'work' ? text('Work', 'Kerja') : text('Project', 'Proyek')}
                       </p>
                       <h4 className="mt-2 font-serif text-xl font-medium leading-snug text-ink">
@@ -147,7 +131,7 @@ export default function AdditionalSkillsDialog({
                 if (!rows.length) return null;
                 return (
                   <section key={tier} className="mt-8">
-                    <h4 className="mb-3 font-mono text-[11px] uppercase tracking-[0.16em] text-accent">
+                    <h4 className="mb-3 font-mono text-[0.6875rem] uppercase tracking-[0.16em] text-accent">
                       {idn ? tierCopy[tier].id : tierCopy[tier].en}
                     </h4>
                     <ul className="border-t border-line">
@@ -163,7 +147,6 @@ export default function AdditionalSkillsDialog({
             </div>
           )}
         </div>
-      </div>
     </PaperDialog>
   );
 }
@@ -209,7 +192,7 @@ function SkillRow({
 }) {
   return (
     <div>
-      <p className="font-mono text-[11px] tracking-[0.14em] uppercase text-muted mb-2">{label}</p>
+      <p className="font-mono text-[0.6875rem] tracking-[0.14em] uppercase text-muted mb-2">{label}</p>
       <ul className="flex flex-wrap gap-2">
         {skills.map((skill) => (
           <li key={skill.name}>
@@ -248,7 +231,7 @@ function TierRow({
   return (
     <button type="button" onClick={() => onPick(row.skill.name)} className="read-row min-h-11 w-full cursor-pointer px-1 py-4 text-left">
       <span className="flex items-center gap-4">
-        <span className="font-mono text-[11px] tracking-[0.14em] text-accent w-6">
+        <span className="font-mono text-[0.6875rem] tracking-[0.14em] text-accent w-6">
           {String(row.rank).padStart(2, '0')}
         </span>
         <Image src={row.skill.image} alt="" width={28} height={28} className="h-7 w-7 object-contain" />
