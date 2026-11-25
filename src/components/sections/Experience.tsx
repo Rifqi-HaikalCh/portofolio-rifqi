@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { ArrowRight } from 'lucide-react';
 import { workExperience, organizationExperience } from '../../data/portfolio';
 import type { Experience as ExperienceEntry } from '../../types';
 import { calculateTotalExperience } from '../../lib/experience-utils';
@@ -9,7 +10,25 @@ import { T } from '../ui/T';
 import { CabinetStation, type FolderSet } from '../scenes/cabinet/CabinetStation';
 import { CABINET_CHAPTER } from '../scenes/cabinet/beats';
 import { Beat, Chapter } from '../scenes/chapter/Chapter';
+import { CareerPath } from './CareerPath';
 import { ExperienceFile } from './ExperienceFile';
+
+const MONTHS = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
+
+/** "Jul 2026 – Present" → two dates and the months between them (the end is today when it is still going). */
+function dateSpan(period: string) {
+  const read = (text?: string) => {
+    const m = text?.match(/([A-Za-z]{3})[A-Za-z]*\.?\s+(\d{4})/);
+    return m ? { mon: m[1].toUpperCase(), year: m[2], at: Number(m[2]) * 12 + Math.max(0, MONTHS.indexOf(m[1].toLowerCase())) } : null;
+  };
+  const [from, to] = period.split(/\s*[–—-]\s*/);
+  const start = read(from);
+  const now = /present|sekarang/i.test(to ?? '');
+  const today = new Date();
+  const end = now ? { mon: '', year: '', at: today.getFullYear() * 12 + today.getMonth() } : read(to);
+  const months = start && end ? Math.max(1, end.at - start.at + 1) : null;
+  return { start, end: now ? null : end, now, months };
+}
 
 const startYear = (period: string) => period.match(/\d{4}/)?.[0] ?? '';
 
@@ -35,7 +54,7 @@ const SETS = {
 } as const;
 
 /* A photograph of the place, taped to the sheet (v3.6, owner request; from the v1 data). Logos sit on paper. */
-function RolePhoto({ entry, src = entry.image, wide = false, className = '' }: { entry: ExperienceEntry; src?: string; wide?: boolean; className?: string }) {
+function RolePhoto({ entry, src = entry.image, wide = false, className = '', sizes = '(min-width: 768px) 224px, 88vw' }: { entry: ExperienceEntry; src?: string; wide?: boolean; className?: string; sizes?: string }) {
   if (!src) return null;
   const logo = src.endsWith('.png');
   return (
@@ -45,7 +64,8 @@ function RolePhoto({ entry, src = entry.image, wide = false, className = '' }: {
           src={src}
           alt=""
           fill
-          sizes="(min-width: 768px) 360px, 40vw"
+          sizes={sizes}
+          quality={90}
           className={logo ? 'object-contain p-[12%]' : 'object-cover'}
         />
       </span>
@@ -99,7 +119,7 @@ function FileBody({ entry }: { entry: ExperienceEntry }) {
           </>
         )}
       </div>
-      <div className="space-y-6">
+      <div className="grid grid-cols-2 items-start gap-4 md:block md:space-y-6 [&>:only-child]:col-span-2 [&>:only-child]:max-w-[14rem] md:[&>:only-child]:max-w-none">
         <RolePhoto entry={entry} className="w-full" />
         {(entry.photos ?? []).map((photo) => (
           <RolePhoto key={photo} entry={entry} src={photo} wide className="w-full -rotate-1" />
@@ -109,26 +129,69 @@ function FileBody({ entry }: { entry: ExperienceEntry }) {
   );
 }
 
+/* The dates, highlighted (v3.18, owner): start → end (or a lamp for "now") and how long it lasted. */
+function RoleDates({ period }: { period: string }) {
+  const { start, end, now, months } = dateSpan(period);
+  if (!start) return <p className="role-dates">{period}</p>;
+  return (
+    <p className="role-dates">
+      <span className="sr-only">{period}</span>
+      <span className="role-date" aria-hidden="true">
+        <b>{start.mon}</b> {start.year}
+      </span>
+      <ArrowRight size={14} className="role-arrow" aria-hidden="true" />
+      <span className="role-date" aria-hidden="true">
+        {now ? (
+          <>
+            <span className="pin-print-lamp" />
+            <T en="Present" id="Sekarang" />
+          </>
+        ) : (
+          end && (
+            <>
+              <b>{end.mon}</b> {end.year}
+            </>
+          )
+        )}
+      </span>
+      {months && (
+        <span className="role-dur" aria-hidden="true">
+          {months >= 12 ? (
+            <>
+              {Math.floor(months / 12)} <T en="yr" id="thn" />
+              {months % 12 ? (
+                <>
+                  {' '}
+                  {months % 12} <T en="mo" id="bln" />
+                </>
+              ) : null}
+            </>
+          ) : (
+            <>
+              {months} <T en="mo" id="bln" />
+            </>
+          )}
+        </span>
+      )}
+    </p>
+  );
+}
+
 /* One role: what is on the sheet that comes out of its folder (§4.5 `03`). Short enough to pin; the rest is in the file. */
 function RoleSheet({ entry, set, index, count }: { entry: ExperienceEntry; set: 'work' | 'organization'; index: number; count: number }) {
   const titleId = `experience-${set}-${index}-file`;
   return (
     <article aria-labelledby={`experience-${set}-${index}-role`} data-eqbot={set === 'work' && index === 0 ? 'experience-files' : undefined}>
-      <RolePhoto entry={entry} className="float-right ml-5 w-28 sm:w-36" />
-      <p className="flex flex-wrap items-baseline gap-x-3 font-mono text-[0.6875rem] uppercase tracking-[0.2em] text-accent">
-        <span className="stamp">{startYear(entry.period)}</span>
-        <span className="text-muted">
-          <T en={SETS[set].en} id={SETS[set].idn} /> · {String(index + 1).padStart(2, '0')}/{String(count).padStart(2, '0')}
-        </span>
+      <RolePhoto entry={entry} className="float-right ml-5 w-28 sm:w-36" sizes="(min-width: 768px) 288px, 30vw" />
+      <p className="font-mono text-[0.6875rem] uppercase tracking-[0.2em] text-muted">
+        <T en={SETS[set].en} id={SETS[set].idn} /> · {String(index + 1).padStart(2, '0')}/{String(count).padStart(2, '0')}
       </p>
-      <h3 id={`experience-${set}-${index}-role`} className="mt-4 font-serif text-2xl font-medium leading-snug text-ink md:text-3xl">
+      <h3 id={`experience-${set}-${index}-role`} className="mt-3 font-serif text-2xl font-medium leading-snug text-ink md:text-3xl">
         <T en={displayCase(entry.title)} id={displayCase(entry.titleId ?? entry.title)} />
       </h3>
-      <p className="mt-1 text-ink">{displayCase(entry.company)}</p>
-      <p className="mt-2 font-mono text-[0.6875rem] uppercase tracking-[0.12em] text-muted">
-        {entry.period}
-        {entry.location ? ` · ${entry.location}` : ''}
-      </p>
+      <p className="mt-1.5 font-medium text-ink">{displayCase(entry.company)}</p>
+      {entry.location && <p className="mt-0.5 text-sm text-muted">{entry.location}</p>}
+      <RoleDates period={entry.period} />
       <p className="mt-4 clear-right text-[0.9375rem] leading-relaxed text-muted sm:clear-none">
         <T en={entry.shortDescription} id={entry.shortDescriptionId} />
       </p>
@@ -142,7 +205,7 @@ function RoleSheet({ entry, set, index, count }: { entry: ExperienceEntry; set: 
         title={<T en={displayCase(entry.title)} id={displayCase(entry.titleId ?? entry.title)} />}
         mark={
           entry.logo ? (
-            <Image src={entry.logo} alt="" width={80} height={80} />
+            <Image src={entry.logo} alt="" width={160} height={160} quality={90} />
           ) : (
             <span className="pd-mark-monogram">{monogram(entry.company)}</span>
           )
@@ -217,6 +280,7 @@ export function Experience() {
             <T en={total.months === 1 ? 'month' : 'months'} id="bulan" />
           </span>
         </p>
+        <CareerPath years={sets.flatMap((set) => set.years)} />
       </Beat>
 
       {workExperience.map((entry, index) => (

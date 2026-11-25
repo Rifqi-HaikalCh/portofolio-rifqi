@@ -1,7 +1,10 @@
 'use client';
 
-import { ArrowDown, ArrowRight } from 'lucide-react';
-import { useCallback, useEffect, useState } from 'react';
+import { ArrowDown, ArrowRight, Volume2, VolumeX } from 'lucide-react';
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore, type CSSProperties } from 'react';
+import { setSound, soundServerSnapshot, soundSnapshot, subscribeSound } from '../../lib/sound/control';
+import { SWIPE_POSES } from '../scene/figurine-parts';
+import { RifqiFigurine } from '../scene/RifqiFigurine';
 import { PaperDialog } from '../ui/PaperDialog';
 import { T } from '../ui/T';
 
@@ -91,7 +94,7 @@ export function WelcomeTour() {
       open={open}
       onClose={close}
       labelledBy="welcome-title"
-      size="sm"
+      size={last ? 'md' : 'sm'}
       className="welcome-dialog"
       eyebrow={last ? <T en="How to explore" id="Cara menjelajah" /> : <T en="Welcome" id="Selamat datang" />}
       title={
@@ -140,59 +143,165 @@ export function WelcomeTour() {
               <T en="EQBot, bottom right, answers questions about my work." id="EQBot, di kanan bawah, menjawab pertanyaan tentang pekerjaan saya." />
             </li>
             <li>
-              <T en="Poke the little paper me. I do not mind. Much." id="Coba colek saya versi kertas. Tidak apa-apa. Sedikit sakit, sih." />
+              <T en="Poke the paper me. I do not mind. Much." id="Coba colek saya versi kertas. Tidak apa-apa. Sedikit sakit, sih." />
             </li>
           </ul>
+          <SoundHint />
         </div>
       )}
     </PaperDialog>
   );
 }
 
-/* The little stage: as the wheel (or finger) moves, a sheet rises, a book opens and the scroll thumb runs down. */
-function ScrollDemo({ touch }: { touch: boolean }) {
+/*
+  v3.13 (owner: "a hint to turn the sound on for a better experience"). Sound
+  stays off until asked (§10.4); the welcome page says it is there and offers
+  the switch itself. The speaker on the desk and the navbar icon do the same.
+*/
+function SoundHint() {
+  const on = useSyncExternalStore(subscribeSound, soundSnapshot, soundServerSnapshot);
+  const Icon = on ? Volume2 : VolumeX;
   return (
-    <svg viewBox="0 0 320 170" className="welcome-demo" aria-hidden="true">
-      <rect x="1" y="1" width="318" height="168" rx="3" className="wd-frame" />
-      <g className="wd-world">
-        <rect x="1" y="1" width="318" height="118" className="wd-wall" />
-        <rect x="1" y="119" width="318" height="50" className="wd-floor" />
-        <rect x="150" y="96" width="140" height="10" className="wd-desk" />
-        <rect x="160" y="106" width="8" height="40" className="wd-desk" />
-        <rect x="272" y="106" width="8" height="40" className="wd-desk" />
-        {/* The book on the desk: its cover turns open. */}
-        <rect x="222" y="80" width="30" height="16" className="wd-page" />
-        <rect x="222" y="80" width="30" height="16" className="wd-cover" />
-        {/* The figure. */}
-        <g className="wd-fig">
-          <circle cx="132" cy="60" r="11" className="wd-skin" />
-          <path d="M125 54 Q132 44 140 54 Z" className="wd-hair" />
-          <rect x="122" y="71" width="20" height="34" rx="3" className="wd-shirt" />
-          <rect x="124" y="105" width="7" height="34" className="wd-jeans" />
-          <rect x="133" y="105" width="7" height="34" className="wd-jeans" />
-        </g>
-      </g>
-      {/* The sheet that rises with the scroll. */}
-      <g className="wd-sheet">
-        <rect x="176" y="30" width="58" height="46" className="wd-paper" />
-        <line x1="184" y1="42" x2="222" y2="42" className="wd-ink" />
-        <line x1="184" y1="52" x2="214" y2="52" className="wd-ink" />
-        <line x1="184" y1="60" x2="218" y2="60" className="wd-ink" />
-      </g>
-      {/* The scrollbar. */}
-      <rect x="306" y="10" width="5" height="150" rx="2.5" className="wd-track" />
-      <rect x="306" y="10" width="5" height="34" rx="2.5" className="wd-thumb" />
-      {touch ? (
-        <g className="wd-finger">
-          <circle cx="44" cy="120" r="10" className="wd-dot" />
-          <line x1="44" y1="120" x2="44" y2="64" className="wd-trail" />
-        </g>
-      ) : (
-        <g className="wd-mouse">
-          <rect x="30" y="66" width="30" height="48" rx="15" className="wd-paper" />
-          <line x1="45" y1="74" x2="45" y2="84" className="wd-wheel" />
-        </g>
-      )}
-    </svg>
+    <div className="welcome-sound" data-on={on || undefined}>
+      <span className="welcome-sound-icon" aria-hidden="true">
+        <Icon size={18} />
+      </span>
+      <p>
+        <T
+          en="Best with sound on: paper rustles, page turns and a soft studio tune. The speaker on the desk switches it too."
+          id="Lebih seru dengan suara: gemerisik kertas, halaman dibalik dan musik studio yang lembut. Speaker di meja juga bisa menyalakannya."
+        />
+      </p>
+      <button type="button" data-sound="none" aria-pressed={on} onClick={() => setSound(!on)} className="welcome-sound-btn">
+        {on ? <T en="Sound on" id="Suara aktif" /> : <T en="Turn sound on" id="Nyalakan suara" />}
+      </button>
+    </div>
+  );
+}
+
+/*
+  v3.13 (owner: "a better tutorial animation, papercraft 2D/3D, my figure showing
+  the swipe up and down slowly, the objects beside him moving with it"). A small
+  shadow box: the paper me on the left swipes his near hand up and down in five
+  stop-motion frames (§10.2); beside him a cut-paper browser card scrolls its
+  chapter sheets, a book opens and a paper sheet rises, all keyed to the same
+  progress `--p` (0 at rest, 1 at the top of the swipe). One rAF loop writes
+  `--p` and `data-frame` on the stage only, so nothing re-renders. Reduced motion:
+  one still frame, halfway up.
+*/
+const LOOP_MS = 7600;
+// [time, progress]: rest, up slowly, hold, down slowly, rest.
+const KEYS: readonly (readonly [number, number])[] = [
+  [0, 0],
+  [0.1, 0],
+  [0.44, 1],
+  [0.56, 1],
+  [0.9, 0],
+  [1, 0],
+];
+const ease = (x: number) => 0.5 - Math.cos(Math.PI * x) / 2;
+
+function progressAt(t: number) {
+  for (let i = 1; i < KEYS.length; i += 1) {
+    const [t1, p1] = KEYS[i];
+    const [t0, p0] = KEYS[i - 1];
+    if (t <= t1) return p0 + (p1 - p0) * ease((t - t0) / (t1 - t0 || 1));
+  }
+  return 0;
+}
+
+const CHAPTERS = [
+  { n: '01', en: 'The Desk', id: 'Meja' },
+  { n: '02', en: 'About', id: 'Tentang' },
+  { n: '03', en: 'Experience', id: 'Pengalaman' },
+  { n: '04', en: 'Projects', id: 'Proyek' },
+  { n: '05', en: 'Certificates', id: 'Sertifikat' },
+  { n: '06', en: 'Contact', id: 'Kontak' },
+];
+
+function ScrollDemo({ touch }: { touch: boolean }) {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const stage = ref.current;
+    if (!stage) return undefined;
+    const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const write = (p: number, dir: 'up' | 'down') => {
+      stage.style.setProperty('--p', p.toFixed(4));
+      const frame = String(Math.min(SWIPE_POSES.length - 1, Math.round(p * (SWIPE_POSES.length - 1))));
+      if (stage.dataset.frame !== frame) stage.dataset.frame = frame;
+      if (stage.dataset.dir !== dir) stage.dataset.dir = dir;
+    };
+    if (still) {
+      write(0.5, 'up');
+      return undefined;
+    }
+    let raf = 0;
+    const start = performance.now();
+    const tick = (now: number) => {
+      const t = ((now - start) % LOOP_MS) / LOOP_MS;
+      write(progressAt(t), t < 0.5 ? 'up' : 'down');
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, []);
+
+  return (
+    <div ref={ref} className="welcome-demo" data-frame="0" data-dir="up" aria-hidden="true">
+      <div className="wt-wall" />
+      <div className="wt-floor" />
+
+      {/* The paper me, five frames of the swipe stacked; the stage shows one. */}
+      <div className="wt-fig">
+        <span className="wt-fig-shadow" />
+        {SWIPE_POSES.map((pose, i) => (
+          <RifqiFigurine key={pose} crop="wide" pose={pose} className="wt-frame" style={{ '--i': i } as CSSProperties} />
+        ))}
+      </div>
+
+      {/* The gesture tag by his hand: a cut-paper arrow that turns with the swipe. */}
+      <span className="wt-tag">
+        <span className="wt-tag-arrow" />
+        <span className="wt-tag-word">{touch ? <T en="swipe" id="geser" /> : <T en="scroll" id="gulir" />}</span>
+      </span>
+
+      {/* The browser card: chapter sheets scroll with the hand, the thumb runs down the rail. */}
+      <div className="wt-card">
+        <div className="wt-card-bar">
+          <i />
+          <i />
+          <i />
+        </div>
+        <div className="wt-card-view">
+          <div className="wt-reel">
+            {CHAPTERS.map((c) => (
+              <div key={c.n} className="wt-leaf">
+                <b>{c.n}</b>
+                <span>
+                  <T en={c.en} id={c.id} />
+                </span>
+                <em />
+                <em />
+              </div>
+            ))}
+          </div>
+        </div>
+        <span className="wt-rail">
+          <span className="wt-thumb" />
+        </span>
+      </div>
+
+      {/* In front: a sheet rising out of the floor slot and a book whose cover opens. */}
+      <div className="wt-sheet">
+        <em />
+        <em />
+        <em />
+      </div>
+      <div className="wt-book">
+        <span className="wt-book-page" />
+        <span className="wt-book-cover" />
+      </div>
+    </div>
   );
 }

@@ -39,7 +39,7 @@ export function Hero() {
             <T en={heroIntro.en} id={heroIntro.id} />
           </p>
 
-          <ul className="mt-7 grid max-w-md grid-cols-2 gap-2">
+          <ul className="hero-tickets mt-7 grid max-w-md grid-cols-2 gap-2">
             {heroHighlights.map((item, i) => (
               <li key={item.label} className="ticket border border-line bg-raised px-5 py-3" style={{ '--i': i } as CSSProperties}>
                 <p className="font-serif text-2xl leading-none text-ink">{item.value}</p>
@@ -50,7 +50,7 @@ export function Hero() {
             ))}
           </ul>
 
-          <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+          <div className="hero-cta mt-7 flex flex-col gap-3 sm:flex-row">
             <a href="#projects" className="btn-primary-custom min-h-11">
               <T en="View projects" id="Lihat proyek" />
             </a>
@@ -63,7 +63,7 @@ export function Hero() {
         </div>
 
         <div className="hero-desk lg:col-span-7">
-          <DeskStation screen={heroScreen()} poster={<RifqiFigurine crop="stage" pose="seated" className="h-full w-full" />} />
+          <DeskStation screen={heroScreen()} poster={<RifqiFigurine crop="stage" pose="lean" className="h-full w-full" />} />
         </div>
       </div>
     </section>

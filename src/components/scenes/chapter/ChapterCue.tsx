@@ -109,7 +109,7 @@ export function ChapterCue() {
             const first = !seen.has(el);
             seen.add(el);
             // Whatever is already above the fold when the cue starts shows without playing.
-            if (first && entry.boundingClientRect.top < fold()) el.dataset.shown = 'now';
+            if (first && entry.boundingClientRect.top < fold() && entry.boundingClientRect.left < window.innerWidth) el.dataset.shown = 'now';
             else if (entry.isIntersecting) el.dataset.shown = '';
             else continue;
             shown.unobserve(el);
@@ -134,6 +134,38 @@ export function ChapterCue() {
       apply(locate(), false);
     };
 
+    // Mobile trays scroll sideways: keyboard users reach them with a tab stop (WCAG 2.1.1).
+    const trays: HTMLElement[] = [];
+    if (split.matches) {
+      const name = document.getElementById(chapter.getAttribute('aria-labelledby') ?? '')?.textContent ?? '';
+      const found = new Set<HTMLElement>(chapter.querySelectorAll<HTMLElement>('.beat-deck, [data-eqbot="services-tabs"]'));
+      chapter.querySelectorAll('.tracing').forEach((el) => el.parentElement && found.add(el.parentElement));
+      found.forEach((el) => {
+        if (el.hasAttribute('tabindex')) return;
+        el.tabIndex = 0;
+        el.setAttribute('role', 'group');
+        el.setAttribute('aria-label', name);
+        trays.push(el);
+      });
+    }
+
+    // A tray nudges once when it first comes into view (a hint that it swipes); not if it was already swiped.
+    let hinter: IntersectionObserver | null = null;
+    if (split.matches) {
+      hinter = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            if (!entry.isIntersecting) continue;
+            const tray = entry.target as HTMLElement;
+            hinter?.unobserve(tray);
+            if (tray.scrollLeft < 4) tray.dataset.hint = '';
+          }
+        },
+        { threshold: 0.6 },
+      );
+    }
+    if (hinter) chapter.querySelectorAll<HTMLElement>('.beat-deck').forEach((tray) => hinter.observe(tray));
+
     chapter.dataset.cue = '';
     build();
     split.addEventListener('change', build);
@@ -142,7 +174,13 @@ export function ChapterCue() {
       observers.forEach((o) => o.disconnect());
       split.removeEventListener('change', build);
       chapter.removeEventListener('focusin', onFocus);
+      hinter?.disconnect();
       delete chapter.dataset.cue;
+      trays.forEach((el) => {
+        el.removeAttribute('tabindex');
+        el.removeAttribute('role');
+        el.removeAttribute('aria-label');
+      });
     };
   }, []);
 

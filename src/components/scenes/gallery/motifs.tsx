@@ -159,11 +159,100 @@ const MOTIFS: Record<ProjectMotif, (k: Kit) => MotifNodes> = {
       </>
     ),
   }),
+  // Design file: artboards, a colour palette and a pen path with anchor points.
+  design: (k) => ({
+    back: (
+      <>
+        {backing(k, 'var(--ill-wall)')}
+        {[0, 1, 2].map((i) => (
+          <g key={i} transform={`rotate(${-7 + i * 7} 130 150)`}>
+            {k.sheet({ d: rect(34 + i * 26, 40 + i * 12, 112, 150, 2), fill: 'var(--ill-page)', gap: 14, edge: 2 })}
+            {k.sheet({ d: rect(44 + i * 26, 52 + i * 12, 92, 46, 1), fill: ['var(--color-accent)', 'var(--color-blueprint)', 'var(--color-sage)'][i], gap: 2, edge: 0.8, rim: false })}
+            <path d={`M${44 + i * 26} ${116 + i * 12}H${130 + i * 26}M${44 + i * 26} ${130 + i * 12}H${112 + i * 26}`} stroke="var(--color-muted)" strokeWidth="3" opacity="0.4" />
+          </g>
+        ))}
+      </>
+    ),
+    mid: (
+      <>
+        {['var(--color-accent)', 'var(--color-blueprint)', 'var(--color-sage)'].map((fill, i) => (
+          <g key={fill}>{k.sheet({ d: circle(300 + i * 30, 44, 12), fill, gap: 18, edge: 1.8 })}</g>
+        ))}
+        <path d="M232 112C262 76 300 150 360 100" fill="none" stroke="var(--ill-page)" strokeWidth="3" strokeLinecap="round" />
+        {[[232, 112], [360, 100]].map(([x, y]) => (
+          <g key={x}>{k.sheet({ d: rect(x - 5, y - 5, 10, 10, 1), fill: 'var(--ill-page)', gap: 8, edge: 1, rim: false })}</g>
+        ))}
+      </>
+    ),
+  }),
+  // Small tools: a ruled sheet with checkboxes and a sticky note.
+  tools: (k) => ({
+    back: (
+      <>
+        {backing(k, 'var(--ill-wall)')}
+        {k.sheet({ d: rect(36, 30, 150, 190, 3), fill: 'var(--ill-page)', gap: 16, edge: 2 })}
+        {[0, 1, 2, 3].map((i) => (
+          <g key={i}>
+            {k.sheet({ d: rect(52, 56 + i * 36, 16, 16, 2), fill: i < 2 ? 'var(--color-sage)' : 'var(--ill-wall)', gap: 2, edge: 0.8, rim: false })}
+            <path d={`M80 ${64 + i * 36}H${160 - i * 10}`} stroke="var(--color-muted)" strokeWidth="3" opacity="0.45" />
+          </g>
+        ))}
+      </>
+    ),
+    mid: (
+      <>
+        <g transform="rotate(6 320 70)">{k.sheet({ d: rect(272, 28, 90, 84, 2), fill: 'var(--ill-note)', gap: 18, edge: 2 })}</g>
+        <path d="M290 58H346M290 74H330" stroke="var(--ill-bezel)" strokeWidth="3" opacity="0.5" transform="rotate(6 320 70)" />
+      </>
+    ),
+  }),
+  // Games: a board of tiles and a star.
+  play: (k) => ({
+    back: (
+      <>
+        {backing(k, 'var(--ill-sky)')}
+        {Array.from({ length: 6 }, (_, i) => (
+          <g key={i}>
+            {k.sheet({ d: rect(30 + (i % 3) * 58, 34 + Math.floor(i / 3) * 58, 50, 50, 4), fill: i % 2 ? 'var(--ill-page)' : ['var(--color-accent)', 'var(--color-blueprint)', 'var(--color-sage)'][i % 3], gap: 14, edge: 2 })}
+          </g>
+        ))}
+      </>
+    ),
+    mid: <>{k.sheet({ d: poly([[320, 30], [333, 58], [364, 62], [341, 82], [347, 112], [320, 97], [293, 112], [299, 82], [276, 62], [307, 58]]), fill: 'var(--ill-note)', gap: 22, edge: 2.2 })}</>,
+  }),
+  // Records systems: a table sheet with header, rows and a stamp.
+  system: (k) => ({
+    back: (
+      <>
+        {backing(k, 'var(--ill-wall)')}
+        {k.sheet({ d: rect(30, 28, 190, 170, 3), fill: 'var(--ill-page)', gap: 16, edge: 2 })}
+        {k.sheet({ d: rect(30, 28, 190, 28, 3), fill: 'var(--color-blueprint)', gap: 2, edge: 0.8, rim: false })}
+        {[0, 1, 2, 3].map((i) => (
+          <path key={i} d={`M44 ${76 + i * 28}H206M100 ${64 + i * 28}V${88 + i * 28}`} stroke="var(--color-muted)" strokeWidth="2.5" opacity="0.4" />
+        ))}
+      </>
+    ),
+    mid: (
+      <>
+        {k.sheet({ d: circle(318, 66, 32), fill: 'var(--color-accent)', gap: 20, edge: 2.4 })}
+        <path d="M303 66l11 11 21-23" fill="none" {...line} strokeWidth="5" />
+      </>
+    ),
+  }),
 };
 
 /** The motif as SVG nodes in its 400 × 300 box, for art drawn inside a station (the hung frames, §4.5 `04b`). */
 export function motifNodes(id: string, motif: ProjectMotif): MotifNodes {
   return MOTIFS[motif](paperKit(`h-${id}`));
+}
+
+/** Every project gets a motif: its own, else one from what the project is (design file, small tool, game, records system). */
+export function motifFor(project: { id: string; motif?: ProjectMotif; type?: string }): ProjectMotif {
+  if (project.motif) return project.motif;
+  if (project.type === 'design') return 'design';
+  if (/todo|notes|bookshelf/.test(project.id)) return 'tools';
+  if (/game/.test(project.id)) return 'play';
+  return 'system';
 }
 
 export function motifArt(id: string, motif: ProjectMotif): MotifArt {

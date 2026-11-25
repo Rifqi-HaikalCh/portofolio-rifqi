@@ -295,7 +295,6 @@
   transition: rotate 0.8s var(--ease-paper);
 }
 .pin-print.is-flat { position: relative; inset: auto; aspect-ratio: 170 / 214; rotate: -1deg; }
-.pin-print.is-flat .pin-print-stamp { right: 3%; }
 .pin-print-back {
   position: absolute;
   inset: -3% -4% -2% -3%;
@@ -357,25 +356,34 @@
   text-transform: uppercase;
   color: var(--color-accent);
 }
+/*
+  The availability tag (v3.16, owner: the badge's shape and place were poor): a small ticket
+  with a sage edge, set on the lower left of the photograph, inside the print, always legible
+  (never under 11 px). The lamp blinks slowly beside the word.
+*/
 .pin-print-stamp {
   position: absolute;
-  right: -6%;
-  bottom: 17%;
+  left: 11.5cqw;
+  top: calc(93.5cqw - 4.5cqw);
+  translate: 0 -100%;
   display: inline-flex;
   align-items: center;
   gap: 0.55em;
-  padding: 0.55em 0.8em;
-  border: 0.45cqw dashed var(--color-accent);
+  padding: 0.5em 0.85em 0.5em 0.7em;
+  border-left: 0.3em solid var(--color-sage);
   font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
-  font-size: 3.6cqw;
+  font-size: clamp(0.6875rem, 4.2cqw, 0.8125rem);
   font-weight: 600;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.1em;
+  line-height: 1;
   text-transform: uppercase;
-  color: var(--color-accent);
-  rotate: -9deg;
-  background: color-mix(in oklab, var(--ill-page) 82%, transparent);
-  box-shadow: 0 1px 2px rgb(var(--rgb-shadow) / 0.18);
+  color: var(--color-ink);
+  rotate: -2deg;
+  background: color-mix(in oklab, var(--ill-page) 95%, transparent);
+  box-shadow: 0 0 0 1px rgb(var(--rgb-shadow) / 0.1), 0 2px 3px rgb(var(--rgb-shadow) / 0.3), 0 8px 14px rgb(var(--rgb-shadow) / 0.16);
 }
+/* On the pinboard the print is small: the tag scales with the art, like the name under the photo. */
+.stage .pin-print-stamp { font-size: 4.4cqw; }
 /* The availability lamp: a slow, soft blink (v3.12, owner). */
 .pin-print-lamp {
   flex: none;
@@ -761,6 +769,57 @@
 }
 @media (max-width: 767px) {
   .lamp-hint { display: none; }
+}
+
+/*
+  v3.13 — the desk speaker (DeskSpeaker), the sound switch on the stage. The
+  cabinet is paper art; the live parts sit over it in world units: the cone
+  pumps and three paper waves ripple out while the sound is on; off, the waves
+  fold away and the light goes out.
+*/
+.desk-speaker { cursor: pointer; }
+.desk-speaker:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+.speaker-live {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+.speaker-cone { transform-box: fill-box; transform-origin: 50% 50%; }
+.speaker-waves path {
+  opacity: 0;
+  transform-box: view-box;
+  transform-origin: 1286px 590px;
+  scale: 0.7;
+  transition: opacity var(--dur-ui) var(--ease-paper), scale var(--dur-ui) var(--ease-paper);
+}
+.speaker-led { opacity: 0.25; transition: opacity var(--dur-ui) var(--ease-paper); }
+.desk-speaker[data-on] .speaker-led { opacity: 1; }
+.desk-speaker[data-on] .speaker-waves path { opacity: 0.85; scale: 1; }
+.desk-speaker:hover .speaker-cone { scale: 1.06; }
+.speaker-hint { left: 50%; top: 62%; }
+.speaker-hint .lamp-tag { left: -24px; top: 34px; }
+.speaker-hint .lamp-tag::before { left: 18px; top: -6px; bottom: auto; rotate: 225deg; }
+@media (prefers-reduced-motion: no-preference) {
+  .speaker-cone { transition: scale 0.2s var(--ease-paper); }
+  .desk-speaker[data-on] .speaker-cone { animation: speaker-pump 0.9s ease-in-out infinite; }
+  .desk-speaker[data-on] .speaker-waves path { animation: speaker-wave 1.8s ease-out infinite; }
+  .desk-speaker[data-on] .speaker-waves path:nth-child(2) { animation-delay: 0.3s; }
+  .desk-speaker[data-on] .speaker-waves path:nth-child(3) { animation-delay: 0.6s; }
+}
+@keyframes speaker-pump {
+  0%, 100% { scale: 1; }
+  40% { scale: 1.09; }
+}
+@keyframes speaker-wave {
+  0% { opacity: 0; translate: 0 6px; }
+  30% { opacity: 0.85; }
+  100% { opacity: 0; translate: 0 -10px; }
+}
+@media (max-width: 767px) {
+  .speaker-hint { display: none; }
 }
 
 /*

@@ -1,18 +1,20 @@
 import type { CSSProperties, ReactNode } from 'react';
 import { air, circle, cut, ellipse, paperKit, poly, rect } from '../../../lib/paper-kit';
 import { DeskLamp } from '../../scene/DeskLamp';
+import { DeskSpeaker } from '../../scene/DeskSpeaker';
 import { FigurineSlot } from '../../scene/FigurineSlot';
 import { LaptopScreenUI, type ScreenData } from '../../scene/LaptopScreenUI';
-import { FIGURINE, LAMP, SCREEN, STAGE } from '../../scene/stage-geometry';
+import { FIGURINE, LAMP, SCREEN, SPEAKER, STAGE } from '../../scene/stage-geometry';
 import { PaperScene, frameVars, type Frames, type SceneLayer } from '../PaperScene';
 import { ShadowBox } from '../ShadowBox';
 import { FAR_TOWERS, NEAR_TOWERS, bar, day, keyRow, lineMuted, night, skyline, windows } from '../office';
 
 /*
   Station `01` — The Desk (DesignRules.md §2.2, §4.5 `01`).
-  14 layers in depth bands (§2.5), back to front: sky, far skyline, near skyline
-  with Monas, wall, window, shelf + pinboard, floor, desk, lamp, laptop (z = 0,
-  the HTML screen sits on it), lamp light, figurine, props, chair back.
+  15 layers in depth bands (§2.5), back to front: sky, far skyline, near skyline
+  with Monas, wall, window, shelf + pinboard, floor, desk, speaker (v3.13), lamp,
+  laptop (z = 0, the HTML screen sits on it), lamp light, figurine (v3.13: life
+  size, standing on the floor beside the desk), props, chair back.
   Every sheet is lit by paper-kit; shadows grow with each sheet's gap.
 */
 
@@ -238,6 +240,25 @@ export function DeskStation({
       ),
     },
     {
+      // v3.13: a paper speaker between the laptop and the lamp, the sound switch (DeskSpeaker).
+      id: 'speaker',
+      band: 'mid',
+      z: -20,
+      box: { x: 1226, y: 496, w: 120, h: 156 },
+      art: (
+        <>
+          {k.sheet({ d: rect(1246, 632, 16, 10, 1), fill: 'var(--ill-bezel)', edge: 0, rim: false })}
+          {k.sheet({ d: rect(1310, 632, 16, 10, 1), fill: 'var(--ill-bezel)', edge: 0, rim: false })}
+          {k.sheet({ d: rect(1238, 508, 96, 128, 9), fill: 'var(--ill-laptop)', gap: 40, edge: 5 })}
+          {k.sheet({ d: rect(1246, 516, 80, 112, 6), fill: 'var(--ill-bezel)', gap: 6, edge: 2, material: 'kraft' })}
+          {k.sheet({ d: circle(1286, 542, 11), fill: 'var(--ill-laptop-shade)', gap: 8, edge: 2 })}
+          {k.sheet({ d: circle(1286, 542, 4), fill: 'var(--ill-bezel)', edge: 0, rim: false })}
+          {k.sheet({ d: circle(1286, 590, 29), fill: 'var(--ill-laptop-shade)', gap: 10, edge: 2 })}
+          <rect x="1252" y="620" width="10" height="3" fill="var(--color-accent)" />
+        </>
+      ),
+    },
+    {
       id: 'lamp',
       band: 'mid',
       z: -10,
@@ -327,9 +348,9 @@ export function DeskStation({
       art: (
         <>
           {/* Mug beside the lamp. */}
-          {k.sheet({ d: `${rect(1186, 614, 42, 42, 18)}${rect(1198, 626, 22, 18, 8)}`, fillRule: 'evenodd', fill: 'var(--ill-mug)', gap: 14, edge: 3 })}
-          {k.sheet({ d: rect(1214, 598, 88, 96, 4), fill: 'var(--ill-mug)', gap: 16, edge: 4 })}
-          {k.sheet({ d: ellipse(1258, 604, 38, 5), fill: 'var(--ill-coffee)', edge: 0, rim: false, material: 'none' })}
+          {k.sheet({ d: `${rect(1150, 614, 42, 42, 18)}${rect(1162, 626, 22, 18, 8)}`, fillRule: 'evenodd', fill: 'var(--ill-mug)', gap: 14, edge: 3 })}
+          {k.sheet({ d: rect(1178, 598, 88, 96, 4), fill: 'var(--ill-mug)', gap: 16, edge: 4 })}
+          {k.sheet({ d: ellipse(1222, 604, 38, 5), fill: 'var(--ill-coffee)', edge: 0, rim: false, material: 'none' })}
           {/* Paper plant: each leaf two halves along the midrib, stacked over the pot. */}
           {[
             { tip: [1440, 462], ctrl: [1452, 540], bend: [1488, 520] },
@@ -403,6 +424,7 @@ export function DeskStation({
     >
       <PaperScene layers={layers} frames={FRAMES} label="desk">
         <DeskLamp style={frameVars(LAMP, FRAMES)} />
+        <DeskSpeaker style={frameVars(SPEAKER, FRAMES)} />
       </PaperScene>
     </ShadowBox>
   );

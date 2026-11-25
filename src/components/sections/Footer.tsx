@@ -57,7 +57,7 @@ export function Footer() {
         </div>
 
         {/* Three columns (v3.12, owner: settings and colophon removed) */}
-        <div className="grid gap-12 py-12 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1.2fr]">
+        <div className="footer-cols grid gap-12 py-12 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1.2fr]">
           <div>
             <BrandLockup variant="horizontal" surface="ink" className="h-auto w-full max-w-[15rem]" label="Rifqi Haikal" />
             <p className="mt-5 max-w-xs text-sm leading-relaxed text-paper/75">
@@ -92,7 +92,7 @@ export function Footer() {
             <h2 className={label}>
               <T en="Contact" id="Kontak" />
             </h2>
-            <ul className="grid">
+            <ul className="footer-reach grid">
               {reach.map((item) => (
                 <li key={item.href}>
                   <a

@@ -19,7 +19,7 @@ import { DraftingStation } from '../scenes/drafting/DraftingStation';
 import { DRAFTING_CHAPTER } from '../scenes/drafting/beats';
 import { GALLERY_CHAPTER } from '../scenes/gallery/beats';
 import { Beat, Chapter } from '../scenes/chapter/Chapter';
-import { motifArt } from '../scenes/gallery/motifs';
+import { motifArt, motifFor } from '../scenes/gallery/motifs';
 import { GalleryStation } from '../scenes/gallery/GalleryStation';
 
 type Capability = { en: string; id: string; bodyEn: string; bodyId: string; points: Array<[string, string]> };
@@ -118,8 +118,8 @@ function toShelf(project: Project, kind: ShelfProject['kind']): ShelfProject {
     stack: project.techStack.map((name) => ({ name, logo: stackLogo(name) })),
     links: project.links,
     kind,
-    mobile: project.id.includes('mobile') || project.type === 'mobile',
-    art: project.motif ? motifArt(project.id, project.motif) : undefined,
+    mobile: project.id.includes('mobile') || project.type === 'mobile' || /mobile/i.test(project.title),
+    art: motifArt(project.id, motifFor(project)),
   };
 }
 

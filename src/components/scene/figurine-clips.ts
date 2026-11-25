@@ -21,7 +21,8 @@ export type Clip = {
   sustain?: boolean;
 };
 
-export const BASE_POSE = POSES.seated;
+/** v3.13: standing beside the desk (was `seated` on the notebook). */
+export const BASE_POSE = POSES.lean;
 
 export const CLIPS: Record<ClipId, Clip> = {
   // Greeting on the first 3D frame: the far (left) arm waves twice.

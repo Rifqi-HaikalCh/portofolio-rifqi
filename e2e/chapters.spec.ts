@@ -193,17 +193,32 @@ test.describe('chapter theatre', () => {
   });
 });
 
-test.describe('folio (mobile, v3.6)', () => {
-  test('under 768 px every chapter is a plain section: no stage, the photograph in the dossier', async ({ page, isMobile }) => {
+test.describe('pocket studio (mobile, v3.14)', () => {
+  test('under 768 px every chapter opens with its window in flow; the desk sits under the hero tickets', async ({ page, isMobile }) => {
     test.skip(!isMobile, 'mobile layout');
     await page.goto('/');
     for (const id of chapters) {
-      expect(await page.locator(`#${id} .stage`).evaluate((el) => getComputedStyle(el).display), `${id} stage`).toBe('none');
+      const stage = page.locator(`#${id} .stage`);
+      expect(await stage.evaluate((el) => getComputedStyle(el).display), `${id} stage`).toBe('block');
+      expect(await stage.evaluate((el) => getComputedStyle(el).position), `${id} stage is in flow`).not.toBe('sticky');
     }
-    await expect(page.locator('#home .hero-desk')).toBeHidden();
+    await expect(page.locator('#home .hero-desk')).toBeVisible();
     const photo = page.locator('#about [data-beat="dossier"] img[alt="Rifqi Haikal"]');
     await photo.scrollIntoViewIfNeeded();
     await expect(photo).toBeVisible();
     expect(await photo.evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0)).toBe(true);
+  });
+
+  test('the gallery wire scrolls sideways and holds every project card', async ({ page, isMobile }) => {
+    test.skip(!isMobile, 'mobile layout');
+    await page.goto('/');
+    const deck = page.locator('#projects .beat-deck');
+    await deck.scrollIntoViewIfNeeded();
+    const { scrollable, cards } = await deck.evaluate((el) => ({
+      scrollable: el.scrollWidth > el.clientWidth,
+      cards: el.querySelectorAll('.rail-card').length,
+    }));
+    expect(scrollable).toBe(true);
+    expect(cards).toBeGreaterThan(2);
   });
 });

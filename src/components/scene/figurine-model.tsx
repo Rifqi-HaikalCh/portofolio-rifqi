@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 import { EQBOT_STATE_EVENT, FIGURINE_LOOK_EVENT, type EqbotStateDetail } from './scene-events';
-import { PARTS, SEAT, STAGE_FRAME, type Expression, type Ink, type JointId } from './figurine-parts';
+import { GROUND, PARTS, STAGE_FRAME, type Expression, type Ink, type JointId } from './figurine-parts';
 import { solveJoints } from './figurine-rig';
 import { partGeometry, toMatrix4 } from './figurine-mesh';
 import { sample, type ActiveClip, type ClipId } from './figurine-clips';
@@ -250,8 +250,8 @@ export function FigurineModel({ palette, lightX }: { palette: FigurinePalette; l
   return (
     <>
       <Framing />
-      {/* Contact shadow where he sits on the notebook */}
-      <mesh position={[SEAT.x, -SEAT.y, -40]} scale={[SEAT.rx, SEAT.ry, 1]} material={shadow}>
+      {/* Contact shadow where he stands on the floor (v3.13) */}
+      <mesh position={[GROUND.x, -GROUND.y, -40]} scale={[GROUND.rx, GROUND.ry, 1]} material={shadow}>
         <circleGeometry args={[1, 24]} />
       </mesh>
       <group ref={root} />

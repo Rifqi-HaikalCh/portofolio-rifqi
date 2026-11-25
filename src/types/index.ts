@@ -56,7 +56,7 @@ export interface Project {
   motif?: ProjectMotif;
 }
 
-export type ProjectMotif = 'api' | 'route' | 'market' | 'hiring' | 'delivery' | 'sport';
+export type ProjectMotif = 'api' | 'route' | 'market' | 'hiring' | 'delivery' | 'sport' | 'design' | 'tools' | 'play' | 'system';
 
 export interface Certificate {
   id: string;

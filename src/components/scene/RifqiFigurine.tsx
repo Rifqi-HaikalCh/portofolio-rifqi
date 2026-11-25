@@ -1,5 +1,5 @@
 import type { CSSProperties } from 'react';
-import { SEAT, STAGE_FRAME, inkVar, type Expression, type PoseId } from './figurine-parts';
+import { GROUND, SEAT, STAGE_FRAME, inkVar, type Expression, type PoseId } from './figurine-parts';
 import { placeParts, type PlacedPart } from './figurine-rig';
 
 /*
@@ -71,7 +71,9 @@ export function RifqiFigurine({
   const decorative = !title;
   const parts = placeParts(pose, expression);
   const grounded = (crop === 'full' || crop === 'wide') && pose !== 'seated';
-  const seated = (crop === 'full' || crop === 'stage') && pose === 'seated';
+  const seated = crop === 'full' && pose === 'seated';
+  // v3.13: the hero frame stands him on the studio floor.
+  const floor = crop === 'stage';
 
   return (
     <svg
@@ -88,6 +90,7 @@ export function RifqiFigurine({
       {/* Contact shadow on the desk */}
       {grounded && <ellipse cx="100" cy="451" rx="66" ry="6" fill="var(--paper-shadow)" />}
       {seated && <ellipse cx={SEAT.x} cy={SEAT.y} rx={SEAT.rx} ry={SEAT.ry} fill="var(--paper-shadow)" />}
+      {floor && <ellipse cx={GROUND.x} cy={GROUND.y} rx={GROUND.rx} ry={GROUND.ry} fill="var(--paper-shadow)" />}
       {/* Round caps and joins inherit to every sheet; cut outlines are closed, so caps only touch line parts. */}
       <g style={{ filter: 'var(--paper-drop-sm)' }} strokeLinecap="round" strokeLinejoin="round">
         {parts.map((part) => (

@@ -183,34 +183,41 @@
   pointer-events: none;
 }
 .pd-head {
+  --pd-head-t: 1.5rem;
+  --pd-head-x: 1.5rem;
+  --pd-head-b: 1.25rem;
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   gap: 1.5rem;
-  padding: 1.5rem 1.5rem 1.25rem;
+  padding: var(--pd-head-t) var(--pd-head-x) var(--pd-head-b);
   border-bottom: 1px solid var(--color-line);
 }
-/* v3.12: the mark at the far left of a dialog header (a company logo on a role file). */
+/*
+  v3.12: the mark at the far left of a dialog header (a company logo on a role file).
+  v3.13 (owner): exactly as tall as the header. It is a square panel flush with the
+  header's top, bottom and left edges (the negative margins cancel the padding), its
+  width taken from that height, with one rule on its right like a tab of card.
+*/
 .pd-mark {
   position: relative;
   flex: none;
+  align-self: stretch;
   display: grid;
   place-items: center;
-  width: 4.25rem;
-  height: 4.25rem;
-  padding: 0.55rem;
+  aspect-ratio: 1;
+  min-height: 4.5rem;
+  margin: calc(var(--pd-head-t) * -1) 0 calc(var(--pd-head-b) * -1) calc(var(--pd-head-x) * -1);
+  padding: 0.85rem;
   background: var(--ill-page);
-  border: 1px solid var(--color-line);
-  box-shadow: 0 1px 0 var(--color-line), 2px 3px 0 rgb(var(--rgb-shadow) / 0.08);
+  border-inline-end: 1px solid var(--color-line);
+  box-shadow: inset -3px 0 0 rgb(var(--rgb-shadow) / 0.05);
 }
 .pd-mark img { width: 100%; height: 100%; object-fit: contain; }
 .pd-mark-monogram {
   font-family: var(--font-fraunces), Georgia, serif;
-  font-size: 1.5rem;
+  font-size: 1.75rem;
   color: var(--color-accent);
-}
-@media (min-width: 640px) {
-  .pd-mark { width: 5rem; height: 5rem; }
 }
 .pd-eyebrow {
   margin-bottom: 0.5rem;
@@ -265,10 +272,48 @@
   border-top: 1px solid var(--color-line);
 }
 @media (min-width: 768px) {
-  .pd-head { padding: 2rem 2rem 1.5rem; }
+  .pd-head { --pd-head-t: 2rem; --pd-head-x: 2rem; --pd-head-b: 1.5rem; }
   .pd-title { font-size: 2.25rem; }
   .pd-body { padding: 2rem; }
   .pd-foot { padding: 1.25rem 2rem; }
+}
+/*
+  Dialog header on a phone (v3.17, owner: too big and not precise): one tidy row. The mark
+  is a fixed 3 rem tile (no longer stretched to the header's height), the title is a
+  heading-sized line or two, the lede is two lines at most, and the close button keeps 44 px.
+*/
+@media (max-width: 767px) {
+  .pd-head {
+    --pd-head-t: 0.875rem;
+    --pd-head-x: 1rem;
+    --pd-head-b: 0.875rem;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .pd-mark {
+    align-self: center;
+    aspect-ratio: auto;
+    width: 3rem;
+    height: 3rem;
+    min-height: 0;
+    margin: 0;
+    padding: 0.5rem;
+    border: 1px solid var(--color-line);
+  }
+  .pd-mark-monogram { font-size: 1.25rem; }
+  .pd-eyebrow { margin-bottom: 0.25rem; font-size: 10px; letter-spacing: 0.12em; line-height: 1.3; }
+  .pd-title { font-size: 1.25rem; line-height: 1.2; }
+  .pd-lede {
+    margin-top: 0.25rem;
+    font-size: 0.8125rem;
+    line-height: 1.45;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .pd-body { padding: 1.25rem 1rem; }
+  .pd-foot { padding: 0.875rem 1rem; }
 }
 .paper-dialog[data-size="drawer"] {
   width: 100vw;
@@ -522,3 +567,31 @@
   0%, 100% { scale: 1 1; }
   50% { scale: 1.006 1.012; }
 }
+
+/*
+  Role dates (v3.18, owner: highlight the start and end of each role): one ruled band with an
+  accent edge, month in accent and year in ink, an arrow, the end (a lamp for "now") and how
+  long it lasted.
+*/
+.role-dates {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 0.6rem;
+  margin-top: 0.875rem;
+  padding: 0.45rem 0.75rem;
+  border-left: 3px solid var(--color-accent);
+  background: color-mix(in oklab, var(--color-accent) 9%, var(--color-raised));
+  font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  line-height: 1.2;
+  text-transform: uppercase;
+  color: var(--color-ink);
+}
+.role-date { display: inline-flex; align-items: center; gap: 0.35em; white-space: nowrap; }
+.role-date b { font-weight: 600; color: var(--color-accent); }
+.role-arrow { flex: none; color: var(--color-muted); }
+.role-dur { font-size: 0.6875rem; font-weight: 500; letter-spacing: 0.08em; color: var(--color-muted); }
+.role-dur::before { content: "· "; }

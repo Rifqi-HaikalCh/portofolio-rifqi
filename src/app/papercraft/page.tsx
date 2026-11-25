@@ -102,7 +102,7 @@ export default function PapercraftPage() {
 
       <section aria-label="Desk station" className="mb-14">
         <Label>Station 01 · The Desk · 14 layers in depth bands · move the pointer for the camera look · scroll for the push</Label>
-        <DeskStation screen={heroScreen()} poster={<RifqiFigurine crop="stage" pose="seated" className="h-full w-full" />} />
+        <DeskStation screen={heroScreen()} poster={<RifqiFigurine crop="stage" pose="lean" className="h-full w-full" />} />
       </section>
 
       <section aria-label="Stations" className="mb-14 grid gap-10">
@@ -124,18 +124,18 @@ export default function PapercraftPage() {
 
       <section aria-label="Poster and 3D" className="grid gap-8 md:grid-cols-2">
         <div>
-          <Label>Figurine poster · seated hero frame</Label>
+          <Label>Figurine poster · standing hero frame</Label>
           <div className="grid place-items-center border border-line bg-raised p-6">
-            <RifqiFigurine crop="stage" pose="seated" className="h-[600px] w-auto" title="Paper figurine of Rifqi Haikal" />
+            <RifqiFigurine crop="stage" pose="lean" className="h-[600px] w-auto" title="Paper figurine of Rifqi Haikal" />
           </div>
         </div>
         <div>
-          <Label>Figurine 3D · seated hero frame · hover the laptop on the stage for the look clip · ?webgl=off for the fallback</Label>
+          <Label>Figurine 3D · standing hero frame · hover the laptop on the stage for the look clip · ?webgl=off for the fallback</Label>
           <div className="grid place-items-center border border-line bg-raised p-6">
             <div className="h-[600px] w-[420px]">
               <FigurineSlot
                 title="3D paper figurine of Rifqi"
-                poster={<RifqiFigurine crop="stage" pose="seated" className="h-full w-full" />}
+                poster={<RifqiFigurine crop="stage" pose="lean" className="h-full w-full" />}
               />
             </div>
           </div>

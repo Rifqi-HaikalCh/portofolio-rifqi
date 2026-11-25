@@ -402,7 +402,10 @@ export const PARTS: readonly Part[] = [
 /* ---- Poses: joint angles in degrees [rx, ry, rz] ------------------------- */
 
 export type Angles = readonly [number, number, number];
-export type PoseId = 'stand' | 'wave' | 'think' | 'seated' | 'peer' | 'pin' | 'folder' | 'draw' | 'hang' | 'binder' | 'seal' | 'reach' | 'hand' | 'explain';
+export type PoseId = 'stand' | 'wave' | 'think' | 'seated' | 'peer' | 'pin' | 'folder' | 'draw' | 'hang' | 'binder' | 'seal' | 'reach' | 'hand' | 'explain' | 'lean' | SwipePose;
+/** v3.13 welcome tour: five stop-motion frames of the near hand swiping up, low to high. */
+export type SwipePose = 'swipe-0' | 'swipe-1' | 'swipe-2' | 'swipe-3' | 'swipe-4';
+export const SWIPE_POSES: readonly SwipePose[] = ['swipe-0', 'swipe-1', 'swipe-2', 'swipe-3', 'swipe-4'];
 
 export type Pose = {
   joints: Partial<Record<JointId, Angles>>;
@@ -436,7 +439,7 @@ export const POSES: Record<PoseId, Pose> = {
       wristR: [0, 0, -10],
     },
   },
-  // Hero pose: seated on the notebook, turned toward the laptop, near hand on its deck.
+  // Hero pose until v3.13: seated on the notebook, turned toward the laptop, near hand on its deck.
   seated: {
     expression: 'neutral',
     joints: {
@@ -547,6 +550,78 @@ export const POSES: Record<PoseId, Pose> = {
       elbowR: [0, 0, 86],
     },
   },
+  // v3.13 hero (owner: "life size, not a little figure on the desk"): standing on the floor beside
+  // the desk, turned a little toward it, the near hand resting on the desk top by the laptop.
+  lean: {
+    expression: 'smile',
+    joints: {
+      body: [0, 10, 0],
+      head: [0, -8, -3],
+      shoulderL: [0, 0, 6],
+      elbowL: [0, 0, -5],
+      shoulderR: [0, 0, -50],
+      elbowR: [0, 0, 12],
+      wristR: [0, 0, -30],
+      hipL: [0, 0, 2],
+      hipR: [0, 0, -3],
+    },
+  },
+  // v3.13 welcome tour: the near hand shows the swipe (stop-motion, §10.2), forearm upright, palm out.
+  'swipe-0': {
+    expression: 'smile',
+    joints: {
+      head: [0, -8, 0],
+      shoulderL: [0, 0, 5],
+      elbowL: [0, 0, -4],
+      shoulderR: [0, 0, -14],
+      elbowR: [0, 0, -76],
+      wristR: [0, 0, -6],
+    },
+  },
+  'swipe-1': {
+    expression: 'smile',
+    joints: {
+      head: [0, -8, -2],
+      shoulderL: [0, 0, 5],
+      elbowL: [0, 0, -4],
+      shoulderR: [0, 0, -32],
+      elbowR: [0, 0, -92],
+      wristR: [0, 0, -4],
+    },
+  },
+  'swipe-2': {
+    expression: 'smile',
+    joints: {
+      head: [0, -8, -4],
+      shoulderL: [0, 0, 5],
+      elbowL: [0, 0, -4],
+      shoulderR: [0, 0, -58],
+      elbowR: [0, 0, -100],
+      wristR: [0, 0, -2],
+    },
+  },
+  'swipe-3': {
+    expression: 'smile',
+    joints: {
+      head: [0, -8, -6],
+      shoulderL: [0, 0, 5],
+      elbowL: [0, 0, -4],
+      shoulderR: [0, 0, -92],
+      elbowR: [0, 0, -78],
+      wristR: [0, 0, 2],
+    },
+  },
+  'swipe-4': {
+    expression: 'smile',
+    joints: {
+      head: [0, -8, -8],
+      shoulderL: [0, 0, 5],
+      elbowL: [0, 0, -4],
+      shoulderR: [0, 0, -128],
+      elbowR: [0, 0, -44],
+      wristR: [0, 0, 6],
+    },
+  },
   // 06 Mail Tray, stop-motion partner of `seal` (§10.2): the card held out to the visitor on his
   // right (the viewer's left, where the letterpress card lands); the other hand keeps the envelope.
   // EQbot host (v3.9): standing beside the chat, the near hand opened toward it while he answers.
@@ -576,10 +651,14 @@ export const POSES: Record<PoseId, Pose> = {
 
 /*
   Framing of the hero figurine box, in poster units. Wider than the 200-unit
-  figure so the hand on the laptop stays inside; the stage box (stage-geometry.ts)
-  and the 3D camera both use it, so poster and canvas frame identically.
+  figure so the hand on the desk stays inside, and taller so the greeting wave
+  (the far arm over his head) does too; the stage box (stage-geometry.ts) and
+  the 3D camera both use it, so poster and canvas frame identically.
 */
-export const STAGE_FRAME = { x: 0, y: 0, w: 280, h: 400 } as const;
+export const STAGE_FRAME = { x: -60, y: -50, w: 320, h: 510 } as const;
 
 /** Where the seated figure meets the notebook (poster units), for its contact shadow. */
 export const SEAT = { x: 100, y: 278, rx: 56, ry: 5 } as const;
+
+/** v3.13: where the hero figure stands on the studio floor (poster units), for its contact shadow. */
+export const GROUND = { x: 104, y: 451, rx: 72, ry: 7 } as const;

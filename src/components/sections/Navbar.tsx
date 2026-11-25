@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState, type KeyboardEvent, type MouseEvent } from 'react';
+import { useEffect, useRef, useState, type CSSProperties, type KeyboardEvent, type MouseEvent } from 'react';
 import { useHydrated } from '../../hooks/useHydrated';
 import { Menu, X, Sun, Moon } from 'lucide-react';
 import { useThemeToggle } from '../shared/Providers';
@@ -34,7 +34,7 @@ export default function Navbar() {
     if (event.key !== 'Tab' || !headerRef.current) return;
     const stops = Array.from(
       headerRef.current.querySelectorAll<HTMLElement>('a[href], button:not([disabled])'),
-    ).filter((node) => node.offsetParent !== null);
+    ).filter((node) => node.offsetParent !== null && !node.closest('[inert]'));
     const first = stops[0];
     const last = stops[stops.length - 1];
     if (event.shiftKey && document.activeElement === first) {
@@ -122,22 +122,27 @@ export default function Navbar() {
             aria-label={menuOpen ? say('Close menu', 'Tutup menu') : say('Open menu', 'Buka menu')}
             aria-expanded={menuOpen}
             aria-controls="mobile-nav"
-            className="inline-flex h-11 w-11 items-center justify-center border border-line text-ink lg:hidden"
+            data-open={menuOpen || undefined}
+            className="menu-btn h-11 w-11 border border-line text-ink lg:hidden"
           >
-            {menuOpen ? <X size={18} aria-hidden="true" /> : <Menu size={18} aria-hidden="true" />}
+            <Menu size={18} className="menu-btn-bars" aria-hidden="true" />
+            <X size={18} className="menu-btn-x" aria-hidden="true" />
           </button>
         </div>
       </div>
 
-      <div id="mobile-nav" hidden={!menuOpen} className="border-t border-line bg-paper lg:hidden">
-        <nav className="mx-auto flex max-w-6xl flex-col px-5 py-3" aria-label={say('Mobile', 'Seluler')}>
-          {links.map((section) => (
+      <button type="button" tabIndex={-1} aria-hidden="true" data-open={menuOpen || undefined} onClick={() => setMenuOpen(false)} className="mnav-scrim lg:hidden" />
+      <div id="mobile-nav" data-open={menuOpen || undefined} inert={!menuOpen} className="mnav lg:hidden">
+        <div className="mnav-inner">
+        <nav className="mx-auto flex max-w-6xl flex-col border-t border-line px-5 py-3" aria-label={say('Mobile', 'Seluler')}>
+          {links.map((section, i) => (
             <a
               key={section.id}
+              style={{ '--i': i } as CSSProperties}
               href={`#${section.id}`}
               onClick={(event) => go(event, section.id)}
               aria-current={activeId === section.id ? 'location' : undefined}
-              className={`flex min-h-12 items-center gap-3 border-b border-line text-base last:border-b-0 ${
+              className={`mnav-link flex min-h-12 items-center gap-3 border-b border-line text-base last:border-b-0 ${
                 activeId === section.id ? 'text-accent' : 'text-ink'
               }`}
             >
@@ -147,7 +152,7 @@ export default function Navbar() {
               <T en={section.en} id={section.idn} />
             </a>
           ))}
-          <div className="flex gap-2 py-4">
+          <div className="mnav-link flex gap-2 py-4" style={{ '--i': links.length } as CSSProperties}>
             <SoundToggle variant="menu" />
             <button type="button" data-sound="lamp" onClick={toggleTheme} className="h-11 flex-1 border border-line text-sm text-ink">
               <span className="dark:hidden">
@@ -162,6 +167,7 @@ export default function Navbar() {
             </button>
           </div>
         </nav>
+        </div>
       </div>
     </header>
   );

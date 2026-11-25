@@ -76,7 +76,7 @@ export async function toReadingWindow(locator: Locator) {
     // Let the sheet's entrance finish first: it may have been cued by this scroll.
     await new Promise(requestAnimationFrame);
     const sheet = el.closest('.beat') ?? el;
-    const finite = sheet.getAnimations({ subtree: true }).filter((a) => a.effect?.getTiming().iterations !== Infinity);
+    const finite = sheet.getAnimations({ subtree: true }).filter((a) => a.timeline instanceof DocumentTimeline && a.effect?.getTiming().iterations !== Infinity);
     await Promise.all(finite.map((a) => a.finished.catch(() => undefined)));
     scrollBy(0, el.getBoundingClientRect().top - innerHeight * 0.68);
   });

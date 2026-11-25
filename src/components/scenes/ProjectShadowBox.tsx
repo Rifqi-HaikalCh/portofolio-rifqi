@@ -37,7 +37,7 @@ export function ProjectShadowBox({
       <div className={`psb-layer psb-device ${mobile ? 'psb-phone' : 'psb-laptop'}`} style={{ '--d': 2 } as CSSProperties}>
         <span className="tape z-scene-front" style={{ '--tape-rotate': tilt } as CSSProperties} />
         <span className="psb-glass">
-          <Image src={image} alt="" fill sizes={sizes} className="object-cover object-top" />
+          <Image src={image} alt="" fill sizes={sizes} className="object-contain object-center" />
         </span>
         {!mobile && <span className="psb-deck" />}
       </div>
