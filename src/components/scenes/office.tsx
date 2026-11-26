@@ -20,7 +20,7 @@ export const FLOOR_Y = 590;
 
 export const night: CSSProperties = { opacity: 'var(--night-opacity)' };
 export const day: CSSProperties = { opacity: 'var(--beam-opacity)' };
-export const lineMuted = { stroke: 'var(--color-muted)', strokeWidth: 2, opacity: 0.45 } as const;
+export const lineMuted = { stroke: 'var(--ill-page-muted)', strokeWidth: 2, opacity: 0.5 } as const;
 
 /** A straight bar between two points as a polygon (lamp arms, ladder rails). */
 export function bar([x1, y1]: P, [x2, y2]: P, w: number) {

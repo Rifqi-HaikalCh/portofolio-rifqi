@@ -599,13 +599,92 @@ footer[data-studio="colophon"]::after {
   filter: drop-shadow(0 14px 10px rgb(var(--rgb-ink) / 0.25));
 }
 .eqbot-host-figure[data-act="wave"] { animation: host-hop 0.7s cubic-bezier(0.3, 1.4, 0.5, 1) 0.25s both; }
+.eqbot-host-figure[data-act="greet"] { animation: host-greet 0.52s cubic-bezier(0.3, 1.55, 0.5, 1) both; }
 .eqbot-host-figure[data-act="say"] { animation: host-say 0.6s cubic-bezier(0.3, 1.5, 0.5, 1) both; }
 .eqbot-host-figure[data-act="think"] { animation: host-think 1.8s ease-in-out infinite; }
+.eqbot-avatar.is-greeting { animation: avatar-greet 0.65s cubic-bezier(0.3, 1.5, 0.5, 1) both; }
 @keyframes host-hop {
   0% { transform: translateY(0) scaleY(1); }
   30% { transform: translateY(2%) scaleY(0.96); }
   60% { transform: translateY(-4%) scaleY(1.02); }
   100% { transform: none; }
+}
+@keyframes host-greet {
+  0% { transform: translateY(3%) scale(0.95) rotate(0deg); }
+  38% { transform: translateY(-5.5%) scale(1.04) rotate(-3.5deg); }
+  72% { transform: translateY(1%) scale(0.99) rotate(2deg); }
+  100% { transform: none; }
+}
+@keyframes avatar-greet {
+  0% { transform: scale(0.88) rotate(-8deg); }
+  50% { transform: scale(1.1) rotate(5deg); }
+  100% { transform: none; }
+}
+.eqbot-greet-pop {
+  position: absolute;
+  top: -1.6rem;
+  left: 52%;
+  translate: -50% 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 7px 12px 8px;
+  border: 1.5px solid rgb(var(--rgb-ink));
+  border-radius: 2px;
+  background: rgb(var(--rgb-paper));
+  box-shadow: 3px 4px 0 rgb(var(--rgb-ink) / 0.22);
+  rotate: -2.5deg;
+  white-space: nowrap;
+  animation: eqbot-greet-badge 0.55s cubic-bezier(0.28, 1.55, 0.5, 1) both;
+}
+.eqbot-greet-pop::after {
+  content: "";
+  position: absolute;
+  bottom: -7px;
+  left: 50%;
+  width: 11px;
+  height: 11px;
+  background: rgb(var(--rgb-paper));
+  border-right: 1.5px solid rgb(var(--rgb-ink));
+  border-bottom: 1.5px solid rgb(var(--rgb-ink));
+  translate: -50% 0;
+  rotate: 45deg;
+}
+.eqbot-greet-tag {
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-size: 13.5px;
+  font-weight: 700;
+  line-height: 1.15;
+  color: rgb(var(--rgb-ink));
+}
+.eqbot-greet-sub {
+  font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgb(var(--rgb-accent));
+}
+.eqbot-greet-spark {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  background: rgb(var(--rgb-accent));
+  rotate: 45deg;
+  animation: eqbot-spark-pop 0.9s ease-out infinite;
+}
+.eqbot-greet-spark.s1 { top: -8px; left: -12px; }
+.eqbot-greet-spark.s2 { top: -10px; right: -12px; animation-delay: 0.18s; background: var(--ill-sun); }
+.eqbot-greet-spark.s3 { bottom: 4px; right: -16px; width: 5px; height: 5px; animation-delay: 0.34s; }
+@keyframes eqbot-greet-badge {
+  0% { opacity: 0; translate: -50% 18px; scale: 0.55; rotate: 6deg; }
+  65% { opacity: 1; translate: -50% -4px; scale: 1.06; rotate: -3.5deg; }
+  100% { opacity: 1; translate: -50% 0; scale: 1; rotate: -2.5deg; }
+}
+@keyframes eqbot-spark-pop {
+  0%, 100% { scale: 0.65; opacity: 0.45; }
+  50% { scale: 1.25; opacity: 1; }
 }
 @keyframes host-say {
   0% { transform: rotate(0deg) scale(1); }
@@ -729,6 +808,9 @@ footer[data-studio="colophon"]::after {
   .eqbot-host,
   .eqbot-scrim { transition: none; }
   .eqbot-host-figure,
+  .eqbot-avatar.is-greeting,
+  .eqbot-greet-pop,
+  .eqbot-greet-spark,
   .eqbot-bot.is-new,
   .eqbot-you,
   .eqbot-thought { animation: none; }

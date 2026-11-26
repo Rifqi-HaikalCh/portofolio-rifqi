@@ -18,14 +18,16 @@ const CASE = { x: 540, y: 70, w: 760, h: 520 };
 const SHELF_1 = 300;
 const SHELF_2 = 520;
 
-/** Library brass-paper picture & reading lamp mounted above the bookcase (§1.11, §2.3 v3.25). */
+/** Library brass-paper picture & reading lamp mounted above the bookcase (§1.11, §2.3 v3.26). */
 export const ARCHIVE_LAMP: LampSpec = {
   kind: 'picture-hood',
   base: [1088, -18],
   elbow: [1048, -56],
   head: [986, -12],
-  aim: [772, 214],
-  spread: 245,
+  aim: [768, 298],
+  spread: 210,
+  plane: 'floor',
+  surfaceY: 298,
   z: -50,
 };
 
@@ -100,12 +102,12 @@ export function ArchiveStation({ binders, wide = false, only }: { binders: Binde
                 fontSize="13"
                 fontWeight="600"
                 letterSpacing="1"
-                fill="var(--color-ink)"
+                fill="var(--ill-page-ink)"
               >
                 {b.label}
               </text>
               {k.sheet({ d: circle(b.x + b.w / 2, SHELF_1 - 44, 11), fill: 'var(--ill-page)', gap: 4, edge: 1.5 })}
-              <text x={b.x + b.w / 2} y={SHELF_1 - 40} textAnchor="middle" fontFamily="var(--font-mono)" fontSize="11" fontWeight="600" fill="var(--color-accent)">
+              <text x={b.x + b.w / 2} y={SHELF_1 - 40} textAnchor="middle" fontFamily="var(--font-mono)" fontSize="11" fontWeight="600" fill="var(--ill-page-accent)">
                 {String(b.count).padStart(2, '0')}
               </text>
             </g>

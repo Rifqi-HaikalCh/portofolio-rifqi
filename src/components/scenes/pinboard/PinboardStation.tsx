@@ -22,14 +22,15 @@ const PHOTO = { x: 790, y: 96, w: 170, h: 204 };
 /** The index cards on the board (world units): the About sheets for them lift off these (beats.ts). */
 export const PIN_CARDS = [0, 1, 2, 3].map((i) => ({ x: 560 + i * 158, y: 318 + (i % 2) * 14, w: 132, h: 112, tilt: [-1.5, 1.2, -0.8, 1.5][i] }));
 
-/** Gallery gooseneck barn-door lamp mounted on the wall above the cork board (§1.11, §2.3 v3.25). */
+/** Gallery gooseneck barn-door lamp mounted on the wall above the cork board (§1.11, §2.3 v3.26). */
 export const PINBOARD_LAMP: LampSpec = {
   kind: 'barn-door',
   base: [1262, -26],
   elbow: [1206, -64],
   head: [1124, -18],
   aim: [875, 258],
-  spread: 275,
+  spread: 265,
+  plane: 'wall',
   z: -55,
 };
 
@@ -93,8 +94,9 @@ export function PinboardStation({ icons, wide = false, only }: { icons: readonly
             <path
               d={Array.from({ length: 5 }, (_, r) => Array.from({ length: 6 }, (_, c) => rect(572 + c * 27, 148 + r * 32, 20, 22)).join('')).join('')}
               fill="none"
-              stroke="var(--color-line)"
+              stroke="var(--ill-page-muted)"
               strokeWidth="1.5"
+              opacity="0.42"
             />
             <path d={rect(626, 212, 20, 22)} fill="var(--color-accent)" opacity="0.35" />
           </g>
@@ -105,7 +107,7 @@ export function PinboardStation({ icons, wide = false, only }: { icons: readonly
             {k.sheet({ d: 'M1092 168q-10-14 0-22q10 8 0 22z', fill: 'var(--color-accent)', gap: 6, edge: 1 })}
           </g>
           {[[650, 112], [1088, 120]].map(([x, y]) => (
-            <g key={x}>{k.sheet({ d: circle(x, y, 5), fill: 'var(--color-ink)', gap: 8, edge: 1.5, material: 'none' })}</g>
+            <g key={x}>{k.sheet({ d: circle(x, y, 5), fill: 'var(--ill-page-ink)', gap: 8, edge: 1.5, material: 'none' })}</g>
           ))}
         </>
       ),

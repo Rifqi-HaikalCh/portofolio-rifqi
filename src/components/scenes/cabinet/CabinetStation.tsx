@@ -28,7 +28,7 @@ export type FolderSet = { name: 'work' | 'organization'; years: string[] };
 const BASE = { x: 560, y: 150, w: 480, h: 446 };
 type Box = typeof BASE;
 
-/** Industrial articulated C-clamp boom lamp aimed into the pulled-out top drawer (§1.11, §2.3 v3.25). */
+/** Industrial articulated C-clamp boom lamp aimed into the pulled-out top drawer (§1.11, §2.3 v3.26). */
 export const cabinetLamp = (shift = 0): LampSpec => {
   const cx = BASE.x + shift;
   return {
@@ -36,8 +36,10 @@ export const cabinetLamp = (shift = 0): LampSpec => {
     base: [cx + 498, -14],
     elbow: [cx + 454, -52],
     head: [cx + 388, -6],
-    aim: [cx + 225, 258],
-    spread: 220,
+    aim: [cx + 235, 342],
+    spread: 195,
+    plane: 'floor',
+    surfaceY: 342,
     z: -55,
   };
 };
@@ -120,7 +122,7 @@ function folders(k: Kit, set: FolderSet, dx: number) {
           edge: 2.5,
         })}
         {k.sheet({ d: rect(tabX + 10, top + 3, tabW - 20, 13, 1), fill: 'var(--ill-page)', gap: 2, edge: 0.8, rim: false })}
-        <text x={tabX + tabW / 2} y={top + 13.5} textAnchor="middle" fontFamily="var(--font-mono)" fontSize="11" fontWeight="600" fill="var(--color-ink)">
+        <text x={tabX + tabW / 2} y={top + 13.5} textAnchor="middle" fontFamily="var(--font-mono)" fontSize="11" fontWeight="600" fill="var(--ill-page-ink)">
           {set.years[i]}
         </text>
       </g>,
@@ -140,7 +142,7 @@ function drawerFront(k: Kit, C: Box) {
       {k.sheet({ d: rect(C.x - 22, 350, C.w + 44, 116, 2), fill: 'var(--ill-cabinet)', gap: 70, edge: 5 })}
       {k.sheet({ d: rect(C.x + C.w / 2 - 40, 372, 80, 26, 1), fill: 'var(--ill-cabinet-shade)', gap: 3, edge: 1 })}
       {k.sheet({ d: rect(C.x + C.w / 2 - 34, 376, 68, 18, 1), fill: 'var(--ill-page)', gap: 2, edge: 0.8, rim: false })}
-      <text x={C.x + C.w / 2} y={389.5} textAnchor="middle" fontFamily="var(--font-mono)" fontSize="11" fontWeight="600" fill="var(--color-accent)">
+      <text x={C.x + C.w / 2} y={389.5} textAnchor="middle" fontFamily="var(--font-mono)" fontSize="11" fontWeight="600" fill="var(--ill-page-accent)">
         03
       </text>
       {k.sheet({ d: rect(C.x + C.w / 2 - 60, 420, 120, 16, 7), fill: 'var(--ill-cabinet-shade)', gap: 10, edge: 2 })}
@@ -169,18 +171,18 @@ function boardLayers(k: Kit, pins: PinSpec[], sets: FolderSet[]): SceneLayer[] {
           {k.sheet({ d: rect(B.x, B.y, B.w, B.h, 1), fill: 'var(--ill-page)', gap: 6, edge: 1.5 })}
           <path
             d={Array.from({ length: 7 }, (_, i) => `M${B.x + 8 + i * 46} ${B.y + 6}V${B.y + B.h - 6}`).join('') + Array.from({ length: 6 }, (_, i) => `M${B.x + 6} ${B.y + 12 + i * 49}H${B.x + B.w - 6}`).join('')}
-            stroke="var(--color-muted)"
+            stroke="var(--ill-page-muted)"
             strokeWidth="0.8"
-            opacity="0.22"
+            opacity="0.26"
           />
           {/* A rule between the two paths. */}
-          {zones.length > 1 && <path d={`M${DIVIDER_X} ${B.y + 44}V${B.y + B.h - 14}`} stroke="var(--color-muted)" strokeWidth="1.4" strokeDasharray="1 5" strokeLinecap="round" opacity="0.6" />}
+          {zones.length > 1 && <path d={`M${DIVIDER_X} ${B.y + 44}V${B.y + B.h - 14}`} stroke="var(--ill-page-muted)" strokeWidth="1.4" strokeDasharray="1 5" strokeLinecap="round" opacity="0.65" />}
           {/* Each route is printed in advance; the threads draw over it as the pins arrive. */}
           {zones.map((zone) => (
-            <path key={zone} d={routeOf(slots, zone)} fill="none" stroke="var(--color-muted)" strokeWidth="2.4" strokeDasharray="2 7" strokeLinecap="round" opacity="0.55" />
+            <path key={zone} d={routeOf(slots, zone)} fill="none" stroke="var(--ill-page-muted)" strokeWidth="2.4" strokeDasharray="2 7" strokeLinecap="round" opacity="0.6" />
           ))}
           {slots.map((s, i) => (
-            <circle key={i} cx={s.x} cy={s.y} r="23" fill="none" stroke="var(--color-muted)" strokeWidth="1.6" strokeDasharray="3 5" opacity="0.5" />
+            <circle key={i} cx={s.x} cy={s.y} r="23" fill="none" stroke="var(--ill-page-muted)" strokeWidth="1.6" strokeDasharray="3 5" opacity="0.55" />
           ))}
         </>
       ),

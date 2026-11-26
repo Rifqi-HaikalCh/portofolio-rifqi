@@ -20,14 +20,15 @@ import { STRIP, bar, figureLayer, floorLayer, wallLayer } from '../office';
 export const DRAFTING_FRAMES: Frames = { desktop: STRIP, mobile: { x: 240, y: 40, w: 1040, h: 600 } };
 const FRAMES = DRAFTING_FRAMES;
 
-/** Swing-arm pantograph drafting lamp clamped to the upper-right edge of the drafting board (§1.11, §2.3 v3.25). */
+/** Swing-arm pantograph drafting lamp clamped to the upper-right edge of the drafting board (§1.11, §2.3 v3.26). */
 export const DRAFTING_LAMP: LampSpec = {
   kind: 'drafting',
   base: [1186, 134],
   elbow: [1252, 54],
   head: [1162, 46],
   aim: [856, 336],
-  spread: 265,
+  spread: 255,
+  plane: 'wall',
   z: -40,
 };
 
@@ -106,26 +107,26 @@ export function DraftingStation({ wide = false, only }: { wide?: boolean; only?:
       art: (
         <>
           {k.sheet({ d: quad(0.08, 0.07, 0.92, 0.9), fill: 'var(--color-blueprint)', gap: 10, edge: 1.5 })}
-          <path d={grid.join('')} stroke="var(--ill-page)" strokeWidth="1" opacity="0.14" />
+          <path d={grid.join('')} stroke="var(--ill-blueprint-ink)" strokeWidth="1" opacity="0.16" />
           {tables.map((t) => (
             <g key={t.u}>
-              <path d={quad(t.u, t.v, t.u + t.w, t.v + 0.06 + t.rows * 0.05)} fill="none" stroke="var(--ill-page)" strokeWidth="2" opacity="0.85" />
-              <path d={quad(t.u, t.v, t.u + t.w, t.v + 0.06)} fill="var(--ill-page)" opacity="0.3" />
+              <path d={quad(t.u, t.v, t.u + t.w, t.v + 0.06 + t.rows * 0.05)} fill="none" stroke="var(--ill-blueprint-ink)" strokeWidth="2" opacity="0.88" />
+              <path d={quad(t.u, t.v, t.u + t.w, t.v + 0.06)} fill="var(--ill-blueprint-ink)" opacity="0.28" />
               {Array.from({ length: t.rows }, (_, r) => (
-                <path key={r} d={`M${on(t.u + 0.02, t.v + 0.09 + r * 0.05).join(' ')}L${on(t.u + t.w * (r % 2 ? 0.6 : 0.8), t.v + 0.09 + r * 0.05).join(' ')}`} stroke="var(--ill-page)" strokeWidth="1.5" opacity="0.6" />
+                <path key={r} d={`M${on(t.u + 0.02, t.v + 0.09 + r * 0.05).join(' ')}L${on(t.u + t.w * (r % 2 ? 0.6 : 0.8), t.v + 0.09 + r * 0.05).join(' ')}`} stroke="var(--ill-blueprint-ink)" strokeWidth="1.5" opacity="0.65" />
               ))}
             </g>
           ))}
           <path
             d={`M${on(0.36, 0.26).join(' ')}H${on(0.42, 0.26)[0]}V${on(0.46, 0.4)[1]}H${on(0.46, 0.4)[0]}M${on(0.66, 0.24).join(' ')}H${on(0.6, 0.24)[0]}V${on(0.6, 0.3)[1]}`}
             fill="none"
-            stroke="var(--ill-page)"
+            stroke="var(--ill-blueprint-ink)"
             strokeWidth="1.5"
             strokeDasharray="5 4"
-            opacity="0.8"
+            opacity="0.82"
           />
           {/* Title block, bottom right. */}
-          <path d={quad(0.7, 0.74, 0.9, 0.88)} fill="none" stroke="var(--ill-page)" strokeWidth="1.5" opacity="0.7" />
+          <path d={quad(0.7, 0.74, 0.9, 0.88)} fill="none" stroke="var(--ill-blueprint-ink)" strokeWidth="1.5" opacity="0.75" />
         </>
       ),
     },
@@ -148,7 +149,7 @@ export function DraftingStation({ wide = false, only }: { wide?: boolean; only?:
             art: (
               <>
                 {k.sheet({ d: quad(0.05, 0.04, 0.95, 0.93), fill: 'var(--ill-page)', gap: 14, edge: 2 })}
-                <path d={`M${on(0.12, 0.14).join(' ')}L${on(0.5, 0.14).join(' ')}M${on(0.12, 0.2).join(' ')}L${on(0.36, 0.2).join(' ')}`} stroke="var(--color-muted)" strokeWidth="3" opacity="0.4" />
+                <path d={`M${on(0.12, 0.14).join(' ')}L${on(0.5, 0.14).join(' ')}M${on(0.12, 0.2).join(' ')}L${on(0.36, 0.2).join(' ')}`} stroke="var(--ill-page-muted)" strokeWidth="3" opacity="0.5" />
               </>
             ),
           },

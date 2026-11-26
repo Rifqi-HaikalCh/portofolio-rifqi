@@ -157,18 +157,18 @@ export function planSheets(k: Kit) {
                 [0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8].map((u) => R([u, 0.11], [u, 0.86])).join('') +
                 [0.2, 0.32, 0.44, 0.56, 0.68, 0.8].map((v) => R([0.14, v], [0.86, v])).join('')
               }
-              stroke="var(--ill-page)"
+              stroke="var(--ill-blueprint-ink)"
               strokeWidth="1"
-              opacity="0.12"
+              opacity="0.16"
               fill="none"
             />
             {/* Title block with the sheet's number as tally marks. */}
-            <path d={boardQuad(0.7, 0.79, 0.86, 0.86)} fill="none" stroke="var(--ill-page)" strokeWidth="1.2" opacity="0.6" />
+            <path d={boardQuad(0.7, 0.79, 0.86, 0.86)} fill="none" stroke="var(--ill-blueprint-ink)" strokeWidth="1.2" opacity="0.65" />
             <path
               d={Array.from({ length: i + 1 }, (_, t) => R([0.72 + t * 0.016, 0.81], [0.72 + t * 0.016, 0.84])).join('')}
-              stroke="var(--ill-page)"
+              stroke="var(--ill-blueprint-ink)"
               strokeWidth="1.6"
-              opacity="0.75"
+              opacity="0.8"
             />
             <g>{draw()}</g>
           </svg>

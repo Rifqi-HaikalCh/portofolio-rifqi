@@ -31,7 +31,7 @@ export function FrameBack() {
       <path d="M300 60Q800 24 1300 60" fill="none" stroke="var(--paper-cut)" strokeWidth="1" />
       <g transform="rotate(-1.5 1460 70)">
         {k.sheet({ d: rect(1400, 44, 130, 64, 1), fill: 'var(--ill-page)', gap: 12, edge: 1.5 })}
-        <path d="M1414 62H1514M1414 76H1490M1414 90H1500" stroke="var(--color-muted)" strokeWidth="3" opacity="0.45" />
+        <path d="M1414 62H1514M1414 76H1490M1414 90H1500" stroke="var(--ill-page-muted)" strokeWidth="3" opacity="0.55" />
       </g>
           </>,
         ),

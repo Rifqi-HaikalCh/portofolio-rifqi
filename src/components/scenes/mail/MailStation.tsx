@@ -18,14 +18,16 @@ const FRAMES = MAIL_FRAMES;
 const WIN = { x: 100, y: 56, w: 320, h: 330 };
 const ENV = { x: 694, y: 362, w: 142, h: 90 };
 
-/** Classic banker's study lamp on the desk corner by the letter tray (§1.11, §2.3 v3.25). */
+/** Classic banker's study lamp on the desk corner by the letter tray (§1.11, §2.3 v3.26). */
 export const MAIL_LAMP: LampSpec = {
   kind: 'banker',
   base: [1500, 424],
   elbow: [1524, 256],
   head: [1448, 212],
-  aim: [1135, 426],
-  spread: 230,
+  aim: [1205, 434],
+  spread: 165,
+  plane: 'floor',
+  surfaceY: 434,
   z: -30,
   desktopOnly: true,
 };
@@ -88,7 +90,7 @@ export function MailStation({ wide = false, only }: { wide?: boolean; only?: rea
         <>
           {/* The letterpress card, flat on the desk. */}
           {k.sheet({ d: poly([[440, 436], [600, 436], [610, 462], [432, 462]]), fill: 'var(--ill-page)', gap: 6, edge: 2 })}
-          <path d="M462 446H560M466 454H528" stroke="var(--color-muted)" strokeWidth="2" opacity="0.5" />
+          <path d="M462 446H560M466 454H528" stroke="var(--ill-page-muted)" strokeWidth="2" opacity="0.55" />
           {/* The envelope in his hands: flap, stamp, and the postmark (after a real send). */}
           {k.sheet({ d: rect(ENV.x, ENV.y, ENV.w, ENV.h, 2), fill: 'var(--ill-envelope)', gap: 40, edge: 2 })}
           {/* The flap: hinged on the envelope's top edge; the card beat folds it open (scale 1 → −1). */}
@@ -97,8 +99,8 @@ export function MailStation({ wide = false, only }: { wide?: boolean; only?: rea
           </g>
           {k.sheet({ d: rect(ENV.x + ENV.w - 40, ENV.y + 52, 28, 30, 1), fill: 'var(--color-accent)', gap: 3, edge: 1, rim: false })}
           <g className="scene-postmark">
-            <path d={`${circle(ENV.x + ENV.w - 34, ENV.y + 64, 20)}`} fill="none" stroke="var(--color-ink)" strokeWidth="2.5" opacity="0.75" />
-            <path d={`M${ENV.x + ENV.w - 66} ${ENV.y + 58}h52M${ENV.x + ENV.w - 66} ${ENV.y + 66}h52M${ENV.x + ENV.w - 66} ${ENV.y + 74}h52`} stroke="var(--color-ink)" strokeWidth="2" opacity="0.6" />
+            <path d={`${circle(ENV.x + ENV.w - 34, ENV.y + 64, 20)}`} fill="none" stroke="var(--ill-page-ink)" strokeWidth="2.5" opacity="0.75" />
+            <path d={`M${ENV.x + ENV.w - 66} ${ENV.y + 58}h52M${ENV.x + ENV.w - 66} ${ENV.y + 66}h52M${ENV.x + ENV.w - 66} ${ENV.y + 74}h52`} stroke="var(--ill-page-ink)" strokeWidth="2" opacity="0.6" />
           </g>
         </>
       ),

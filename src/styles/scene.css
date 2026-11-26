@@ -153,14 +153,66 @@
   .station-sheet { margin-top: -4.5rem; }
 }
 
-/* Desk lamp: the head tilts and the light pool fades when the lamp turns on. */
+/* Desk lamp: the light pool fades when the lamp turns on; the head stays strictly aligned with its beam (v3.26). */
 .lamp-head {
   transform-box: fill-box;
   transform-origin: 68% 36%;
   transition: transform var(--dur-ui) var(--ease-paper);
 }
-.dark .lamp-head { transform: rotate(-6deg); }
 .lamp-glow { transition: opacity var(--dur-ui) var(--ease-paper); }
+
+/*
+  v3.26 — Floating dust motes inside the light beam and glowing fireflies around the lamp (owner).
+  Compositor-friendly transform & opacity keyframes; paused under prefers-reduced-motion.
+*/
+.lamp-mote {
+  fill: var(--ill-page);
+  opacity: var(--a, 0.45);
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.lamp-firefly {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .lamp-mote {
+    animation: lamp-mote-drift var(--dur, 6.5s) ease-in-out var(--delay, 0s) infinite alternate;
+  }
+  .lamp-firefly {
+    animation: lamp-firefly-orbit var(--dur, 5.2s) ease-in-out var(--delay, 0s) infinite alternate;
+  }
+}
+@keyframes lamp-mote-drift {
+  0% {
+    transform: translate(0, 0) scale(0.85);
+    opacity: calc(var(--a, 0.45) * 0.45);
+  }
+  50% {
+    opacity: var(--a, 0.45);
+  }
+  100% {
+    transform: translate(var(--dx, 8px), var(--dy, -14px)) scale(1.15);
+    opacity: calc(var(--a, 0.45) * 0.25);
+  }
+}
+@keyframes lamp-firefly-orbit {
+  0% {
+    transform: translate(0, 0) scale(0.78);
+    opacity: 0.35;
+  }
+  35% {
+    opacity: 0.95;
+  }
+  65% {
+    transform: translate(calc(var(--dx, 16px) * 0.6), calc(var(--dy, -12px) * -0.45)) scale(1.12);
+    opacity: 0.55;
+  }
+  100% {
+    transform: translate(var(--dx, 16px), var(--dy, -12px)) scale(0.92);
+    opacity: 1;
+  }
+}
 
 .desk-lamp:focus-visible {
   outline: 2px solid var(--color-accent);
@@ -444,12 +496,12 @@
 #services .plan svg { display: block; width: 100%; height: 100%; overflow: visible; }
 #services .plan .ink {
   fill: none;
-  stroke: var(--ill-page);
+  stroke: var(--ill-blueprint-ink);
   stroke-linecap: round;
   stroke-linejoin: round;
   stroke-dasharray: 1 1;
   stroke-dashoffset: var(--ink);
-  opacity: 0.92;
+  opacity: 0.94;
   transition: stroke-dashoffset 1.5s var(--ease-paper) 0.4s;
 }
 #services .plan .ink-dash { stroke-dasharray: 0.012 0.012; opacity: calc(0.7 - var(--ink) * 0.7); transition: opacity 0.6s var(--ease-paper) 1.2s; }
@@ -608,7 +660,7 @@
       transform-origin: 50% 100% !important;
       transform: perspective(calc(1312 * var(--zs))) rotateX(30deg) !important;
       font-size: clamp(13px, calc(18 * var(--zs)), 36px);
-      color: var(--ill-page);
+      color: var(--ill-blueprint-ink);
     }
     #services.chapter[data-cue]:not([data-stacked]) .beat:not([data-state="in"]) > .beat-sheet.svc-sheet {
       opacity: 0 !important;
@@ -621,7 +673,7 @@
     #services.chapter[data-cue]:not([data-stacked]) .svc-sheet::after { display: none !important; }
     #services[data-cue]:not([data-stacked]) .svc-sheet > p:first-child {
       font-size: 0.66em;
-      color: color-mix(in oklab, var(--ill-page) 72%, transparent);
+      color: color-mix(in oklab, var(--ill-blueprint-ink) 80%, transparent);
     }
     #services[data-cue]:not([data-stacked]) .svc-sheet .stamp { color: var(--ill-sun); }
     #services[data-cue]:not([data-stacked]) .svc-sheet h3 {
@@ -629,21 +681,21 @@
       font-family: var(--font-fraunces), Georgia, serif;
       font-size: 1.75em;
       line-height: 1.08;
-      color: var(--ill-page);
+      color: var(--ill-blueprint-ink);
     }
     #services[data-cue]:not([data-stacked]) .svc-sheet h3 + p {
       margin-top: 0.5em;
       font-size: 0.9em;
       line-height: 1.4;
-      color: color-mix(in oklab, var(--ill-page) 86%, transparent);
+      color: color-mix(in oklab, var(--ill-blueprint-ink) 90%, transparent);
     }
     #services[data-cue]:not([data-stacked]) .svc-sheet ul {
       margin-top: 0.75em;
       padding-top: 0.6em;
       gap: 0.15em;
       font-size: 0.84em;
-      color: var(--ill-page);
-      border-color: color-mix(in oklab, var(--ill-page) 40%, transparent);
+      color: var(--ill-blueprint-ink);
+      border-color: color-mix(in oklab, var(--ill-blueprint-ink) 45%, transparent);
     }
     #services[data-cue]:not([data-stacked]) .svc-sheet li { grid-template-columns: 1.1em 1fr; }
     #services[data-cue]:not([data-stacked]) .svc-sheet li > span { color: var(--ill-sun); }

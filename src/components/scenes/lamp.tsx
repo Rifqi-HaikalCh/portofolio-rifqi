@@ -1,43 +1,31 @@
+import type { CSSProperties } from 'react';
 import { circle, ellipse, poly, rect, type Kit } from '../../lib/paper-kit';
 import type { Act } from './chapter/spec';
 import type { Rect, SceneLayer } from './PaperScene';
 import { bar } from './office';
 
 /*
-  Station-tailored multi-layered 2D/3D papercraft lamps (DesignRules.md §1.11, §2.3 v3.25).
+  Station-tailored multi-layered 2D/3D papercraft lamps & realistic volumetric lighting
+  (DesignRules.md §1.11, §2.3 v3.26).
 
-  Every station in the studio has a physical paper lamp fixture tailored to its architecture:
-  - `architect` (`01` The Desk): counterpoise twin-arm desk lamp with 3-layer stacked plinth,
-    tension spring, counterweight, and 4-plane conical hood.
-  - `barn-door` (`02` The Pinboard): gallery wall gooseneck lamp with stepped wood/brass pattera,
-    arched multi-segment neck with cable clips, and 4-plane barn-door shade with angled side flaps.
-  - `clamp` (`03` The Filing Cabinet): industrial articulated C-clamp boom lamp with thumbscrew,
-    twin-strut arm, heat-fin cap, and faceted trapezoidal bell aimed into the open drawer.
-  - `drafting` (`04` The Drafting Table): swing-arm pantograph drafting lamp clamped to the board
-    edge with parallel bars, oxide tension spring, and wide asymmetric visor hood.
-  - `track-can` (`04b` The Shadow-Box Gallery): ceiling track theatrical spotlight with track rail,
-    sliding adapter box, U-yoke bracket, deep cylindrical stage barrel, and glare-control louvers
-    aimed at Rifqi's character on the ladder.
-  - `picture-hood` (`05` The Archive Shelf): library brass-paper picture & reading lamp mounted
-    above the bookcase with swan-neck tube and wide 3-layer horizontal trough reflector hood.
-  - `banker` (`06` The Mail Tray): classic banker's study lamp on the desk corner with stepped
-    plinth, twin uprights, folded cased-paper shade, and pull-chain with paper bead.
-
-  3D Illusion from 2D Paper Layers:
-  - Two scene layers at distinct analytic camera depths (`lamp` at `z: -60 … -10`, `lamp-light` at
-    `z: 10`), so camera pointer-look (`--k`) and tilt handoffs produce real parallax between the
-    fixture, the target surface, and the light cone in front.
-  - Inside `lamp`: 6–9 stacked paper planes at progressive `gap` depths (10 → 64):
-    1. Mount / plinth (`k.stack` / `k.sheet`)
-    2. Articulated twin parallel bars / gooseneck + tension springs & cable clips
-    3. Rear neck collar / heat-vent fin (`gap: 42`)
-    4. Outer hood / cowl (`gap: 58`, `edge: 4.5`)
-    5. Side fold facet (`--paper-fold`) for 3D cylindrical/conical volume
-    6. Recessed inner reflector liner (`--ill-page`, `gap: 8`)
-    7. Warm bulb core (`--ill-bulb`) + die-cut cross-baffle louvers / barn-door flaps (`gap: 64`)
-  - Inside `lamp-light`: 3-tier directional paper beam (`outer penumbra`, `mid fold cone`, `inner
-    core ray`) originating strictly from the head's open aperture (`frontL → frontR`) along the
-    `head → aim` vector, plus a 3-tier concentric target pool at `poolAt`.
+  Realistic Perspective Lighting & Surface Termination:
+  - Instead of ending along a tilted perpendicular line (`farL → farR`) or floating a pool in mid-air,
+    each lamp beam terminates on the actual receiving surface plane (`plane: 'floor' | 'wall'`, plus
+    `surfaceY`):
+    * `'floor'` (horizontal surface — desk top, drawer mouth, shelf, floor under the ladder): the
+      left and right rays from the hood aperture (`frontL`, `frontR`) are intersected with the
+      horizontal surface plane, so the light cone lands flat on the surface and casts a perspective-
+      foreshortened elliptical pool (`rx = hitSpan`, `ry = hitSpan * 0.16`) right where the beam
+      meets the plane.
+    * `'wall'` (vertical surface — pinboard, drafting board): the rays terminate smoothly into a
+      soft radial wall/board wash (`radialGradient`) with no misplaced horizontal rings.
+  - Soft Gaussian blur (`url(#pk-blur-3)` and `url(#pk-blur-2)` from `PaperDefs`), radial bulb
+    bloom at the hood mouth, and soft lateral feathering eliminate hard geometric triangle cutouts
+    while keeping the warm papercraft shadow-box atmosphere.
+  - Ambient Dust Motes & Fireflies:
+    * 14 deterministic dust specks (`lamp-mote`) drift slowly inside the illuminated cone.
+    * 5 warm fireflies (`lamp-firefly`) with soft glowing halos orbit gently around the lamp and
+      upper beam.
 */
 
 export type P = readonly [number, number];
@@ -58,6 +46,10 @@ export type LampSpec = {
   head: P;
   aim: P;
   spread: number;
+  /** Receiving surface orientation: `'floor'` for horizontal surfaces (desk, floor, drawer, shelf), `'wall'` for vertical/angled boards. */
+  plane?: 'floor' | 'wall';
+  /** Exact world Y of the receiving horizontal plane (defaults to `aim[1]`). */
+  surfaceY?: number;
   id?: string;
   z?: number;
   desktopOnly?: boolean;
@@ -72,6 +64,9 @@ const add = (a: P, b: P, k = 1): P => [
   Math.round((a[0] + b[0] * k) * 10) / 10,
   Math.round((a[1] + b[1] * k) * 10) / 10,
 ];
+
+const lerp = (a: number, b: number, t: number) => Math.round((a + (b - a) * t) * 10) / 10;
+const lerpP = (a: P, b: P, t: number): P => [lerp(a[0], b[0], t), lerp(a[1], b[1], t)];
 
 const boxOf = (pts: P[], pad: number): Rect => {
   const xs = pts.map((p) => p[0]);
@@ -88,6 +83,15 @@ const boxOf = (pts: P[], pad: number): Rect => {
 
 const pct = (v: number) => `${Math.round(v * 1000) / 10}%`;
 
+/** Seeded deterministic PRNG (0..1) so server and client SVG match without hydration drift. */
+function seeded(seed: number) {
+  let s = seed >>> 0;
+  return () => {
+    s = (s * 1664525 + 1013904223) >>> 0;
+    return (s & 0xfffffff) / 0xfffffff;
+  };
+}
+
 /** Zig-zag paper tension spring between two arm points. */
 function springPath(a: P, b: P, coils = 6, amp = 5) {
   const dir = unit([b[0] - a[0], b[1] - a[1]]);
@@ -103,9 +107,19 @@ function springPath(a: P, b: P, coils = 6, amp = 5) {
   return pts.join('');
 }
 
-/** Compute the exact open aperture geometry, bounding boxes, and pivot origins for a lamp spec. */
+/** Project a ray `p0 -> p1` onto a horizontal line `y = targetY`. */
+function projectToY(p0: P, p1: P, targetY: number): P {
+  const dy = p1[1] - p0[1];
+  if (Math.abs(dy) < 1) return [p1[0], targetY];
+  const t = Math.max(0.2, (targetY - p0[1]) / dy);
+  return [Math.round((p0[0] + (p1[0] - p0[0]) * t) * 10) / 10, targetY];
+}
+
+/** Compute the exact open aperture geometry, perspective beam termination, bounding boxes, and pivot origins. */
 export function lampGeometry(o: LampSpec) {
   const { kind, base, elbow, head, aim, spread } = o;
+  const plane = o.plane ?? (kind === 'barn-door' || kind === 'drafting' ? 'wall' : 'floor');
+  const surfaceY = o.surfaceY ?? aim[1];
   const d = unit([aim[0] - head[0], aim[1] - head[1]]);
   const n: P = [-d[1], d[0]];
 
@@ -130,18 +144,35 @@ export function lampGeometry(o: LampSpec) {
   const flapR = add(add(frontR, d, cfg.flap), n, -cfg.flap * 0.55);
 
   const dist = Math.hypot(aim[0] - head[0], aim[1] - head[1]);
-  const reach = dist * 1.1;
-  const far = add(head, d, reach);
-  const farL = add(far, n, spread);
-  const farR = add(far, n, -spread);
-  const midL = add(far, n, spread * 0.68);
-  const midR = add(far, n, -spread * 0.68);
-  const coreL = add(far, n, spread * 0.34);
-  const coreR = add(far, n, -spread * 0.34);
-  const poolAt = add(head, d, dist * 0.98);
+  const rawFar = add(head, d, dist);
+  const rawFarL = add(rawFar, n, spread);
+  const rawFarR = add(rawFar, n, -spread);
+
+  // Perspective surface termination: floor/desk beams flatten onto `y = surfaceY`; wall/board beams fan over the surface.
+  const farL: P = plane === 'floor' ? projectToY(frontL, rawFarL, surfaceY) : add(rawFarL, d, dist * 0.08);
+  const farR: P = plane === 'floor' ? projectToY(frontR, rawFarR, surfaceY) : add(rawFarR, d, dist * 0.08);
+  const poolAt: P = plane === 'floor' ? [Math.round((farL[0] + farR[0]) / 2), surfaceY] : aim;
+  const hitRx = plane === 'floor' ? Math.max(spread * 0.85, Math.round(Math.abs(farR[0] - farL[0]) * 0.54)) : spread * 0.92;
+  const hitRy = plane === 'floor' ? Math.max(18, Math.round(hitRx * 0.14)) : Math.round(spread * 0.52);
+
+  const midL = lerpP(farL, farR, 0.16);
+  const midR = lerpP(farL, farR, 0.84);
+  const coreL = lerpP(farL, farR, 0.3);
+  const coreR = lerpP(farL, farR, 0.7);
 
   const lampBox = boxOf([base, elbow, head, backL, backR, frontL, frontR, flapL, flapR], 54);
-  const lightBox = boxOf([frontL, frontR, farL, farR, poolAt], Math.round(spread * 0.36 + 28));
+  const lightBox = boxOf(
+    [
+      frontL,
+      frontR,
+      farL,
+      farR,
+      poolAt,
+      [poolAt[0] - hitRx * 1.15, poolAt[1] - hitRy * 1.2],
+      [poolAt[0] + hitRx * 1.15, poolAt[1] + hitRy * 1.2],
+    ],
+    44,
+  );
 
   // Pivot for synchronized rotation of head and beam (elbow for wall/clamp lamps, head for desk lamps).
   const pivot = kind === 'architect' || kind === 'banker' ? head : elbow;
@@ -152,6 +183,8 @@ export function lampGeometry(o: LampSpec) {
   const hitRect: Rect = boxOf([base, elbow, head, frontL, frontR], 24);
 
   return {
+    plane,
+    surfaceY,
     d,
     n,
     cfg,
@@ -163,7 +196,6 @@ export function lampGeometry(o: LampSpec) {
     frontR,
     flapL,
     flapR,
-    far,
     farL,
     farR,
     midL,
@@ -171,6 +203,8 @@ export function lampGeometry(o: LampSpec) {
     coreL,
     coreR,
     poolAt,
+    hitRx,
+    hitRy,
     lampBox,
     lightBox,
     lampOrigin,
@@ -180,7 +214,7 @@ export function lampGeometry(o: LampSpec) {
 }
 
 /**
- * Synchronized beat acts for a station's lamp and its 3-tier beam: both rotate about the exact
+ * Synchronized beat acts for a station's lamp and its volumetric beam: both rotate about the exact
  * same world pivot (`lampOrigin` / `lightOrigin`), so the light cone never detaches from the hood.
  */
 export function lampActs(o: LampSpec, deg: number, mode: Act['mode'] = 'in'): Act[] {
@@ -194,10 +228,33 @@ export function lampActs(o: LampSpec, deg: number, mode: Act['mode'] = 'in'): Ac
 }
 
 export function lampLayers(k: Kit, o: LampSpec): SceneLayer[] {
-  const { kind, base, elbow, head, spread } = o;
+  const { kind, base, elbow, head } = o;
   const id = o.id ?? 'lamp';
   const g = lampGeometry(o);
-  const { d, n, backC, backL, backR, faceMid, frontL, frontR, flapL, flapR, far, farL, farR, midL, midR, coreL, coreR, poolAt, lampBox, lightBox } = g;
+  const {
+    plane,
+    d,
+    n,
+    backC,
+    backL,
+    backR,
+    faceMid,
+    frontL,
+    frontR,
+    flapL,
+    flapR,
+    farL,
+    farR,
+    midL,
+    midR,
+    coreL,
+    coreR,
+    poolAt,
+    hitRx,
+    hitRy,
+    lampBox,
+    lightBox,
+  } = g;
 
   // Shared helper vectors for twin parallel arm struts.
   const arm1 = unit([elbow[0] - base[0], elbow[1] - base[1]]);
@@ -218,7 +275,6 @@ export function lampLayers(k: Kit, o: LampSpec): SceneLayer[] {
   const renderMountAndArm = () => {
     switch (kind) {
       case 'architect': {
-        // Weighted 3-layer stepped desk plinth + twin counterpoise pantograph arms + counterweight + spring.
         const cw = add(elbow, arm2, -26);
         return (
           <>
@@ -236,15 +292,11 @@ export function lampLayers(k: Kit, o: LampSpec): SceneLayer[] {
               edge: 4,
             })}
             {k.sheet({ d: rect(base[0] - 24, base[1] - 20, 48, 16, 2), fill: 'var(--ill-cabinet-shade)', gap: 24, edge: 3 })}
-            {/* Power switch tab on plinth */}
             <rect x={base[0] + 22} y={base[1] + 1} width="16" height="7" rx="1" fill="var(--color-accent)" />
-            {/* Lower twin parallel bars + tension spring */}
             {k.sheet({ d: bar(add(base, norm1, 7), add(elbow, norm1, 6), 8), fill: 'var(--ill-lamp)', gap: 48, edge: 2.5 })}
             {k.sheet({ d: bar(add(base, norm1, -7), add(elbow, norm1, -6), 7), fill: 'var(--ill-cabinet-shade)', gap: 42, edge: 2 })}
             <path d={springPath(add(base, arm1, 28), add(elbow, arm1, -24), 7, 5)} fill="none" stroke="var(--color-accent)" strokeWidth="2.2" />
-            {/* Counterweight cylinder behind elbow */}
             {k.sheet({ d: bar(elbow, cw, 14), fill: 'var(--ill-bezel)', gap: 44, edge: 3 })}
-            {/* Upper twin parallel bars */}
             {k.sheet({ d: bar(add(elbow, norm2, 6), add(head, norm2, 5), 8), fill: 'var(--ill-lamp)', gap: 52, edge: 2.5 })}
             {k.sheet({ d: bar(add(elbow, norm2, -6), add(head, norm2, -5), 6), fill: 'var(--ill-cabinet-shade)', gap: 46, edge: 2 })}
             {k.sheet({ d: circle(elbow[0], elbow[1], 13), fill: 'var(--ill-lamp)', gap: 54, edge: 3 })}
@@ -254,17 +306,14 @@ export function lampLayers(k: Kit, o: LampSpec): SceneLayer[] {
       }
 
       case 'barn-door': {
-        // Gallery wall pattera (wood backplate + brass collar) + arched gooseneck with paper cord clips.
         const mid1 = add(add(base, elbow, 0.5), norm1, 10);
         return (
           <>
             {k.stack({ d: circle(base[0], base[1], 22), fill: 'var(--color-wood-dark)', layers: 2, step: 3, gap: 18, edge: 3.5, material: 'wood' })}
             {k.sheet({ d: circle(base[0], base[1], 13), fill: 'var(--ill-folder)', gap: 26, edge: 2.5 })}
-            {/* Gooseneck segmented tubes */}
             {k.sheet({ d: bar(base, mid1, 12), fill: 'var(--ill-lamp)', gap: 46, edge: 2.5 })}
             {k.sheet({ d: bar(mid1, elbow, 11), fill: 'var(--ill-lamp)', gap: 50, edge: 2.5 })}
             {k.sheet({ d: bar(elbow, head, 10), fill: 'var(--ill-lamp)', gap: 52, edge: 2.5 })}
-            {/* Decorative brass-paper cable clips along the neck */}
             {k.sheet({ d: circle(mid1[0], mid1[1], 7.5), fill: 'var(--ill-folder)', gap: 48, edge: 2 })}
             {k.sheet({ d: circle(elbow[0], elbow[1], 9.5), fill: 'var(--ill-lamp)', gap: 52, edge: 2.5 })}
             {k.sheet({ d: circle(elbow[0], elbow[1], 4), fill: 'var(--color-accent)', gap: 4, edge: 1, rim: false })}
@@ -273,15 +322,12 @@ export function lampLayers(k: Kit, o: LampSpec): SceneLayer[] {
       }
 
       case 'clamp': {
-        // Industrial C-clamp bracket + thumbscrew spindle + twin-strut boom arm + tension spring.
         return (
           <>
-            {/* C-clamp body & thumbscrew */}
             {k.sheet({ d: rect(base[0] - 18, base[1] - 16, 36, 32, 3), fill: 'var(--ill-cabinet-shade)', gap: 18, edge: 3.5 })}
             {k.sheet({ d: rect(base[0] - 12, base[1] + 12, 24, 14, 2), fill: 'var(--ill-lamp)', gap: 22, edge: 2.5 })}
             {k.sheet({ d: bar([base[0], base[1] + 22], [base[0], base[1] + 38], 5), fill: 'var(--ill-folder)', gap: 20, edge: 1.5 })}
             {k.sheet({ d: rect(base[0] - 11, base[1] + 35, 22, 7, 2), fill: 'var(--color-accent)', gap: 24, edge: 2 })}
-            {/* Twin boom struts */}
             {k.sheet({ d: bar(add(base, norm1, 5), add(elbow, norm1, 5), 8), fill: 'var(--ill-lamp)', gap: 48, edge: 2.5 })}
             {k.sheet({ d: bar(add(base, norm1, -5), add(elbow, norm1, -5), 6), fill: 'var(--ill-cabinet-shade)', gap: 44, edge: 2 })}
             <path d={springPath(add(base, arm1, 14), add(elbow, arm1, -14), 6, 4.5)} fill="none" stroke="var(--ill-folder)" strokeWidth="2" />
@@ -294,7 +340,6 @@ export function lampLayers(k: Kit, o: LampSpec): SceneLayer[] {
       }
 
       case 'drafting': {
-        // Clamp mount on the drafting board edge + pantograph parallel bars + oxide spring.
         return (
           <>
             {k.stack({ d: rect(base[0] - 18, base[1] - 12, 36, 26, 2), fill: 'var(--ill-lamp)', layers: 2, step: 3, gap: 14, edge: 3.5 })}
@@ -311,18 +356,14 @@ export function lampLayers(k: Kit, o: LampSpec): SceneLayer[] {
       }
 
       case 'track-can': {
-        // Overhead gallery track rail + sliding adapter box + U-yoke gimbal bracket.
         const yokeL = add(head, n, 19);
         const yokeR = add(head, n, -19);
         return (
           <>
-            {/* Ceiling track rail segment */}
             {k.sheet({ d: rect(base[0] - 64, base[1] - 10, 128, 16, 2), fill: 'var(--ill-bezel)', gap: 22, edge: 3.5 })}
             <path d={`M${base[0] - 56} ${base[1] - 2}H${base[0] + 56}`} stroke="var(--paper-cut)" strokeWidth="1.5" />
-            {/* Track adapter box */}
             {k.sheet({ d: rect(base[0] - 20, base[1] - 4, 40, 22, 2), fill: 'var(--ill-lamp)', gap: 32, edge: 3 })}
             <rect x={base[0] - 12} y={base[1] + 5} width="8" height="4" fill="var(--color-accent)" />
-            {/* Stem & U-yoke arms */}
             {k.sheet({ d: bar(base, elbow, 11), fill: 'var(--ill-lamp)', gap: 44, edge: 2.5 })}
             {k.sheet({ d: bar(elbow, yokeL, 7), fill: 'var(--ill-cabinet-shade)', gap: 48, edge: 2 })}
             {k.sheet({ d: bar(elbow, yokeR, 7), fill: 'var(--ill-cabinet-shade)', gap: 48, edge: 2 })}
@@ -332,12 +373,10 @@ export function lampLayers(k: Kit, o: LampSpec): SceneLayer[] {
       }
 
       case 'picture-hood': {
-        // Library stepped brass-paper wall bracket + swan-neck curved arm + under-brace.
         return (
           <>
             {k.stack({ d: rect(base[0] - 22, base[1] - 16, 44, 30, 3), fill: 'var(--color-wood-dark)', layers: 2, step: 3, gap: 18, edge: 3.5, material: 'wood' })}
             {k.sheet({ d: rect(base[0] - 14, base[1] - 10, 28, 18, 2), fill: 'var(--ill-folder)', gap: 26, edge: 2.5 })}
-            {/* Swan-neck arm & decorative scroll brace */}
             {k.sheet({ d: bar(base, elbow, 11), fill: 'var(--ill-folder)', gap: 48, edge: 2.5 })}
             {k.sheet({ d: bar(add(base, [0, 12], 1), add(elbow, head, 0.45), 6), fill: 'var(--ill-kraft-dark)', gap: 40, edge: 2 })}
             {k.sheet({ d: bar(elbow, head, 10), fill: 'var(--ill-folder)', gap: 52, edge: 2.5 })}
@@ -347,7 +386,6 @@ export function lampLayers(k: Kit, o: LampSpec): SceneLayer[] {
       }
 
       case 'banker': {
-        // Classic banker's study lamp: 3-tier plinth + twin brass-paper uprights + crossbar.
         return (
           <>
             {k.stack({
@@ -365,12 +403,10 @@ export function lampLayers(k: Kit, o: LampSpec): SceneLayer[] {
               material: 'wood',
             })}
             {k.sheet({ d: rect(base[0] - 32, base[1] - 18, 64, 12, 2), fill: 'var(--ill-folder)', gap: 22, edge: 2.5 })}
-            {/* Twin vertical column bars */}
             {k.sheet({ d: bar([base[0] - 8, base[1] - 14], [elbow[0] - 7, elbow[1]], 7), fill: 'var(--ill-folder)', gap: 46, edge: 2.5 })}
             {k.sheet({ d: bar([base[0] + 8, base[1] - 14], [elbow[0] + 7, elbow[1]], 7), fill: 'var(--ill-kraft-dark)', gap: 42, edge: 2 })}
             {k.sheet({ d: bar(elbow, head, 9), fill: 'var(--ill-folder)', gap: 50, edge: 2.5 })}
             {k.sheet({ d: circle(elbow[0], elbow[1], 10), fill: 'var(--ill-folder)', gap: 52, edge: 2.5 })}
-            {/* Pull-chain hanging from the socket with a paper bead */}
             <path d={`M${head[0] + 10} ${head[1] + 18}V${head[1] + 64}`} stroke="var(--ill-folder)" strokeWidth="2" strokeDasharray="3 2" />
             {k.sheet({ d: circle(head[0] + 10, head[1] + 68, 5), fill: 'var(--color-accent)', gap: 18, edge: 1.5 })}
           </>
@@ -379,7 +415,7 @@ export function lampLayers(k: Kit, o: LampSpec): SceneLayer[] {
     }
   };
 
-  /* ---- 2. Multi-Layered 3D-Illusion Lamp Head (Depth planes 4–7) ---- */
+  /* ---- 2. Multi-Layered 3D-Illusion Lamp Head (Depth planes 4–8) ---- */
   const renderHead = () => {
     const collarBack = add(backC, d, -12);
     const collarL = add(collarBack, n, g.cfg.backW * 0.68);
@@ -393,7 +429,7 @@ export function lampLayers(k: Kit, o: LampSpec): SceneLayer[] {
 
     return (
       <g className="lamp-head">
-        {/* Plane 4: Rear socket collar / heat- dissipation cap (deepest head plane) */}
+        {/* Plane 4: Rear socket collar / heat-dissipation cap */}
         {k.sheet({
           d: poly([collarL, collarR, backR, backL]),
           fill: 'var(--ill-bezel)',
@@ -401,7 +437,7 @@ export function lampLayers(k: Kit, o: LampSpec): SceneLayer[] {
           edge: 3,
         })}
 
-        {/* Plane 5: Recessed inner reflector wall (visible inside the open aperture) */}
+        {/* Plane 5: Recessed inner reflector wall */}
         {k.sheet({
           d: poly([deepInL, deepInR, rimInR, rimInL]),
           fill: 'var(--ill-page)',
@@ -423,7 +459,7 @@ export function lampLayers(k: Kit, o: LampSpec): SceneLayer[] {
           fill="var(--ill-bulb)"
         />
 
-        {/* Plane 7: Main outer hood cowl (casts deep shadow, thick cut edge) */}
+        {/* Plane 7: Main outer hood cowl */}
         {k.sheet({
           d: poly([backL, backR, frontR, frontL]),
           fill: hoodFill,
@@ -436,17 +472,15 @@ export function lampLayers(k: Kit, o: LampSpec): SceneLayer[] {
           points={[backC, backR, frontR, faceMid].map((p) => p.join(',')).join(' ')}
           fill="var(--paper-fold)"
         />
-        {/* Lit cut ridge along the centerline of the hood */}
         <path
           d={`M${backC[0]} ${backC[1]}L${faceMid[0]} ${faceMid[1]}`}
           stroke="var(--paper-cut)"
           strokeWidth="1.3"
         />
 
-        {/* Plane 8: Fixture-specific front hardware (barn doors, glare louvers, visor lip, or brass valence) */}
+        {/* Plane 8: Fixture-specific front hardware */}
         {kind === 'barn-door' && (
           <>
-            {/* Two angled paper barn-door flaps framing the beam */}
             {k.sheet({
               d: poly([frontL, add(frontL, n, -7), add(flapL, n, -5), flapL]),
               fill: 'var(--ill-bezel)',
@@ -464,7 +498,6 @@ export function lampLayers(k: Kit, o: LampSpec): SceneLayer[] {
 
         {kind === 'track-can' && (
           <>
-            {/* Theatrical snoot ring & die-cut cross-baffle louvers */}
             {k.sheet({
               d: poly([frontL, frontR, add(frontR, d, 10), add(frontL, d, 10)]),
               fill: 'var(--ill-bezel)',
@@ -488,7 +521,6 @@ export function lampLayers(k: Kit, o: LampSpec): SceneLayer[] {
         )}
 
         {(kind === 'drafting' || kind === 'clamp' || kind === 'architect') && (
-          /* Asymmetric angled visor lip along the top/outer rim */
           <>
             {k.sheet({
               d: poly([frontL, add(faceMid, n, 4), add(add(faceMid, d, 8), n, 2), flapL]),
@@ -500,15 +532,9 @@ export function lampLayers(k: Kit, o: LampSpec): SceneLayer[] {
         )}
 
         {(kind === 'picture-hood' || kind === 'banker') && (
-          /* Stepped brass-paper valence band across the hood brow */
           <>
             {k.sheet({
-              d: poly([
-                add(frontL, d, -8),
-                add(frontR, d, -8),
-                frontR,
-                frontL,
-              ]),
+              d: poly([add(frontL, d, -8), add(frontR, d, -8), frontR, frontL]),
               fill: kind === 'banker' ? 'var(--ill-folder)' : 'var(--color-accent)',
               gap: 62,
               edge: 2.5,
@@ -516,7 +542,6 @@ export function lampLayers(k: Kit, o: LampSpec): SceneLayer[] {
           </>
         )}
 
-        {/* Pivot knuckle rivet with oxide accent cap */}
         {k.sheet({ d: circle(head[0], head[1], 8.5), fill: 'var(--ill-lamp)', gap: 62, edge: 2.5 })}
         {k.sheet({ d: circle(head[0], head[1], 3.8), fill: 'var(--color-accent)', gap: 4, edge: 1, rim: false })}
       </g>
@@ -537,13 +562,57 @@ export function lampLayers(k: Kit, o: LampSpec): SceneLayer[] {
     ),
   };
 
-  /* ---- 3. Three-Tier Layered Paper Light Cone & Target Pool (`z: 10`) ---- */
+  /* ---- 3. Realistic Volumetric Light Refraction, Perspective Surface Pool, Dust & Fireflies (`z: 10`) ---- */
   const gidOuter = `${id}-beam-outer`;
+  const gidMid = `${id}-beam-mid`;
   const gidCore = `${id}-beam-core`;
-  const midInL = add(frontL, n, -g.cfg.frontW * 0.22);
-  const midInR = add(frontR, n, g.cfg.frontW * 0.22);
-  const coreInL = add(frontL, n, -g.cfg.frontW * 0.48);
-  const coreInR = add(frontR, n, g.cfg.frontW * 0.48);
+  const gidBloom = `${id}-bulb-bloom`;
+  const gidPool = `${id}-surface-pool`;
+  const gidFly = `${id}-firefly-glow`;
+
+  const midInL = lerpP(frontL, frontR, 0.14);
+  const midInR = lerpP(frontL, frontR, 0.86);
+  const coreInL = lerpP(frontL, frontR, 0.28);
+  const coreInR = lerpP(frontL, frontR, 0.72);
+
+  // Curved quadratic paths for the cone bottoms so the beam wraps naturally into the elliptical surface pool.
+  const bend = plane === 'floor' ? Math.round(hitRy * 0.65) : Math.round(hitRy * 0.25);
+  const conePath = (inL: P, inR: P, outR: P, outL: P) => {
+    const midOut: P = [Math.round((outL[0] + outR[0]) / 2), Math.round((outL[1] + outR[1]) / 2 + bend)];
+    return `M${inL[0]} ${inL[1]}L${inR[0]} ${inR[1]}L${outR[0]} ${outR[1]}Q${midOut[0]} ${midOut[1]} ${outL[0]} ${outL[1]}Z`;
+  };
+
+  // Deterministic dust motes inside the beam cone & fireflies around the lamp.
+  const rand = seeded(Math.round(head[0] * 31 + head[1] * 17 + poolAt[0] * 13));
+  const motes = Array.from({ length: 14 }, (_, i) => {
+    // Concentrate motes in the upper and middle 80% of the beam where light is brightest.
+    const u = Math.round((0.12 + rand() * 0.76) * 100) / 100;
+    const v = Math.round((0.2 + rand() * 0.6) * 100) / 100;
+    const rowL = lerpP(frontL, farL, u);
+    const rowR = lerpP(frontR, farR, u);
+    const pos = lerpP(rowL, rowR, v);
+    const r = Math.round((1.1 + rand() * 1.5) * 10) / 10;
+    const dx = Math.round((rand() * 18 - 9) * 10) / 10;
+    const dy = Math.round((-8 - rand() * 14) * 10) / 10;
+    const dur = Math.round((5.2 + rand() * 4.5) * 10) / 10;
+    const delay = Math.round((i * 0.42 + rand() * 1.2) * 10) / 10;
+    const alpha = Math.round((0.32 + (1 - u) * 0.45) * 100) / 100;
+    return { pos, r, dx, dy, dur, delay, alpha };
+  });
+
+  const fireflies = Array.from({ length: 5 }, (_, i) => {
+    const u = Math.round((0.06 + rand() * 0.58) * 100) / 100;
+    const v = Math.round((0.04 + rand() * 0.92) * 100) / 100;
+    const rowL = lerpP(add(frontL, n, 24), add(farL, n, 38), u);
+    const rowR = lerpP(add(frontR, n, -24), add(farR, n, -38), u);
+    const pos = lerpP(rowL, rowR, v);
+    const r = Math.round((2.2 + rand() * 1.1) * 10) / 10;
+    const dx = Math.round((rand() > 0.5 ? 1 : -1) * (14 + rand() * 18));
+    const dy = Math.round((rand() > 0.5 ? 1 : -1) * (10 + rand() * 14));
+    const dur = Math.round((4.4 + rand() * 3.2) * 10) / 10;
+    const delay = Math.round((i * 0.75 + rand() * 0.8) * 10) / 10;
+    return { pos, r, dx, dy, dur, delay };
+  });
 
   const light: SceneLayer = {
     id: `${id}-light`,
@@ -555,36 +624,123 @@ export function lampLayers(k: Kit, o: LampSpec): SceneLayer[] {
     art: (
       <g style={{ opacity: 'var(--glow-opacity)' }}>
         <defs>
-          {/* Outer & mid paper light wash */}
-          <linearGradient id={gidOuter} gradientUnits="userSpaceOnUse" x1={faceMid[0]} y1={faceMid[1]} x2={far[0]} y2={far[1]}>
+          {/* Soft inverse-square falloff for outer penumbra */}
+          <linearGradient id={gidOuter} gradientUnits="userSpaceOnUse" x1={faceMid[0]} y1={faceMid[1]} x2={poolAt[0]} y2={poolAt[1]}>
+            <stop offset="0" stopColor="var(--ill-bulb)" stopOpacity="0.28" />
+            <stop offset="0.28" stopColor="var(--ill-bulb)" stopOpacity="0.16" />
+            <stop offset="0.68" stopColor="var(--ill-bulb)" stopOpacity="0.06" />
+            <stop offset="1" stopColor="var(--ill-bulb)" stopOpacity="0.01" />
+          </linearGradient>
+          {/* Mid volumetric scatter cone */}
+          <linearGradient id={gidMid} gradientUnits="userSpaceOnUse" x1={faceMid[0]} y1={faceMid[1]} x2={poolAt[0]} y2={poolAt[1]}>
             <stop offset="0" stopColor="var(--ill-bulb)" stopOpacity="0.34" />
-            <stop offset="0.52" stopColor="var(--ill-bulb)" stopOpacity="0.15" />
+            <stop offset="0.38" stopColor="var(--ill-bulb)" stopOpacity="0.18" />
+            <stop offset="0.78" stopColor="var(--ill-bulb)" stopOpacity="0.06" />
             <stop offset="1" stopColor="var(--ill-bulb)" stopOpacity="0" />
           </linearGradient>
-          {/* Inner high-intensity core ray */}
+          {/* High-intensity warm core ray near the bulb */}
           <linearGradient id={gidCore} gradientUnits="userSpaceOnUse" x1={faceMid[0]} y1={faceMid[1]} x2={poolAt[0]} y2={poolAt[1]}>
-            <stop offset="0" stopColor="var(--ill-bulb)" stopOpacity="0.46" />
-            <stop offset="0.6" stopColor="var(--ill-bulb)" stopOpacity="0.18" />
+            <stop offset="0" stopColor="var(--ill-page)" stopOpacity="0.48" />
+            <stop offset="0.22" stopColor="var(--ill-bulb)" stopOpacity="0.3" />
+            <stop offset="0.62" stopColor="var(--ill-bulb)" stopOpacity="0.09" />
             <stop offset="1" stopColor="var(--ill-bulb)" stopOpacity="0" />
           </linearGradient>
+          {/* Warm radial bloom right at the lamp aperture */}
+          <radialGradient id={gidBloom} cx="50%" cy="50%" r="50%">
+            <stop offset="0" stopColor="var(--ill-page)" stopOpacity="0.65" />
+            <stop offset="0.38" stopColor="var(--ill-bulb)" stopOpacity="0.32" />
+            <stop offset="1" stopColor="var(--ill-bulb)" stopOpacity="0" />
+          </radialGradient>
+          {/* Soft radial pool on the receiving surface (floor or board) */}
+          <radialGradient id={gidPool} cx="50%" cy="50%" r="50%">
+            <stop offset="0" stopColor="var(--ill-page)" stopOpacity="0.26" />
+            <stop offset="0.32" stopColor="var(--ill-bulb)" stopOpacity="0.18" />
+            <stop offset="0.68" stopColor="var(--ill-bulb)" stopOpacity="0.07" />
+            <stop offset="1" stopColor="var(--ill-bulb)" stopOpacity="0" />
+          </radialGradient>
+          {/* Firefly radial halo */}
+          <radialGradient id={gidFly} cx="50%" cy="50%" r="50%">
+            <stop offset="0" stopColor="var(--ill-page)" stopOpacity="0.95" />
+            <stop offset="0.3" stopColor="var(--ill-bulb)" stopOpacity="0.55" />
+            <stop offset="1" stopColor="var(--ill-bulb)" stopOpacity="0" />
+          </radialGradient>
         </defs>
-        {/* Tier 1: Wide outer penumbra cone */}
-        <polygon points={[frontL, frontR, farR, farL].map((p) => p.join(',')).join(' ')} fill={`url(#${gidOuter})`} />
-        {/* Tier 2: Mid directional paper-fold cone */}
-        <polygon points={[midInL, midInR, midR, midL].map((p) => p.join(',')).join(' ')} fill={`url(#${gidOuter})`} />
-        {/* Tier 3: Bright inner core ray aimed directly at the target */}
-        <polygon points={[coreInL, coreInR, coreR, coreL].map((p) => p.join(',')).join(' ')} fill={`url(#${gidCore})`} />
-        {/* Paper-cut crease lines along the mid cone edges for tactile papercraft authenticity */}
+
+        {/* 1. Blurred Volumetric Cones (feGaussianBlur from PaperDefs removes harsh triangle edges) */}
+        <path d={conePath(frontL, frontR, farR, farL)} fill={`url(#${gidOuter})`} filter="url(#pk-blur-3)" />
+        <path d={conePath(midInL, midInR, midR, midL)} fill={`url(#${gidMid})`} filter="url(#pk-blur-2)" />
+        <path d={conePath(coreInL, coreInR, coreR, coreL)} fill={`url(#${gidCore})`} filter="url(#pk-blur-2)" />
+
+        {/* Subtle inner papercraft light-crease whisper near the hood */}
         <path
-          d={`M${midInL[0]} ${midInL[1]}L${midL[0]} ${midL[1]}M${midInR[0]} ${midInR[1]}L${midR[0]} ${midR[1]}`}
+          d={`M${midInL[0]} ${midInL[1]}L${lerpP(midInL, midL, 0.55).join(' ')}M${midInR[0]} ${midInR[1]}L${lerpP(midInR, midR, 0.55).join(' ')}`}
           stroke="var(--ill-bulb)"
           strokeWidth="1"
-          opacity="0.16"
+          opacity="0.11"
+          filter="url(#pk-blur-1)"
         />
-        {/* 3-tier concentric elliptical light pool on the target surface */}
-        <path d={ellipse(poolAt[0], poolAt[1], spread * 0.94, spread * 0.27)} fill="var(--ill-bulb)" opacity="0.06" />
-        <path d={ellipse(poolAt[0], poolAt[1], spread * 0.62, spread * 0.18)} fill="var(--ill-bulb)" opacity="0.08" />
-        <path d={ellipse(poolAt[0], poolAt[1], spread * 0.32, spread * 0.09)} fill="var(--ill-bulb)" opacity="0.11" />
+
+        {/* 2. Aperture Bulb Bloom Halo at the hood opening */}
+        <path
+          d={ellipse(faceMid[0], faceMid[1], g.cfg.frontW * 1.45, g.cfg.frontW * 0.95)}
+          fill={`url(#${gidBloom})`}
+          filter="url(#pk-blur-2)"
+        />
+
+        {/* 3. Perspective Surface Pool at the exact termination plane */}
+        <path
+          d={ellipse(poolAt[0], poolAt[1], hitRx * 1.08, hitRy * 1.15)}
+          fill={`url(#${gidPool})`}
+          filter="url(#pk-blur-2)"
+        />
+        <path
+          d={ellipse(poolAt[0], poolAt[1], hitRx * 0.58, hitRy * 0.6)}
+          fill={`url(#${gidPool})`}
+          filter="url(#pk-blur-1)"
+        />
+
+        {/* 4. Floating Dust Motes inside the light beam */}
+        <g className="lamp-dust">
+          {motes.map((m, i) => (
+            <circle
+              key={`mote-${i}`}
+              cx={m.pos[0]}
+              cy={m.pos[1]}
+              r={m.r}
+              className="lamp-mote"
+              style={
+                {
+                  '--dx': `${m.dx}px`,
+                  '--dy': `${m.dy}px`,
+                  '--dur': `${m.dur}s`,
+                  '--delay': `-${m.delay}s`,
+                  '--a': m.alpha,
+                } as CSSProperties
+              }
+            />
+          ))}
+        </g>
+
+        {/* 5. Glowing Fireflies orbiting around the lamp and upper cone */}
+        <g className="lamp-fireflies">
+          {fireflies.map((f, i) => (
+            <g
+              key={`fly-${i}`}
+              className="lamp-firefly"
+              style={
+                {
+                  '--dx': `${f.dx}px`,
+                  '--dy': `${f.dy}px`,
+                  '--dur': `${f.dur}s`,
+                  '--delay': `-${f.delay}s`,
+                } as CSSProperties
+              }
+            >
+              <circle cx={f.pos[0]} cy={f.pos[1]} r={f.r * 5.2} fill={`url(#${gidFly})`} />
+              <circle cx={f.pos[0]} cy={f.pos[1]} r={f.r * 0.72} fill="var(--ill-page)" />
+            </g>
+          ))}
+        </g>
       </g>
     ),
   };

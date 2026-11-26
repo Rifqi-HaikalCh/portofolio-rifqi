@@ -37,17 +37,18 @@ function EqbotFace({ expression = 'neutral' }: { expression?: Expression }) {
 
 function downloadCv() {
   const link = document.createElement('a');
-  link.href = '/assets/CV Rifqi Haikal Chairiansyah.pdf';
-  link.download = 'CV Rifqi Haikal Chairiansyah.pdf';
+  link.href = '/assets/Rifqi Haikal Chairiansyah-CV.pdf';
+  link.download = 'Rifqi Haikal Chairiansyah-CV.pdf';
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
 }
 
 function openPlace(place: EqbotPlace) {
-  // 'projects' is the Selected work shelf inside #services.
   scrollToStudioSection(place);
 }
+
+type GreetBeat = 0 | 1 | 2 | 3;
 
 export function EqbotCompanion() {
   const { t } = useLanguage();
@@ -64,6 +65,7 @@ export function EqbotCompanion() {
   const [nodeId, setNodeId] = useState('menu');
   const [waiting, setWaiting] = useState(false);
   const [notice, setNotice] = useState(false);
+  const [greetBeat, setGreetBeat] = useState<GreetBeat>(0);
   const seen = useRef(new Set<string>());
   const offeredPlace = useRef(new Set<string>());
   const answers = useRef(0);
@@ -71,9 +73,11 @@ export function EqbotCompanion() {
   const saidThorough = useRef(false);
   const saidRestless = useRef(false);
   const opened = useRef(false);
+  const introDone = useRef(false);
   const chose = useRef(false);
   const leftEarly = useRef(false);
   const waitTimer = useRef(0);
+  const introTimer = useRef(0);
   const logRef = useRef<HTMLDivElement>(null);
   const launchRef = useRef<HTMLButtonElement>(null);
   const tabAvatarRef = useRef<HTMLSpanElement>(null);
@@ -84,6 +88,7 @@ export function EqbotCompanion() {
     const hide = window.setTimeout(() => setNotice(false), 8600);
     return () => {
       window.clearTimeout(waitTimer.current);
+      window.clearTimeout(introTimer.current);
       window.clearTimeout(show);
       window.clearTimeout(hide);
     };
@@ -163,11 +168,41 @@ export function EqbotCompanion() {
     ];
   };
 
+  // Playful multi-beat greeting choreography when the chat opens.
+  useEffect(() => {
+    if ((phase !== 'grow' && phase !== 'open') || reducedMotion()) return undefined;
+    const t0 = window.setTimeout(() => setGreetBeat(1), 40);
+    const t1 = window.setTimeout(() => setGreetBeat(2), 520);
+    const t2 = window.setTimeout(() => setGreetBeat(3), 1020);
+    const t3 = window.setTimeout(() => setGreetBeat(0), 2240);
+    return () => {
+      window.clearTimeout(t0);
+      window.clearTimeout(t1);
+      window.clearTimeout(t2);
+      window.clearTimeout(t3);
+    };
+  }, [phase]);
+
   const openChat = () => {
     if (phase !== 'shut') return;
     setNotice(false);
     if (log.length === 0) {
-      setLog([greeting()]);
+      const firstGreeting = greeting();
+      if (!introDone.current) {
+        introDone.current = true;
+        if (reducedMotion()) {
+          setLog([firstGreeting, { who: 'bot', ...eqbotCopy.introFollow }]);
+        } else {
+          setLog([firstGreeting]);
+          window.clearTimeout(introTimer.current);
+          introTimer.current = window.setTimeout(() => {
+            setLog((prev) => (prev.length === 1 ? [...prev, { who: 'bot', ...eqbotCopy.introFollow }] : prev));
+            play('pop');
+          }, 760);
+        }
+      } else {
+        setLog([firstGreeting]);
+      }
       setNodeId('menu');
     }
     setPhase(reducedMotion() ? 'open' : 'fly');
@@ -175,6 +210,8 @@ export function EqbotCompanion() {
 
   const closeToTab = () => {
     if (phase === 'shut' || phase === 'shrink') return;
+    window.clearTimeout(introTimer.current);
+    setGreetBeat(0);
     if (!chose.current) {
       leftEarly.current = true;
       setLog([]);
@@ -269,13 +306,35 @@ export function EqbotCompanion() {
   const panelOpen = phase === 'grow' || phase === 'open';
   const lastTurn = log[log.length - 1];
   const mood: Expression =
-    phase === 'shrink' ? 'wink' : waiting ? 'thinking' : log.length > 1 && lastTurn?.who === 'bot' ? 'smile' : 'neutral';
+    phase === 'shrink'
+      ? 'wink'
+      : greetBeat === 2
+        ? 'wink'
+        : greetBeat === 1 || greetBeat === 3
+          ? 'smile'
+          : waiting
+            ? 'thinking'
+            : log.length > 1 && lastTurn?.who === 'bot'
+              ? 'smile'
+              : 'neutral';
   const showFace = phase !== 'fly';
-  // The host beside the chat (v3.9): waves hello, thinks while "typing", opens a hand toward the answer.
+  // The host beside the chat (v3.9 + v3.29): playful stop-motion greeting sequence on open, thinks while "typing", opens a hand toward the answer.
   const botTurns = log.filter((turn) => turn.who === 'bot').length;
   const lastBot = log.reduce((at, turn, index) => (turn.who === 'bot' ? index : at), -1);
-  const hostPose: PoseId = waiting ? 'think' : log.length <= 1 ? 'wave' : lastTurn?.who === 'bot' ? 'explain' : 'stand';
-  const hostAct = waiting ? 'think' : log.length <= 1 ? 'wave' : 'say';
+  const hostPose: PoseId = waiting
+    ? 'think'
+    : greetBeat === 1
+      ? 'wave'
+      : greetBeat === 2
+        ? 'explain'
+        : greetBeat === 3
+          ? 'wave'
+          : log.length <= 2
+            ? 'wave'
+            : lastTurn?.who === 'bot'
+              ? 'explain'
+              : 'stand';
+  const hostAct = waiting ? 'think' : greetBeat > 0 ? 'greet' : log.length <= 2 ? 'wave' : 'say';
 
   if (!ready) return null;
 
@@ -313,7 +372,7 @@ export function EqbotCompanion() {
                 <i className="eqbot-presence" />
               </span>
               <span className="eqbot-tab-copy">
-                <span className="eqbot-name">EQBot</span>
+                <span className="eqbot-name">{text(eqbotCopy.headerName.en, eqbotCopy.headerName.idn)}</span>
                 <span className="eqbot-status">{text(eqbotCopy.ongoing.en, eqbotCopy.ongoing.idn)}</span>
               </span>
             </button>
@@ -333,9 +392,18 @@ export function EqbotCompanion() {
       )}
       {phase !== 'shut' && (
         <div className={`eqbot-host${panelOpen ? ' is-open' : ''}`} aria-hidden="true">
-          <div key={`${hostAct}-${botTurns}`} className="eqbot-host-figure" data-act={hostAct}>
-            <RifqiFigurine crop="wide" pose={hostPose} expression={mood === 'wink' ? 'wink' : undefined} className="h-full w-full" />
+          <div key={`${hostAct}-${botTurns}-${greetBeat}`} className="eqbot-host-figure" data-act={hostAct}>
+            <RifqiFigurine crop="wide" pose={hostPose} expression={mood === 'wink' ? 'wink' : mood === 'smile' ? 'smile' : undefined} className="h-full w-full" />
           </div>
+          {greetBeat > 0 && !waiting && (
+            <div className="eqbot-greet-pop">
+              <span className="eqbot-greet-tag">{text(eqbotCopy.greetingBubbleBadge.en, eqbotCopy.greetingBubbleBadge.idn)}</span>
+              <span className="eqbot-greet-sub">{text(eqbotCopy.greetingSubBadge.en, eqbotCopy.greetingSubBadge.idn)}</span>
+              <i className="eqbot-greet-spark s1" />
+              <i className="eqbot-greet-spark s2" />
+              <i className="eqbot-greet-spark s3" />
+            </div>
+          )}
           {waiting && (
             <span className="eqbot-thought">
               <span />
@@ -349,7 +417,7 @@ export function EqbotCompanion() {
         <div className={`eqbot-panel${panelOpen ? ' is-open' : ''}`} role="dialog" aria-label="EQbot">
           <div className="eqbot-panel-bar">
             <div className="eqbot-id">
-              <span className="eqbot-avatar" ref={avatarRef}>
+              <span className={`eqbot-avatar${greetBeat > 0 ? ' is-greeting' : ''}`} ref={avatarRef}>
                 {showFace && (
                   <span className="eqbot-face-clip">
                     <EqbotFace expression={mood} />
@@ -358,7 +426,7 @@ export function EqbotCompanion() {
                 <i className="eqbot-presence" />
               </span>
               <span className="eqbot-tab-copy">
-                <span className="eqbot-name">EQBot</span>
+                <span className="eqbot-name">{text(eqbotCopy.headerName.en, eqbotCopy.headerName.idn)}</span>
                 <span className="eqbot-status">{text(eqbotCopy.online.en, eqbotCopy.online.idn)}</span>
               </span>
             </div>

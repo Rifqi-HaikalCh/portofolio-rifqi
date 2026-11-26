@@ -1,4 +1,4 @@
-import type { CSSProperties, ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { air, circle, cut, ellipse, paperKit, poly, rect } from '../../../lib/paper-kit';
 import { DeskLamp } from '../../scene/DeskLamp';
 import { DeskSpeaker } from '../../scene/DeskSpeaker';
@@ -29,8 +29,10 @@ export const DESK_LAMP_SPEC: LampSpec = {
   base: [1380, 634],
   elbow: [1328, 422],
   head: [1206, 286],
-  aim: [830, 610],
-  spread: 260,
+  aim: [860, 654],
+  spread: 250,
+  plane: 'floor',
+  surfaceY: 654,
   id: 'desk-lamp',
   z: -10,
 };
@@ -230,7 +232,7 @@ export function DeskStation({
             <g key={label}>
               {k.sheet({ d: rect(80, 756 + i * 58, 360, 50, 2), fill: 'var(--color-wood)', gap: 8, edge: 3, material: 'wood' })}
               {k.sheet({ d: rect(230, 773 + i * 58, 60, 16, 1), fill: 'var(--ill-page)', gap: 4, edge: 1 })}
-              <text x="260" y={785 + i * 58} textAnchor="middle" fontFamily="var(--font-mono)" fontSize="12" fontWeight="600" fill="var(--color-accent)">
+              <text x="260" y={785 + i * 58} textAnchor="middle" fontFamily="var(--font-mono)" fontSize="12" fontWeight="600" fill="var(--ill-page-accent)">
                 {label}
               </text>
             </g>
@@ -307,6 +309,7 @@ export function DeskStation({
           {k.sheet({ d: poly([[716, 636], [884, 636], [892, 648], [708, 648]]), fill: 'var(--ill-laptop-shade)', edge: 0, gap: 0, rim: true, material: 'none' })}
         </>
       ),
+      html: <LaptopScreenUI screen={screen} className="scene-desktop-only pointer-events-auto absolute inset-x-[15.12%] top-[7.5%] h-[67.14%] w-[69.77%]" />,
     },
     { ...lampLightLayer, id: 'lamp-light' },
     {
@@ -381,23 +384,10 @@ export function DeskStation({
     },
   ];
 
-  const screenVars = {
-    '--screen-x': `${(SCREEN.x / STAGE.width) * 100}%`,
-    '--screen-y': `${(SCREEN.y / STAGE.height) * 100}%`,
-    '--screen-w': `${(SCREEN.w / STAGE.width) * 100}%`,
-    '--screen-h': `${(SCREEN.h / STAGE.height) * 100}%`,
-  } as CSSProperties;
-
   return (
     <ShadowBox
       className={className}
-      style={screenVars}
-      after={
-        <LaptopScreenUI
-          screen={screen}
-          className="relative z-scene-mid mt-4 md:absolute md:top-(--screen-y) md:left-(--screen-x) md:mt-0 md:h-(--screen-h) md:w-(--screen-w)"
-        />
-      }
+      after={<LaptopScreenUI screen={screen} className="relative z-scene-mid mt-4 md:hidden" />}
     >
       <PaperScene layers={layers} frames={FRAMES} label="desk">
         <DeskLamp style={frameVars(LAMP, FRAMES)} />

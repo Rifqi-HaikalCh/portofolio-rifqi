@@ -21,14 +21,16 @@ export const GALLERY_FRAMES: Frames = { desktop: STRIP, mobile: { x: 380, y: 0, 
 const FRAMES = GALLERY_FRAMES;
 const RAIL_Y = 46;
 
-/** Ceiling track theatrical spotlight with glare louvers aimed at Rifqi's character on the ladder (§1.11, §2.3 v3.25). */
+/** Ceiling track theatrical spotlight with glare louvers aimed through Rifqi's character onto the floor below the ladder (§1.11, §2.3 v3.26). */
 export const GALLERY_LAMP: LampSpec = {
   kind: 'track-can',
-  base: [1096, -32],
-  elbow: [1054, -68],
-  head: [992, -22],
-  aim: [812, 236],
+  base: [1086, -32],
+  elbow: [1046, -68],
+  head: [988, -22],
+  aim: [810, 602],
   spread: 195,
+  plane: 'floor',
+  surfaceY: 602,
   z: -50,
 };
 
