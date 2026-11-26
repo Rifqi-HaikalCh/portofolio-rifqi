@@ -1,5 +1,6 @@
 import type { ChapterSpec } from '../chapter/spec';
-import { ARCHIVE_FRAMES } from './ArchiveStation';
+import { lampActs } from '../lamp';
+import { ARCHIVE_FRAMES, ARCHIVE_LAMP } from './ArchiveStation';
 
 /*
   Chapter `05` — The Archive Shelf (DesignRules.md §4.5 `05`). Arrives by the
@@ -24,6 +25,7 @@ export const ARCHIVE_CHAPTER: ChapterSpec = {
       origin: 'rise',
       acts: [
         { target: { layer: 'binders' }, moved: 'translateY(-2.4cqw) scale(1.04)', mode: 'in' },
+        ...lampActs(ARCHIVE_LAMP, -6),
         // W3: then each binder is pulled half out and pushed back, one after another, left to right.
         ...[0, 1, 2, 3].map((i) => ({
           target: { obj: `binder-${i}` },

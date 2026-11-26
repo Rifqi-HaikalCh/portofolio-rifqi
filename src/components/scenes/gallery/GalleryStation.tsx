@@ -1,9 +1,11 @@
 import { circle, paperKit, poly, rect, type Kit } from '../../../lib/paper-kit';
 import type { ProjectMotif } from '../../../types';
+import { DeskLamp } from '../../scene/DeskLamp';
 import { motifNodes } from './motifs';
-import type { Frames, SceneLayer } from '../PaperScene';
+import { frameVars, type Frames, type SceneLayer } from '../PaperScene';
 import { Station } from '../Station';
 import { STRIP, bar, figureLayer, floorLayer, wallLayer } from '../office';
+import { lampGeometry, lampLayers, type LampSpec } from '../lamp';
 
 /*
   Station `04` — The Shadow-Box Gallery (DesignRules.md §2.2, §4.5 `04`
@@ -18,6 +20,17 @@ import { STRIP, bar, figureLayer, floorLayer, wallLayer } from '../office';
 export const GALLERY_FRAMES: Frames = { desktop: STRIP, mobile: { x: 380, y: 0, w: 900, h: 640 } };
 const FRAMES = GALLERY_FRAMES;
 const RAIL_Y = 46;
+
+/** Ceiling track theatrical spotlight with glare louvers aimed at Rifqi's character on the ladder (§1.11, §2.3 v3.25). */
+export const GALLERY_LAMP: LampSpec = {
+  kind: 'track-can',
+  base: [1096, -32],
+  elbow: [1054, -68],
+  head: [992, -22],
+  aim: [812, 236],
+  spread: 195,
+  z: -50,
+};
 
 /** One hung frame: wires to the rail, frame lip, backing, two inner sheets. */
 function hungFrame(k: Kit, x: number, y: number, w: number, h: number, fills: [string, string]) {
@@ -138,6 +151,8 @@ export function GalleryStation({ wide = false, only, hung }: { wide?: boolean; o
         </>
       ),
     },
+    // v3.25: ceiling track theatrical spotlight above and right of the figure, its louvered barrel and 3-tier beam aimed at him.
+    ...lampLayers(k, GALLERY_LAMP),
     figureLayer('hang', 690, 83, 330),
     ...(wide ? [{ ...figureLayer('reach', 690, 83, 330, 0, 'figure-alt'), className: 'station-fig pose-alt' }] : []),
     {
@@ -180,5 +195,9 @@ export function GalleryStation({ wide = false, only, hung }: { wide?: boolean; o
     css += `${on}[data-beat="wire-${s}"] :is([data-obj="work-${2 * s}"],[data-obj="work-${2 * s + 1}"]){animation:work-swing 1.6s var(--ease-leaf) 0.7s both}`;
   }
 
-  return <Station name="gallery" layers={layers} frames={FRAMES} light="midday" css={segments ? `@media (prefers-reduced-motion: no-preference) and (min-width: 768px) and (min-height: 561px){${css}}` : undefined} only={only} />;
+  return (
+    <Station name="gallery" layers={layers} frames={FRAMES} light="midday" css={segments ? `@media (prefers-reduced-motion: no-preference) and (min-width: 768px) and (min-height: 561px){${css}}` : undefined} only={only}>
+      <DeskLamp pointerOnly className="scene-desktop-only" style={frameVars(lampGeometry(GALLERY_LAMP).hitRect, FRAMES)} />
+    </Station>
+  );
 }

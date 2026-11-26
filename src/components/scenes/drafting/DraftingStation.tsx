@@ -1,15 +1,17 @@
-import { circle, ellipse, paperKit, poly, rect } from '../../../lib/paper-kit';
+import { ellipse, paperKit, poly, rect } from '../../../lib/paper-kit';
+import { DeskLamp } from '../../scene/DeskLamp';
 import { BL, BR, TL, TR, on, quad } from './board';
 import { PLAN_BOX, planCss, planSheets } from './plans';
-import type { Frames, SceneLayer } from '../PaperScene';
+import { frameVars, type Frames, type SceneLayer } from '../PaperScene';
 import { Station } from '../Station';
+import { lampGeometry, lampLayers, type LampSpec } from '../lamp';
 import { STRIP, bar, figureLayer, floorLayer, wallLayer } from '../office';
 
 /*
   Station `04` — The Drafting Table (DesignRules.md §2.2, §4.5 `04` services),
   midday. An angled board under a clamp lamp; on it a blueprint of a small
   data model (three tables and their keys: the SQL Server work the section
-  describes), a ruler, a set square and the pencil in the figure's hand.
+  describes), a ruler and a set square.
   As the chapter stage (v3.7) a pile of six service blueprints lands on the
   board: each `svc-*` beat tucks the front sheet under the pile and the next
   drawing inks itself in (`plans.tsx`).
@@ -17,6 +19,17 @@ import { STRIP, bar, figureLayer, floorLayer, wallLayer } from '../office';
 
 export const DRAFTING_FRAMES: Frames = { desktop: STRIP, mobile: { x: 240, y: 40, w: 1040, h: 600 } };
 const FRAMES = DRAFTING_FRAMES;
+
+/** Swing-arm pantograph drafting lamp clamped to the upper-right edge of the drafting board (§1.11, §2.3 v3.25). */
+export const DRAFTING_LAMP: LampSpec = {
+  kind: 'drafting',
+  base: [1186, 134],
+  elbow: [1252, 54],
+  head: [1162, 46],
+  aim: [856, 336],
+  spread: 265,
+  z: -40,
+};
 
 /*
   As a chapter stage (§4.5): `wide` bleeds the wall and floor for the fullscreen
@@ -154,42 +167,12 @@ export function DraftingStation({ wide = false, only }: { wide?: boolean; only?:
           </g>
           {/* v3.7: the set square sits on the board's right edge, clear of the drawing. */}
           {k.sheet({ d: `${poly([[1170, 310], [1170, 450], [1282, 450]])}${poly([[1188, 358], [1188, 432], [1248, 432]])}`, fillRule: 'evenodd', fill: 'var(--color-sage)', gap: 12, edge: 2, opacity: 0.92 })}
-          <g transform="rotate(28 620 330)">
-            {k.sheet({ d: rect(560, 324, 120, 9, 1), fill: 'var(--ill-note)', gap: 14, edge: 1.5 })}
-            {k.sheet({ d: poly([[680, 324], [696, 328.5], [680, 333]]), fill: 'var(--ill-skin)', gap: 6, edge: 0.8 })}
-          </g>
+          {/* v3.19 (owner): the pencil is gone; it lay across the blueprint text. */}
         </>
       ),
     },
-    {
-      id: 'lamp',
-      band: 'mid',
-      z: -40,
-      box: { x: 1080, y: 20, w: 240, h: 200 },
-      art: (
-        <>
-          {k.sheet({ d: rect(1172, 126, 28, 22, 2), fill: 'var(--ill-lamp)', gap: 10, edge: 3 })}
-          {k.sheet({ d: bar([1186, 128], [1250, 54], 12), fill: 'var(--ill-lamp)', gap: 50, edge: 2.5 })}
-          {k.sheet({ d: bar([1250, 54], [1150, 40], 10), fill: 'var(--ill-lamp)', gap: 50, edge: 2.5 })}
-          {k.sheet({ d: circle(1250, 54, 10), fill: 'var(--ill-lamp)', gap: 40, edge: 2 })}
-          {k.sheet({ d: poly([[1100, 50], [1160, 26], [1176, 82], [1112, 106]]), fill: 'var(--ill-lamp)', gap: 50, edge: 4 })}
-          <polygon points="1104,104 1176,82 1180,92 1108,114" fill="var(--ill-bulb)" />
-        </>
-      ),
-    },
-    {
-      id: 'lamp-light',
-      band: 'mid',
-      z: 10,
-      box: { x: 560, y: 80, w: 640, h: 400 },
-      className: 'lamp-glow',
-      art: (
-        <g style={{ opacity: 'var(--glow-opacity)' }}>
-          <polygon points="1106,108 1180,88 1060,460 640,460" fill="var(--ill-lamp-light)" />
-          <path d={ellipse(860, 400, 260, 60)} fill="var(--ill-bulb)" opacity="0.08" />
-        </g>
-      ),
-    },
+    // v3.25: pantograph drafting lamp clamped to the board edge, with asymmetric visor hood and 3-tier beam onto the blueprint.
+    ...lampLayers(k, DRAFTING_LAMP),
     figureLayer('draw', 250, 92, 500),
     ...(wide ? [{ ...figureLayer('reach', 250, 92, 500, 0, 'figure-alt'), className: 'station-fig pose-alt' }] : []),
     {
@@ -213,5 +196,9 @@ export function DraftingStation({ wide = false, only }: { wide?: boolean; only?:
     },
   ];
 
-  return <Station name="drafting" layers={layers} frames={FRAMES} light="midday" css={wide ? planCss('services', (i) => `svc-${i}`) : undefined} only={only} />;
+  return (
+    <Station name="drafting" layers={layers} frames={FRAMES} light="midday" css={wide ? planCss('services', (i) => `svc-${i}`) : undefined} only={only}>
+      <DeskLamp pointerOnly className="scene-desktop-only" style={frameVars(lampGeometry(DRAFTING_LAMP).hitRect, FRAMES)} />
+    </Station>
+  );
 }

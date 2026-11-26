@@ -1,5 +1,6 @@
 import type { BeatSpec, ChapterSpec } from '../chapter/spec';
-import { GALLERY_FRAMES } from './GalleryStation';
+import { lampActs } from '../lamp';
+import { GALLERY_FRAMES, GALLERY_LAMP } from './GalleryStation';
 
 /*
   Chapter `04b` — The Shadow-Box Gallery (DesignRules.md §4.5 `04b`, v3.6). Arrives
@@ -26,7 +27,10 @@ export const GALLERY_CHAPTER: ChapterSpec = {
       id: 'title',
       hold: 40,
       origin: 'rise',
-      acts: [{ target: { layer: 'new-frame' }, moved: 'translateY(70%) rotate(-9deg)', mode: 'in' }],
+      acts: [
+        { target: { layer: 'new-frame' }, moved: 'translateY(70%) rotate(-9deg)', mode: 'in' },
+        ...lampActs(GALLERY_LAMP, -6),
+      ],
       poses: { base: 'figure', alt: 'figure-alt', swaps: 2 },
     },
     ...wire,

@@ -42,16 +42,25 @@ const write = (value: boolean) => {
 
 const getEngine = () => (engine ??= import('./engine').then((m) => m.createEngine()));
 
-export function play(cue: Cue) {
-  if (on && engine) void engine.then((e) => e.play(cue));
+export function play(cue: Cue, n?: number) {
+  if (on && engine) void engine.then((e) => e.play(cue, n));
 }
 
-async function start() {
-  const e = await getEngine();
-  await e.resume();
-  if (!on) return;
-  e.music(true);
-  install();
+// One start at a time: the first gesture of a visit and the sound switch can both ask for it (v3.22).
+let starting: Promise<void> | null = null;
+
+function start() {
+  return (starting ??= (async () => {
+    try {
+      const e = await getEngine();
+      await e.resume();
+      if (!on) return;
+      e.music(true);
+      install();
+    } finally {
+      starting = null;
+    }
+  })());
 }
 
 function stop() {
@@ -64,12 +73,42 @@ function stop() {
   });
 }
 
+const boardTimers: number[] = [];
+
+/** The closing beat: the light runs each path (a bell per pin), then the rocket and the firework. Times come from the CSS. */
+function playBoard() {
+  play('zoom');
+  const pins = [...document.querySelectorAll<HTMLElement>('#experience .career-pin')];
+  const secs = (el: Element, name: string) => parseFloat(getComputedStyle(el).getPropertyValue(name)) || 0;
+  pins.forEach((pin) => {
+    const j = Number(pin.dataset.j ?? 0);
+    boardTimers.push(window.setTimeout(() => play('glint', j), secs(pin, '--lit') * 1000));
+  });
+  const fw = document.querySelector('#experience .career-fw');
+  if (fw) {
+    const t = secs(fw, '--t');
+    boardTimers.push(window.setTimeout(() => play('whistle'), t * 1000));
+    boardTimers.push(window.setTimeout(() => play('burst'), (t + 0.45) * 1000));
+  }
+}
+
 function install() {
   if (installed) return;
   installed = true;
   window.addEventListener('studio:cue', (event) => {
     const { chapter, beat, dir } = (event as CustomEvent<{ chapter: string; beat: string; dir: 'fwd' | 'back' }>).detail;
     // v3.9: richer cues — the camera arriving at a station, the push-in to the board, the wire sliding.
+    boardTimers.forEach((id) => window.clearTimeout(id));
+    boardTimers.length = 0;
+    if (chapter === 'experience' && dir === 'fwd' && /^(work|organization)-\d+$/.test(beat) && beat !== 'work-0') {
+      // v3.22: the file before this one folds and is pinned to the career board.
+      play('fold');
+      boardTimers.push(window.setTimeout(() => play('pin'), 720));
+    }
+    if (chapter === 'experience' && beat === 'board' && dir === 'fwd') {
+      playBoard();
+      return;
+    }
     if (chapter === 'experience' && beat === 'title' && dir === 'fwd') play('drawer');
     else if (chapter === 'services' && beat === 'svc-0' && dir === 'fwd') play('zoom');
     else if (chapter === 'projects' && beat.startsWith('wire-')) play('swish');

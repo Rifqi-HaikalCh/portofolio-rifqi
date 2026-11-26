@@ -7,7 +7,8 @@ import { LaptopScreenUI, type ScreenData } from '../../scene/LaptopScreenUI';
 import { FIGURINE, LAMP, SCREEN, SPEAKER, STAGE } from '../../scene/stage-geometry';
 import { PaperScene, frameVars, type Frames, type SceneLayer } from '../PaperScene';
 import { ShadowBox } from '../ShadowBox';
-import { FAR_TOWERS, NEAR_TOWERS, bar, day, keyRow, lineMuted, night, skyline, windows } from '../office';
+import { lampLayers, type LampSpec } from '../lamp';
+import { FAR_TOWERS, NEAR_TOWERS, day, keyRow, lineMuted, night, skyline, windows } from '../office';
 
 /*
   Station `01` — The Desk (DesignRules.md §2.2, §4.5 `01`).
@@ -23,6 +24,17 @@ const FRAMES: Frames = {
   mobile: { x: 150, y: 60, w: 1350, h: 940 },
 };
 
+export const DESK_LAMP_SPEC: LampSpec = {
+  kind: 'architect',
+  base: [1380, 634],
+  elbow: [1328, 422],
+  head: [1206, 286],
+  aim: [830, 610],
+  spread: 260,
+  id: 'desk-lamp',
+  z: -10,
+};
+
 export function DeskStation({
   screen,
   poster,
@@ -33,6 +45,7 @@ export function DeskStation({
   className?: string;
 }) {
   const k = paperKit('desk');
+  const [lampLayer, lampLightLayer] = lampLayers(k, DESK_LAMP_SPEC);
 
   const layers: SceneLayer[] = [
     {
@@ -258,27 +271,7 @@ export function DeskStation({
         </>
       ),
     },
-    {
-      id: 'lamp',
-      band: 'mid',
-      z: -10,
-      box: { x: 1100, y: 230, w: 380, h: 440 },
-      art: (
-        <>
-          {k.sheet({ d: poly([[1304, 652], [1456, 652], [1446, 628], [1314, 628]]), fill: 'var(--ill-lamp)', gap: 10, edge: 5 })}
-          {k.sheet({ d: bar([1380, 632], [1322, 420], 16), fill: 'var(--ill-lamp)', gap: 60, edge: 3 })}
-          {k.sheet({ d: bar([1322, 420], [1214, 300], 14), fill: 'var(--ill-lamp)', gap: 60, edge: 3 })}
-          {k.sheet({ d: circle(1322, 420, 15), fill: 'var(--ill-lamp)', gap: 50, edge: 3 })}
-          {k.sheet({ d: circle(1214, 300, 12), fill: 'var(--ill-lamp)', gap: 50, edge: 3 })}
-          <g className="lamp-head">
-            {k.sheet({ d: poly([[1190, 256], [1252, 288], [1232, 378], [1132, 330]]), fill: 'var(--ill-lamp)', gap: 60, edge: 5 })}
-            <polygon points="1252,288 1232,378 1196,360 1222,272" fill="var(--paper-fold)" />
-            <polygon points="1136,332 1230,376 1220,386 1130,344" fill="var(--ill-bulb)" />
-          </g>
-          <rect x="1404" y="634" width="18" height="8" rx="1" fill="var(--ill-bulb)" />
-        </>
-      ),
-    },
+    { ...lampLayer, id: 'lamp' },
     {
       id: 'laptop',
       band: 'mid',
@@ -315,23 +308,7 @@ export function DeskStation({
         </>
       ),
     },
-    {
-      id: 'lamp-light',
-      band: 'mid',
-      z: 10,
-      box: { x: 460, y: 320, w: 780, h: 380 },
-      className: 'lamp-glow',
-      art: (
-        <g style={{ opacity: 'var(--glow-opacity)' }}>
-          <polygon points="1138,334 1226,374 1080,652 560,652" fill="var(--ill-lamp-light)" />
-          <g fill="var(--ill-bulb)">
-            <ellipse cx="860" cy="652" rx="380" ry="46" opacity="0.07" />
-            <ellipse cx="860" cy="652" rx="260" ry="32" opacity="0.09" />
-            <ellipse cx="860" cy="652" rx="140" ry="18" opacity="0.12" />
-          </g>
-        </g>
-      ),
-    },
+    { ...lampLightLayer, id: 'lamp-light' },
     {
       id: 'figurine',
       band: 'mid',

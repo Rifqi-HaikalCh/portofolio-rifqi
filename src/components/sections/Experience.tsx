@@ -7,7 +7,9 @@ import { displayCase } from '../../lib/display-case';
 import { SectionTitle } from '../ui/SectionTitle';
 import { stackLogo } from '../../lib/additional-skills';
 import { T } from '../ui/T';
-import { CabinetStation, type FolderSet } from '../scenes/cabinet/CabinetStation';
+import { CabinetStation, type FolderSet, type PinSpec } from '../scenes/cabinet/CabinetStation';
+import { CareerPinClicks } from './CareerPinClicks';
+import { EXP_SHIFT } from '../scenes/cabinet/board';
 import { CABINET_CHAPTER } from '../scenes/cabinet/beats';
 import { Beat, Chapter } from '../scenes/chapter/Chapter';
 import { CareerPath } from './CareerPath';
@@ -181,7 +183,7 @@ function RoleDates({ period }: { period: string }) {
 function RoleSheet({ entry, set, index, count }: { entry: ExperienceEntry; set: 'work' | 'organization'; index: number; count: number }) {
   const titleId = `experience-${set}-${index}-file`;
   return (
-    <article aria-labelledby={`experience-${set}-${index}-role`} data-eqbot={set === 'work' && index === 0 ? 'experience-files' : undefined}>
+    <article aria-labelledby={`experience-${set}-${index}-role`} data-role={`${set}-${index}`} data-eqbot={set === 'work' && index === 0 ? 'experience-files' : undefined}>
       <RolePhoto entry={entry} className="float-right ml-5 w-28 sm:w-36" sizes="(min-width: 768px) 288px, 30vw" />
       <p className="font-mono text-[0.6875rem] uppercase tracking-[0.2em] text-muted">
         <T en={SETS[set].en} id={SETS[set].idn} /> · {String(index + 1).padStart(2, '0')}/{String(count).padStart(2, '0')}
@@ -249,14 +251,24 @@ export function Experience() {
     },
   ];
 
+  // One pin per role on the career board, newest first: the work roles, then the organisations.
+  const pins: PinSpec[] = [...workExperience, ...organizationExperience].map((entry) => ({
+    logo: entry.logo,
+    mono: monogram(entry.company),
+    year: startYear(entry.period),
+    // NOW marks the newest role of a path, and only when it is still going.
+    now: (entry === workExperience[0] || entry === organizationExperience[0]) && /present|sekarang/i.test(entry.period),
+  }));
+
   return (
+    <>
     <Chapter
       spec={CABINET_CHAPTER}
       labelledBy="experience-title"
       studio="ledger"
       next={{ id: 'services', en: 'Services', idn: 'Layanan' }}
-      stage={<CabinetStation sets={sets} wide />}
-      front={<CabinetStation sets={sets} wide only={['drawer-front']} name="cabinet-front" />}
+      stage={<CabinetStation sets={sets} wide shift={EXP_SHIFT} pins={pins} />}
+      front={<CabinetStation sets={sets} wide shift={EXP_SHIFT} only={['drawer-front']} name="cabinet-front" />}
     >
       <Beat id="title" className="[&>header]:mb-0">
         <SectionTitle
@@ -293,6 +305,21 @@ export function Experience() {
           <RoleSheet entry={entry} set="organization" index={index} count={organizationExperience.length} />
         </Beat>
       ))}
+
+      {/* v3.19: the last beat, the camera in on the career board (a short sheet; the board is the picture). */}
+      <Beat id="board" className="exp-board-note">
+        <p className="font-mono text-[0.6875rem] uppercase tracking-[0.18em] text-accent">
+          <T en="Career path" id="Jalur karier" />
+        </p>
+        <h3 className="mt-3 font-serif text-2xl font-medium leading-snug text-ink">
+          <T en={`${workExperience.length + organizationExperience.length} files, pinned in order`} id={`${workExperience.length + organizationExperience.length} berkas, disematkan berurutan`} />
+        </h3>
+        <p className="mt-2 text-[0.9375rem] leading-relaxed text-muted">
+          <T en="Each pin is a company; the thread is the road between them." id="Setiap pin adalah sebuah perusahaan; benangnya adalah jalan di antara mereka." />
+        </p>
+      </Beat>
     </Chapter>
+    <CareerPinClicks />
+    </>
   );
 }

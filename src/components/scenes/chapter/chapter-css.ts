@@ -26,6 +26,23 @@ const P = 'perspective(1400px)';
 
 const n = (v: number) => Math.round(v * 100) / 100;
 
+/**
+ * World point → a translate that puts the sheet's top centre there (through the stage fit, chapter.css).
+ * `--dx` / `--dy` are the sheet's own slot in a grid group, so a sheet that does not sit at the lane's
+ * centre still leaves from, or arrives at, the right spot. `k` takes a fraction of the way.
+ */
+function worldAt(spec: ChapterSpec) {
+  const f = spec.frames.desktop;
+  const vx = (x: number) => `(50cqw + ${n(x - f.x)} * var(--s) - var(--cxs))`;
+  const vy = (y: number) => `(50svh + ${n(y - f.y)} * var(--s) - var(--cys))`;
+  const centre =
+    spec.lane === 'right' ? '(100cqw - var(--lane-pad) - var(--lane-w) / 2)' : '(var(--lane-pad) + var(--lane-w) / 2)';
+  return ([x, y]: readonly [number, number], k = 1) =>
+    k === 1
+      ? `translate(calc(${vx(x)} - ${centre} - var(--dx, 0px)),calc(${vy(y)} - var(--beat-top) - var(--dy, 0px)))`
+      : `translate(calc((${vx(x)} - ${centre} - var(--dx, 0px)) * ${k}),calc((${vy(y)} - var(--beat-top) - var(--dy, 0px)) * ${k}))`;
+}
+
 /*
   Entrances, one per origin (§4.1). Every one bends the sheet on its way in
   (rotateX/skew about the edge that leads), overshoots a little and settles
@@ -74,12 +91,7 @@ function sheetIn(spec: ChapterSpec, beat: BeatSpec, name: string) {
     );
   }
   // Emerge: out of an object in the stage (world coordinates → viewport through the stage fit, chapter.css).
-  const f = spec.frames.desktop;
-  const vx = (x: number) => `(50cqw + ${n(x - f.x)} * var(--s) - var(--cxs))`;
-  const vy = (y: number) => `(50svh + ${n(y - f.y)} * var(--s) - var(--cys))`;
-  const centre =
-    spec.lane === 'right' ? '(100cqw - var(--lane-pad) - var(--lane-w) / 2)' : '(var(--lane-pad) + var(--lane-w) / 2)';
-  const at = ([x, y]: readonly [number, number]) => `translate(calc(${vx(x)} - ${centre}),calc(${vy(y)} - var(--beat-top)))`;
+  const at = worldAt(spec);
   const { from, via } = o.emerge;
   return frames(
     `0%{transform:${at(from)} scale(.3) rotate(-5deg);opacity:0}` +
@@ -91,9 +103,21 @@ function sheetIn(spec: ChapterSpec, beat: BeatSpec, name: string) {
 }
 
 /* Exits: the sheet is lifted by its near edge and carried off (slides go back the way they came). */
-function sheetOut(beat: BeatSpec, name: string) {
+function sheetOut(spec: ChapterSpec, beat: BeatSpec, name: string) {
   const o = beat.origin;
   const frames = (body: string) => `@keyframes ${name}{${body}}@keyframes ${name}-r{${body}}`;
+  if (beat.exit) {
+    // Folded small and pinned (v3.19): lifted, turned edge-on and narrowed like a sheet folded in half,
+    // then carried to its pin and shrunk to a dot. Backwards it comes off the pin and unfolds.
+    const at = worldAt(spec);
+    return frames(
+      `0%{transform:none;opacity:1}` +
+        `16%{transform:${P} translateY(-1svh) rotateX(5deg) scale(1.01)}` +
+        `38%{transform:${at(beat.exit.pin, 0.12)} ${P} rotateY(52deg) scale(.7,.86) rotate(-3deg);opacity:1}` +
+        `66%{transform:${at(beat.exit.pin, 0.7)} ${P} rotateY(8deg) scale(.26,.3) rotate(5deg);opacity:1}` +
+        `to{transform:${at(beat.exit.pin)} scale(.035) rotate(10deg);opacity:0}`,
+    );
+  }
   if (o === 'slide-left' || o === 'slide-right') {
     const s = o === 'slide-left' ? -1 : 1;
     return frames(
@@ -280,6 +304,23 @@ function groupCss(sel: string, spec: ChapterSpec, group: NonNullable<ChapterSpec
     return css;
   }
 
+  if (group.layout === 'grid') {
+    // Two columns; each sheet lands in its slot and stays while the later ones arrive.
+    const COLS = 2;
+    const GAP = '1rem';
+    ids.forEach((id, i) => {
+      const col = i % COLS;
+      const row = Math.floor(i / COLS);
+      const sh = `${sel} [data-beat="${id}"] > .beat-sheet`;
+      css += `${sh}{--cw:calc((var(--lane-w) - ${GAP}) / ${COLS});--ch:12.5rem;--dx:calc(${col} * (var(--cw) + ${GAP}) + var(--cw) / 2 - var(--lane-w) / 2);--dy:calc(${row} * (var(--ch) + ${GAP}));` +
+        `width:var(--cw);min-height:var(--ch);left:calc(var(--lane-pad) + ${col} * (var(--cw) + ${GAP}));top:calc(var(--beat-top) + ${row} * (var(--ch) + ${GAP}))}`;
+      // Once arrived it stays (the exit is not played); going back before it, the entrance reverses as usual.
+      const hold = group.release ? `:not([data-reached~="${group.release}"])` : '';
+      css += `${sel}${hold} [data-beat="${id}"][data-state="after"] > .beat-sheet{opacity:1!important;pointer-events:auto;animation:none!important;transform:none!important}`;
+    });
+    return css;
+  }
+
   // rail
   const slide = `translateX(calc(var(--x) * (var(--rail-w) + var(--rail-gap))))`;
   css += `${sel} ${any} > .beat-sheet{left:calc(var(--rail-cx, 50cqw) - var(--rail-w) / 2);right:auto;width:var(--rail-w);transform:${slide};transition:transform calc(var(--dur-leaf-in) * 1.2) var(--ease-leaf),opacity var(--dur-act) var(--ease-paper)}`;
@@ -322,7 +363,7 @@ export function chapterCss(spec: ChapterSpec) {
     }
 
     const s = `${b} > .beat-sheet`;
-    desktop += sheetIn(spec, beat, `${name}-in`) + sheetOut(beat, `${name}-out`);
+    desktop += sheetIn(spec, beat, `${name}-in`) + sheetOut(spec, beat, `${name}-out`);
     desktop += `${s}{transform-origin:${sheetOrigin(beat.origin)}}`;
     // Forward: land. Back from the next beat: the exit played backwards. Leaving: the exit.
     // Back to before: the entrance played backwards. `-r` twins restart the animation on a direction change.

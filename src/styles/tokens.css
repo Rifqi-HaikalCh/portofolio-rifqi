@@ -160,7 +160,8 @@
   --ill-leaf-fold: #44543f;
   --ill-note: #7d7148;
   --ill-notebook: #6e3027;
-  --ill-page: #3a3631;
+  /* v3.24 (owner): paper is a dim warm off-white at night, never black (pins, cards, prints, sheets). */
+  --ill-page: #dcd1b4;
   --ill-eye: #e6dfd2;
   --ill-beam: transparent;
 
@@ -194,7 +195,7 @@
   --ill-cabinet: #3e4a49;
   --ill-cabinet-shade: #313b3a;
   --ill-folder: #7b6643;
-  --ill-envelope: #4a443b;
+  --ill-envelope: #cdbf9b;
   --ill-board: #2e3638;
   --ill-dusk: #1f2a3a;
   --ill-dusk-low: #2a3346;
@@ -203,6 +204,58 @@
   --ill-figure-rim: rgb(255 214 150 / 0.55);
 
   color-scheme: dark;
+}
+
+/*
+  Paper at night (v3.24, owner: "paper is a dim yellowish white, not black"). Every paper surface
+  re-declares the ink, line and paper tokens for its own subtree, so text, rules and chips on it
+  read as ink on cream, while the page, the stage and the chrome stay dark. Blueprint sheets and
+  the tracing paper on the drafting board are not paper in this sense and keep the night tokens.
+  `--color-*` are repeated because they were substituted at :root and do not follow a new `--rgb-*`.
+*/
+.dark :is(.paper-leaf, .pd-sheet, .paper-card, .paper-sheet, .ticket, .role-photo, .pin-print, .career-pins, .book) {
+  --rgb-paper: 232 223 201;
+  --rgb-raised: 224 214 189;
+  --rgb-recess: 206 195 168;
+  --rgb-ink: 40 33 25;
+  --rgb-muted: 98 88 74;
+  --rgb-line: 178 166 140;
+  --rgb-accent: 150 62 46;
+  --rgb-blueprint: 62 90 108;
+  --rgb-sage: 84 103 78;
+  --color-paper: rgb(var(--rgb-paper));
+  --color-raised: rgb(var(--rgb-raised));
+  --color-recess: rgb(var(--rgb-recess));
+  --color-ink: rgb(var(--rgb-ink));
+  --color-muted: rgb(var(--rgb-muted));
+  --color-line: rgb(var(--rgb-line));
+  --color-accent: rgb(var(--rgb-accent));
+  --color-blueprint: rgb(var(--rgb-blueprint));
+  --color-sage: rgb(var(--rgb-sage));
+  --leaf-lip: inset 0 1px 0 rgb(255 255 255 / 0.4);
+  --paper-edge-cut: 0 0 0 1px rgb(var(--rgb-line)), calc(2px * var(--light-x)) 2px 0 rgb(var(--rgb-recess));
+  --paper-edge-lifted: 0 0 0 1px rgb(var(--rgb-line)), calc(4px * var(--light-x)) 4px 0 rgb(var(--rgb-recess)), calc(10px * var(--light-x)) 14px 24px rgb(0 0 0 / 0.3);
+}
+.dark :is(.blueprint-leaf, .tracing) {
+  --rgb-paper: 19 18 17;
+  --rgb-raised: 28 26 23;
+  --rgb-recess: 36 33 29;
+  --rgb-ink: 243 238 230;
+  --rgb-muted: 167 158 147;
+  --rgb-line: 50 46 41;
+  --rgb-accent: 212 120 104;
+  --rgb-blueprint: 127 161 184;
+  --rgb-sage: 142 163 135;
+  --color-paper: rgb(var(--rgb-paper));
+  --color-raised: rgb(var(--rgb-raised));
+  --color-recess: rgb(var(--rgb-recess));
+  --color-ink: rgb(var(--rgb-ink));
+  --color-muted: rgb(var(--rgb-muted));
+  --color-line: rgb(var(--rgb-line));
+  --color-accent: rgb(var(--rgb-accent));
+  --color-blueprint: rgb(var(--rgb-blueprint));
+  --color-sage: rgb(var(--rgb-sage));
+  --leaf-lip: inset 0 1px 0 rgb(255 255 255 / 0.05);
 }
 
 @theme inline {

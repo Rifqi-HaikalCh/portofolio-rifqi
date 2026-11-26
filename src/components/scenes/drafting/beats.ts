@@ -1,5 +1,6 @@
 import type { BeatSpec, ChapterSpec } from '../chapter/spec';
-import { DRAFTING_FRAMES } from './DraftingStation';
+import { lampActs } from '../lamp';
+import { DRAFTING_FRAMES, DRAFTING_LAMP } from './DraftingStation';
 
 /*
   Chapter `04` — The Drafting Table (DesignRules.md §4.5 `04`, v3.6). Arrives by
@@ -37,11 +38,7 @@ export const DRAFTING_CHAPTER: ChapterSpec = {
       id: 'title',
       hold: 30,
       origin: 'drop',
-      acts: [
-        { target: { layer: 'lamp' }, moved: 'rotate(9deg)', mode: 'in' },
-        // The light pool swings with the head, about the same point (the lamp box's centre, 1200 × 120).
-        { target: { layer: 'lamp-light' }, moved: 'rotate(9deg)', mode: 'in', origin: '100% 10%' },
-      ],
+      acts: lampActs(DRAFTING_LAMP, 9),
     },
     {
       id: 'stack',

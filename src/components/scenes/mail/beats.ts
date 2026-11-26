@@ -1,5 +1,6 @@
 import type { ChapterSpec } from '../chapter/spec';
-import { MAIL_FRAMES } from './MailStation';
+import { lampActs } from '../lamp';
+import { MAIL_FRAMES, MAIL_LAMP } from './MailStation';
 
 /*
   Chapter `06` — The Mail Tray (DesignRules.md §4.5 `06`). Arrives by a pan
@@ -19,7 +20,7 @@ export const MAIL_CHAPTER: ChapterSpec = {
   handoffIn: 'pan-right',
   handoffOut: 'turn-over',
   beats: [
-    { id: 'letterhead', hold: 30, origin: 'drop' },
+    { id: 'letterhead', hold: 30, origin: 'drop', acts: lampActs(MAIL_LAMP, 6) },
     {
       id: 'card',
       hold: 50,

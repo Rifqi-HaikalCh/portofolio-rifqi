@@ -84,6 +84,19 @@ export function About() {
         </Beat>
       ))
       }
+
+      {/* v3.20: the closing beat. The cards fold back onto the board while this note comes up. */}
+      <Beat id="tidy" className="about-tidy-note">
+        <p className="font-mono text-[0.6875rem] uppercase tracking-[0.18em] text-accent">
+          <T en="Back on the board" id="Kembali ke papan" />
+        </p>
+        <h3 className="mt-3 font-serif text-2xl font-medium leading-snug text-ink">
+          <T en="That is the short version." id="Itu versi singkatnya." />
+        </h3>
+        <p className="mt-2 text-[0.9375rem] leading-relaxed text-muted">
+          <T en="The cards go back where they were pinned. The files are next." id="Kartu-kartu kembali ke tempat disematkannya. Berkas-berkas menyusul." />
+        </p>
+      </Beat>
     </Chapter>
   );
 }

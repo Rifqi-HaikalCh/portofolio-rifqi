@@ -1,7 +1,9 @@
 import { PhotoPrint } from '../../ui/PhotoPrint';
 import type { ReactNode } from 'react';
 import { circle, cut, paperKit, poly, rect } from '../../../lib/paper-kit';
-import type { Frames, SceneLayer } from '../PaperScene';
+import { DeskLamp } from '../../scene/DeskLamp';
+import { frameVars, type Frames, type SceneLayer } from '../PaperScene';
+import { lampGeometry, lampLayers, type LampSpec } from '../lamp';
 import { Station } from '../Station';
 import { STRIP, figureLayer, floorLayer, lineMuted, wallLayer, windowHole, windowLayers } from '../office';
 
@@ -19,6 +21,17 @@ const BOARD = { x: 520, y: 70, w: 700, h: 400 };
 const PHOTO = { x: 790, y: 96, w: 170, h: 204 };
 /** The index cards on the board (world units): the About sheets for them lift off these (beats.ts). */
 export const PIN_CARDS = [0, 1, 2, 3].map((i) => ({ x: 560 + i * 158, y: 318 + (i % 2) * 14, w: 132, h: 112, tilt: [-1.5, 1.2, -0.8, 1.5][i] }));
+
+/** Gallery gooseneck barn-door lamp mounted on the wall above the cork board (§1.11, §2.3 v3.25). */
+export const PINBOARD_LAMP: LampSpec = {
+  kind: 'barn-door',
+  base: [1262, -26],
+  elbow: [1206, -64],
+  head: [1124, -18],
+  aim: [875, 258],
+  spread: 275,
+  z: -55,
+};
 
 type Icon = 'graduation-cap' | 'briefcase' | 'trophy' | 'users' | string;
 
@@ -130,6 +143,8 @@ export function PinboardStation({ icons, wide = false, only }: { icons: readonly
         <PhotoPrint sizes="(min-width: 1024px) 320px, 40vw" />
       ),
     },
+    // v3.25: gallery gooseneck barn-door lamp on the wall above the board, its head and 3-tier beam aimed at the cork board.
+    ...lampLayers(k, PINBOARD_LAMP),
     figureLayer('pin', 1150, 92, 520),
     ...(wide ? [{ ...figureLayer('reach', 1150, 92, 520, 0, 'figure-alt'), className: 'station-fig pose-alt' }] : []),
     {
@@ -142,7 +157,11 @@ export function PinboardStation({ icons, wide = false, only }: { icons: readonly
     },
   ];
 
-  return <Station name="pinboard" layers={layers} frames={PINBOARD_FRAMES} light="midday" only={only} />;
+  return (
+    <Station name="pinboard" layers={layers} frames={PINBOARD_FRAMES} light="midday" only={only}>
+      <DeskLamp pointerOnly className="scene-desktop-only" style={frameVars(lampGeometry(PINBOARD_LAMP).hitRect, PINBOARD_FRAMES)} />
+    </Station>
+  );
 }
 
 /** A floor plant on a stool, in front of the board's right edge. */

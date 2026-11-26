@@ -1,7 +1,9 @@
 import { circle, paperKit, poly, rect } from '../../../lib/paper-kit';
-import type { Frames, SceneLayer } from '../PaperScene';
+import { DeskLamp } from '../../scene/DeskLamp';
+import { frameVars, type Frames, type SceneLayer } from '../PaperScene';
 import { Station } from '../Station';
 import { STRIP, figureLayer, floorLayer, stateCss, wallLayer } from '../office';
+import { lampGeometry, lampLayers, type LampSpec } from '../lamp';
 
 /*
   Station `05` — The Archive Shelf (DesignRules.md §2.2, §4.5 `05`), afternoon.
@@ -15,6 +17,17 @@ const FRAMES = ARCHIVE_FRAMES;
 const CASE = { x: 540, y: 70, w: 760, h: 520 };
 const SHELF_1 = 300;
 const SHELF_2 = 520;
+
+/** Library brass-paper picture & reading lamp mounted above the bookcase (§1.11, §2.3 v3.25). */
+export const ARCHIVE_LAMP: LampSpec = {
+  kind: 'picture-hood',
+  base: [1088, -18],
+  elbow: [1048, -56],
+  head: [986, -12],
+  aim: [772, 214],
+  spread: 245,
+  z: -50,
+};
 
 export type BinderData = { label: string; count: number };
 
@@ -112,6 +125,8 @@ export function ArchiveStation({ binders, wide = false, only }: { binders: Binde
         </>
       ),
     },
+    // v3.25: library brass-paper picture & reading lamp above the bookcase, its trough reflector hood and 3-tier beam aimed at the binders/books.
+    ...lampLayers(k, ARCHIVE_LAMP),
     figureLayer('binder', 300, 92, 500),
     {
       id: 'stack',
@@ -135,5 +150,9 @@ export function ArchiveStation({ binders, wide = false, only }: { binders: Binde
     spines.map((_, i) => ({ when: `details[data-binder="${i}"][open]`, key: `binder-${i}`, transform: 'translateY(6px) rotate(-6deg) scale(1.06)' })),
   );
 
-  return <Station name="archive" layers={layers} frames={FRAMES} light="afternoon" css={css} only={only} />;
+  return (
+    <Station name="archive" layers={layers} frames={FRAMES} light="afternoon" css={css} only={only}>
+      <DeskLamp pointerOnly className="scene-desktop-only" style={frameVars(lampGeometry(ARCHIVE_LAMP).hitRect, FRAMES)} />
+    </Station>
+  );
 }

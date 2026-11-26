@@ -1125,3 +1125,238 @@
   from { transform: rotateY(-180deg); }
   to { transform: rotateY(0deg); }
 }
+
+/*
+  The career board's pins (v3.19, CabinetStation): a paper disc with the company's logo (initials when it
+  has none), a red push-pin head on top and its start year under it. Sizes follow the stage fit (--s).
+*/
+.career-pins { position: absolute; inset: 0; pointer-events: none; }
+.career-pin {
+  position: absolute;
+  width: 13.4%;
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--ill-page);
+  box-shadow:
+    0 0 0 calc(2 * var(--s, 0.6px)) color-mix(in oklab, var(--color-ink) 18%, var(--ill-page)),
+    calc(2px * var(--light-x)) calc(4 * var(--s, 0.6px)) calc(6 * var(--s, 0.6px)) rgb(var(--rgb-shadow) / 0.35);
+}
+.career-pin img { width: 68%; height: 68%; object-fit: contain; }
+.career-pin b {
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-size: calc(15 * var(--s, 0.6px));
+  font-weight: 600;
+  color: var(--color-accent);
+}
+.career-pin-head {
+  position: absolute;
+  top: -6%;
+  left: 50%;
+  width: 24%;
+  aspect-ratio: 1;
+  translate: -50% 0;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, color-mix(in oklab, var(--color-accent) 70%, white), var(--color-accent) 60%);
+  box-shadow: 0 calc(2 * var(--s, 0.6px)) calc(3 * var(--s, 0.6px)) rgb(var(--rgb-shadow) / 0.4);
+}
+.career-pin small {
+  position: absolute;
+  top: calc(100% + 3 * var(--s, 0.6px));
+  left: 50%;
+  translate: -50% 0;
+  padding: 0 calc(3 * var(--s, 0.6px));
+  font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
+  font-size: calc(9.5 * var(--s, 0.6px));
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--color-ink);
+  background: color-mix(in oklab, var(--ill-page) 85%, transparent);
+}
+
+/*
+  `02` the index cards in the theatre (v3.19, owner): the four sheets fill a two-column grid, so
+  they are smaller than a lone sheet (chapter-css.ts, the `grid` group).
+*/
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) and (min-height: 561px) and (min-width: 768px) {
+    #about[data-cue]:not([data-stacked]) .beat-sheet.index-sheet { padding: 1rem 1.1rem; }
+    /* A narrower lane, so the two columns of cards stay clear of the board. */
+    @media (min-width: 1024px) {
+      #about[data-cue]:not([data-stacked]) { --lane-w: min(31rem, 36cqw); }
+    }
+    #about[data-cue]:not([data-stacked]) .index-sheet h3 { margin-top: 0.6rem; font-size: 1.4rem; line-height: 1.15; }
+    #about[data-cue]:not([data-stacked]) .index-sheet p:not(:first-child) { margin-top: 0.5rem; font-size: 0.875rem; line-height: 1.5; }
+  }
+}
+
+/*
+  `02` tidy (v3.20): when the cards are released they fold and fly back one after another, and
+  each card on the board is bright again once its sheet has landed there.
+*/
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) and (min-height: 561px) and (min-width: 768px) {
+    #about[data-cue]:not([data-stacked])[data-reached~="tidy"] [data-beat="card-1"][data-state="after"] > .beat-sheet { animation-delay: 70ms; }
+    #about[data-cue]:not([data-stacked])[data-reached~="tidy"] [data-beat="card-2"][data-state="after"] > .beat-sheet { animation-delay: 140ms; }
+    #about[data-cue]:not([data-stacked])[data-reached~="tidy"] [data-beat="card-3"][data-state="after"] > .beat-sheet { animation-delay: 210ms; }
+    #about[data-cue]:not([data-stacked])[data-reached~="tidy"] :is(.stage, .stage-front) [data-obj^="card-"] { opacity: 1 !important; transition-delay: 0.5s; }
+  }
+}
+
+/*
+  `03` career board, v3.20: zone labels, START / NOW badges and the walkers. The walker is hidden
+  until the closing beat; it runs along its path from START to NOW.
+*/
+.career-tag {
+  position: absolute;
+  padding: calc(2 * var(--s, 0.6px)) calc(6 * var(--s, 0.6px));
+  border-left: calc(3 * var(--s, 0.6px)) solid var(--color-accent);
+  background: color-mix(in oklab, var(--color-accent) 12%, var(--ill-page));
+  font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
+  font-size: calc(9.5 * var(--s, 0.6px));
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  line-height: 1.3;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--color-ink);
+}
+.career-badge {
+  position: absolute;
+  top: calc(100% + 17 * var(--s, 0.6px));
+  left: 50%;
+  display: inline-flex;
+  align-items: center;
+  gap: calc(3 * var(--s, 0.6px));
+  padding: calc(1.5 * var(--s, 0.6px)) calc(5 * var(--s, 0.6px));
+  font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
+  font-size: calc(8 * var(--s, 0.6px));
+  font-style: normal;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  line-height: 1.2;
+  text-transform: uppercase;
+  white-space: nowrap;
+  box-shadow: 0 calc(1.5 * var(--s, 0.6px)) calc(3 * var(--s, 0.6px)) rgb(var(--rgb-shadow) / 0.3);
+}
+.career-start { background: var(--color-ink); color: var(--color-paper); translate: -104% 0; }
+.career-now { background: var(--color-accent); color: var(--color-paper); translate: 4% 0; }
+.career-badge:only-of-type { translate: -50% 0; }
+.career-now i {
+  width: calc(5 * var(--s, 0.6px));
+  height: calc(5 * var(--s, 0.6px));
+  border-radius: 50%;
+  background: var(--color-paper);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .career-now i { animation: print-lamp 2.4s ease-in-out infinite; }
+}
+/* A pin opens its file (CareerPinClicks). */
+.career-pin { pointer-events: auto; cursor: pointer; }
+.career-pin:hover { box-shadow: 0 0 0 calc(2.5 * var(--s, 0.6px)) var(--color-accent), 0 0 calc(10 * var(--s, 0.6px)) calc(2 * var(--s, 0.6px)) color-mix(in oklab, var(--color-accent) 55%, transparent); }
+
+/*
+  v3.22: the closing beat. A comet of light runs each path from START to NOW (a dashed copy of the
+  thread whose dash is animated along it, tail and bright head); each pin's ring and push-pin head
+  glow as it passes (`--lit` on the pin); when it reaches the current role a rocket goes up and bursts.
+  The timings come from board.ts (LIT0, STEP) through custom properties, so the sound follows them.
+*/
+.career-light { fill: none; stroke-linecap: round; opacity: 0; }
+.career-light-tail { stroke: color-mix(in oklab, var(--color-accent) 55%, white); stroke-width: 6; filter: blur(1.6px); }
+.career-light-head { stroke: #fff4dc; stroke-width: 3.4; }
+@keyframes career-run {
+  from { stroke-dashoffset: var(--o0); }
+  to { stroke-dashoffset: var(--o1); }
+}
+@keyframes career-glow {
+  30% {
+    box-shadow:
+      0 0 0 calc(3 * var(--s, 0.6px)) var(--color-accent),
+      0 0 calc(22 * var(--s, 0.6px)) calc(8 * var(--s, 0.6px)) color-mix(in oklab, var(--color-accent) 75%, transparent);
+  }
+  60% {
+    box-shadow:
+      0 0 0 calc(2 * var(--s, 0.6px)) color-mix(in oklab, var(--color-accent) 70%, transparent),
+      0 0 calc(12 * var(--s, 0.6px)) calc(3 * var(--s, 0.6px)) color-mix(in oklab, var(--color-accent) 45%, transparent);
+  }
+}
+@keyframes career-head {
+  30% {
+    scale: 1.55;
+    filter: brightness(1.5) saturate(1.3);
+    box-shadow: 0 0 calc(14 * var(--s, 0.6px)) calc(5 * var(--s, 0.6px)) color-mix(in oklab, var(--color-accent) 85%, transparent);
+  }
+}
+
+.career-fw { position: absolute; inset: 0; pointer-events: none; --cy: calc(-30 * var(--s, 0.6px)); }
+.fw-rocket {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: calc(2.6 * var(--s, 0.6px));
+  height: calc(16 * var(--s, 0.6px));
+  margin-left: calc(-1.3 * var(--s, 0.6px));
+  border-radius: 99px;
+  background: linear-gradient(to top, transparent, #ffd27a);
+  opacity: 0;
+}
+.career-fw i {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: calc(12 * var(--s, 0.6px));
+  height: calc(2.6 * var(--s, 0.6px));
+  margin-top: calc(-1.3 * var(--s, 0.6px));
+  border-radius: 99px;
+  background: linear-gradient(90deg, transparent, var(--color-accent) 45%, #ffd27a);
+  box-shadow: 0 0 calc(5 * var(--s, 0.6px)) color-mix(in oklab, var(--color-accent) 60%, transparent);
+  opacity: 0;
+  transform-origin: 0 50%;
+  translate: 0 var(--cy);
+  rotate: var(--a);
+  --reach: calc(46 * var(--s, 0.6px));
+}
+.career-fw .fb {
+  width: calc(8 * var(--s, 0.6px));
+  height: calc(2 * var(--s, 0.6px));
+  background: linear-gradient(90deg, transparent, #ffd27a 50%, #fff4dc);
+  --reach: calc(78 * var(--s, 0.6px));
+}
+.career-fw .fc {
+  width: calc(3.4 * var(--s, 0.6px));
+  height: calc(3.4 * var(--s, 0.6px));
+  margin: calc(-1.7 * var(--s, 0.6px)) 0 0 calc(-1.7 * var(--s, 0.6px));
+  background: #ffd27a;
+  rotate: 0deg;
+  box-shadow: 0 0 calc(5 * var(--s, 0.6px)) #ffd27a;
+}
+.career-fw::before {
+  content: "";
+  position: absolute;
+  inset: -40%;
+  border-radius: 50%;
+  border: calc(2 * var(--s, 0.6px)) solid #ffd27a;
+  opacity: 0;
+  translate: 0 var(--cy);
+}
+@keyframes career-rocket {
+  0% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(calc(-34 * var(--s, 0.6px))); }
+}
+@keyframes career-flash {
+  0% { opacity: 0.9; scale: 0.3; }
+  100% { opacity: 0; scale: 2.6; }
+}
+@keyframes career-spark {
+  0% { opacity: 1; transform: translateX(0) scaleX(0.4); }
+  18% { opacity: 1; transform: translateX(calc(var(--reach) * 0.35)) scaleX(1); }
+  70% { opacity: 1; }
+  100% { opacity: 0; transform: translateX(var(--reach)) scaleX(0.3); }
+}
+@keyframes career-ember {
+  0% { opacity: 0; transform: translate(0, 0); }
+  15% { opacity: 1; transform: translate(calc(var(--ex) * 0.4), calc(8 * var(--s, 0.6px))); }
+  100% { opacity: 0; transform: translate(var(--ex), calc(46 * var(--s, 0.6px))); }
+}

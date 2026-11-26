@@ -1,7 +1,8 @@
-import { circle, ellipse, paperKit, poly, rect } from '../../../lib/paper-kit';
+import { circle, paperKit, poly, rect } from '../../../lib/paper-kit';
 import { frameVars, type Frames, type SceneLayer } from '../PaperScene';
 import { Station } from '../Station';
 import { DeskLamp } from '../../scene/DeskLamp';
+import { lampGeometry, lampLayers, type LampSpec } from '../lamp';
 import { STRIP, bar, figureLayer, floorLayer, wallLayer, windowHole, windowLayers } from '../office';
 
 /*
@@ -16,6 +17,18 @@ export const MAIL_FRAMES: Frames = { desktop: STRIP, mobile: { x: 420, y: 40, w:
 const FRAMES = MAIL_FRAMES;
 const WIN = { x: 100, y: 56, w: 320, h: 330 };
 const ENV = { x: 694, y: 362, w: 142, h: 90 };
+
+/** Classic banker's study lamp on the desk corner by the letter tray (§1.11, §2.3 v3.25). */
+export const MAIL_LAMP: LampSpec = {
+  kind: 'banker',
+  base: [1500, 424],
+  elbow: [1524, 256],
+  head: [1448, 212],
+  aim: [1135, 426],
+  spread: 230,
+  z: -30,
+  desktopOnly: true,
+};
 
 /*
   As a chapter stage (§4.5): `wide` bleeds the wall and floor for the fullscreen
@@ -90,37 +103,8 @@ export function MailStation({ wide = false, only }: { wide?: boolean; only?: rea
         </>
       ),
     },
-    {
-      id: 'lamp',
-      band: 'mid',
-      z: -30,
-      box: { x: 1360, y: 160, w: 260, h: 280 },
-      desktopOnly: true,
-      art: (
-        <>
-          {k.sheet({ d: poly([[1440, 432], [1560, 432], [1552, 414], [1448, 414]]), fill: 'var(--ill-lamp)', gap: 10, edge: 4 })}
-          {k.sheet({ d: bar([1500, 416], [1540, 260], 12), fill: 'var(--ill-lamp)', gap: 50, edge: 3 })}
-          {k.sheet({ d: bar([1540, 260], [1440, 200], 11), fill: 'var(--ill-lamp)', gap: 50, edge: 3 })}
-          {k.sheet({ d: circle(1540, 260, 11), fill: 'var(--ill-lamp)', gap: 40, edge: 2 })}
-          {k.sheet({ d: poly([[1420, 176], [1472, 202], [1456, 270], [1382, 236]]), fill: 'var(--ill-lamp)', gap: 50, edge: 4 })}
-          <polygon points="1384,238 1456,270 1450,278 1380,248" fill="var(--ill-bulb)" />
-        </>
-      ),
-    },
-    {
-      id: 'lamp-light',
-      band: 'mid',
-      z: 10,
-      box: { x: 900, y: 230, w: 580, h: 250 },
-      className: 'lamp-glow',
-      desktopOnly: true,
-      art: (
-        <g style={{ opacity: 'var(--glow-opacity)' }}>
-          <polygon points="1382,244 1452,276 1300,440 960,440" fill="var(--ill-lamp-light)" />
-          <path d={ellipse(1150, 440, 260, 30)} fill="var(--ill-bulb)" opacity="0.1" />
-        </g>
-      ),
-    },
+    // v3.25: classic banker's study lamp on the desk corner, with folded cased-paper shade, pull chain and 3-tier beam onto the letter tray.
+    ...lampLayers(k, MAIL_LAMP),
     {
       id: 'chair',
       band: 'front',
@@ -142,7 +126,7 @@ export function MailStation({ wide = false, only }: { wide?: boolean; only?: rea
   return (
     <Station name="mail" layers={layers} frames={FRAMES} light="golden" only={only}>
       {/* v3.10 (owner): the Mail Tray lamp is a theme switch too, like the desk lamp in `01`. */}
-      <DeskLamp pointerOnly className="scene-desktop-only mail-lamp" style={frameVars({ x: 1372, y: 168, w: 196, h: 272 }, FRAMES)} />
+      <DeskLamp pointerOnly className="scene-desktop-only mail-lamp" style={frameVars(lampGeometry(MAIL_LAMP).hitRect, FRAMES)} />
     </Station>
   );
 }

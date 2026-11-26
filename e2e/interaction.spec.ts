@@ -7,7 +7,8 @@ test.describe('interaction', () => {
     const chapter = page.locator('#experience');
     await expect(chapter.locator('.beat[data-beat^="work-"]')).toHaveCount(6);
     await expect(chapter.locator('.beat[data-beat^="organization-"]')).toHaveCount(2);
-    await expect(chapter.locator('.beat-track')).toHaveCount(9);
+    // Eight roles and the closing beat that zooms in on the career board (v3.19).
+    await expect(chapter.locator('.beat-track')).toHaveCount(10);
     // Each role has a folder in the drawer for its sheet to come out of.
     for (const set of ['work', 'organization']) {
       const beats = await chapter.locator(`.beat[data-beat^="${set}-"]`).evaluateAll((els) => els.map((e) => (e as HTMLElement).dataset.beat));
@@ -20,6 +21,40 @@ test.describe('interaction', () => {
     await page.getByRole('link', { name: 'View projects' }).click();
     // A chapter link lands with its first beat composed (§4.4), so the title is what must be on screen.
     await expect(page.locator('#projects-title')).toBeInViewport({ ratio: 1 });
+  });
+
+  test('at the closing beat a pin brings its role card back, then the file opens from it (v3.23)', async ({ page, isMobile }) => {
+    test.skip(isMobile, 'the board is a theatre layout; on a phone the files open from their sheets');
+    await page.goto('/');
+    await cueBeat(page, 'experience', 'board');
+    await page.waitForTimeout(1500);
+    const chapter = page.locator('#experience');
+    // A real mouse click at the pin: a locator click would scroll the page, which moves the camera.
+    const pinClick = async (n: number) => {
+      const box = (await page.locator(`#experience [data-obj="pin-${n}"]`).boundingBox())!;
+      await page.mouse.click(box.x + box.width / 2, box.y + box.height / 2);
+    };
+    await pinClick(1);
+    // The card, not the dialog; the beat is still the closing one (the path is not replayed).
+    await expect(page.locator('dialog[open]')).toHaveCount(0);
+    await expect(chapter).toHaveAttribute('data-peek', 'work-1');
+    await expect(chapter).toHaveAttribute('data-beat', 'board');
+    const card = page.locator('#experience [data-beat="work-1"] > .beat-sheet');
+    await expect(card).toHaveCSS('opacity', '1');
+    // Another pin swaps the card.
+    await pinClick(3);
+    await expect(chapter).toHaveAttribute('data-peek', 'work-3');
+    // The card's own button opens the full entry.
+    await page.waitForTimeout(900);
+    const open = (await page.locator('#experience [data-beat="work-3"] button[aria-haspopup="dialog"]').boundingBox())!;
+    await page.mouse.click(open.x + open.width / 2, open.y + open.height / 2);
+    const dialog = page.locator('dialog[open]');
+    await expect(dialog).toBeVisible();
+    await page.keyboard.press('Escape');
+    await expect(dialog).toHaveCount(0);
+    // The same pin again puts the card away.
+    await pinClick(3);
+    await expect(chapter).not.toHaveAttribute('data-peek', /.+/);
   });
 
   test('a role file opens from the keyboard and returns focus', async ({ page }) => {

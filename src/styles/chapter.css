@@ -480,6 +480,9 @@
   :is(#about, #experience, #services) .beat-deck > .beat:is([data-beat^="card-"], [data-beat^="work-"], [data-beat^="organization-"], [data-beat^="svc-"]) {
     width: min(82vw, 21rem);
   }
+  /* The career board's closing note belongs to the desktop walk; on a phone the career path above the tray says it. */
+  #experience .beat[data-beat="board"],
+  #about .beat[data-beat="tidy"] { display: none; }
 }
 
 /* The card in the middle of the tray is the one in front; its neighbours sit back. */

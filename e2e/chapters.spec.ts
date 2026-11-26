@@ -45,7 +45,7 @@ test.describe('chapter theatre', () => {
           sheet.evaluate((el) => {
             const r = el.getBoundingClientRect();
             const cs = getComputedStyle(el);
-            return { top: r.top, bottom: r.bottom, transform: cs.transform, opacity: Number(cs.opacity), vh: innerHeight, label: el.classList.contains('rail-seg'), board: el.classList.contains('svc-sheet'), book: el.classList.contains('book-sheet') };
+            return { top: r.top, bottom: r.bottom, transform: cs.transform, opacity: Number(cs.opacity), vh: innerHeight, label: el.classList.contains('rail-seg'), board: el.classList.contains('svc-sheet'), book: el.classList.contains('book-sheet'), grid: Boolean(el.parentElement?.dataset.group?.startsWith('grid')) };
           });
         const state = await read();
         // A service is written on the drafting board (v3.7): it lies in the board's tilted plane, not flat on the deck.
@@ -56,6 +56,8 @@ test.describe('chapter theatre', () => {
         else if (state.board) expect(state.top, `${where} is on the board, under the navbar`).toBeGreaterThan(64);
         // A certificate book (v3.11) opens in the middle of the stage, under the navbar.
         else if (state.book) expect(state.top, `${where} is open under the navbar`).toBeGreaterThan(64);
+        // An index card (v3.19) lies in its slot of the grid: the first row sits at --beat-top, the second below it.
+        else if (state.grid) expect(state.top, `${where} is in its grid slot`).toBeGreaterThanOrEqual(state.vh * 0.18 - 10);
         else expect(state.top, `${where} sits at --beat-top`).toBeCloseTo(state.vh * 0.18, -1);
         expect(state.bottom, `${where} fits the viewport`).toBeLessThanOrEqual(state.vh);
         // The wheel moves inside the track: the text does not (§4.4 v3.3).

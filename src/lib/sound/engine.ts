@@ -21,10 +21,16 @@ export type Cue =
   | 'swish'
   | 'pop'
   | 'ouch'
-  | 'chime';
+  | 'chime'
+  | 'pin'
+  | 'glint'
+  | 'whistle'
+  | 'burst';
 
 type Engine = {
-  play: (cue: Cue) => void;
+  play: (cue: Cue, n?: number) => void;
+  /** Stops the clock, the oscillators and the context (v3.22: one engine at a time). */
+  dispose: () => void;
   music: (on: boolean) => void;
   resume: () => Promise<void>;
   suspend: () => Promise<void>;
@@ -48,24 +54,31 @@ const ARP = [
 // Bass: 1 = root, 2 = octave, 5 = fifth, 0 = rest.
 const BASS = [1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 2, 0, 0, 5, 0, 0];
 
+type Holder = { __studioEngine?: Engine };
+
 export function createEngine(): Engine {
+  // v3.22 (owner: the backsound was doubled): never two engines. A second one (a hot reload, a
+  // remount) would run its own groove over the first; the older one is stopped and closed first.
+  const holder = window as unknown as Holder;
+  holder.__studioEngine?.dispose();
   const ctx = new AudioContext({ latencyHint: 'interactive' });
   const master = ctx.createGain();
-  master.gain.value = 0.9;
+  master.gain.value = 1;
   const comp = ctx.createDynamicsCompressor();
   comp.threshold.value = -18;
   comp.ratio.value = 3;
   master.connect(comp).connect(ctx.destination);
 
   const sfx = ctx.createGain();
-  sfx.gain.value = 0.55;
+  sfx.gain.value = 0.5;
   sfx.connect(master);
 
   // A small room: one feedback delay through a low-pass, shared by the music and the sheets.
   const room = ctx.createDelay(1);
-  room.delayTime.value = 0.23;
+  // v3.22: the echo sits on the beat (an eighth note), not 0.23 s off it, which sounded like each hit played twice.
+  room.delayTime.value = (60 / BPM) / 2;
   const roomFb = ctx.createGain();
-  roomFb.gain.value = 0.32;
+  roomFb.gain.value = 0.28;
   const roomTone = ctx.createBiquadFilter();
   roomTone.type = 'lowpass';
   roomTone.frequency.value = 1800;
@@ -124,7 +137,7 @@ export function createEngine(): Engine {
     osc.stop(t + o.attack + o.release + 0.05);
   };
 
-  const play = (cue: Cue) => {
+  const play = (cue: Cue, n = 0) => {
     if (ctx.state !== 'running') return;
     const t = ctx.currentTime;
     switch (cue) {
@@ -182,6 +195,30 @@ export function createEngine(): Engine {
       case 'chime': // a section reached
         [1174.66, 1479.98, 1760].forEach((f, i) => tone({ t: t + i * 0.07, freq: f, peak: 0.045, attack: 0.003, release: 0.7, dest: room }));
         break;
+      case 'pin': // a pin pressed into the board: a tack and a small thud
+        rustle({ t, dur: 0.03, type: 'bandpass', from: 3600, to: 2600, q: 3, peak: 0.4, attack: 0.001 });
+        tone({ t, freq: 1500, to: 800, type: 'square', peak: 0.035, attack: 0.001, release: 0.03 });
+        tone({ t: t + 0.015, freq: 130, to: 80, peak: 0.2, attack: 0.003, release: 0.09 });
+        break;
+      case 'glint': { // the light reaches a pin: a bell, one step higher each time along the path
+        const scale = [587.33, 659.25, 739.99, 880, 987.77, 1174.66, 1318.51];
+        const f = scale[Math.min(n, scale.length - 1)];
+        tone({ t, freq: f, peak: 0.075, attack: 0.003, release: 0.7, dest: room });
+        tone({ t, freq: f * 2, peak: 0.02, attack: 0.002, release: 0.3, dest: room });
+        break;
+      }
+      case 'whistle': // the rocket goes up
+        tone({ t, freq: 520, to: 2300, type: 'sine', peak: 0.05, attack: 0.05, release: 0.4 });
+        rustle({ t, dur: 0.4, type: 'highpass', from: 2000, to: 6000, q: 0.7, peak: 0.1, attack: 0.1 });
+        break;
+      case 'burst': // the firework: a soft boom, a spray of paper and a few crackles
+        tone({ t, freq: 110, to: 46, type: 'triangle', peak: 0.2, attack: 0.004, release: 0.35 });
+        rustle({ t, dur: 0.5, type: 'highpass', from: 1500, to: 4200, q: 0.6, peak: 0.34, attack: 0.01, wet: true });
+        [0.05, 0.12, 0.19, 0.27, 0.35, 0.46].forEach((d, i) =>
+          rustle({ t: t + d, dur: 0.03, type: 'bandpass', from: 5200 - i * 300, to: 4200, q: 3, peak: 0.14, attack: 0.001 }),
+        );
+        tone({ t: t + 0.1, freq: 1760, peak: 0.03, attack: 0.003, release: 0.6, dest: room });
+        break;
       case 'lamp': // the lamp switch
         tone({ t, freq: 2200, to: 1500, type: 'square', peak: 0.05, attack: 0.001, release: 0.03 });
         rustle({ t, dur: 0.03, type: 'highpass', from: 2500, to: 4000, peak: 0.3, attack: 0.001 });
@@ -194,12 +231,13 @@ export function createEngine(): Engine {
   const musicBus = ctx.createGain();
   musicBus.gain.value = 0;
   musicBus.connect(master);
+  // The pad and arpeggio duck a little under each kick, so the groove pumps. Only they go to the room:
+  // the kick, clap, hats and bass stay dry (an echoing kick is the 'double' hit).
   const musicWet = ctx.createGain();
-  musicWet.gain.value = 0.5;
-  musicBus.connect(musicWet).connect(room);
-  // The pad and arpeggio duck a little under each kick, so the groove pumps.
+  musicWet.gain.value = 0.35;
   const melodic = ctx.createGain();
   melodic.connect(musicBus);
+  melodic.connect(musicWet).connect(room);
   const padTone = ctx.createBiquadFilter();
   padTone.type = 'lowpass';
   padTone.frequency.value = 1500;
@@ -315,7 +353,7 @@ export function createEngine(): Engine {
     musicBus.gain.setValueAtTime(musicBus.gain.value, t);
     if (on && !playing) {
       playing = true;
-      musicBus.gain.linearRampToValueAtTime(0.5, t + 2);
+      musicBus.gain.linearRampToValueAtTime(1.2, t + 2);
       next = t + 0.08;
       step = 0;
       window.clearInterval(timer);
@@ -330,10 +368,23 @@ export function createEngine(): Engine {
     }
   };
 
-  return {
+  const api: Engine = {
     play,
     music,
     resume: () => ctx.resume(),
     suspend: () => ctx.suspend(),
+    dispose: () => {
+      playing = false;
+      window.clearInterval(timer);
+      try {
+        lfo.stop();
+      } catch {
+        /* already stopped */
+      }
+      void ctx.close().catch(() => undefined);
+      if (holder.__studioEngine === api) holder.__studioEngine = undefined;
+    },
   };
+  holder.__studioEngine = api;
+  return api;
 }

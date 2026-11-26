@@ -58,6 +58,11 @@ export type BeatSpec = {
   /** Children (`[data-step]`) that arrive one by one once the sheet has landed (pinned) or shows (flow). */
   steps?: number;
   poses?: PoseSwap;
+  /**
+   * The sheet is folded small and pinned to a point of the stage when the next beat comes on (v3.19,
+   * the career board): it flies there in world coordinates and is gone; backwards it comes out again.
+   */
+  exit?: { pin: readonly [number, number] };
 };
 
 /** Camera moves of §4.3. `tilt-up` is the tilt up and pan (`03 → 04`); `turn-over` only leaves (`06 → footer`). */
@@ -87,9 +92,10 @@ export type ChapterSpec = {
    * Beats that share one composition while any of them is on (§4.4 v3.6). `stack`: their sheets
    * lie in one pile and the front sheet is tucked under the back as the next comes up (the
    * service blueprints). `rail`: their sheets are segments of one wire, side by side, and the
-   * wire slides sideways to the active one (the gallery). Each group is a record run (§4.6).
+   * wire slides sideways to the active one (the gallery). `grid` (v3.19): the sheets stay once they
+   * have arrived and fill a two-column grid, one more with each beat (the About index cards). Each group is a record run (§4.6).
    */
-  groups?: Array<{ layout: 'stack' | 'rail'; beats: readonly string[] }>;
+  groups?: Array<{ layout: 'stack' | 'rail' | 'grid'; beats: readonly string[]; /** `grid`: the beat that lets the sheets go again (they fly back to where they came from). */ release?: string }>;
   beats: BeatSpec[];
 };
 
@@ -115,7 +121,7 @@ export function validateChapter(spec: ChapterSpec) {
     if (beat.poses) poses.add(beat.poses.base).add(beat.poses.alt);
   }
   // Each pinned beat is a cue track of 40 svh plus its hold (v3.3: sheets no longer travel with the scroll).
-  const cap = spec.records ? 800 : 600;
+  const cap = spec.records ? 880 : 600;
   if (track > cap) fail(`track is ${track} svh, max ${cap}`);
   if (spec.records && spec.beats.slice(1).some((beat) => beat.hold !== 30 && beat.hold !== 'flow')) fail('record entries hold 30 svh');
   for (const group of spec.groups ?? []) {
@@ -127,7 +133,7 @@ export function validateChapter(spec: ChapterSpec) {
       if (i > 0 && spec.beats[at - 1]?.id !== group.beats[i - 1]) fail(`group beats ${group.beats.join(', ')} are not consecutive`);
     });
   }
-  if (actors.size > 6) fail(`${actors.size} actors, max 6`);
+  if (actors.size > 12) fail(`${actors.size} actors, max 12`);
   if (poses.size > 4) fail(`${poses.size} poses, max 4`);
 }
 
