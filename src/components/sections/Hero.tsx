@@ -1,113 +1,71 @@
-'use client';
+import type { CSSProperties } from 'react';
+import { cvFile, heroHighlights, heroIntro, workExperience } from '../../data/portfolio';
+import { displayCase } from '../../lib/display-case';
+import { heroScreen } from '../../lib/hero-screen';
+import { RifqiFigurine } from '../scene/RifqiFigurine';
+import { DeskStation } from '../scenes/desk/DeskStation';
+import { T } from '../ui/T';
 
-import React from 'react';
-import { TypeAnimation } from 'react-type-animation';
-import { Mail, Linkedin, Github } from 'lucide-react';
-import { FaWhatsapp } from 'react-icons/fa';
-import { useLanguage } from '../../context/LanguageContext';
-import { typingTexts, contactInfo, heroHighlights } from '../../data/portfolio';
-
-interface HeroProps {
-  onViewProjects?: () => void;
-}
-
-const Hero: React.FC<HeroProps> = ({ onViewProjects }) => {
-  const { language, t } = useLanguage();
-
-  const socialIcons = [
-    { href: `mailto:${contactInfo.email}`, icon: Mail, label: 'Email' },
-    { href: contactInfo.linkedin, icon: Linkedin, label: 'LinkedIn' },
-    { href: contactInfo.github, icon: Github, label: 'GitHub' },
-    { href: contactInfo.whatsapp, icon: FaWhatsapp, label: 'WhatsApp' },
-  ];
+/*
+  `01` #home — The Desk station (DesignRules.md §2.2, §4.3).
+  Server component: the headline, tickets and buttons are plain HTML on first
+  paint. The station's art is server-rendered; only the pointer look, lamp,
+  figurine and laptop screen are client leaves. On tall desktops it
+  leaves by the push-in and pan right to the pinboard (scene.css `01 → 02`).
+*/
+export function Hero() {
+  const current = workExperience[0];
 
   return (
-    <section id="home" data-studio="folio" className="bg-paper border-b border-line">
-      <div className="rise-item w-full max-w-6xl mx-auto px-5 lg:px-8 pt-28 pb-12">
-          <p className="font-jetbrains-mono text-[11px] tracking-[0.22em] uppercase text-accent mb-6">
-            {t("Web · Mobile · Interface", "Web · Mobile · Antarmuka")}
+    <section id="home" data-studio="folio" aria-labelledby="home-title" className="hero-sticky border-b border-line bg-paper">
+      <div className="mx-auto grid max-w-7xl gap-10 px-5 pb-12 pt-24 min-[1680px]:max-w-[min(92vw,100rem)] lg:min-h-svh lg:grid-cols-12 lg:items-center lg:gap-10 lg:px-8 lg:pt-24 xl:gap-12">
+        <div className="hero-title lg:col-span-5">
+          <p className="mb-5 font-mono text-[0.6875rem] uppercase tracking-[0.22em] text-accent">
+            <span className="stamp">01</span> — Software Engineer
           </p>
-          <p className="text-sm text-muted mb-3">
-            {t("Hi, I'm", "Halo, Saya")}
-          </p>
-          <h1 className="font-serif text-6xl sm:text-7xl lg:text-8xl font-medium tracking-tight leading-[0.9] text-ink max-w-4xl">
+          <h1 id="home-title" className="font-serif text-6xl font-medium leading-[0.92] tracking-tight text-ink sm:text-7xl">
             Rifqi
             <span className="block">
               Haikal
-              <span data-eqbot="home-name" data-eqbot-at="end" className="inline-block w-px h-px" aria-hidden="true" />
+              <span data-eqbot="home-name" data-eqbot-at="end" className="inline-block h-px w-px" aria-hidden="true" />
             </span>
           </h1>
 
-          <div className="mt-10 flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
-            <p data-eqbot="home-role" data-eqbot-at="end" className="text-lg md:text-xl text-muted max-w-md">
-              <span>{t("I'm", "Saya")} </span>
-              <TypeAnimation
-                sequence={
-                  language === 'en'
-                    ? typingTexts.en.flatMap((text) => [text, 2000])
-                    : typingTexts.id.flatMap((text) => [text, 2000])
-                }
-                wrapper="span"
-                speed={55}
-                className="text-ink font-serif italic"
-                repeat={Infinity}
-                cursor
-                preRenderFirstString
-              />
-            </p>
-            <div className="flex flex-col sm:flex-row gap-3">
-              <a href="#contact" className="btn-primary-custom">
-                {t("Get In Touch", "Hubungi Saya")}
-              </a>
-              <button type="button" onClick={onViewProjects} className="btn-outline-custom">
-                {t("View Projects", "Lihat Projek")}
-              </button>
-            </div>
-          </div>
-      </div>
-
-      <div className="rise-item max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-4 border-t border-l border-line">
-        {heroHighlights.map((item) => (
-          <div key={item.label} className="border-b border-r border-line px-5 lg:px-8 py-5">
-            <p className="font-serif text-3xl leading-none text-ink">{item.value}</p>
-            <p className="mt-2 font-jetbrains-mono text-[11px] tracking-[0.12em] uppercase text-muted">
-              {t(item.label, item.labelId)}
-            </p>
-          </div>
-        ))}
-      </div>
-
-      <div className="rise-item border-t border-line">
-        <div className="max-w-6xl mx-auto px-5 lg:px-8 py-5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <p data-eqbot="home-available" data-eqbot-at="end" className="font-jetbrains-mono text-[11px] tracking-[0.16em] uppercase">
-            <span className="inline-flex items-center text-accent">
-              <span className="presence" aria-hidden="true" />
-              {t("Available for work", "Tersedia untuk bekerja")}
-            </span>
-            <span className="text-muted"> · {contactInfo.location}</span>
+          <p data-eqbot="home-role" data-eqbot-at="end" className="mt-6 font-serif text-xl italic text-ink">
+            <T en={displayCase(current.title)} id={displayCase(current.titleId ?? current.title)} />
+            <span className="caret" aria-hidden="true" />
           </p>
-          <div className="flex flex-wrap gap-x-5 gap-y-2">
-            {socialIcons.map((social) => {
-              const IconComponent = social.icon;
-              return (
-                <a
-                  key={social.label}
-                  href={social.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={social.label}
-                  className="link-mark inline-flex items-center gap-2 text-sm text-muted"
-                >
-                  <IconComponent size={16} />
-                  {social.label}
-                </a>
-              );
-            })}
+          <p className="mt-3 max-w-md text-muted">
+            <T en={heroIntro.en} id={heroIntro.id} />
+          </p>
+
+          <ul className="hero-tickets mt-7 grid max-w-md grid-cols-2 gap-2">
+            {heroHighlights.map((item, i) => (
+              <li key={item.label} className="ticket border border-line bg-raised px-5 py-3" style={{ '--i': i } as CSSProperties}>
+                <p className="font-serif text-2xl leading-none text-ink">{item.value}</p>
+                <p className="mt-1.5 font-mono text-[0.6875rem] uppercase tracking-[0.1em] text-muted">
+                  <T en={item.label} id={item.labelId} />
+                </p>
+              </li>
+            ))}
+          </ul>
+
+          <div className="hero-cta mt-7 flex flex-col gap-3 sm:flex-row">
+            <a href="#projects" className="btn-primary-custom min-h-11">
+              <T en="View projects" id="Lihat proyek" />
+            </a>
+            {cvFile && (
+              <a href={cvFile} download className="btn-outline-custom min-h-11">
+                <T en="Download CV" id="Unduh CV" />
+              </a>
+            )}
           </div>
+        </div>
+
+        <div className="hero-desk lg:col-span-7">
+          <DeskStation screen={heroScreen()} poster={<RifqiFigurine crop="stage" pose="lean" className="h-full w-full" />} />
         </div>
       </div>
     </section>
   );
-};
-
-export default Hero;
+}

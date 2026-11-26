@@ -1,0 +1,44 @@
+/* Motion tokens (DesignRules.md §10). CSS first; `motion` only for presence. */
+
+:root {
+  --ease-paper: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-micro: 160ms;
+  --dur-ui: 200ms;
+  --dur-sheet: 320ms;
+  --dur-reveal: 600ms;
+  /* Cued paper (§4.4 v3.3): a sheet lands in --dur-leaf-in and is lifted off in --dur-leaf-out. */
+  --ease-leaf: cubic-bezier(0.3, 0.72, 0.28, 1);
+  --dur-leaf-in: 760ms;
+  --dur-leaf-out: 520ms;
+  --dur-act: 900ms;
+  --dur-pose: 420ms;
+  --dur-step: 520ms;
+  --gap-step: 170ms;
+  --dur-morph: 520ms;
+}
+
+/* Hero role caret: the one allowed blinking element. */
+.caret {
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  margin-left: 0.2em;
+  vertical-align: -0.12em;
+  background: rgb(var(--rgb-accent));
+  animation: caret-blink 1.1s steps(1, end) infinite;
+}
+
+@keyframes caret-blink {
+  50% { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -1,111 +1,102 @@
-'use client';
+import { Download, GraduationCap, Briefcase, Trophy, Users, ArrowRight } from 'lucide-react';
+import type { ReactNode } from 'react';
+import { aboutHighlights, cvFile } from '../../data/portfolio';
+import { Beat, Chapter } from '../scenes/chapter/Chapter';
+import { PINBOARD_CHAPTER } from '../scenes/pinboard/beats';
+import { PinboardStation } from '../scenes/pinboard/PinboardStation';
+import { SectionTitle } from '../ui/SectionTitle';
+import { T } from '../ui/T';
+import { PhotoPrint } from '../ui/PhotoPrint';
 
-import React from 'react';
-import Image from 'next/image';
-import { useLanguage } from '../../context/LanguageContext';
-import { aboutHighlights } from '../../data/portfolio';
-import { Download, GraduationCap, Briefcase, Trophy, Users, ChevronRight } from 'lucide-react';
-import { AnimatedSectionTitle } from '../shared/AnimatedSectionTitle';
-import { BrandLockup } from '../shared/BrandLockup';
-
-const iconMap: { [key: string]: React.ReactNode } = {
-  'graduation-cap': <GraduationCap size={18} />,
-  briefcase: <Briefcase size={18} />,
-  trophy: <Trophy size={18} />,
-  users: <Users size={18} />,
+const glyphs: Record<string, ReactNode> = {
+  'graduation-cap': <GraduationCap size={22} aria-hidden="true" />,
+  briefcase: <Briefcase size={22} aria-hidden="true" />,
+  trophy: <Trophy size={22} aria-hidden="true" />,
+  users: <Users size={22} aria-hidden="true" />,
 };
 
-export const About: React.FC = () => {
-  const { t, language } = useLanguage();
-
+/*
+  02 About — the Pinboard chapter (DesignRules.md §4.5 `02`, v3.6). The title
+  drops onto a pin; the dossier unfolds while the photograph comes off the
+  board to stand beside it; then each index card on the board comes forward in
+  turn as its own sheet. Server component. Where there is no stage (mobile),
+  the photograph is printed at the top of the dossier instead.
+*/
+export function About() {
   return (
-    <section id="about" data-studio="manuscript" className="py-12 md:py-16 border-b border-line">
-      <div className="max-w-6xl mx-auto px-5 lg:px-8">
-        <AnimatedSectionTitle
-          center={false}
-          badge={t('Get to Know Me', 'Mengenal Saya') as string}
-          title={t('About Me', 'Tentang Saya') as string}
-          subtitle={t(
-            'Software engineer specialized in C#, ASP.NET, and SQL Server for enterprise web and data systems',
-            'Software engineer yang berfokus pada C#, ASP.NET, dan SQL Server untuk sistem web dan data enterprise'
-          ) as string}
+    <Chapter
+      spec={PINBOARD_CHAPTER}
+      labelledBy="about-title"
+      studio="manuscript"
+      eqbot="about-photo"
+      next={{ id: 'experience', en: 'Experience', idn: 'Pengalaman' }}
+      stage={<PinboardStation icons={aboutHighlights.map((item) => item.icon)} wide />}
+    >
+      <Beat id="title" className="fold-tr [&>header]:mb-0">
+        <SectionTitle
+          index="02"
+          eyebrow={<T en="Dossier" id="Berkas" />}
+          title={<T en="About me" id="Tentang saya" />}
+          titleId="about-title"
         />
+      </Beat>
 
-        <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-start">
-          <figure data-eqbot="about-photo" data-eqbot-at="above" className="rise-item lg:col-span-5 lg:sticky lg:top-24">
-            <div className="border border-line bg-raised">
-              <div className="relative aspect-square overflow-hidden bg-raised">
-                <Image
-                  src="/assets/me.png"
-                  alt="Rifqi Haikal"
-                  fill
-                  sizes="(min-width: 1024px) 420px, 90vw"
-                  className="object-contain"
-                />
-              </div>
-              <figcaption className="p-4 flex items-center gap-4">
-                <BrandLockup variant="badge" label="" className="h-20 w-20 shrink-0" />
-                <div className="min-w-0">
-                  <p className="font-serif text-xl text-ink">Rifqi Haikal</p>
-                  <p className="text-sm text-muted">{t('Software Developer', 'Developer Perangkat Lunak')}</p>
-                  <p className="mt-2 inline-flex items-center text-[11px] tracking-[0.14em] uppercase text-accent">
-                    <span className="presence" aria-hidden="true" />
-                    {t('Available for Work', 'Tersedia untuk Bekerja')}
-                  </p>
-                </div>
-              </figcaption>
-            </div>
-          </figure>
-
-          <div className="rise-item lg:col-span-7">
-            <h3 className="font-serif text-3xl md:text-4xl font-medium tracking-tight text-ink mb-5">
-              {t("Hi, I'm", "Halo, Saya")}{' '}
-              <span className="italic">Rifqi Haikal</span>
-            </h3>
-            <p className="text-base md:text-lg text-muted leading-relaxed">
-              {language === 'en'
-                ? 'Software Engineer with 3 years of hands-on development experience. My core work is C#, ASP.NET MVC, and .NET Core for enterprise web and data systems. I also bring additional full-stack experience with React, Angular, and Spring Boot. I have built backend services, REST APIs, monitoring dashboards, and secure applications with SQL Server, Entity Framework, RBAC, SSO, and MFA, delivered for telecommunications, oil and gas, research, and financial services.'
-                : 'Software Engineer dengan 3 tahun pengalaman pengembangan. Pekerjaan inti saya adalah C#, ASP.NET MVC, dan .NET Core untuk sistem web dan data enterprise. Saya juga memiliki pengalaman full-stack tambahan dengan React, Angular, dan Spring Boot. Saya membangun layanan backend, REST API, dashboard pemantauan, dan aplikasi yang aman dengan SQL Server, Entity Framework, RBAC, SSO, dan MFA, untuk telekomunikasi, minyak dan gas, riset, serta jasa keuangan.'}
-            </p>
-
-            <div className="mt-10">
-              <p className="font-jetbrains-mono text-[11px] tracking-[0.22em] uppercase text-accent mb-4">
-                {t('At a Glance', 'Sekilas')}
-              </p>
-              <dl className="grid sm:grid-cols-2 auto-rows-fr border-t border-l border-line">
-                {aboutHighlights.map((highlight) => (
-                  <div key={highlight.title} className="read-row flex flex-col p-5 border-b border-r border-line">
-                    <dt className="flex items-center gap-2.5">
-                      <span className="shrink-0 text-accent">{iconMap[highlight.icon]}</span>
-                      <span className="font-jetbrains-mono text-[11px] tracking-[0.14em] uppercase text-ink">
-                        {t(highlight.title, highlight.titleId)}
-                      </span>
-                    </dt>
-                    <dd className="mt-3 text-[15px] leading-relaxed text-muted">
-                      {t(highlight.description, highlight.descriptionId)}
-                    </dd>
-                  </div>
-                ))}
-              </dl>
-            </div>
-
-            <div className="mt-8 flex flex-wrap gap-3">
-              <a href="/assets/CV Rifqi Haikal Chairiansyah.pdf" download className="btn-primary-custom">
-                <Download size={16} />
-                {t('Download CV', 'Unduh CV')}
-              </a>
-              <button
-                type="button"
-                onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
-                className="btn-outline-custom"
-              >
-                {t('Get in Touch', 'Hubungi Saya')}
-                <ChevronRight size={16} />
-              </button>
-            </div>
-          </div>
+      <Beat id="dossier">
+        <div className="mb-8 max-w-[16rem] md:hidden">
+          <PhotoPrint flat alt="Rifqi Haikal" sizes="80vw" />
         </div>
-      </div>
-    </section>
+        <p className="text-base leading-relaxed text-ink md:text-lg">
+          <T
+            en="I'm a software engineer with three years of hands-on development. Most of my work is C#, ASP.NET MVC and .NET Core for enterprise web and data systems: backend services, REST APIs, monitoring dashboards, and secure access with SQL Server, Entity Framework, RBAC, SSO and MFA."
+            id="Saya software engineer dengan tiga tahun pengalaman pengembangan. Sebagian besar pekerjaan saya adalah C#, ASP.NET MVC, dan .NET Core untuk sistem web dan data enterprise: layanan backend, REST API, dashboard pemantauan, serta akses aman dengan SQL Server, Entity Framework, RBAC, SSO, dan MFA."
+          />
+        </p>
+        <p className="mt-4 text-base leading-relaxed text-muted">
+          <T
+            en="I've built systems for telecommunications, oil and gas, research and financial services, and I also work in React, Angular and Spring Boot when a project needs it."
+            id="Saya pernah membangun sistem untuk sektor telekomunikasi, minyak dan gas, riset, dan jasa keuangan, serta bekerja dengan React, Angular, dan Spring Boot bila proyek membutuhkannya."
+          />
+        </p>
+        <div className="mt-6 flex flex-wrap gap-3">
+          <a href={cvFile} download className="btn-primary-custom">
+            <Download size={16} aria-hidden="true" />
+            <T en="Download CV" id="Unduh CV" />
+          </a>
+          <a href="#contact" className="btn-outline-custom">
+            <T en="Get in touch" id="Hubungi saya" />
+            <ArrowRight size={16} aria-hidden="true" />
+          </a>
+        </div>
+      </Beat>
+
+      {aboutHighlights.map((item, index) => (
+        <Beat key={item.title} id={`card-${index}`} className="index-sheet">
+          <p className="flex items-center justify-between font-mono text-[0.6875rem] uppercase tracking-[0.16em] text-muted">
+            <T en={`Pinned ${String(index + 1).padStart(2, '0')} / ${String(aboutHighlights.length).padStart(2, '0')}`} id={`Kartu ${String(index + 1).padStart(2, '0')} / ${String(aboutHighlights.length).padStart(2, '0')}`} />
+            <span className="text-accent">{glyphs[item.icon]}</span>
+          </p>
+          <h3 className="mt-4 font-serif text-3xl font-medium leading-tight tracking-tight text-ink">
+            <T en={item.title} id={item.titleId} />
+          </h3>
+          <p className="mt-3 text-base leading-relaxed text-muted md:text-lg">
+            <T en={item.description} id={item.descriptionId} />
+          </p>
+        </Beat>
+      ))
+      }
+
+      {/* v3.20: the closing beat. The cards fold back onto the board while this note comes up. */}
+      <Beat id="tidy" className="about-tidy-note">
+        <p className="font-mono text-[0.6875rem] uppercase tracking-[0.18em] text-accent">
+          <T en="Back on the board" id="Kembali ke papan" />
+        </p>
+        <h3 className="mt-3 font-serif text-2xl font-medium leading-snug text-ink">
+          <T en="That is the short version." id="Itu versi singkatnya." />
+        </h3>
+        <p className="mt-2 text-[0.9375rem] leading-relaxed text-muted">
+          <T en="The cards go back where they were pinned. The files are next." id="Kartu-kartu kembali ke tempat disematkannya. Berkas-berkas menyusul." />
+        </p>
+      </Beat>
+    </Chapter>
   );
-};
+}

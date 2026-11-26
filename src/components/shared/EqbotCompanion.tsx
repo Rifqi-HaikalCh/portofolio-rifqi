@@ -1,11 +1,14 @@
 'use client';
 
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { useEffect, useEffectEvent, useLayoutEffect, useRef, useState } from 'react';
+import { useHydrated } from '../../hooks/useHydrated';
 import { createPortal } from 'react-dom';
-import Lottie from 'lottie-react';
 import { X } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
-import assistantAnimation from '../../../public/assets/assistant.json';
+import { RifqiFigurine } from '../scene/RifqiFigurine';
+import type { Expression, PoseId } from '../scene/figurine-parts';
+import { play } from '../../lib/sound/control';
+import { EQBOT_OPEN_EVENT, emitEqbotState } from '../scene/scene-events';
 import { scrollToStudioSection, useStudio } from './StudioProvider';
 import {
   eqbotCopy,
@@ -26,26 +29,26 @@ function reducedMotion() {
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
-function EqbotFace() {
-  return <Lottie animationData={assistantAnimation} loop className="h-9 w-9" />;
+function EqbotFace({ expression = 'neutral' }: { expression?: Expression }) {
+  // Head crop of the same paper puppet as the hero (DesignRules §2.6); the
+  // expression swaps face parts only (DesignRules.md §2.7).
+  return <RifqiFigurine crop="head" expression={expression} className="h-full w-full" />;
 }
 
 function downloadCv() {
   const link = document.createElement('a');
-  link.href = '/assets/CV Rifqi Haikal Chairiansyah.pdf';
-  link.download = 'CV Rifqi Haikal Chairiansyah.pdf';
+  link.href = '/assets/Rifqi Haikal Chairiansyah-CV.pdf';
+  link.download = 'Rifqi Haikal Chairiansyah-CV.pdf';
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
 }
 
 function openPlace(place: EqbotPlace) {
-  if (place === 'projects' && !document.getElementById('projects')) {
-    scrollToStudioSection('services');
-    return;
-  }
   scrollToStudioSection(place);
 }
+
+type GreetBeat = 0 | 1 | 2 | 3;
 
 export function EqbotCompanion() {
   const { t } = useLanguage();
@@ -54,7 +57,7 @@ export function EqbotCompanion() {
     return typeof value === 'string' ? value : en;
   };
   const { activeId } = useStudio();
-  const [ready, setReady] = useState(false);
+  const ready = useHydrated();
   const [phase, setPhase] = useState<Phase>('shut');
   const [rest, setRest] = useState<Rest>('logo');
   const [flyer, setFlyer] = useState<Flyer | null>(null);
@@ -62,6 +65,7 @@ export function EqbotCompanion() {
   const [nodeId, setNodeId] = useState('menu');
   const [waiting, setWaiting] = useState(false);
   const [notice, setNotice] = useState(false);
+  const [greetBeat, setGreetBeat] = useState<GreetBeat>(0);
   const seen = useRef(new Set<string>());
   const offeredPlace = useRef(new Set<string>());
   const answers = useRef(0);
@@ -69,20 +73,22 @@ export function EqbotCompanion() {
   const saidThorough = useRef(false);
   const saidRestless = useRef(false);
   const opened = useRef(false);
+  const introDone = useRef(false);
   const chose = useRef(false);
   const leftEarly = useRef(false);
   const waitTimer = useRef(0);
+  const introTimer = useRef(0);
   const logRef = useRef<HTMLDivElement>(null);
   const launchRef = useRef<HTMLButtonElement>(null);
   const tabAvatarRef = useRef<HTMLSpanElement>(null);
   const avatarRef = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
-    setReady(true);
     const show = window.setTimeout(() => setNotice(true), 600);
     const hide = window.setTimeout(() => setNotice(false), 8600);
     return () => {
       window.clearTimeout(waitTimer.current);
+      window.clearTimeout(introTimer.current);
       window.clearTimeout(show);
       window.clearTimeout(hide);
     };
@@ -94,14 +100,6 @@ export function EqbotCompanion() {
     node.scrollTop = node.scrollHeight;
   }, [log, waiting, phase]);
 
-  useEffect(() => {
-    if (phase === 'shut') return undefined;
-    const onKey = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') closeToTab();
-    };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [phase]);
 
   useLayoutEffect(() => {
     if (phase !== 'fly') return undefined;
@@ -170,11 +168,41 @@ export function EqbotCompanion() {
     ];
   };
 
+  // Playful multi-beat greeting choreography when the chat opens.
+  useEffect(() => {
+    if ((phase !== 'grow' && phase !== 'open') || reducedMotion()) return undefined;
+    const t0 = window.setTimeout(() => setGreetBeat(1), 40);
+    const t1 = window.setTimeout(() => setGreetBeat(2), 520);
+    const t2 = window.setTimeout(() => setGreetBeat(3), 1020);
+    const t3 = window.setTimeout(() => setGreetBeat(0), 2240);
+    return () => {
+      window.clearTimeout(t0);
+      window.clearTimeout(t1);
+      window.clearTimeout(t2);
+      window.clearTimeout(t3);
+    };
+  }, [phase]);
+
   const openChat = () => {
     if (phase !== 'shut') return;
     setNotice(false);
     if (log.length === 0) {
-      setLog([greeting()]);
+      const firstGreeting = greeting();
+      if (!introDone.current) {
+        introDone.current = true;
+        if (reducedMotion()) {
+          setLog([firstGreeting, { who: 'bot', ...eqbotCopy.introFollow }]);
+        } else {
+          setLog([firstGreeting]);
+          window.clearTimeout(introTimer.current);
+          introTimer.current = window.setTimeout(() => {
+            setLog((prev) => (prev.length === 1 ? [...prev, { who: 'bot', ...eqbotCopy.introFollow }] : prev));
+            play('pop');
+          }, 760);
+        }
+      } else {
+        setLog([firstGreeting]);
+      }
       setNodeId('menu');
     }
     setPhase(reducedMotion() ? 'open' : 'fly');
@@ -182,6 +210,8 @@ export function EqbotCompanion() {
 
   const closeToTab = () => {
     if (phase === 'shut' || phase === 'shrink') return;
+    window.clearTimeout(introTimer.current);
+    setGreetBeat(0);
     if (!chose.current) {
       leftEarly.current = true;
       setLog([]);
@@ -192,6 +222,33 @@ export function EqbotCompanion() {
     setRest('tab');
     setPhase(reducedMotion() ? 'shut' : 'shrink');
   };
+
+  // The hero figurine holds a "thinking" pose while the sheet is open.
+  const sheetOpen = phase !== 'shut';
+  useEffect(() => {
+    emitEqbotState(sheetOpen);
+  }, [sheetOpen]);
+
+  // Escape closes to the tab. useEffectEvent reads the latest closeToTab without re-subscribing.
+  const onEscape = useEffectEvent(() => closeToTab());
+
+  useEffect(() => {
+    if (phase === 'shut') return undefined;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') onEscape();
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [phase]);
+
+  // Other parts of the page (the laptop screen's "Ask EQbot") open the sheet with this event.
+  const onOpenRequest = useEffectEvent(() => openChat());
+
+  useEffect(() => {
+    const onOpen = () => onOpenRequest();
+    window.addEventListener(EQBOT_OPEN_EVENT, onOpen);
+    return () => window.removeEventListener(EQBOT_OPEN_EVENT, onOpen);
+  }, []);
 
   const choose = (choice: EqbotChoice) => {
     if (waiting || phase !== 'open') return;
@@ -234,6 +291,7 @@ export function EqbotCompanion() {
     waitTimer.current = window.setTimeout(() => {
       setLog((prev) => [...prev, ...notes, reply, ...(see ? [see] : [])]);
       setWaiting(false);
+      play('pop');
       if (choice.download) downloadCv();
     }, reducedMotion() ? 0 : 900);
   };
@@ -246,7 +304,37 @@ export function EqbotCompanion() {
 
   const choices = choicesFor(nodeId);
   const panelOpen = phase === 'grow' || phase === 'open';
+  const lastTurn = log[log.length - 1];
+  const mood: Expression =
+    phase === 'shrink'
+      ? 'wink'
+      : greetBeat === 2
+        ? 'wink'
+        : greetBeat === 1 || greetBeat === 3
+          ? 'smile'
+          : waiting
+            ? 'thinking'
+            : log.length > 1 && lastTurn?.who === 'bot'
+              ? 'smile'
+              : 'neutral';
   const showFace = phase !== 'fly';
+  // The host beside the chat (v3.9 + v3.29): playful stop-motion greeting sequence on open, thinks while "typing", opens a hand toward the answer.
+  const botTurns = log.filter((turn) => turn.who === 'bot').length;
+  const lastBot = log.reduce((at, turn, index) => (turn.who === 'bot' ? index : at), -1);
+  const hostPose: PoseId = waiting
+    ? 'think'
+    : greetBeat === 1
+      ? 'wave'
+      : greetBeat === 2
+        ? 'explain'
+        : greetBeat === 3
+          ? 'wave'
+          : log.length <= 2
+            ? 'wave'
+            : lastTurn?.who === 'bot'
+              ? 'explain'
+              : 'stand';
+  const hostAct = waiting ? 'think' : greetBeat > 0 ? 'greet' : log.length <= 2 ? 'wave' : 'say';
 
   if (!ready) return null;
 
@@ -284,7 +372,7 @@ export function EqbotCompanion() {
                 <i className="eqbot-presence" />
               </span>
               <span className="eqbot-tab-copy">
-                <span className="eqbot-name">EQBot</span>
+                <span className="eqbot-name">{text(eqbotCopy.headerName.en, eqbotCopy.headerName.idn)}</span>
                 <span className="eqbot-status">{text(eqbotCopy.ongoing.en, eqbotCopy.ongoing.idn)}</span>
               </span>
             </button>
@@ -300,19 +388,45 @@ export function EqbotCompanion() {
         )}
       </div>
       {phase !== 'shut' && (
+        <div className={`eqbot-scrim${panelOpen ? ' is-open' : ''}`} aria-hidden="true" onClick={closeToTab} />
+      )}
+      {phase !== 'shut' && (
+        <div className={`eqbot-host${panelOpen ? ' is-open' : ''}`} aria-hidden="true">
+          <div key={`${hostAct}-${botTurns}-${greetBeat}`} className="eqbot-host-figure" data-act={hostAct}>
+            <RifqiFigurine crop="wide" pose={hostPose} expression={mood === 'wink' ? 'wink' : mood === 'smile' ? 'smile' : undefined} className="h-full w-full" />
+          </div>
+          {greetBeat > 0 && !waiting && (
+            <div className="eqbot-greet-pop">
+              <span className="eqbot-greet-tag">{text(eqbotCopy.greetingBubbleBadge.en, eqbotCopy.greetingBubbleBadge.idn)}</span>
+              <span className="eqbot-greet-sub">{text(eqbotCopy.greetingSubBadge.en, eqbotCopy.greetingSubBadge.idn)}</span>
+              <i className="eqbot-greet-spark s1" />
+              <i className="eqbot-greet-spark s2" />
+              <i className="eqbot-greet-spark s3" />
+            </div>
+          )}
+          {waiting && (
+            <span className="eqbot-thought">
+              <span />
+              <span />
+              <span />
+            </span>
+          )}
+        </div>
+      )}
+      {phase !== 'shut' && (
         <div className={`eqbot-panel${panelOpen ? ' is-open' : ''}`} role="dialog" aria-label="EQbot">
           <div className="eqbot-panel-bar">
             <div className="eqbot-id">
-              <span className="eqbot-avatar" ref={avatarRef}>
+              <span className={`eqbot-avatar${greetBeat > 0 ? ' is-greeting' : ''}`} ref={avatarRef}>
                 {showFace && (
                   <span className="eqbot-face-clip">
-                    <EqbotFace />
+                    <EqbotFace expression={mood} />
                   </span>
                 )}
                 <i className="eqbot-presence" />
               </span>
               <span className="eqbot-tab-copy">
-                <span className="eqbot-name">EQBot</span>
+                <span className="eqbot-name">{text(eqbotCopy.headerName.en, eqbotCopy.headerName.idn)}</span>
                 <span className="eqbot-status">{text(eqbotCopy.online.en, eqbotCopy.online.idn)}</span>
               </span>
             </div>
@@ -331,13 +445,13 @@ export function EqbotCompanion() {
                 <button
                   key={`${turn.who}-${index}`}
                   type="button"
-                  className="eqbot-bot eqbot-jump"
+                  className={`eqbot-bot eqbot-jump${index === lastBot ? ' is-new' : ''}`}
                   onClick={() => jumpTo(turn.place as EqbotPlace)}
                 >
                   {text(turn.en, turn.idn)}
                 </button>
               ) : (
-                <p key={`${turn.who}-${index}`} className={turn.who === 'you' ? 'eqbot-you' : 'eqbot-bot'}>
+                <p key={`${turn.who}-${index}`} className={turn.who === 'you' ? 'eqbot-you' : `eqbot-bot${index === lastBot ? ' is-new' : ''}`}>
                   {text(turn.en, turn.idn)}
                 </p>
               )
@@ -348,7 +462,9 @@ export function EqbotCompanion() {
               </p>
             )}
           </div>
+          {/* v3.12 (owner): the choices are one scrolling row, so the messages get the height. */}
           <div className="eqbot-options">
+            <div className="eqbot-choices" role="group" aria-label={text('Questions', 'Pertanyaan')}>
             {choices.map((choice) => (
               <button
                 key={choice.id}
@@ -360,6 +476,7 @@ export function EqbotCompanion() {
                 {text(choice.en, choice.idn)}
               </button>
             ))}
+            </div>
             <p className="eqbot-hint">{text(eqbotCopy.hint.en, eqbotCopy.hint.idn)}</p>
           </div>
         </div>

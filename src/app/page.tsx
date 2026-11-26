@@ -1,43 +1,50 @@
-"use client";
-
-import { useRef, useState } from 'react';
-import { AnimatePresence } from 'framer-motion';
 import Navbar from '../components/sections/Navbar';
+import { Hero } from '../components/sections/Hero';
+import { About } from '../components/sections/About';
+import { Experience } from '../components/sections/Experience';
+import { Projects, Services } from '../components/sections/Services';
+import { Certificates } from '../components/sections/Certificates';
+import { Contact } from '../components/sections/Contact';
 import { Footer } from '../components/sections/Footer';
-import LoadingScreen from '../components/shared/LoadingScreen';
-import { FloatingNavigation } from '../components/shared/FloatingNavigation';
-import { ResponsiveLayout } from '../components/ResponsiveLayout';
 import { StudioProvider } from '../components/shared/StudioProvider';
 import { StudioRail } from '../components/shared/StudioRail';
-import { EqbotCompanion } from '../components/shared/EqbotCompanion';
-import { useSectionRise } from '../components/shared/useLedgerRise';
+import { ChapterBar } from '../components/shared/ChapterBar';
+import { EqbotLoader } from '../components/shared/EqbotLoader';
+import { FigureGaze } from '../components/shared/FigureGaze';
+import { SectionHints } from '../components/shared/SectionHints';
+import { StagePoke } from '../components/shared/StagePoke';
+import { WelcomeTour } from '../components/shared/WelcomeTour';
+import { PaperDefs } from '../lib/paper-kit';
+
+/*
+  One page, one section order (DesignRules.md §4, src/data/sections.ts).
+  A Server Component: sections render to HTML and ship only their client
+  leaves. Total experience and the footer year refresh once a day.
+*/
+export const revalidate = 86400;
 
 export default function Home() {
-  const [loading, setLoading] = useState(true);
-  const frameRef = useRef<HTMLDivElement>(null);
-  useSectionRise(frameRef, loading ? 'loading' : 'ready');
-
   return (
-    <>
-      <AnimatePresence>
-        {loading && <LoadingScreen onComplete={() => setLoading(false)} />}
-      </AnimatePresence>
-
-      <div ref={frameRef}>
-      {!loading && (
-        <StudioProvider>
-          <Navbar />
-          <StudioRail />
-          <main>
-            <ResponsiveLayout />
-          </main>
-          <Footer />
-          <EqbotCompanion />
-        </StudioProvider>
-      )}
-      </div>
-
-      <FloatingNavigation />
-    </>
+    <StudioProvider>
+      <Navbar />
+      <StudioRail />
+      <ChapterBar />
+      <main id="main">
+        <PaperDefs />
+        <Hero />
+        <About />
+        <Experience />
+        <Services />
+        <Projects />
+        <Certificates />
+        <Contact />
+      </main>
+      <Footer />
+      <EqbotLoader />
+      <FigureGaze />
+      <SectionHints />
+      <StagePoke />
+      <WelcomeTour />
+    </StudioProvider>
   );
 }

@@ -1,117 +1,49 @@
 'use client';
 
-import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import { pageSections, type PageSectionId } from '../../data/sections';
 
-export const studioSections = [
-  { id: 'home', en: 'Home', idn: 'Beranda', index: '01' },
-  { id: 'about', en: 'About', idn: 'Tentang', index: '02' },
-  { id: 'experience', en: 'Experience', idn: 'Pengalaman', index: '03' },
-  { id: 'services', en: 'Services', idn: 'Layanan', index: '04' },
-  { id: 'certificates', en: 'Certificates', idn: 'Sertifikat', index: '05' },
-  { id: 'contact', en: 'Contact', idn: 'Kontak', index: '06' },
-  { id: 'projects', en: 'Projects', idn: 'Projek', index: '07' },
-] as const;
+/*
+  Which section the reader is in, for the navbar, StudioRail and EQbot.
+  One IntersectionObserver on a thin reading line at 38 % of the viewport:
+  no scroll listeners, no per-frame state (DesignRules.md §4 StudioRail).
+  The archive drawer is a modal dialog, so it never competes here.
+*/
 
-export type StudioSectionId = (typeof studioSections)[number]['id'];
-
-interface StudioContextValue {
-  activeId: StudioSectionId;
-  progress: number;
-}
-
-const StudioContext = createContext<StudioContextValue | undefined>(undefined);
-
-function pickReading(nodes: HTMLElement[]) {
-  const sheet = nodes.find((node) => node.dataset.studio === 'sheet');
-  if (sheet) {
-    const rect = sheet.getBoundingClientRect();
-    const visible = Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0);
-    if (visible > window.innerHeight * 0.55) return sheet;
-  }
-
-  const line = window.innerHeight * 0.38;
-  const readable = nodes.filter((node) => node.dataset.studio !== 'sheet');
-  const containing = [...readable].reverse().find((node) => {
-    const rect = node.getBoundingClientRect();
-    return rect.top <= line && rect.bottom >= line;
-  });
-  if (containing) return containing;
-
-  let current = readable[0] ?? nodes[0];
-  for (const node of readable) {
-    if (node.getBoundingClientRect().top <= line) current = node;
-  }
-  return current;
-}
+const StudioContext = createContext<{ activeId: PageSectionId } | undefined>(undefined);
 
 export function StudioProvider({ children }: { children: React.ReactNode }) {
-  const [activeId, setActiveId] = useState<StudioSectionId>('home');
-  const [progress, setProgress] = useState(0);
-  const progressRef = useRef(0);
+  const [activeId, setActiveId] = useState<PageSectionId>('home');
 
   useEffect(() => {
-    let frame = 0;
+    const nodes = pageSections
+      .map((section) => document.getElementById(section.id))
+      .filter((node): node is HTMLElement => node !== null);
+    if (nodes.length === 0) return undefined;
 
-    const measure = () => {
-      frame = 0;
-      const doc = document.documentElement;
-      const max = doc.scrollHeight - doc.clientHeight;
-      const nextProgress = max > 0 ? Math.min(1, Math.max(0, doc.scrollTop / max)) : 0;
-      if (Math.abs(nextProgress - progressRef.current) > 0.004) {
-        progressRef.current = nextProgress;
-        setProgress(nextProgress);
-      }
-
-      const nodes = Array.from(document.querySelectorAll<HTMLElement>('[data-studio]')).filter(
-        (node) => node.id && node.dataset.studio !== 'colophon'
-      );
-      if (nodes.length === 0) return;
-
-      const atEnd = doc.scrollTop + window.innerHeight >= doc.scrollHeight - 32;
-      const next = atEnd
-        ? [...nodes].reverse().find((node) => node.dataset.studio !== 'sheet') ?? nodes[nodes.length - 1]
-        : pickReading(nodes);
-      const id = (next?.id || 'home') as StudioSectionId;
-      setActiveId((prev) => (prev === id ? prev : id));
-      if (document.body.dataset.reading !== id) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const hit = entries.filter((entry) => entry.isIntersecting).at(-1);
+        if (!hit) return;
+        const id = hit.target.id as PageSectionId;
+        setActiveId(id);
         document.body.dataset.reading = id;
-      }
-    };
-
-    const requestMeasure = () => {
-      if (frame) return;
-      frame = requestAnimationFrame(measure);
-    };
-
-    measure();
-    window.addEventListener('scroll', requestMeasure, { passive: true });
-    window.addEventListener('resize', requestMeasure);
-
-    const main = document.querySelector('main');
-    const observer = new MutationObserver(requestMeasure);
-    if (main) observer.observe(main, { childList: true, subtree: true });
-
+      },
+      { rootMargin: '-38% 0px -62% 0px', threshold: 0 },
+    );
+    nodes.forEach((node) => observer.observe(node));
     return () => {
-      window.removeEventListener('scroll', requestMeasure);
-      window.removeEventListener('resize', requestMeasure);
       observer.disconnect();
-      if (frame) cancelAnimationFrame(frame);
       delete document.body.dataset.reading;
     };
   }, []);
 
-  return (
-    <StudioContext.Provider value={{ activeId, progress }}>
-      {children}
-    </StudioContext.Provider>
-  );
+  return <StudioContext.Provider value={{ activeId }}>{children}</StudioContext.Provider>;
 }
 
 export function useStudio() {
   const context = useContext(StudioContext);
-  if (!context) {
-    throw new Error('useStudio must be used within a StudioProvider');
-  }
+  if (!context) throw new Error('useStudio must be used within a StudioProvider');
   return context;
 }
 

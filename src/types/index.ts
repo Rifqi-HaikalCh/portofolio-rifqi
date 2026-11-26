@@ -31,6 +31,8 @@ export interface Experience {
   techStack?: string[];
   type: 'work' | 'organization';
   image?: string;
+  /** More photographs for the file dialog (v3.9). */
+  photos?: string[];
   logo?: string;
 }
 
@@ -50,7 +52,11 @@ export interface Project {
   category: 'individual' | 'group';
   slides?: string[];
   type?: 'web' | 'mobile' | 'design';
+  /** Domain sheets inside the project's shadow box (DesignRules.md §4.5 `04`), chosen from what the project does. */
+  motif?: ProjectMotif;
 }
+
+export type ProjectMotif = 'api' | 'route' | 'market' | 'hiring' | 'delivery' | 'sport' | 'design' | 'tools' | 'play' | 'system';
 
 export interface Certificate {
   id: string;
@@ -73,6 +79,8 @@ export interface CertificateCategory {
 
 export interface ContactInfo {
   email: string;
+  /** Shown on the laptop screen only when set by the owner (DesignRules §4 `01`). */
+  availability?: { en: string; id: string };
   phone: string;
   location: string;
   linkedin: string;

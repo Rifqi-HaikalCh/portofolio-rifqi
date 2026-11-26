@@ -1,40 +1,43 @@
 'use client';
 
-import React from 'react';
 import { useLanguage } from '../../context/LanguageContext';
-import { scrollToStudioSection, studioSections, useStudio } from './StudioProvider';
+import { pageSections } from '../../data/sections';
+import { useStudio } from './StudioProvider';
 
+/*
+  Vertical paper index 01–06 at ≥ 1440 px (DesignRules.md §4 StudioRail).
+  Each index is a link; the hairline progress rule is a CSS scroll-driven
+  animation (.studio-rail-track), so scrolling never touches React.
+*/
 export function StudioRail() {
-  const { language } = useLanguage();
-  const { activeId, progress } = useStudio();
-  const index = studioSections.filter((section) => section.id !== 'projects');
-  const current = studioSections.find((section) => section.id === activeId) ?? studioSections[0];
-  const label = language === 'en' ? current.en : current.idn;
+  const { language, say } = useLanguage();
+  const { activeId } = useStudio();
+  const current = pageSections.find((section) => section.id === activeId) ?? pageSections[0];
 
   return (
-    <nav className="studio-rail" aria-label={language === 'en' ? 'On this page' : 'Di halaman ini'}>
+    <nav className="studio-rail" aria-label={say('On this page', 'Di halaman ini')}>
       <ol className="flex flex-col gap-2">
-        {index.map((section) => {
-          const currentSection = section.id === activeId;
+        {pageSections.map((section) => {
+          const here = section.id === activeId;
           return (
             <li key={section.id}>
-              <button
-                type="button"
-                onClick={() => scrollToStudioSection(section.id)}
-                aria-current={currentSection ? 'true' : undefined}
-                className={`font-jetbrains-mono text-[11px] tracking-[0.14em] ${
-                  currentSection ? 'text-accent' : 'text-muted hover:text-ink'
-                }`}
+              <a
+                href={`#${section.id}`}
+                aria-current={here ? 'location' : undefined}
+                aria-label={language === 'en' ? section.en : section.idn}
+                className={`font-mono text-[0.6875rem] tracking-[0.14em] ${here ? 'text-accent' : 'text-muted hover:text-ink'}`}
               >
                 {section.index}
-              </button>
+              </a>
             </li>
           );
         })}
       </ol>
-      <p className="studio-rail-label">{label}</p>
+      <p className="studio-rail-label" aria-hidden="true">
+        {language === 'en' ? current.en : current.idn}
+      </p>
       <div className="studio-rail-track" aria-hidden="true">
-        <span style={{ height: `${Math.round(progress * 100)}%` }} />
+        <span />
       </div>
     </nav>
   );

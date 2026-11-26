@@ -1,5 +1,4 @@
 import type { 
-  NavLink, 
   Experience, 
   Project, 
   CertificateCategory, 
@@ -7,19 +6,14 @@ import type {
   AboutHighlight 
 } from '../types';
 
-export const navLinks: NavLink[] = [
-  { href: '#home', labelEn: 'Home', labelId: 'Beranda' },
-  { href: '#about', labelEn: 'About', labelId: 'Tentang' },
-  { href: '#services', labelEn: 'Services', labelId: 'Layanan' },
-  { href: '#experience', labelEn: 'Experience', labelId: 'Pengalaman' },
-  { href: '#certificates', labelEn: 'Certificates', labelId: 'Sertifikat' },
-  { href: '#contact', labelEn: 'Contact', labelId: 'Kontak' },
-];
-
-export const typingTexts = {
-  en: ['A Software Developer', 'A Fullstack Developer', 'A Frontend Developer', 'A .Net/C# Developer'],
-  id: ['Seorang Pengembang Perangkat Lunak', 'Seorang Pengembang Fullstack', 'Seorang Pengembang Frontend', 'Seorang Pengembang .Net/C#']
+/** Hero value proposition: two lines at most (DesignRules §4 `01`). */
+export const heroIntro = {
+  en: 'I build enterprise .NET and SQL Server systems, and the web interfaces people use on top of them.',
+  id: 'Saya membangun sistem enterprise .NET dan SQL Server, beserta antarmuka web yang dipakai di atasnya.',
 };
+
+/** Rendered as a download link only because this file exists in public/. */
+export const cvFile = '/assets/CV Rifqi Haikal Chairiansyah.pdf';
 
 export const heroHighlights = [
   {
@@ -182,7 +176,8 @@ export const workExperience: Experience[] = [
     descriptionId: '• Merancang ulang aplikasi enterprise monolitik menjadi 8 aplikasi mandiri, memisahkan basis kode dan deployment agar perubahan atau kegagalan di satu modul tidak memengaruhi modul lain.\n• Mengembangkan 3 dashboard pemantauan enterprise untuk Payout, Business Projects, dan HSE memakai C#, ASP.NET MVC, dan Telerik, sehingga manajemen mendapat visibilitas operasional yang terpusat.\n• Mengoptimalkan pemrosesan data SQL Server dengan stored procedure, kueri set-based, indexing, dan logika transaksional pada 8 aplikasi dan 3 dashboard.\n• Berkolaborasi dengan manajer proyek dan pengguna bisnis dari analisis kebutuhan, desain sistem, pengembangan, pengujian, deployment, hingga pemeliharaan.',
     techStack: ['C#', 'ASP.NET MVC', '.NET Core', 'Telerik', 'SQL Server', 'Stored Procedure'],
     type: 'work',
-    image: '/assets/Logo-TBG.png',
+    image: '/assets/tbg-desk.webp',
+    photos: ['/assets/tbg-office.webp'],
     logo: '/assets/logo-tower-bersama.png'
   },
   {
@@ -311,7 +306,51 @@ export const organizationExperience: Experience[] = [
 
 export const individualProjects: Project[] = [
   {
+    id: 'mejascalp',
+    motif: 'market',
+    title: 'MejaScalp – AI Crypto Scalping Assistant',
+    description: 'A web app that records crypto scalping positions and watches their prices around the clock. A Node.js worker reads Binance and DEX prices every few seconds and sends a Telegram alert the moment a position reaches its target, so no target is missed while the trader is away. The dashboard shows active positions with live WebSocket prices, a target ticket, a market watchlist, candlestick charts and a market news digest. AI analysis (Gemini, with Groq as fallback) reads the candles, SMA and volume and answers BUY or DO NOT BUY with its reasons. Supabase Auth and Postgres keep each trader’s data; the layout works on desktop and mobile.',
+    descriptionId: 'Aplikasi web untuk mencatat posisi scalping kripto dan memantau harganya sepanjang waktu. Worker Node.js membaca harga Binance dan DEX setiap beberapa detik dan mengirim notifikasi Telegram begitu posisi menyentuh target, sehingga tidak ada target yang terlewat saat pengguna tidak di depan layar. Dasbor menampilkan posisi aktif dengan harga WebSocket langsung, tiket target, daftar pantauan pasar, grafik candlestick, dan ringkasan berita pasar. Analisis AI (Gemini, dengan cadangan Groq) membaca candle, SMA, dan volume lalu menjawab BELI atau JANGAN BELI beserta alasannya. Supabase Auth dan Postgres menyimpan data tiap pengguna; tampilannya berjalan di desktop dan ponsel.',
+    image: '/assets/mejascalp-cover.webp',
+    techStack: ['Next.js 16', 'React 19', 'TypeScript', 'Tailwind CSS', 'Supabase', 'Node.js', 'Binance WebSocket', 'Gemini', 'Groq', 'Telegram Bot API'],
+    links: {},
+    category: 'individual',
+    type: 'web',
+    slides: [
+      '/assets/mejascalp-01.webp',
+      '/assets/mejascalp-02.webp',
+      '/assets/mejascalp-03.webp',
+      '/assets/mejascalp-04.webp',
+      '/assets/mejascalp-05.webp',
+      '/assets/mejascalp-06.webp',
+      '/assets/mejascalp-07.webp'
+    ]
+  },
+  {
+    id: 'buku-dompet',
+    motif: 'market',
+    title: 'BukuDompet – Family Money Journal',
+    description: 'A cash journal that helps a whole family understand money, with one app and three roles. Teens and adults record spending item by item (with a check for odd amounts), split money into wallets and savings jars, and find small leaks with streaks, points and a pet that grows. Primary-school children learn through a story journal, 49 learning games and a savings goal. Parents get a portal to approve requests, scan the day’s journal and set weekly budgets, and the whole family shares a home feed to cheer each other on. Built with Next.js, React 19, Supabase, Zustand and Motion, mobile first.',
+    descriptionId: 'Jurnal kas yang membuat satu keluarga melek uang, dengan satu aplikasi dan tiga peran. Remaja dan dewasa mencatat belanja per barang (dengan pengecekan nominal janggal), membagi uang ke dompet dan celengan, dan menemukan kebocoran kecil lewat streak, poin, dan hewan peliharaan yang tumbuh. Anak SD belajar lewat jurnal cerita, 49 permainan belajar, dan celengan impian. Orang tua mendapat portal untuk menyetujui permintaan, memindai jurnal hari itu, dan mengatur anggaran mingguan, dan seluruh keluarga berbagi beranda untuk saling menyemangati. Dibangun dengan Next.js, React 19, Supabase, Zustand, dan Motion, mengutamakan ponsel.',
+    image: '/assets/bukudompet-01.webp',
+    techStack: ['Next.js 15', 'React 19', 'TypeScript', 'Tailwind CSS', 'Supabase', 'Zustand', 'Motion', 'Radix UI'],
+    links: {},
+    category: 'individual',
+    type: 'web',
+    slides: [
+      '/assets/bukudompet-01.webp',
+      '/assets/bukudompet-02.webp',
+      '/assets/bukudompet-03.webp',
+      '/assets/bukudompet-04.webp',
+      '/assets/bukudompet-05.webp',
+      '/assets/bukudompet-06.webp',
+      '/assets/bukudompet-07.webp',
+      '/assets/bukudompet-08.webp'
+    ]
+  },
+  {
     id: 'shipment-tracker',
+    motif: 'route',
     title: 'Shipment – Transport Tracker',
     description: 'Web-based application used for logistic company to track delivery. Developed a responsive Shipment Management SPA using Vue 3 (Composition API) and TypeScript, delivering a seamless user experience across desktop and mobile devices with a built-in Dark/Light mode via Tailwind CSS. Engineered a real-time tracking and filtering system utilizing Pinia for state management. Built a fully simulated REST API environment using Mirage.js to mimic realistic network latency, HTTP status codes, and real-time shipment route simulations with automated status transitions.',
     descriptionId: 'Aplikasi berbasis web yang dipakai perusahaan logistik untuk melacak pengiriman. Dikembangkan sebagai SPA manajemen pengiriman yang responsif memakai Vue 3 (Composition API) dan TypeScript, dengan pengalaman yang mulus di desktop dan ponsel serta mode gelap/terang lewat Tailwind CSS. Sistem pelacakan dan penyaringan waktu nyata memakai Pinia untuk state. Lingkungan REST API yang disimulasikan penuh memakai Mirage.js meniru latensi jaringan, kode status HTTP, dan simulasi rute pengiriman waktu nyata dengan transisi status otomatis.',
@@ -327,6 +366,7 @@ export const individualProjects: Project[] = [
   },
     {
     id: 'marketplace-influencer',
+    motif: 'market',
     title: 'Marketplace Influencer Platform',
     description: 'Simplifies influencer discovery and collaboration for brands. Engineered a full-stack marketplace from scratch using a modern tech stack (Next.js 14, TypeScript, Supabase) to connect brands with influencers. Designed and implemented a pixel-perfect, responsive UI/UX with Tailwind CSS, featuring separate, optimized views for desktop and mobile to ensure a seamless user journey.',
     descriptionId: 'Menyederhanakan pencarian influencer dan kolaborasi untuk merek. Marketplace full-stack dibangun dari awal memakai Next.js 14, TypeScript, dan Supabase untuk menghubungkan merek dengan influencer. Antarmuka responsif dengan Tailwind CSS memiliki tampilan terpisah yang dioptimalkan untuk desktop dan ponsel.',
@@ -340,6 +380,7 @@ export const individualProjects: Project[] = [
   },
   {
     id: 'hiring-platform',
+    motif: 'hiring',
     title: 'Hiring Platform for Jobseeker',
     description: 'Modern hiring platform enabling administrators to manage job listings and candidates to browse/apply. Implemented secure user authentication and role-based access control (RBAC) leveraging Supabase Auth. Designed and built reusable, responsive UI components using Tailwind CSS and Headless UI, ensuring an intuitive user experience across desktop and mobile platforms.',
     descriptionId: 'Platform perekrutan yang memungkinkan administrator mengelola lowongan dan kandidat menelusuri serta melamar. Otentikasi pengguna dan kontrol akses berbasis peran memakai Supabase Auth. Komponen antarmuka yang dapat dipakai ulang dan responsif memakai Tailwind CSS dan Headless UI, untuk desktop dan ponsel.',
@@ -381,6 +422,7 @@ export const individualProjects: Project[] = [
   },
   {
     id: 'api-central',
+    motif: 'api',
     title: 'API Central',
     description: 'Centralization and standardization of API documentation with Postman-to-Swagger converter tool.',
     descriptionId: 'Sentralisasi dan standardisasi dokumentasi API dengan alat konverter Postman-ke-Swagger.',
@@ -440,6 +482,7 @@ export const individualProjects: Project[] = [
 export const designProjects: Project[] = [
   {
     id: 'sportainment-app',
+    motif: 'sport',
     title: 'Sportainment App',
     description: 'A platform for sports enthusiasts to easily find activities, events, and track their progress. Complete with features for booking sports facilities, joining community events, and monitoring personal fitness achievements.',
     descriptionId: 'Platform bagi penggemar olahraga untuk menemukan aktivitas, acara, dan memantau progres. Dilengkapi pemesanan fasilitas olahraga, keikutsertaan pada acara komunitas, dan pemantauan pencapaian kebugaran pribadi.',
@@ -572,6 +615,7 @@ export const designProjects: Project[] = [
 export const groupProjects: Project[] = [
   {
     id: 'del-pick',
+    motif: 'delivery',
     title: 'Del-Pick Delivery App',
     description: 'Mobile delivery system designed to overcome logistics and transportation problems. Led a 3-person team through the entire product lifecycle, from initial concept to a fully functional mobile delivery application. Translated high-fidelity Figma UI/UX designs into 20+ polished and intuitive screens using Flutter. Built and integrated 30+ RESTful APIs with Express.js to power real-time order processing, driver matching, and route optimization.',
     descriptionId: 'Sistem Layanan Antar yang dirancang untuk mengatasi masalah logistik dan transportasi. Memimpin tim 3 orang melalui seluruh siklus produk, dari konsep awal hingga aplikasi pengiriman mobile yang berfungsi penuh.',
@@ -810,6 +854,7 @@ export const certificateCategories: CertificateCategory[] = [
 
 export const contactInfo: ContactInfo = {
   email: 'r.haikal1610@gmail.com',
+  availability: { en: 'Available for work', id: 'Tersedia untuk bekerja' },
   phone: '+62 853-6278-4585',
   location: 'Jakarta, Indonesia',
   linkedin: 'https://www.linkedin.com/in/rifqhaikall',

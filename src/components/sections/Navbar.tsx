@@ -1,136 +1,174 @@
 'use client';
-import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { useTheme } from 'next-themes';
-import { useThemeAnimation } from '../shared/Providers';
-import { useLanguage } from '../../context/LanguageContext';
-import { navLinks } from '../../data/portfolio';
+
+import { useEffect, useRef, useState, type CSSProperties, type KeyboardEvent, type MouseEvent } from 'react';
+import { useHydrated } from '../../hooks/useHydrated';
 import { Menu, X, Sun, Moon } from 'lucide-react';
-import { useStudio } from '../shared/StudioProvider';
+import { useThemeToggle } from '../shared/Providers';
+import { useLanguage } from '../../context/LanguageContext';
+import { pageSections } from '../../data/sections';
+import { useStudio, scrollToStudioSection } from '../shared/StudioProvider';
 import { BrandLockup } from '../shared/BrandLockup';
+import { SoundToggle } from '../shared/SoundToggle';
+import { T } from '../ui/T';
 
-const Navbar: React.FC = () => {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { theme } = useTheme();
-  const { toggleTheme } = useThemeAnimation();
-  const { language, toggleLanguage } = useLanguage();
-  const { activeId } = useStudio();
-  const [mounted, setMounted] = useState(false);
+/*
+  Paper top bar (DesignRules.md §4 Navbar). Renders on the server so the first
+  paint has navigation; the theme icon swaps through the `dark` class, never
+  through hydration state, so nothing flashes.
+*/
+export default function Navbar() {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const { isDark, toggleTheme } = useThemeToggle();
+  const hydrated = useHydrated();
+  const headerRef = useRef<HTMLElement>(null);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    e.preventDefault();
-    const target = document.querySelector(href);
-    if (target) {
-      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      setMobileMenuOpen(false);
+  // Escape closes the menu; Tab cycles inside the bar and the open menu (§14.2).
+  const onMenuKeyDown = (event: KeyboardEvent<HTMLElement>) => {
+    if (!menuOpen) return;
+    if (event.key === 'Escape') {
+      setMenuOpen(false);
+      menuButtonRef.current?.focus();
+      return;
+    }
+    if (event.key !== 'Tab' || !headerRef.current) return;
+    const stops = Array.from(
+      headerRef.current.querySelectorAll<HTMLElement>('a[href], button:not([disabled])'),
+    ).filter((node) => node.offsetParent !== null && !node.closest('[inert]'));
+    const first = stops[0];
+    const last = stops[stops.length - 1];
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
     }
   };
 
-  if (!mounted) return null;
+  useEffect(() => {
+    if (!menuOpen) return undefined;
+    const close = () => setMenuOpen(false);
+    const wide = window.matchMedia('(min-width: 1024px)');
+    wide.addEventListener('change', close);
+    return () => wide.removeEventListener('change', close);
+  }, [menuOpen]);
+  const { language, toggleLanguage, say } = useLanguage();
+  const { activeId } = useStudio();
+
+  const go = (event: MouseEvent<HTMLAnchorElement>, id: string) => {
+    event.preventDefault();
+    scrollToStudioSection(id);
+    history.replaceState(null, '', `#${id}`);
+    setMenuOpen(false);
+  };
+
+  const links = pageSections.slice(1);
 
   return (
-    <header className="fixed top-0 inset-x-0 z-navigation bg-paper border-b border-line">
-      <div className="relative max-w-6xl mx-auto px-5 lg:px-8 h-16 flex items-center">
-        <Link
-          href="#home"
-          onClick={(e) => handleNavClick(e, '#home')}
-          aria-label="Rifqi Haikal"
-          className="relative z-10 inline-flex items-center"
-        >
+    <header ref={headerRef} onKeyDown={onMenuKeyDown} className="fixed inset-x-0 top-0 z-chrome border-b border-line bg-paper">
+      <div className="relative mx-auto flex h-16 max-w-6xl items-center px-5 lg:px-8">
+        <a href="#home" onClick={(event) => go(event, 'home')} aria-label="Rifqi Haikal, home" className="inline-flex min-h-11 items-center">
           <BrandLockup variant="mark" label="" className="h-8 w-auto sm:h-9" />
-        </Link>
+        </a>
 
-        <nav
-          className="hidden lg:flex absolute inset-0 items-center justify-center gap-5 px-36 pointer-events-none"
-          aria-label="Primary"
-        >
-          {navLinks.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              onClick={(e) => handleNavClick(e, link.href)}
-              aria-current={activeId === link.href.slice(1) ? 'location' : undefined}
-              className={`pointer-events-auto whitespace-nowrap text-sm leading-none hover:text-ink ${
-                activeId === link.href.slice(1) ? 'nav-current' : 'text-muted'
-              }`}
-            >
-              {language === 'en' ? link.labelEn : link.labelId}
-            </a>
-          ))}
+        <nav className="hidden flex-1 items-center justify-center gap-6 lg:flex" aria-label={say('Primary', 'Utama')}>
+          {links.map((section) => {
+            const here = activeId === section.id;
+            return (
+              <a
+                key={section.id}
+                href={`#${section.id}`}
+                onClick={(event) => go(event, section.id)}
+                aria-current={here ? 'location' : undefined}
+                className={`inline-flex min-h-11 items-center gap-1.5 whitespace-nowrap text-sm ${here ? 'nav-current' : 'text-muted hover:text-ink'}`}
+              >
+                <span className="font-mono text-[0.625rem] text-accent" aria-hidden="true">
+                  {section.index}
+                </span>
+                <T en={section.en} id={section.idn} />
+              </a>
+            );
+          })}
         </nav>
 
-        <div className="relative z-10 ml-auto flex items-center gap-2">
-          <div className="hidden sm:flex items-stretch border border-line">
+        <div className="ml-auto flex items-center gap-2 lg:ml-0">
+          <div className="hidden items-stretch border border-line sm:flex">
+            <SoundToggle className="border-r border-line" />
             <button
               type="button"
+              data-sound="lamp"
               onClick={toggleTheme}
-              aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
-              className="inline-flex h-9 w-9 items-center justify-center border-r border-line text-ink hover:bg-ink hover:text-paper"
+              aria-label={say('Dark mode', 'Mode gelap')}
+              aria-pressed={hydrated ? isDark : undefined}
+              className="inline-flex h-11 w-11 items-center justify-center border-r border-line text-ink hover:bg-ink hover:text-paper"
             >
-              {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+              <Moon size={16} className="dark:hidden" aria-hidden="true" />
+              <Sun size={16} className="hidden dark:block" aria-hidden="true" />
             </button>
             <button
               type="button"
               onClick={toggleLanguage}
-              aria-label="Switch language"
-              className="inline-flex h-9 min-w-9 px-2.5 items-center justify-center font-jetbrains-mono text-[11px] tracking-[0.14em] text-ink hover:bg-ink hover:text-paper"
+              aria-label={say('Baca dalam Bahasa Indonesia', 'Read in English')}
+              className="inline-flex h-11 min-w-11 items-center justify-center px-2.5 font-mono text-[0.6875rem] tracking-[0.14em] text-ink hover:bg-ink hover:text-paper"
             >
               {language === 'en' ? 'ID' : 'EN'}
             </button>
           </div>
           <button
+            ref={menuButtonRef}
             type="button"
-            onClick={() => setMobileMenuOpen((open) => !open)}
-            aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
-            aria-expanded={mobileMenuOpen}
-            className="lg:hidden inline-flex h-9 w-9 items-center justify-center border border-line text-ink"
+            onClick={() => setMenuOpen((open) => !open)}
+            aria-label={menuOpen ? say('Close menu', 'Tutup menu') : say('Open menu', 'Buka menu')}
+            aria-expanded={menuOpen}
+            aria-controls="mobile-nav"
+            data-open={menuOpen || undefined}
+            className="menu-btn h-11 w-11 border border-line text-ink lg:hidden"
           >
-            {mobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
+            <Menu size={18} className="menu-btn-bars" aria-hidden="true" />
+            <X size={18} className="menu-btn-x" aria-hidden="true" />
           </button>
         </div>
       </div>
 
-      {mobileMenuOpen && (
-        <div className="lg:hidden border-t border-line bg-paper">
-          <nav className="max-w-6xl mx-auto px-5 py-3 flex flex-col" aria-label="Mobile">
-            {navLinks.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                onClick={(e) => handleNavClick(e, link.href)}
-                aria-current={activeId === link.href.slice(1) ? 'location' : undefined}
-                className={`py-3 text-base border-b border-line last:border-b-0 ${
-                  activeId === link.href.slice(1) ? 'text-accent' : 'text-ink'
-                }`}
-              >
-                {language === 'en' ? link.labelEn : link.labelId}
-              </a>
-            ))}
-            <div className="flex gap-2 py-4">
-              <button
-                type="button"
-                onClick={toggleTheme}
-                className="flex-1 h-10 border border-line text-sm text-ink"
-              >
-                {theme === 'dark' ? 'Light' : 'Dark'}
-              </button>
-              <button
-                type="button"
-                onClick={toggleLanguage}
-                className="h-10 px-4 border border-line text-sm text-ink"
-              >
-                {language === 'en' ? 'Bahasa' : 'English'}
-              </button>
-            </div>
-          </nav>
+      <button type="button" tabIndex={-1} aria-hidden="true" data-open={menuOpen || undefined} onClick={() => setMenuOpen(false)} className="mnav-scrim lg:hidden" />
+      <div id="mobile-nav" data-open={menuOpen || undefined} inert={!menuOpen} className="mnav lg:hidden">
+        <div className="mnav-inner">
+        <nav className="mx-auto flex max-w-6xl flex-col border-t border-line px-5 py-3" aria-label={say('Mobile', 'Seluler')}>
+          {links.map((section, i) => (
+            <a
+              key={section.id}
+              style={{ '--i': i } as CSSProperties}
+              href={`#${section.id}`}
+              onClick={(event) => go(event, section.id)}
+              aria-current={activeId === section.id ? 'location' : undefined}
+              className={`mnav-link flex min-h-12 items-center gap-3 border-b border-line text-base last:border-b-0 ${
+                activeId === section.id ? 'text-accent' : 'text-ink'
+              }`}
+            >
+              <span className="font-mono text-xs text-accent" aria-hidden="true">
+                {section.index}
+              </span>
+              <T en={section.en} id={section.idn} />
+            </a>
+          ))}
+          <div className="mnav-link flex gap-2 py-4" style={{ '--i': links.length } as CSSProperties}>
+            <SoundToggle variant="menu" />
+            <button type="button" data-sound="lamp" onClick={toggleTheme} className="h-11 flex-1 border border-line text-sm text-ink">
+              <span className="dark:hidden">
+                <T en="Dark mode" id="Mode gelap" />
+              </span>
+              <span className="hidden dark:inline">
+                <T en="Light mode" id="Mode terang" />
+              </span>
+            </button>
+            <button type="button" onClick={toggleLanguage} className="h-11 border border-line px-4 text-sm text-ink">
+              {language === 'en' ? 'Bahasa' : 'English'}
+            </button>
+          </div>
+        </nav>
         </div>
-      )}
+      </div>
     </header>
   );
-};
-
-export default Navbar;
+}

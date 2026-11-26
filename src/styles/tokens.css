@@ -1,0 +1,273 @@
+/*
+  Paper Desk tokens (DesignRules.md §5).
+  Raw values are RGB triplets so CSS can write rgb(var(--rgb-x) / alpha).
+  Tailwind utilities (bg-paper, text-ink, …) come from the @theme block below.
+  Light = Daylight Desk (window, upper-left). Dark = Lamp-On Desk (lamp, upper-right).
+*/
+
+:root {
+  --rgb-paper: 244 240 232;
+  --rgb-raised: 251 248 242;
+  --rgb-recess: 234 227 213;
+  --rgb-ink: 27 25 22;
+  --rgb-muted: 106 99 91;
+  --rgb-line: 221 212 198;
+  --rgb-accent: 140 58 47;
+  --rgb-wood: 138 98 69;
+  --rgb-wood-dark: 92 64 48;
+  --rgb-blueprint: 78 106 125;
+  --ill-blueprint-ink: #fbf8f2;
+  --rgb-sage: 107 125 101;
+  --rgb-scrim: 27 25 22;
+
+  /* Illustration palette: SVG scene, figurine, props only (§5.2). */
+  --ill-skin: #e9c4a3;
+  --ill-skin-shade: #cf9f7f;
+  --ill-hair: #211d1b;
+  --ill-shirt: #2b2927;
+  --ill-denim: #466080;
+  --ill-denim-fade: #6884a0;
+  --ill-sneaker: #969694;
+  --ill-sole: #e8e5de;
+  --ill-window: #e6eef2;
+  --ill-lamp-light: transparent;
+  --ill-hair-hi: #4a403b;
+  --ill-wall: #e7dfd1;
+  --ill-wall-shade: #d8cdbb;
+  --ill-frame: #f7f2e9;
+  --ill-mat: #3c4347;
+  --ill-laptop: #d3cfc8;
+  --ill-laptop-shade: #b3aea6;
+  --ill-bezel: #2a2826;
+  --ill-screen: #1d2125;
+  --ill-lamp: #34424a;
+  --ill-bulb: #4a5a63;
+  --ill-mug: #4e6a7d;
+  --ill-coffee: #4a3125;
+  --ill-pot: #a4553f;
+  --ill-pot-rim: #8a4532;
+  --ill-leaf: #6b7d65;
+  --ill-leaf-fold: #56684f;
+  --ill-note: #e9d99f;
+  --ill-notebook: #8c3a2f;
+  --ill-page: #fbf8f2;
+  --ill-page-ink: #1b1916;
+  --ill-page-muted: #6a635b;
+  --ill-page-accent: #8c3a2f;
+  --ill-eye: #fbf8f2;
+  --ill-beam: rgb(255 252 240 / 0.38);
+
+  /* Day/night scene switches (opacity only, never display). */
+  --beam-opacity: 1;
+  --night-opacity: 0;
+  --glow-opacity: 0;
+
+  /* Light direction: shadows fall to +x in daylight, -x under the lamp (§2.2). */
+  --light-x: 1;
+
+  /* Paper depth for SVG pieces: a hard offset shadow plus a pale cut edge. */
+  --paper-shadow: rgb(27 25 22 / 0.18);
+  --paper-cut: rgb(255 255 255 / 0.55);
+  --paper-fold: rgb(27 25 22 / 0.12);
+  --paper-drop-sm: drop-shadow(calc(2px * var(--light-x)) 3px 3px var(--paper-shadow));
+  --paper-drop: drop-shadow(calc(4px * var(--light-x)) 5px 6px var(--paper-shadow));
+
+  /* v2 light & depth model (DesignRules.md §2.3–§2.5, §5.6). paper-kit reads these. */
+  --light-len: 1;
+  --light-warmth: 0.2;
+  --rgb-shadow: 58 40 28;
+  --pk-shadow: rgb(var(--rgb-shadow));
+  --pk-dark: rgb(var(--rgb-shadow));
+  --pk-light: rgb(255 249 236);
+  --pk-contact: 0.34;
+  --pk-penumbra: 0.24;
+  --pk-grain: 0.2;
+  --pk-fall: 0.16;
+  --air: #e8edf0;
+  --ill-sky: #dfe9ef;
+  --ill-cloud: #f6f8f8;
+  --ill-city-far: #c2ced6;
+  --ill-city-near: #9fb0bc;
+  --ill-city-lit: #c9d4db;
+  --ill-cork: #b68b5e;
+  --ill-chair: #3b4850;
+  --ill-sun: #fff1d0;
+  /* R2 stations (DesignRules.md §2.2, §5.2). */
+  --ill-kraft: #b99a72;
+  --ill-kraft-dark: #9c7d58;
+  --ill-cabinet: #7f8f8c;
+  --ill-cabinet-shade: #687673;
+  --ill-folder: #d9b77a;
+  --ill-envelope: #efe5d2;
+  --ill-board: #ced7d6;
+  --ill-dusk: #f2c99a;
+  --ill-dusk-low: #e7a77c;
+  /* Lamp-side rim on the figurine at night, so he never sinks into the wall (P6.2). */
+  --ill-figure-rim: transparent;
+  --figure-rim: drop-shadow(calc(-1.5px * var(--light-x)) 0 0 var(--ill-figure-rim));
+
+  --paper-edge-flat: 0 0 0 1px rgb(var(--rgb-line));
+  /* The lit top edge of a reading sheet. */
+  --leaf-lip: inset 0 1px 0 rgb(255 255 255 / 0.6);
+  --paper-edge-cut:
+    0 0 0 1px rgb(var(--rgb-line)),
+    calc(2px * var(--light-x)) 2px 0 rgb(var(--rgb-recess));
+  --paper-edge-lifted:
+    0 0 0 1px rgb(var(--rgb-line)),
+    calc(4px * var(--light-x)) 4px 0 rgb(var(--rgb-recess)),
+    calc(10px * var(--light-x)) 14px 24px rgb(27 25 22 / 0.08);
+
+  color-scheme: light;
+}
+
+.dark {
+  --leaf-lip: inset 0 1px 0 rgb(255 255 255 / 0.05);
+  --rgb-paper: 19 18 17;
+  --rgb-raised: 28 26 23;
+  --rgb-recess: 36 33 29;
+  --rgb-ink: 243 238 230;
+  --rgb-muted: 167 158 147;
+  --rgb-line: 50 46 41;
+  --rgb-accent: 212 120 104;
+  --rgb-wood: 107 75 52;
+  --rgb-wood-dark: 61 42 31;
+  --rgb-blueprint: 49 77 97;
+  --ill-blueprint-ink: #f7f2e7;
+  --rgb-sage: 142 163 135;
+  --rgb-scrim: 8 7 6;
+
+  --ill-skin: #c39878;
+  --ill-skin-shade: #a37a5e;
+  --ill-hair: #161413;
+  --ill-shirt: #45413c;
+  --ill-denim: #344862;
+  --ill-denim-fade: #4e647e;
+  --ill-sneaker: #70706e;
+  --ill-sole: #aaa6a0;
+  --ill-window: #1e2a36;
+  --ill-lamp-light: rgb(255 214 150 / 0.18);
+  --ill-hair-hi: #2e2825;
+  --ill-wall: #1b1917;
+  --ill-wall-shade: #141210;
+  --ill-frame: #2c2924;
+  --ill-mat: #212528;
+  --ill-laptop: #56524d;
+  --ill-laptop-shade: #403d39;
+  --ill-bezel: #0f0e0d;
+  --ill-screen: #121518;
+  --ill-lamp: #3f4d55;
+  --ill-bulb: #ffd696;
+  --ill-mug: #55728a;
+  --ill-coffee: #2c1d16;
+  --ill-pot: #7e3f2f;
+  --ill-pot-rim: #66321f;
+  --ill-leaf: #56684f;
+  --ill-leaf-fold: #44543f;
+  --ill-note: #7d7148;
+  --ill-notebook: #6e3027;
+  /* v3.27 (owner): paper at night is a darker warm amber-cream catching a subtle lamp refraction, never black and never bright white. */
+  --ill-page: #c9b995;
+  --ill-page-ink: #241d15;
+  --ill-page-muted: #5c5040;
+  --ill-page-accent: #8c3728;
+  --ill-eye: #e6dfd2;
+  --ill-beam: transparent;
+
+  --beam-opacity: 0;
+  --night-opacity: 1;
+  --glow-opacity: 1;
+
+  --light-x: -1;
+
+  --paper-shadow: rgb(0 0 0 / 0.5);
+
+  --light-len: 1;
+  --light-warmth: 0.8;
+  --rgb-shadow: 6 8 14;
+  --pk-light: rgb(255 214 150);
+  --pk-contact: 0.55;
+  --pk-penumbra: 0.36;
+  --pk-grain: 0.22;
+  --pk-fall: 0.2;
+  --air: #1a2430;
+  --ill-sky: #1b2633;
+  --ill-cloud: #2b3644;
+  --ill-city-far: #233040;
+  --ill-city-near: #2c3b4c;
+  --ill-city-lit: #e0b878;
+  --ill-cork: #6c5136;
+  --ill-chair: #2b353c;
+  --ill-sun: #ffd696;
+  --ill-kraft: #5e4c37;
+  --ill-kraft-dark: #4a3b2a;
+  --ill-cabinet: #3e4a49;
+  --ill-cabinet-shade: #313b3a;
+  --ill-folder: #7b6643;
+  --ill-envelope: #bfae89;
+  --ill-board: #2e3638;
+  --ill-dusk: #1f2a3a;
+  --ill-dusk-low: #2a3346;
+  --paper-cut: rgb(255 255 255 / 0.13);
+  --paper-fold: rgb(0 0 0 / 0.22);
+  --ill-figure-rim: rgb(255 214 150 / 0.55);
+
+  color-scheme: dark;
+}
+
+/*
+  Paper at night (v3.24, refined in v3.27, owner: "make the yellow paper darker, like paper catching
+  a slight refraction of light, and fix any black sections inside paper"). Every paper surface
+  re-declares the ink, line and paper tokens for its own subtree, so text, rules, tracing overlays
+  and chips on it read as dark ink on warm lamp-lit amber stock, while the page, the stage and the
+  chrome stay dark. Only `.svc-sheet` (the text written directly on the dark-blue drafting board in
+  the theatre) is excluded. `--color-*` are repeated because they were substituted at :root and do
+  not follow a new `--rgb-*`.
+*/
+.dark :is(.paper-leaf, .pd-sheet, .paper-card, .paper-sheet, .ticket, .role-photo, .pin-print, .career-pins, .book, .index-card, .laptop-screen, .eqbot-panel, .eqbot-tab, .eqbot-notice, .eqbot-thought, .section-hint):not(.svc-sheet) {
+  --rgb-paper: 204 189 156;
+  --rgb-raised: 194 178 144;
+  --rgb-recess: 176 160 126;
+  --rgb-ink: 36 29 21;
+  --rgb-muted: 88 76 60;
+  --rgb-line: 154 139 110;
+  --rgb-accent: 140 55 40;
+  --rgb-blueprint: 52 79 96;
+  --rgb-sage: 74 94 68;
+  --color-paper: rgb(var(--rgb-paper));
+  --color-raised: rgb(var(--rgb-raised));
+  --color-recess: rgb(var(--rgb-recess));
+  --color-ink: rgb(var(--rgb-ink));
+  --color-muted: rgb(var(--rgb-muted));
+  --color-line: rgb(var(--rgb-line));
+  --color-accent: rgb(var(--rgb-accent));
+  --color-blueprint: rgb(var(--rgb-blueprint));
+  --color-sage: rgb(var(--rgb-sage));
+  --leaf-lip: inset 0 1px 0 rgb(255 232 185 / 0.34), inset 0 0 28px rgb(255 214 150 / 0.12);
+  --paper-edge-cut: 0 0 0 1px rgb(var(--rgb-line)), calc(2px * var(--light-x)) 2px 0 rgb(var(--rgb-recess));
+  --paper-edge-lifted: 0 0 0 1px rgb(var(--rgb-line)), calc(4px * var(--light-x)) 4px 0 rgb(var(--rgb-recess)), calc(10px * var(--light-x)) 14px 24px rgb(0 0 0 / 0.38);
+}
+
+@theme inline {
+  --color-paper: rgb(var(--rgb-paper));
+  --color-raised: rgb(var(--rgb-raised));
+  --color-recess: rgb(var(--rgb-recess));
+  --color-ink: rgb(var(--rgb-ink));
+  --color-muted: rgb(var(--rgb-muted));
+  --color-line: rgb(var(--rgb-line));
+  --color-accent: rgb(var(--rgb-accent));
+  --color-wood: rgb(var(--rgb-wood));
+  --color-wood-dark: rgb(var(--rgb-wood-dark));
+  --color-blueprint: rgb(var(--rgb-blueprint));
+  --color-sage: rgb(var(--rgb-sage));
+  --color-scrim: rgb(var(--rgb-scrim));
+
+  --font-sans: var(--font-source-sans), "Source Sans 3", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-fraunces), "Fraunces", Georgia, serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
+
+  --shadow-paper-flat: var(--paper-edge-flat);
+  --shadow-paper-cut: var(--paper-edge-cut);
+  --shadow-paper-lifted: var(--paper-edge-lifted);
+
+  --breakpoint-rail: 1440px;
+}

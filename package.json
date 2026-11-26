@@ -6,37 +6,41 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "check:design": "node scripts/check-design-rules.mjs",
+    "test:e2e": "playwright test",
+    "lighthouse": "lhci autorun"
   },
   "dependencies": {
-    "@react-three/drei": "^9.114.3",
-    "@react-three/fiber": "^8.17.10",
-    "@react-three/rapier": "^1.4.0",
-    "@types/node": "^20",
-    "@types/react": "^18.3.24",
-    "@types/react-dom": "^18",
-    "framer-motion": "^11.0.3",
-    "lottie-react": "^2.4.1",
-    "lucide-react": "^0.356.0",
-    "matter-js": "^0.20.0",
-    "motion": "^12.23.24",
-    "next": "^14.2.35",
-    "next-themes": "^0.2.1",
-    "react": "^18.3.1",
-    "react-dom": "^18",
-    "react-icons": "^5.5.0",
-    "react-type-animation": "^3.2.0",
-    "resend": "^6.32.0",
-    "three": "^0.181.0",
-    "typescript": "^5"
+    "@react-three/fiber": "^9.8.2",
+    "lucide-react": "^1.77.0",
+    "motion": "^14.14.0",
+    "next": "^16.4.6",
+    "next-themes": "^0.4.6",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "resend": "^6.39.0",
+    "three": "^0.187.0",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
-    "@types/matter-js": "^0.20.2",
-    "autoprefixer": "^10.0.1",
-    "eslint": "^8",
-    "eslint-config-next": "^14.2.35",
+    "@axe-core/playwright": "4.13",
+    "@lhci/cli": "0.15.1",
+    "@playwright/test": "^1.65.1",
+    "@tailwindcss/postcss": "^4.3.5",
+    "@types/node": "^24.19.2",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@types/three": "^0.187.0",
+    "eslint": "^9.39.5",
+    "eslint-config-next": "^16.4.6",
     "postcss": "^8",
     "sharp": "^0.33.5",
-    "tailwindcss": "^3.3.0"
+    "tailwindcss": "^4.3.5",
+    "typescript": "~5.9.3"
+  },
+  "engines": {
+    "node": ">=20.9.0"
   }
 }

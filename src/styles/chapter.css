@@ -1,0 +1,729 @@
+/*
+  Chapter Theatre (DesignRules.md §4, §8, §9.7). The static half of every
+  chapter; chapter-css.ts writes the timelines, beats, acts and handoffs.
+
+  Default = the stacked studio (no scroll-driven support, reduced motion,
+  short screens, data-stacked): the station as a framed box, then the sheets.
+  Inside the @supports/@media block = the theatre (768 px and wider): a sticky
+  fullscreen stage with the beats cued over it. Under 768 px = the pocket
+  studio (v3.14): each chapter's window in flow, paper leaves cued once, no pin.
+*/
+
+/* ---- Stacked studio ------------------------------------------------------ */
+.chapter {
+  position: relative;
+  padding-block: 4rem;
+}
+@media (min-width: 768px) {
+  .chapter { padding-block: 6rem; }
+}
+
+.chapter .stage,
+.chapter .flow {
+  max-width: 72rem;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+}
+@media (min-width: 1024px) {
+  .chapter .stage,
+  .chapter .flow { padding-inline: 2rem; }
+}
+
+.chapter .stage-front,
+.chapter .beat-lead,
+.chapter .beat-track,
+.chapter .beat-tail { display: none; }
+
+/* Stacked: the pinned sheets are simply the first sheets of the flow. */
+.chapter .beat-pins,
+.chapter .beat-deck {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.chapter .flow {
+  position: relative;
+  z-index: var(--z-content-ui);
+  display: grid;
+  gap: 1.5rem;
+  margin-top: -2.5rem;
+}
+@media (min-width: 768px) {
+  .chapter .flow { margin-top: -4.5rem; padding-inline: 3.5rem; }
+}
+
+.chapter .beat-sheet { padding: 1.5rem; }
+@media (min-width: 640px) {
+  .chapter .beat-sheet { padding: 2.25rem; }
+}
+
+/*
+  Paper leaf (§2.6, v3.3): every beat sheet is a sheet of the studio's stock,
+  not a card. Fibre grain sits in the sheet's own background (static, so it
+  costs nothing on scroll); the top edge catches the light; ::before is the
+  curvature shade that only shows while the sheet bends in flight.
+*/
+.paper-leaf {
+  position: relative;
+  --leaf-tone: var(--color-raised);
+  /* The cardstock tile (the scenes' own grain, §2.3) under a veil of the sheet's tone: 22 % strength. */
+  background-image:
+    linear-gradient(color-mix(in oklab, var(--leaf-tone) 78%, transparent) 0 0),
+    image-set(url("/assets/papercraft/tex-cardstock.avif") type("image/avif"), url("/assets/papercraft/tex-cardstock.webp") type("image/webp"));
+  background-size: auto, 256px 256px;
+  box-shadow: var(--leaf-lip), var(--paper-edge-cut);
+}
+/* At night each paper sheet catches a warm diagonal lamp refraction from the upper-right and falls into warm amber shade toward the opposite edge (v3.27). */
+.dark .paper-leaf {
+  background-image:
+    linear-gradient(218deg, rgb(255 224 166 / 0.22) 0%, rgb(255 214 150 / 0.05) 44%, rgb(22 16 10 / 0.16) 100%),
+    linear-gradient(color-mix(in oklab, var(--leaf-tone) 78%, transparent) 0 0),
+    image-set(url("/assets/papercraft/tex-cardstock.avif") type("image/avif"), url("/assets/papercraft/tex-cardstock.webp") type("image/webp"));
+  background-size: auto, auto, 256px 256px;
+}
+.paper-leaf.bg-paper { --leaf-tone: var(--color-paper); }
+/* A blueprint sheet (`04` services pile, v3.6): the leaf under a blueprint grid. */
+.paper-leaf.blueprint-leaf {
+  --leaf-tone: color-mix(in oklab, var(--color-blueprint) 7%, var(--color-raised));
+  background-image:
+    linear-gradient(rgb(var(--rgb-blueprint) / 0.13) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(var(--rgb-blueprint) / 0.13) 1px, transparent 1px),
+    linear-gradient(color-mix(in oklab, var(--leaf-tone) 80%, transparent) 0 0),
+    image-set(url("/assets/papercraft/tex-cardstock.avif") type("image/avif"), url("/assets/papercraft/tex-cardstock.webp") type("image/webp"));
+  background-size: 22px 22px, 22px 22px, auto, 256px 256px;
+  border-color: rgb(var(--rgb-blueprint) / 0.35);
+}
+
+/*
+  The gallery wire (`04b`, v3.6): a segment is not a sheet but a length of wire
+  with two cards hung from it by a string and a clip. The wire sags a little
+  and runs on past both ends, so neighbouring segments read as one wire.
+*/
+.chapter .beat-sheet.rail-seg {
+  padding: 3rem 0 0;
+  border: 0;
+  background: none;
+  box-shadow: none;
+}
+.chapter .beat-sheet.rail-seg::before,
+.chapter .beat-sheet.rail-seg::after { display: none; }
+.rail-row {
+  position: relative;
+  display: grid;
+  gap: 3.5rem 2.5rem;
+}
+.rail-row::before {
+  content: "";
+  position: absolute;
+  top: -2.6rem;
+  left: calc(var(--rail-gap, 2rem) / -2 - 1px);
+  right: calc(var(--rail-gap, 2rem) / -2 - 1px);
+  height: 1.1rem;
+  border-bottom: 2px solid var(--color-muted);
+  border-radius: 0 0 50% 50% / 0 0 100% 100%;
+  pointer-events: none;
+}
+@media (min-width: 640px) {
+  .rail-row { grid-template-columns: 1fr 1fr; }
+}
+.rail-card {
+  position: relative;
+  transform-origin: 50% -2rem;
+}
+.rail-card::before {
+  /* The string and the wooden clip it hangs from. */
+  content: "";
+  position: absolute;
+  top: -1.75rem;
+  left: calc(50% - 7px);
+  width: 14px;
+  height: 2.2rem;
+  background:
+    linear-gradient(var(--color-wood), var(--color-wood)) 50% 100% / 14px 20px no-repeat,
+    linear-gradient(var(--color-muted), var(--color-muted)) 50% 0 / 2px 100% no-repeat;
+  box-shadow: 0 2px 0 rgb(var(--rgb-shadow) / 0.12);
+  z-index: 1;
+}
+.paper-leaf::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  background: linear-gradient(180deg, rgb(var(--rgb-shadow) / 0.2), rgb(var(--rgb-shadow) / 0) 55%, rgb(var(--rgb-shadow) / 0.08));
+}
+
+/* Tracing-paper overlay (the core stack on the drafting board). */
+.tracing {
+  background: color-mix(in oklab, var(--color-raised) 78%, transparent);
+  border-style: dashed;
+}
+
+/* Layers that exist only for a theatre act (a cover sheet that slides away). */
+.chapter .theatre-only { display: none; }
+
+/* Alternate stop-motion poses are hidden until their beat swaps them in. */
+.chapter .pose-alt > * { opacity: 0; }
+.chapter .stage-front .scene-layer { opacity: 0; }
+
+.skip-chapter:focus {
+  position: absolute;
+  z-index: var(--z-chrome);
+  top: 1rem;
+  left: 1rem;
+  padding: 0.5rem 0.75rem;
+  background: var(--color-raised);
+  border: 1px solid var(--color-line);
+}
+
+/* ---- Theatre ------------------------------------------------------------- */
+/*
+  Active only once ChapterCue has started ([data-cue]): without JS the chapter
+  stays the stacked studio, fully readable.
+*/
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) and (min-height: 561px) and (min-width: 768px) {
+    .chapter[data-cue]:not([data-stacked]) {
+      --beat-top: var(--beat-top-fit, 18svh);
+      --lane-pad: 5cqw;
+      --lane-w: min(34rem, 40cqw);
+      --lane-w-flow: min(60rem, 64cqw);
+      container-type: inline-size;
+      /* Each chapter paints as one unit: an incoming stage covers the outgoing chapter, sheets included. */
+      isolation: isolate;
+      /* Transparent: during a handoff the outgoing stage shows through the incoming chapter's box. */
+      background: none;
+      padding-block: 0;
+      /* In-page links land on the composed stage; the first cue is already on there. */
+      scroll-margin-top: 0;
+      /* The gallery wire (a `rail` group, chapter-css.ts): one segment's width and the gap between two. */
+      --rail-w: min(50rem, 58cqw);
+      --rail-gap: 6cqw;
+    }
+
+    /* Stage moves slide whole stages sideways; nothing may widen the page. */
+    main:has(> .chapter) { overflow-x: clip; }
+
+    .chapter[data-cue]:not([data-stacked]) .theatre-only { display: block; }
+
+    .chapter[data-cue]:not([data-stacked]) .stage {
+      position: sticky;
+      top: 0;
+      z-index: 0;
+      height: 100svh;
+      max-width: none;
+      padding: 0;
+      overflow: clip;
+      container-type: size;
+      background: var(--ill-wall);
+    }
+    /* The shadow-box lip on the viewport edges. */
+    /* Only the stages near the viewport are painted (§1.5 low-end GPU); their size is fixed, so anchors are unaffected. */
+    .chapter[data-cue]:not([data-stacked]) :is(.stage, .stage-front) {
+      content-visibility: auto;
+      contain-intrinsic-size: auto 100svh;
+    }
+    .chapter[data-cue]:not([data-stacked]) .stage::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      border: clamp(6px, 1cqw, 14px) solid var(--ill-frame);
+      box-shadow:
+        inset calc(3px * var(--light-x)) 4px 3px rgb(var(--rgb-shadow) / 0.3),
+        inset calc(14px * var(--light-x)) 18px 30px rgb(var(--rgb-shadow) / 0.24);
+    }
+
+    .chapter[data-cue]:not([data-stacked]) .stage-front {
+      display: block;
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      height: 100svh;
+      margin-top: -100svh;
+      overflow: clip;
+      container-type: size;
+      pointer-events: none;
+    }
+
+    /*
+      The stage fit (§9.1, v3.7): --s is pixels per world unit. It covers the
+      theatre rect when the screen's ratio allows, and zooms out just enough to
+      keep the safe rect (--sx … --sh) in view when it does not; the camera
+      centre (--cxs, --cys, in px) sits on the theatre's centre and slides
+      toward the safe rect when that would crop it. The navbar's band at the
+      top does not count as view. Declared on the chapter, resolved where used
+      (the stage canvas, emerge flights, sheets placed in world coordinates).
+    */
+    .chapter[data-cue]:not([data-stacked]) {
+      --nav-band: 4rem;
+      --s: min(
+        max(calc(100cqw / var(--tw)), calc(100svh / var(--th))),
+        min(calc(100cqw / var(--sw)), calc((100svh - var(--nav-band)) / var(--sh)))
+      );
+      --cxs: clamp(
+        calc((var(--sx) + var(--sw)) * var(--s) - 50cqw),
+        calc((var(--tx) + var(--tw) / 2) * var(--s)),
+        calc(var(--sx) * var(--s) + 50cqw)
+      );
+      /* …and never shows more than --floor-room world units below the safe rect (tall screens: wall, not floor). */
+      --floor-room: 150;
+      --cys: clamp(
+        calc((var(--sy) + var(--sh)) * var(--s) - 50svh),
+        calc((var(--ty) + var(--th) / 2) * var(--s)),
+        min(
+          calc(var(--sy) * var(--s) + 50svh - var(--nav-band)),
+          calc((var(--sy) + var(--sh) + var(--floor-room)) * var(--s) - 50svh)
+        )
+      );
+    }
+    .chapter[data-cue]:not([data-stacked]) .stage-canvas {
+      position: absolute;
+      width: calc(var(--fw) * var(--s));
+      left: calc(50cqw - var(--cxs));
+      top: calc(50svh - var(--cys));
+    }
+    .chapter[data-cue]:not([data-stacked]) .stage-canvas .scene-viewport {
+      content-visibility: visible;
+      overflow: visible;
+      background: none;
+      box-shadow: none;
+    }
+    .chapter[data-cue]:not([data-stacked]) .stage-canvas .shadowbox-frame { display: none; }
+
+    .chapter[data-cue]:not([data-stacked]) .flow {
+      position: relative;
+      z-index: 1;
+      display: block;
+      max-width: none;
+      margin-top: -100svh;
+      padding: 0;
+      pointer-events: none;
+    }
+
+    /*
+      The deck: one sticky viewport layer holding every pinned sheet at its
+      place in the lane. It never moves while its tracks scroll past beneath
+      it; the cue line (viewport middle) crossing a track turns its beat on.
+      Lead-in 35svh (the first cue fires as the stage settles), a track of
+      40svh + hold per beat, and a 70svh tail so the last sheet has left
+      before the deck scrolls away with the page.
+    */
+    .chapter[data-cue]:not([data-stacked]) .beat-pins { display: block; }
+    .chapter[data-cue]:not([data-stacked]) .beat-deck {
+      display: block;
+      position: sticky;
+      top: 0;
+      height: 100svh;
+      margin-bottom: -100svh;
+    }
+    .chapter[data-cue]:not([data-stacked]) .beat-lead { display: block; height: 35svh; }
+    .chapter[data-cue]:not([data-stacked]) .beat-track { display: block; height: calc((40 + var(--hold, 40)) * 1svh); }
+    .chapter[data-cue]:not([data-stacked]) .beat-tail { display: block; height: 70svh; }
+
+    .chapter[data-cue]:not([data-stacked]) .beat-deck > .beat > .beat-sheet {
+      position: absolute;
+      top: var(--beat-top);
+      left: var(--lane-pad);
+      width: var(--lane-w);
+      box-shadow: var(--leaf-lip), var(--sheet-shadow);
+      backface-visibility: hidden;
+      /* Off until cued: out of sight and out of reach, but still in the accessibility tree. */
+      opacity: 0;
+      pointer-events: none;
+    }
+    .chapter[data-cue]:not([data-stacked])[data-lane="right"] .beat-deck > .beat > .beat-sheet {
+      left: auto;
+      right: var(--lane-pad);
+    }
+    .chapter[data-cue]:not([data-stacked]) .beat-deck > .beat[data-state="in"] > .beat-sheet {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    /* The bend shade plays with every flight (chapter-css.ts writes the flight itself). */
+    .chapter[data-cue]:not([data-stacked]) .beat-deck > .beat:is([data-dir="fwd"], [data-dir="back"]) > .beat-sheet::before {
+      animation: leaf-shade var(--dur-leaf-in) var(--ease-leaf) both;
+    }
+    .chapter[data-cue]:not([data-stacked]) .beat-deck > .beat:is([data-state="after"], [data-state="before"]) > .beat-sheet::before {
+      animation-name: leaf-shade-out;
+      animation-duration: var(--dur-leaf-out);
+    }
+
+    /* Long sheets scroll as normal pages; each rises off the tray once, when it first comes into view. */
+    .chapter[data-cue]:not([data-stacked]) .beat[data-flow] { padding: 30svh 0 24svh; }
+    .chapter[data-cue]:not([data-stacked]) .beat[data-flow] > .beat-sheet {
+      width: var(--lane-w-flow);
+      margin-inline-start: var(--lane-pad);
+      pointer-events: auto;
+      box-shadow: var(--leaf-lip), var(--sheet-shadow);
+    }
+    .chapter[data-cue]:not([data-stacked])[data-lane="right"] .beat[data-flow] > .beat-sheet {
+      margin-inline-start: calc(100cqw - var(--lane-pad) - var(--lane-w-flow));
+    }
+    .chapter[data-cue]:not([data-stacked]) .beat[data-flow]:not([data-shown]) > .beat-sheet { opacity: 0; }
+    .chapter[data-cue]:not([data-stacked]) .beat[data-flow][data-shown=""] > .beat-sheet {
+      transform-origin: 50% 100%;
+      animation: leaf-rise var(--dur-leaf-in) var(--ease-leaf) both;
+    }
+    .chapter[data-cue]:not([data-stacked]) .beat[data-flow][data-shown=""] > .beat-sheet::before {
+      animation: leaf-shade var(--dur-leaf-in) var(--ease-leaf) both;
+    }
+
+    /*
+      A keyboard-focused sheet that is not showing yet is composed at once (§4.4 step 8);
+      ChapterCue also scrolls a focused pinned sheet's track under the cue line. Only sheets
+      that are off: switching a showing sheet's animation off and on again (a text field is
+      :focus-visible even after a click) would replay its entrance under the pointer.
+    */
+    .chapter .beat-deck > .beat:not([data-state="in"]):has(:focus-visible) > .beat-sheet,
+    .chapter .beat-deck > .beat:not([data-state="in"]):has(:focus-visible) [data-step],
+    .chapter .beat[data-flow]:not([data-shown]):has(:focus-visible) > .beat-sheet {
+      opacity: 1 !important;
+      pointer-events: auto !important;
+      animation: none !important;
+    }
+
+    /* A pair of cards swings on its clips when the wire brings it in, then hangs still. */
+    .chapter[data-cue]:not([data-stacked]) .beat[data-state="in"]:is([data-dir="fwd"], [data-dir="back"]) .rail-card {
+      animation: rail-sway calc(var(--dur-leaf-in) * 1.6) var(--ease-leaf) both;
+    }
+    .chapter[data-cue]:not([data-stacked]) .beat[data-state="in"] .rail-card:nth-child(2) { animation-delay: 90ms; }
+
+    /* Tablet: a wider lane. */
+    @media (min-width: 768px) and (max-width: 1023px) {
+      .chapter[data-cue]:not([data-stacked]) { --lane-w: min(34rem, 56cqw); --lane-w-flow: 90cqw; }
+    }
+  }
+}
+
+/*
+  The pocket studio (< 768 px, v3.14, owner request: a mobile experience as
+  deliberate as the desktop one). Same markup as the theatre, chosen in CSS
+  (§8). No pinned stage, no scroll-jacking, no WebGL: each chapter opens with
+  its shadow-box window (the station's mobile frame, in flow), the first paper
+  sheet overlaps the window's lower lip, and every sheet is cued once as it
+  comes up the screen. Native scroll does the rest: the window's layers drift
+  at their own depths, the index cards and the service blueprints pile up like
+  papers on a board, the gallery wire swipes sideways.
+*/
+@media (max-width: 767px) {
+  .chapter {
+    padding: 0.75rem 0 3.5rem;
+    background: var(--color-paper);
+  }
+  .chapter .stage {
+    display: block;
+    max-width: none;
+    padding: 0 0.75rem;
+  }
+  .chapter .stage-front { display: none; }
+  /* A sheet in flight or a window unfolding never widens the page. */
+  main { overflow-x: clip; }
+  .chapter .flow {
+    margin-top: -2.25rem;
+    padding-inline: 0.75rem;
+    gap: 1.25rem;
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .chapter .beat-pins,
+  .chapter .beat-deck { gap: 1.25rem; grid-template-columns: minmax(0, 1fr); }
+  .chapter .beat-sheet { padding: 1.25rem; box-shadow: var(--leaf-lip), var(--sheet-shadow); }
+  .chapter .beat-sheet.rail-seg { padding: 0; box-shadow: none; }
+  /* The sheets that are drawn on the stage in the theatre keep their paper here. */
+  .chapter .paper-card { box-shadow: var(--leaf-lip), var(--sheet-shadow); }
+  #home .hero-desk { display: block; }
+
+  /*
+    A sheet is cued once, when it comes up the screen (§10.2 cued paper): it is already
+    composed when it is first on screen at load (`data-shown="now"`), and ChapterCue only
+    marks it once. Without JS the sheets simply stay on the page.
+  */
+  .chapter[data-cue]:not(#projects) .beat:not([data-shown]) > .beat-sheet { opacity: 0; }
+  .chapter[data-cue]:not(#projects) .beat[data-shown=""] > .beat-sheet {
+    transform-origin: 50% 100%;
+    animation: m-rise 640ms var(--ease-leaf) both;
+  }
+  .chapter[data-cue]:not(#projects) .beat:nth-child(even)[data-shown=""] > .beat-sheet { --tilt: 0.7deg; }
+
+  /* Ruled boxes are still ruled boxes, but cut from the same stock as the sheets. */
+  .chapter .beat-sheet.index-sheet,
+  .chapter .beat-sheet.blueprint-leaf { padding: 1.25rem; }
+
+  /* A grid track never grows past the screen because of a long title (320 px). */
+  .chapter .beat-sheet ul.grid { grid-template-columns: minmax(0, 1fr); }
+  .chapter .folio > summary { min-width: 0; }
+
+  /* The role file's header and photograph stay taped to the sheet. */
+  .chapter .role-photo { rotate: 2deg; }
+}
+
+/*
+  Trays (`02` index cards, `03` role folders, `04` blueprints): the title and the lead-in
+  stay on the page as the first rows, and the cards under them form one tray that swipes
+  sideways, the next card peeking in (§8, v3.15). The lead-in rows are sticky, so they
+  stay put while the tray moves. --cols only has to be at least the number of cards.
+*/
+@media (max-width: 767px) {
+  #about { --cols: 4; }
+  #experience { --cols: 8; }
+  #services { --cols: 6; }
+  :is(#about, #experience, #services) .beat-deck {
+    display: grid;
+    grid-template-columns: repeat(var(--cols), max-content);
+    align-items: start;
+    gap: 1.25rem 0.875rem;
+    margin-inline: -0.75rem;
+    padding: 0 0.75rem 1.25rem;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+  }
+  :is(#about, #experience, #services) .beat-deck::-webkit-scrollbar { display: none; }
+  :is(#about, #experience, #services) .beat-deck > .beat:not([data-beat^="card-"], [data-beat^="work-"], [data-beat^="organization-"], [data-beat^="svc-"]) {
+    grid-column: 1 / -1;
+    position: sticky;
+    left: 0;
+    width: calc(100vw - 1.5rem);
+  }
+  :is(#about, #experience, #services) .beat-deck > .beat:is([data-beat^="card-"], [data-beat^="work-"], [data-beat^="organization-"], [data-beat^="svc-"]) {
+    width: min(82vw, 21rem);
+  }
+  /* The career board's closing note belongs to the desktop walk; on a phone the career path above the tray says it. */
+  #experience .beat[data-beat="board"],
+  #about .beat[data-beat="tidy"] { display: none; }
+}
+
+/* The card in the middle of the tray is the one in front; its neighbours sit back. */
+@supports (animation-timeline: view()) {
+  @media (max-width: 767px) and (prefers-reduced-motion: no-preference) {
+    :is(#about, #experience, #services) .beat-deck > .beat:is([data-beat^="card-"], [data-beat^="work-"], [data-beat^="organization-"], [data-beat^="svc-"]),
+    #projects .rail-card {
+      animation: m-focus linear both;
+      animation-timeline: view(inline);
+      animation-range: cover 0% cover 100%;
+    }
+  }
+}
+@keyframes m-focus {
+  0% { scale: 0.93; opacity: 0.6; }
+  35%, 65% { scale: 1; opacity: 1; }
+  to { scale: 0.93; opacity: 0.6; }
+}
+
+/* The gallery wire swipes sideways (`04b`): free native scroll (no snapping, §3.2), the next card peeking in. */
+@media (max-width: 767px) {
+  #projects { --cols: 8; }
+  #projects .beat-deck {
+    display: grid;
+    grid-template-columns: repeat(var(--cols), min(82vw, 21rem));
+    column-gap: 1rem;
+    row-gap: 2.5rem;
+    align-items: stretch;
+    margin-inline: -0.75rem;
+    padding: 0 0.75rem 1.25rem;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+  }
+  /* The title and the archive button are rows of their own, held still while the wire moves. */
+  #projects .beat-deck > .beat:not([data-beat^="wire-"]) {
+    display: block;
+    grid-column: 1 / -1;
+    position: sticky;
+    left: 0;
+    width: calc(100vw - 1.5rem);
+  }
+  #projects .beat-deck::-webkit-scrollbar { display: none; }
+  #projects .beat,
+  #projects .beat-sheet.rail-seg,
+  #projects .rail-row { display: contents; }
+  #projects .rail-card { transform-origin: 50% -2rem; }
+  /* The wire: each card carries its length of it, so neighbours join into one line. */
+  #projects .rail-card::after {
+    content: "";
+    position: absolute;
+    top: -1.75rem;
+    left: -0.5rem;
+    right: -0.5rem;
+    height: 2px;
+    background: var(--color-muted);
+    pointer-events: none;
+  }
+  #projects .beat-deck { --tray-gap: 2.5rem; }
+  #projects .rail-card::before { display: block; }
+  #projects .rail-nav { display: none; }
+  #projects .rail-row::before { display: none; }
+}
+
+@keyframes rail-sway {
+  0% { rotate: var(--sway, -2deg); }
+  40% { rotate: calc(var(--sway, -2deg) * -0.5); }
+  70% { rotate: calc(var(--sway, -2deg) * 0.2); }
+  to { rotate: 0deg; }
+}
+
+/* Leaf motion shared by every chapter (the per-origin flights are generated). */
+@keyframes leaf-rise {
+  0% { transform: perspective(1400px) translateY(9svh) rotateX(-18deg); opacity: 0; }
+  30% { opacity: 1; }
+  62% { transform: perspective(1400px) translateY(-0.6svh) rotateX(3deg); }
+  84% { transform: perspective(1400px) translateY(0.15svh) rotateX(-0.8deg); }
+  to { transform: none; opacity: 1; }
+}
+/* The bend shade: strongest while the leaf is curved, gone once it lies flat. */
+@keyframes leaf-shade {
+  0% { opacity: 1; }
+  55% { opacity: 0.5; }
+  to { opacity: 0; }
+}
+@keyframes leaf-shade-out {
+  0% { opacity: 0; }
+  40% { opacity: 0.8; }
+  to { opacity: 1; }
+}
+
+/*
+  The first screen on a phone (`01`): the name, the role and both calls to action come
+  before the proof, so a recruiter has the CV and the projects one thumb away without
+  scrolling; the four tickets follow, and the desk peeks in right below them.
+*/
+@media (max-width: 767px) {
+  #home > div { padding-top: 5rem; padding-bottom: 1.25rem; gap: 1.75rem; }
+  #home .hero-title { display: flex; flex-direction: column; }
+  #home .hero-cta { order: 1; margin-top: 1.5rem; flex-direction: row; gap: 0.625rem; }
+  #home .hero-cta > a { flex: 1 1 0; min-width: 0; padding-inline: 0.75rem; }
+  #home .hero-cta > a:first-child { flex-grow: 1.35; }
+  #home .hero-tickets { order: 2; margin-top: 1.25rem; max-width: none; }
+  #home .hero-tickets .ticket { padding: 0.75rem 1rem; }
+  #home .hero-desk { margin-inline: -0.25rem; }
+}
+@media (max-width: 767px) and (prefers-reduced-motion: reduce) {
+  .chapter .beat-sheet { opacity: 1 !important; animation: none !important; }
+}
+
+/*
+  Swipe progress and hint for every tray (v3.16): a hairline track under the tray with an
+  accent fill that grows as the tray scrolls (a native scroll timeline on the tray itself),
+  and one nudge when the tray first comes up (`data-hint`, set once by ChapterCue).
+*/
+@media (max-width: 767px) {
+  :is(#about, #experience, #services, #projects) .beat-deck::before,
+  :is(#about, #experience, #services, #projects) .beat-deck::after {
+    content: "";
+    grid-column: 1 / -1;
+    position: sticky;
+    left: 0;
+    width: calc(100vw - 1.5rem);
+    height: 3px;
+  }
+  :is(#about, #experience, #services, #projects) .beat-deck::before { order: 98; background: var(--color-line); }
+  :is(#about, #experience, #services, #projects) .beat-deck::after {
+    order: 99;
+    margin-top: calc(-3px - var(--tray-gap, 1.25rem));
+    background: var(--color-accent);
+    transform-origin: 0 50%;
+    transform: scaleX(0.12);
+  }
+  .career-path { margin-top: 1.5rem; }
+  .cp-road { stroke: var(--color-line); stroke-width: 3; stroke-linecap: round; stroke-dasharray: 0.012 0.018; }
+  .cp-trail { stroke: var(--color-accent); stroke-width: 3; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 0.96; }
+  .cp-ring { fill: var(--ill-page); stroke: var(--color-line); stroke-width: 1.5; }
+  .cp-dot { fill: var(--color-muted); }
+  .cp-year { font-family: var(--font-jetbrains-mono), ui-monospace, monospace; font-size: 8.5px; fill: var(--color-muted); }
+  .cp-pin { fill: var(--color-accent); offset-distance: 0%; offset-rotate: 0deg; filter: drop-shadow(0 1.5px 1px rgb(var(--rgb-shadow) / 0.35)); }
+  .cp-pin circle { fill: var(--ill-page); }
+}
+@media (min-width: 768px) {
+  .career-path { display: none; }
+}
+@supports (animation-timeline: scroll()) {
+  @media (max-width: 767px) and (prefers-reduced-motion: no-preference) {
+    :is(#about, #experience, #services, #projects) .beat-deck::after {
+      animation: m-tray linear both;
+      animation-timeline: scroll(nearest inline);
+    }
+    .cp-trail { animation: m-trail linear both; animation-timeline: scroll(nearest inline); }
+    .cp-pin { animation: m-walk linear both; animation-timeline: scroll(nearest inline); }
+    .cp-dot { animation: m-dot linear both; animation-timeline: scroll(nearest inline); animation-range: calc(var(--p) * 96% - 4%) calc(var(--p) * 96%); }
+    .cp-ring { animation: m-ring linear both; animation-timeline: scroll(nearest inline); animation-range: calc(var(--p) * 96% - 4%) calc(var(--p) * 96%); }
+    /* The one-time nudge: the tray's cards slide a little to the left and settle back. */
+    :is(#about, #experience, #services) .beat-deck[data-hint] > .beat:is([data-beat^="card-"], [data-beat^="work-"], [data-beat^="organization-"], [data-beat^="svc-"]),
+    #projects .beat-deck[data-hint] .rail-card {
+      animation: m-focus linear both, m-nudge 1.1s var(--ease-leaf) 0.5s both;
+      animation-timeline: view(inline), auto;
+      animation-range: cover 0% cover 100%, normal;
+    }
+  }
+}
+@keyframes m-tray { to { transform: scaleX(1); } }
+@keyframes m-trail { to { stroke-dashoffset: 0; } }
+@keyframes m-walk { to { offset-distance: 100%; } }
+@keyframes m-dot { to { fill: var(--color-accent); } }
+@keyframes m-ring { to { stroke: var(--color-accent); } }
+@keyframes m-nudge {
+  0%, 100% { translate: 0 0; }
+  45% { translate: -26px 0; }
+}
+
+/* Denser lists on a phone (v3.15): chips and tools in short trays, certificates and the footer tighter. */
+@media (max-width: 767px) {
+  #services .beat[data-beat="stack"] div:has(> .tracing),
+  #services [data-eqbot="services-tabs"] {
+    display: flex;
+    gap: 0.75rem;
+    margin-inline: -1.25rem;
+    padding-inline: 1.25rem;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+  }
+  #services .beat[data-beat="stack"] div:has(> .tracing)::-webkit-scrollbar,
+  #services [data-eqbot="services-tabs"]::-webkit-scrollbar { display: none; }
+  #services .beat[data-beat="stack"] .tracing { flex: 0 0 74%; }
+  #services [data-eqbot="services-tabs"] > div { flex: 0 0 88%; }
+  #services [data-eqbot="services-tabs"] a.paper-card > span:first-child { aspect-ratio: 16 / 8; }
+  .cert-folios .folio-body p { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .cert-folios .folio-body li { padding-block: 0.875rem; }
+  #contact address ul { grid-template-columns: 1fr 1fr; column-gap: 0.75rem; }
+  footer .footer-cols { gap: 2rem; padding-block: 2rem; }
+  footer .footer-reach { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  footer .footer-reach a { min-height: 2.75rem; gap: 0; }
+  footer .footer-reach a > span:first-child { width: 2.75rem; height: 2.75rem; }
+  footer .footer-reach a > span:last-child {
+    position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap;
+  }
+}
+
+/* Mobile: a sheet is set down from slightly below, settles with a little give, and lies flat. */
+@keyframes m-rise {
+  0% { transform: translateY(34px) rotate(var(--tilt, -0.7deg)); opacity: 0; }
+  35% { opacity: 1; }
+  65% { transform: translateY(-4px) rotate(calc(var(--tilt, -0.7deg) * -0.3)); }
+  to { transform: none; opacity: 1; }
+}
+
+/* Mobile windows: the station unfolds into depth while it comes up, and its layers drift at their own depths. */
+@supports (animation-timeline: view()) {
+  @media (max-width: 767px) and (prefers-reduced-motion: no-preference) {
+    main .scene-viewport { view-timeline: --diorama block; }
+    main .scene-layer {
+      animation: m-depth linear both;
+      animation-timeline: --diorama;
+      animation-range: cover 0% cover 100%;
+    }
+    .chapter .stage {
+      transform-origin: 50% 0;
+      animation: m-window linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 60%;
+    }
+  }
+}
+@keyframes m-depth {
+  from { translate: 0 calc(var(--k, 0) * 9cqw); }
+  to { translate: 0 calc(var(--k, 0) * -9cqw); }
+}
+@keyframes m-window {
+  from { transform: translateY(18px) scale(0.955); opacity: 0.35; }
+  to { transform: none; opacity: 1; }
+}

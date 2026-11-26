@@ -1,348 +1,358 @@
-"use client";
-
-import React, { useState } from 'react';
 import Image from 'next/image';
-import { useLanguage } from '../../context/LanguageContext';
-import { AnimatedSectionTitle } from '../shared/AnimatedSectionTitle';
-import PortfolioFigmaCard from '../shared/PortfolioFigmaCard';
-import { Code, Monitor } from 'lucide-react';
-import { Projects, ProjectCard } from './Projects';
-import { 
-  designSkills as designSkillsData, 
-  developerSkills as developerSkillsData, 
-  designProjects as portfolioDesignProjects 
+import type { CSSProperties } from 'react';
+import { ArrowUpRight } from 'lucide-react';
+import {
+  designProjects,
+  designSkills,
+  developerSkills,
+  groupProjects,
+  individualProjects,
 } from '../../data/portfolio';
-import { ProjectDetailDialog, projectDetailLinks } from '../shared/ProjectDetailDialog';
-import { AdditionalSkillsCell, AdditionalSkillsDialog } from '../shared/AdditionalSkillsDialog';
-import { listedAdditionalGroups } from '../../lib/additional-skills';
-import { ViewAllProjects } from './ViewAllProjects';
+import { listedAdditionalGroups, stackLogo } from '../../lib/additional-skills';
+import type { Project } from '../../types';
+import { SectionTitle } from '../ui/SectionTitle';
+import { T } from '../ui/T';
+import { AdditionalSkillsLauncher } from './AdditionalSkillsLauncher';
+import { RailNav } from './RailNav';
+import { ProjectCard, ProjectShelf, tilts, type ShelfProject } from './ProjectShelf';
+import { DraftingStation } from '../scenes/drafting/DraftingStation';
+import { DRAFTING_CHAPTER } from '../scenes/drafting/beats';
+import { GALLERY_CHAPTER } from '../scenes/gallery/beats';
+import { Beat, Chapter } from '../scenes/chapter/Chapter';
+import { motifArt, motifFor } from '../scenes/gallery/motifs';
+import { GalleryStation } from '../scenes/gallery/GalleryStation';
 
-interface Service {
-  id: string;
-  titleEn: string;
-  titleId: string;
-  descriptionEn: string;
-  descriptionId: string;
-  features: {
-    en: string[];
-    id: string[];
+type Capability = { en: string; id: string; bodyEn: string; bodyId: string; points: Array<[string, string]> };
+
+const developerServices: Capability[] = [
+  {
+    en: '.NET application development',
+    id: 'Pengembangan aplikasi .NET',
+    bodyEn: 'Enterprise web applications in C#, ASP.NET MVC and .NET Core.',
+    bodyId: 'Aplikasi web enterprise dengan C#, ASP.NET MVC, dan .NET Core.',
+    points: [
+      ['C# application logic', 'Logika aplikasi C#'],
+      ['ASP.NET MVC and .NET Core', 'ASP.NET MVC dan .NET Core'],
+      ['Telerik and Kendo interfaces', 'Antarmuka Telerik dan Kendo'],
+    ],
+  },
+  {
+    en: 'SQL Server and data',
+    id: 'SQL Server dan data',
+    bodyEn: 'Operational data shaped with stored procedures, set-based queries and Entity Framework.',
+    bodyId: 'Data operasional ditata dengan stored procedure, kueri set-based, dan Entity Framework.',
+    points: [
+      ['Stored procedures and indexing', 'Stored procedure dan indexing'],
+      ['Entity Framework', 'Entity Framework'],
+      ['Transactional processing', 'Pemrosesan transaksional'],
+    ],
+  },
+  {
+    en: 'Operational dashboards',
+    id: 'Dashboard operasional',
+    bodyEn: 'Internal dashboards and modular applications that operations teams open every day.',
+    bodyId: 'Dashboard internal dan aplikasi modular yang dibuka tim operasional setiap hari.',
+    points: [
+      ['Monitoring dashboards', 'Dashboard pemantauan'],
+      ['Modular application structure', 'Struktur aplikasi modular'],
+      ['Deployment on IIS', 'Deployment di IIS'],
+    ],
+  },
+];
+
+const designServices: Capability[] = [
+  {
+    en: 'App and website design',
+    id: 'Desain aplikasi dan website',
+    bodyEn: 'Complete, ready-to-build screens for mobile and desktop.',
+    bodyId: 'Layar lengkap yang siap dibangun untuk mobile dan desktop.',
+    points: [
+      ['UI design systems', 'Sistem desain UI'],
+      ['Mobile-first layouts', 'Tata letak mobile-first'],
+      ['Developer handoff notes', 'Catatan handoff untuk developer'],
+    ],
+  },
+  {
+    en: 'High-fidelity prototypes',
+    id: 'Prototipe fidelitas tinggi',
+    bodyEn: 'Clickable flows you can put in front of users before a line of code.',
+    bodyId: 'Alur yang bisa diklik untuk diuji pengguna sebelum ada kode.',
+    points: [
+      ['Interactive prototypes', 'Prototipe interaktif'],
+      ['Micro-interactions', 'Micro-interaction'],
+      ['Ready for user testing', 'Siap untuk uji pengguna'],
+    ],
+  },
+  {
+    en: 'Branding and identity',
+    id: 'Branding dan identitas',
+    bodyEn: 'The look and feel an application keeps across every screen.',
+    bodyId: 'Tampilan dan nuansa yang dijaga aplikasi di setiap layar.',
+    points: [
+      ['Identity design', 'Desain identitas'],
+      ['Color palettes', 'Palet warna'],
+      ['Logos and icons', 'Logo dan ikon'],
+    ],
+  },
+];
+
+const coreGroups: Array<{ en: string; id: string; names: string[] }> = [
+  { en: 'Backend', id: 'Backend', names: ['C#', 'ASP.NET MVC', '.NET Core'] },
+  { en: 'Data', id: 'Data', names: ['SQL Server', 'Entity Framework'] },
+  { en: 'Interface', id: 'Antarmuka', names: ['Telerik'] },
+];
+
+const figmaWorkspace =
+  'https://www.figma.com/proto/tfuZv6wJ89rcjMHj62C8px/Portfolio?page-id=0%3A1&node-id=1-2&p=f&viewport=412%2C255%2C0.04&t=6zl8vTjnEZzdUhRC-1&scaling=contain&content-scaling=fixed&starting-point-node-id=1%3A2';
+
+const featured = ['mejascalp', 'buku-dompet', 'api-central', 'shipment-tracker', 'marketplace-influencer', 'hiring-platform', 'del-pick', 'sportainment-app'];
+
+function toShelf(project: Project, kind: ShelfProject['kind']): ShelfProject {
+  return {
+    id: project.id,
+    title: project.title,
+    en: project.description,
+    idn: project.descriptionId || project.description,
+    image: project.image,
+    slides: project.slides ?? [],
+    stack: project.techStack.map((name) => ({ name, logo: stackLogo(name) })),
+    links: project.links,
+    kind,
+    mobile: project.id.includes('mobile') || project.type === 'mobile' || /mobile/i.test(project.title),
+    art: motifArt(project.id, motifFor(project)),
   };
-  gradient: string;
 }
 
-export const uiuxServices: Service[] = [
-  {
-    id: 'ui-design',
-    titleEn: 'Full App & Website Design',
-    titleId: 'Desain Aplikasi & Website Lengkap',
-    descriptionEn: 'Crafting complete, ready-to-code designs for mobile and desktop.',
-    descriptionId: 'Merancang desain lengkap yang siap di-coding untuk mobile dan desktop.',
-    features: {
-      en: ['Complete UI design systems', 'Mobile-first responsive design', 'Design handoff documentation'],
-      id: ['Sistem desain UI yang lengkap', 'Desain responsif mobile-first', 'Dokumentasi handoff desain']
-    },
-    gradient: 'from-purple-500 to-pink-500'
-  },
-  {
-    id: 'prototypes',
-    titleEn: 'High-Fidelity Prototypes',
-    titleId: 'Prototype Fidelitas Tinggi',
-    descriptionEn: 'Building clickable, interactive demos you can test and feel.',
-    descriptionId: 'Membangun demo interaktif yang dapat diuji dan dirasakan.',
-    features: {
-      en: ['Interactive prototypes', 'Animation & micro-interactions', 'User testing ready'],
-      id: ['Prototype interaktif', 'Animasi & micro-interactions', 'Siap untuk user testing']
-    },
-    gradient: 'from-emerald-500 to-teal-500'
-  },
-  {
-    id: 'branding',
-    titleEn: 'Branding & Identity',
-    titleId: 'Branding & Identitas',
-    descriptionEn: 'Helping you define the look and feel of your application.',
-    descriptionId: 'Membantu Anda mendefinisikan tampilan dan nuansa aplikasi Anda.',
-    features: {
-      en: ['Brand identity design', 'Color palette creation', 'Logo and iconography'],
-      id: ['Desain identitas brand', 'Pembuatan palet warna', 'Logo dan ikonografi']
-    },
-    gradient: 'from-orange-500 to-red-500'
-  }
+type Area = 'development' | 'design';
+const AREAS: Record<Area, { en: string; id: string }> = {
+  development: { en: 'Development', id: 'Pengembangan' },
+  design: { en: 'Interface design', id: 'Desain antarmuka' },
+};
+const services: Array<Capability & { area: Area }> = [
+  ...developerServices.map((item) => ({ ...item, area: 'development' as const })),
+  ...designServices.map((item) => ({ ...item, area: 'design' as const })),
 ];
 
-export const developerServices: Service[] = [
-  {
-    id: 'design-to-code',
-    titleEn: '.NET Application Development',
-    titleId: 'Pengembangan Aplikasi .NET',
-    descriptionEn: 'Building enterprise web applications with C#, ASP.NET MVC, and .NET Core.',
-    descriptionId: 'Membangun aplikasi web enterprise dengan C#, ASP.NET MVC, dan .NET Core.',
-    features: {
-      en: ['C# application logic', 'ASP.NET MVC and .NET Core', 'Telerik interfaces'],
-      id: ['Logika aplikasi C#', 'ASP.NET MVC dan .NET Core', 'Antarmuka Telerik']
-    },
-    gradient: 'from-blue-500 to-indigo-500'
-  },
-  {
-    id: 'api-integration',
-    titleEn: 'SQL Server and Data',
-    titleId: 'SQL Server dan Data',
-    descriptionEn: 'Shaping operational data with SQL Server, stored procedures, and Entity Framework.',
-    descriptionId: 'Menata data operasional dengan SQL Server, stored procedure, dan Entity Framework.',
-    features: {
-      en: ['Stored procedures and indexing', 'Entity Framework', 'Transactional processing'],
-      id: ['Stored procedure dan indexing', 'Entity Framework', 'Pemrosesan transaksional']
-    },
-    gradient: 'from-cyan-500 to-blue-500'
-  },
-  {
-    id: 'fullstack-dev',
-    titleEn: 'Operational Dashboards',
-    titleId: 'Dashboard Operasional',
-    descriptionEn: 'Delivering internal dashboards and modular applications that operations teams use every day.',
-    descriptionId: 'Menghadirkan dashboard internal dan aplikasi modular yang dipakai tim operasional setiap hari.',
-    features: {
-      en: ['Monitoring dashboards', 'Modular application structure', 'Deployment on IIS'],
-      id: ['Dashboard pemantauan', 'Struktur aplikasi modular', 'Deployment di IIS']
-    },
-    gradient: 'from-green-500 to-emerald-500'
-  }
-];
-
-export function Services() {
-  const { language } = useLanguage();
-  const [activeTab, setActiveTab] = useState<'uiux' | 'development'>('development');
-  const [showAllProjects, setShowAllProjects] = useState(false);
-  const [skillsOpen, setSkillsOpen] = useState(false);
-
-  const currentServices = activeTab === 'uiux' ? uiuxServices : developerServices;
-
-  if (showAllProjects) {
-    return <ViewAllProjects onBack={() => setShowAllProjects(false)} projectType="all" />;
-  }
-
-  return (
-    <section id="services" data-studio="draft" className="py-12 md:py-16 border-b border-line">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <AnimatedSectionTitle
-          badge={language === 'en' ? 'Expertise' : 'Keahlian'}
-          title={language === 'en' ? 'My Services' : 'Layanan Saya'}
-          subtitle={language === 'en' 
-            ? 'Enterprise web and data systems in C# and .NET, with interface design for the same products.'
-            : 'Sistem web dan data enterprise dengan C# dan .NET, serta desain antarmuka untuk produk yang sama.'
-          }
-        />
-
-        <div className="rise-item flex justify-center mb-16">
-          <div data-eqbot="services-tabs" data-eqbot-at="above" className="inline-flex border border-line" role="tablist">
-            <button
-              onClick={() => setActiveTab('development')}
-              className={`flex items-center gap-2 px-5 py-3 text-sm ${
-                activeTab === 'development'
-                  ? 'bg-ink text-paper'
-                  : 'bg-paper text-muted hover:text-ink'
-              }`}
-            >
-              <Code size={16} />
-              Development
-            </button>
-            <button
-              onClick={() => setActiveTab('uiux')}
-              className={`flex items-center gap-2 px-5 py-3 text-sm border-l border-line ${
-                activeTab === 'uiux'
-                  ? 'bg-ink text-paper'
-                  : 'bg-paper text-muted hover:text-ink'
-              }`}
-            >
-              <Monitor size={16} />
-              UI/UX Design
-            </button>
-          </div>
-        </div>
-
-        <div key={activeTab} className="space-y-24">
-            {/* Services Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-3 border-t border-l border-line">
-              {currentServices.map((service) => (
-                <article key={`${activeTab}-${service.id}`} className="rise-item read-row p-7 md:p-8 border-b border-r border-line flex flex-col bg-paper">
-                  <h3 className="font-serif text-2xl font-medium text-ink mb-3">
-                    {language === 'en' ? service.titleEn : service.titleId}
-                  </h3>
-                  <p className="text-muted leading-relaxed mb-6 flex-grow">
-                    {language === 'en' ? service.descriptionEn : service.descriptionId}
-                  </p>
-                  <ul className="space-y-2">
-                    {(language === 'en' ? service.features.en : service.features.id).map((feature) => (
-                      <li key={feature} className="flex gap-3 text-sm text-ink">
-                        <span className="mt-2 h-1 w-1 shrink-0 bg-accent" />
-                        {feature}
-                      </li>
-                    ))}
-                  </ul>
-                </article>
-              ))}
-            </div>
-
-            {/* Skills Animation */}
-            <div className="space-y-8">
-              <h3 className="rise-item font-serif text-3xl font-medium text-ink">
-                {language === 'en' ? 'Technological Stack' : 'Tumpukan Teknologi'}
-              </h3>
-              {activeTab === 'development' ? (
-                <div className="space-y-10">
-                  <div className="rise-item">
-                    <p className="font-jetbrains-mono text-[11px] tracking-[0.16em] uppercase text-accent mb-4">
-                      {language === 'en' ? 'Core · Enterprise web and data' : 'Inti · Web dan data enterprise'}
-                    </p>
-                    <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 border-t border-l border-line">
-                      {developerSkillsData.filter((skill) => skill.focus === 'core').map((skill) => (
-                        <li key={skill.name} className="read-row flex flex-col items-center gap-3 p-5 border-b border-r border-line bg-paper text-center">
-                          <Image src={skill.image} alt="" width={120} height={40} className="h-10 w-auto max-w-full object-contain" />
-                          <span className="text-sm text-ink">{skill.name}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  <div className="space-y-8">
-                    {listedAdditionalGroups.map((group) => (
-                      <div key={group.labelEn} className="rise-item">
-                        <p className="font-jetbrains-mono text-[11px] tracking-[0.16em] uppercase text-accent mb-4">
-                          {language === 'en' ? group.labelEn : group.labelId}
-                        </p>
-                        <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 border-t border-l border-line">
-                          {group.skills.map((skill) => (
-                            <li key={skill.name} className="read-row flex flex-col items-center gap-2 p-5 border-b border-r border-line bg-paper text-center">
-                              {skill.image && (
-                                'imageDark' in skill && skill.imageDark ? (
-                                  <>
-                                    <Image src={skill.image} alt="" width={72} height={40} className="h-10 w-auto max-w-[4.5rem] object-contain dark:hidden" />
-                                    <Image src={skill.imageDark} alt="" width={72} height={40} className="hidden h-10 w-auto max-w-[4.5rem] object-contain dark:block" />
-                                  </>
-                                ) : (
-                                  <Image src={skill.image} alt="" width={40} height={40} className="h-10 w-10 object-contain" />
-                                )
-                              )}
-                              <span className="text-sm text-ink">{skill.name}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    ))}
-                  </div>
-                  <div className="rise-item">
-                    <p className="font-jetbrains-mono text-[11px] tracking-[0.16em] uppercase text-accent mb-4">
-                      {language === 'en' ? 'Nice to Have' : 'Baik untuk Dimiliki'}
-                    </p>
-                    <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 border-t border-l border-line">
-                      <li className="flex border-b border-r border-line bg-paper">
-                        <AdditionalSkillsCell language={language} onOpen={() => setSkillsOpen(true)} />
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              ) : (
-                <ul className="rise-item grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 border-t border-l border-line">
-                  {designSkillsData.map((skill) => (
-                    <li key={skill.name} className="read-row flex flex-col items-center gap-3 p-5 border-b border-r border-line bg-paper text-center">
-                      <Image src={skill.image} alt="" width={40} height={40} className="h-10 w-10 object-contain" />
-                      <span className="text-sm text-ink">{skill.name}</span>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-
-            {/* Showcase */}
-            <div className="space-y-8">
-              <h3 className="rise-item font-serif text-3xl font-medium text-ink">
-                {activeTab === 'uiux'
-                  ? (language === 'en' ? 'Design Showcase' : 'Pameran Desain')
-                  : (language === 'en' ? 'Project Portfolio' : 'Portofolio Projek')}
-              </h3>
-              {activeTab === 'uiux' ? (
-                <>
-                  <DesignShowcase onShowAll={() => setShowAllProjects(true)} />
-                  <div className="rise-item pt-16 border-t border-line">
-                    <div className="mb-8">
-                      <h3 className="font-serif text-3xl font-medium text-ink">
-                        {language === 'en' ? 'My Creative Workspace' : 'Lihat Meja Kerja Saya'}
-                      </h3>
-                      <p className="text-muted mt-3 max-w-xl">
-                        {language === 'en' ? 'A deeper look into my design process and tools' : 'Melihat lebih dekat proses desain dan alat saya'}
-                      </p>
-                    </div>
-                    <div className="relative max-w-4xl mx-auto">
-                      <PortfolioFigmaCard />
-                    </div>
-                  </div>
-                </>
-              ) : (
-                <Projects onShowAll={() => setShowAllProjects(true)} />
-              )}
-            </div>
-        </div>
-      </div>
-      {skillsOpen && (
-        <AdditionalSkillsDialog language={language} onClose={() => setSkillsOpen(false)} />
-      )}
-    </section>
-  );
-}
-
-const DesignShowcase = ({ onShowAll }: { onShowAll: () => void }) => {
-  const { language } = useLanguage();
-  const [selectedProject, setSelectedProject] = useState<any>(null);
-
+/* One service as a blueprint sheet of the pile on the drafting table (§4.5 `04`, v3.6). */
+function ServiceSheet({ item, index }: { item: Capability & { area: Area }; index: number }) {
   return (
     <>
-      <div className="rise-item flex items-stretch gap-6 overflow-x-auto pb-8 scrollbar-hide px-4 sm:px-0">
-        {portfolioDesignProjects.map((project) => (
-          <div key={project.id} className="flex w-80 shrink-0 md:w-96">
-            <ProjectCard
-              project={project}
-              label={project.id.includes('mobile')
-                ? (language === 'en' ? 'Mobile Design' : 'Desain Mobile')
-                : (language === 'en' ? 'Web Design' : 'Desain Web')}
-              onClick={() => setSelectedProject({
-                id: project.id,
-                title: project.title,
-                description: language === 'en' ? project.description : (project.descriptionId || project.description),
-                images: project.slides?.length ? project.slides : [project.image],
-                tools: project.techStack,
-                category: project.id.includes('mobile')
-                  ? (language === 'en' ? 'Mobile Design' : 'Desain Mobile')
-                  : (language === 'en' ? 'Web Design' : 'Desain Web'),
-                links: project.links
-              })}
-            />
-          </div>
+      <p className="flex items-baseline justify-between gap-4 font-mono text-[0.6875rem] uppercase tracking-[0.16em] text-blueprint">
+        <span>
+          <T en={AREAS[item.area].en} id={AREAS[item.area].id} />
+        </span>
+        <span className="stamp">
+          {String(index + 1).padStart(2, '0')} / {String(services.length).padStart(2, '0')}
+        </span>
+      </p>
+      <h3 className="mt-5 font-serif text-3xl font-medium leading-tight tracking-tight text-ink">
+        <T en={item.en} id={item.id} />
+      </h3>
+      <p className="mt-3 leading-relaxed text-muted">
+        <T en={item.bodyEn} id={item.bodyId} />
+      </p>
+      <ul className="mt-6 grid gap-2 border-t border-dashed border-line pt-5 text-sm text-ink">
+        {item.points.map(([en, id]) => (
+          <li key={en} className="grid grid-cols-[1.25rem_1fr]">
+            <span className="text-accent" aria-hidden="true">
+              —
+            </span>
+            <T en={en} id={id} />
+          </li>
         ))}
-      </div>
-
-      <div className="mt-12 text-center">
-        <button
-          type="button"
-          onClick={onShowAll}
-          className="btn-primary-custom"
-        >
-          {language === 'en' ? 'View All Projects' : 'Lihat Semua Projek'}
-        </button>
-      </div>
-
-      {selectedProject && (
-        <ProjectDetailDialog
-          key={selectedProject.id}
-          title={selectedProject.title}
-          category={selectedProject.category}
-          description={selectedProject.description}
-          images={selectedProject.images}
-          tools={selectedProject.tools}
-          links={projectDetailLinks(language, selectedProject.links)}
-          overviewLabel={language === 'en' ? 'Overview' : 'Ringkasan'}
-          toolsLabel={language === 'en' ? 'Stack' : 'Teknologi'}
-          closeLabel={language === 'en' ? 'Close' : 'Tutup'}
-          onClose={() => setSelectedProject(null)}
-        />
-      )}
+      </ul>
     </>
   );
-};
+}
+
+function SkillChip({ name, image, imageDark }: { name: string; image?: string; imageDark?: string }) {
+  return (
+    <li className="flex min-h-11 items-center gap-3 border border-line bg-raised px-3 py-2 text-sm text-ink">
+      {image &&
+        (imageDark ? (
+          <>
+            <Image src={image} alt="" width={24} height={24} className="h-6 w-6 object-contain dark:hidden" />
+            <Image src={imageDark} alt="" width={24} height={24} className="hidden h-6 w-6 object-contain dark:block" />
+          </>
+        ) : (
+          <Image src={image} alt="" width={24} height={24} className="h-6 w-6 object-contain" />
+        ))}
+      {name}
+    </li>
+  );
+}
+
+const groupLabel = 'mb-3 font-mono text-[0.6875rem] uppercase tracking-[0.16em] text-muted';
+
+/* After the pile: the tools behind the services, the additional skills index and the Figma workspace. */
+function ToolsSheet() {
+  const tooling = listedAdditionalGroups.flatMap((group) => group.skills);
+  return (
+    <div data-eqbot="services-tabs" data-eqbot-at="above" className="grid gap-12 lg:grid-cols-2 lg:items-start">
+      <div>
+        <h3 className="font-serif text-2xl font-medium text-ink">
+          <T en="Tooling" id="Perkakas" />
+        </h3>
+        <ul className="mt-5 flex flex-wrap gap-2">
+          {tooling.map((skill) => (
+            <SkillChip key={skill.name} name={skill.name} image={skill.image} imageDark={'imageDark' in skill ? (skill.imageDark as string) : undefined} />
+          ))}
+        </ul>
+        <div className="mt-8 max-w-xl">
+          <AdditionalSkillsLauncher />
+        </div>
+      </div>
+      <div>
+        <h3 className="font-serif text-2xl font-medium text-ink">
+          <T en="Design tools" id="Alat desain" />
+        </h3>
+        <ul className="mt-5 grid grid-cols-2 gap-2">
+          {designSkills.map((skill) => (
+            <SkillChip key={skill.name} name={skill.name} image={skill.image} />
+          ))}
+        </ul>
+        <a href={figmaWorkspace} target="_blank" rel="noopener noreferrer" className="paper-card mt-8 block border border-line">
+          <span className="relative block aspect-[3/2] border-b border-line bg-recess">
+            <Image src="/assets/my portfolio.webp" alt="" fill sizes="(min-width: 1024px) 480px, 92vw" className="object-cover" />
+          </span>
+          <span className="flex items-center justify-between gap-4 px-5 py-4 text-sm text-ink">
+            <T en="Open my Figma workspace for this portfolio" id="Buka ruang kerja Figma untuk portofolio ini" />
+            <ArrowUpRight size={16} aria-hidden="true" />
+          </span>
+        </a>
+      </div>
+    </div>
+  );
+}
+
+/*
+  04 Services — the Drafting Table chapter (DesignRules.md §4.5 `04`, v3.6): the
+  title drops as the lamp swings, the core stack lands as three tracing
+  overlays once the cover sheet slides off the blueprint, then the services
+  come off the board as one pile of blueprints: each scroll tucks the front
+  sheet under the pile and the next one is read. The tools follow in flow.
+  Server component; the skills dialog is the only client leaf.
+*/
+export function Services() {
+  return (
+    <Chapter
+      spec={DRAFTING_CHAPTER}
+      labelledBy="services-title"
+      studio="draft"
+      next={{ id: 'projects', en: 'Selected work', idn: 'Karya pilihan' }}
+      stage={<DraftingStation wide />}
+    >
+      <Beat id="title" className="fold-tr [&>header]:mb-0">
+        <SectionTitle
+          index="04"
+          eyebrow={<T en="Blueprint" id="Cetak biru" />}
+          title={<T en="Services" id="Layanan" />}
+          titleId="services-title"
+          lede={
+            <T
+              en="Enterprise web and data systems in C# and .NET, and interface design for the same products."
+              id="Sistem web dan data enterprise dengan C# dan .NET, serta desain antarmuka untuk produk yang sama."
+            />
+          }
+        />
+      </Beat>
+
+      <Beat id="stack">
+        <h3 className="font-serif text-2xl font-medium text-ink">
+          <T en="Core stack" id="Stack inti" />
+        </h3>
+        <div className="mt-5 grid gap-3">
+          {coreGroups.map((group, index) => (
+            <div key={group.en} data-step={index} className="tracing border border-line p-4">
+              <p className={groupLabel}>
+                <T en={group.en} id={group.id} />
+              </p>
+              <ul className="flex flex-wrap gap-2">
+                {group.names.map((name) => (
+                  <SkillChip key={name} name={name} image={developerSkills.find((skill) => skill.name === name)?.image} />
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </Beat>
+
+      {services.map((item, index) => (
+        <Beat key={item.en} id={`svc-${index}`} className="blueprint-leaf svc-sheet stage-sheet">
+          <ServiceSheet item={item} index={index} />
+        </Beat>
+      ))}
+
+      <Beat id="tools" flow>
+        <ToolsSheet />
+      </Beat>
+    </Chapter>
+  );
+}
+
+/*
+  04b Selected work — the Shadow-Box Gallery chapter (DesignRules.md §4.5 `04b`,
+  v3.6): the title rises while the figure hangs a new frame; then the featured
+  projects hang as cards on one wire, two per segment, and the wire slides
+  sideways as the visitor scrolls (a `rail` group: the scroll only picks the
+  segment, the slide plays in time). The archive drawer follows in flow.
+*/
+export function Projects() {
+  const projects = [
+    ...individualProjects.map((project) => toShelf(project, 'individual')),
+    ...groupProjects.map((project) => toShelf(project, 'group')),
+    ...designProjects.map((project) => toShelf(project, 'design')),
+  ];
+  const picks = featured.map((id) => projects.find((p) => p.id === id)).filter((p): p is ShelfProject => Boolean(p));
+  const hung = featured.flatMap((id) => {
+    const raw = [...individualProjects, ...groupProjects, ...designProjects].find((p) => p.id === id);
+    return raw ? [{ id, motif: raw.motif, image: raw.image, mobile: raw.id.includes('mobile') || raw.type === 'mobile' }] : [];
+  });
+  const segments = Array.from({ length: Math.ceil(picks.length / 2) }, (_, i) => picks.slice(i * 2, i * 2 + 2));
+
+  return (
+    <Chapter
+      spec={GALLERY_CHAPTER}
+      labelledBy="projects-title"
+      studio="gallery"
+      next={{ id: 'certificates', en: 'Certificates', idn: 'Sertifikat' }}
+      stage={<GalleryStation wide hung={hung} />}
+    >
+      <Beat id="title" className="[&_header]:mb-0">
+        <div data-eqbot="projects-title" data-eqbot-at="above">
+          <SectionTitle
+            index="04b"
+            eyebrow={<T en="Gallery wall" id="Dinding galeri" />}
+            title={<T en="Selected work" id="Karya pilihan" />}
+            titleId="projects-title"
+            lede={
+              <T
+                en="Eight projects hung on the wire, the rest in the archive drawer. Scroll down or swipe sideways to walk along it; open a card for the case study."
+                id="Delapan proyek digantung di kawat, sisanya di laci arsip. Gulir ke bawah atau geser ke samping untuk menyusurinya; buka kartu untuk melihat studi kasusnya."
+              />
+            }
+          />
+        </div>
+      </Beat>
+
+      {segments.map((pair, s) => (
+        <Beat key={pair[0].id} id={`wire-${s}`} className="rail-seg">
+          <ul className="rail-row">
+            {pair.map((project, i) => (
+              <li key={project.id} className="rail-card" style={{ '--sway': tilts[(s * 2 + i) % tilts.length] } as CSSProperties}>
+                <ProjectCard project={project} tilt={tilts[(s * 2 + i) % tilts.length]} />
+              </li>
+            ))}
+          </ul>
+          <RailNav segment={s} count={segments.length} />
+        </Beat>
+      ))}
+
+      <Beat id="archive" flow>
+        <div data-eqbot="projects-filters" data-eqbot-at="above">
+          <ProjectShelf projects={projects} />
+        </div>
+      </Beat>
+    </Chapter>
+  );
+}

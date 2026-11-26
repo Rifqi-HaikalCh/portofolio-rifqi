@@ -1,9 +1,9 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useMemo, useState } from 'react';
 import Image from 'next/image';
-import { X } from 'lucide-react';
-import { Portal } from './Portal';
+import { PaperDialog } from '../ui/PaperDialog';
+import { FolderTabs } from '../ui/FolderTabs';
 import {
   additionalSkillCards,
   additionalSkillTiers,
@@ -19,32 +19,12 @@ const tierCopy = {
   once: { en: 'Tier III · Once', id: 'Tingkat III · Sekali' },
 } as const;
 
-export function AdditionalSkillsCell({
-  onOpen,
-  language,
-}: {
-  onOpen: () => void;
-  language: 'en' | 'id';
-}) {
-  const id = language === 'en';
-  return (
-    <button
-      type="button"
-      onClick={onOpen}
-      aria-haspopup="dialog"
-      className="cell-open flex h-full w-full flex-1 flex-col items-center justify-center gap-2 p-4 text-center"
-    >
-      <span className="font-jetbrains-mono text-[11px] tracking-[0.16em] uppercase text-accent">
-        {id ? 'Language · Framework' : 'Bahasa · Framework'}
-      </span>
-      <span className="cell-open-title font-serif text-lg leading-snug text-ink">
-        {id ? 'Additional Skills' : 'Keterampilan Tambahan'}
-      </span>
-    </button>
-  );
-}
-
-export function AdditionalSkillsDialog({
+/*
+  Languages and frameworks outside the .NET core, counted from the work and
+  projects on the page. Loaded only when the reader opens it (next/dynamic),
+  so its data never reaches the first-load bundle.
+*/
+export default function AdditionalSkillsDialog({
   language,
   onClose,
 }: {
@@ -58,23 +38,6 @@ export function AdditionalSkillsDialog({
   const maxCount = tiers[0]?.count ?? 1;
   const [tab, setTab] = useState<TabId>('all');
   const [focus, setFocus] = useState<string | null>(null);
-  const dialogRef = useRef<HTMLDivElement>(null);
-  const onCloseRef = useRef(onClose);
-  onCloseRef.current = onClose;
-
-  useEffect(() => {
-    dialogRef.current?.focus();
-    const onKey = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') onCloseRef.current();
-    };
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    window.addEventListener('keydown', onKey);
-    return () => {
-      document.body.style.overflow = previousOverflow;
-      window.removeEventListener('keydown', onKey);
-    };
-  }, []);
 
   const shown = focus ? cards.filter((card) => card.skills.some((skill) => skill.name === focus)) : cards;
 
@@ -84,140 +47,107 @@ export function AdditionalSkillsDialog({
   };
 
   return (
-    <Portal>
-      <div
-        className="fixed inset-0 z-[99999] overflow-y-auto overscroll-contain bg-ink/45 dark:bg-paper/80 flex p-4 sm:p-8"
-        onClick={onClose}
-      >
-        <div
-          ref={dialogRef}
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="additional-skills-title"
-          tabIndex={-1}
-          className="bg-raised text-ink border border-line w-full max-w-5xl m-auto outline-none flex flex-col max-h-[90vh]"
-          onClick={(event) => event.stopPropagation()}
-        >
-          <div className="flex items-start justify-between gap-6 p-6 md:p-8 border-b border-line">
-            <div>
-              <p className="font-jetbrains-mono text-[11px] tracking-[0.16em] uppercase text-accent mb-2">
-                {text('Outside the enterprise core', 'Di luar inti enterprise')}
-              </p>
-              <h3 id="additional-skills-title" className="font-serif text-3xl md:text-4xl font-medium leading-tight">
-                {text('Additional Skills', 'Keterampilan Tambahan')}
-              </h3>
-              <p className="mt-2 max-w-xl text-muted leading-relaxed">
-                {text(
-                  'Languages and frameworks from the work and projects already listed on this page.',
-                  'Bahasa dan framework dari kerja dan projek yang sudah tercantum di halaman ini.'
-                )}
-              </p>
-            </div>
-            <button
-              type="button"
-              onClick={onClose}
-              aria-label={text('Close', 'Tutup')}
-              className="w-10 h-10 shrink-0 border border-line flex items-center justify-center hover:border-ink hover:bg-ink hover:text-paper"
-            >
-              <X size={18} />
-            </button>
-          </div>
-
-          <div className="px-6 md:px-8 pt-6">
-            <div className="flex w-fit flex-col border border-line sm:flex-row" role="tablist">
-              <button
-                type="button"
-                role="tab"
-                aria-selected={tab === 'all'}
-                onClick={() => setTab('all')}
-                className={`px-5 py-3 text-sm text-left sm:text-center ${tab === 'all' ? 'bg-ink text-paper' : 'text-muted hover:text-ink'}`}
-              >
-                {text('All Additional Skills', 'Semua Keterampilan Tambahan')}
-                <span className="ml-2 font-serif">{cards.length}</span>
-              </button>
-              <button
-                type="button"
-                role="tab"
-                aria-selected={tab === 'tier'}
-                onClick={() => setTab('tier')}
-                className={`px-5 py-3 text-sm text-left sm:text-center border-t sm:border-t-0 sm:border-l border-line ${tab === 'tier' ? 'bg-ink text-paper' : 'text-muted hover:text-ink'}`}
-              >
-                {text('List Tier Additional Skills', 'Daftar Tingkat Keterampilan Tambahan')}
-              </button>
-            </div>
-          </div>
-
-          <div key={tab} className="frame-swap flex-1 overflow-y-auto p-6 md:p-8">
-            {tab === 'all' ? (
-              <div>
-                {focus && (
-                  <div className="mb-6 flex items-center justify-between gap-4 border border-line px-4 py-3">
-                    <p className="text-sm text-ink">
-                      {text('Showing works that use', 'Menampilkan karya yang memakai')}{' '}
-                      <span className="text-accent">{focus}</span>
-                    </p>
-                    <button type="button" onClick={() => setFocus(null)} className="text-sm text-ink link-mark">
-                      {text('Show all', 'Tampilkan semua')}
-                    </button>
-                  </div>
-                )}
-                <ul className="grid sm:grid-cols-2 gap-6" aria-live="polite">
-                  {shown.map((card) => (
-                    <li key={card.id} className="border border-line bg-paper">
-                      <div className="relative h-40 border-b border-line bg-raised">
-                        <Image src={card.image} alt="" fill sizes="360px" className="object-contain" />
-                      </div>
-                      <div className="p-5">
-                        <p className="font-jetbrains-mono text-[11px] tracking-[0.16em] uppercase text-accent">
-                          {card.source === 'work' ? text('Work', 'Kerja') : text('Project', 'Projek')}
-                        </p>
-                        <h4 className="mt-2 font-serif text-xl font-medium leading-snug text-ink">
-                          {idn && card.titleId ? card.titleId : card.title}
-                        </h4>
-                        <SkillLines
-                          skills={card.skills}
-                          focus={focus}
-                          onPick={openSkill}
-                          languageLabel={text('Language', 'Bahasa')}
-                          frameworkLabel={text('Framework', 'Framework')}
-                        />
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ) : (
-              <div>
-                <p className="max-w-xl text-muted leading-relaxed">
-                  {text(
-                    'Counted once for each work or project outside the enterprise core. Choose a row to see those works.',
-                    'Dihitung sekali untuk tiap kerja atau projek di luar inti enterprise. Pilih baris untuk melihat karya itu.'
-                  )}
-                </p>
-                {(['lead', 'repeat', 'once'] as const).map((tier) => {
-                  const rows = tiers.filter((row) => row.tier === tier);
-                  if (!rows.length) return null;
-                  return (
-                    <section key={tier} className="mt-8">
-                      <h4 className="font-jetbrains-mono text-[11px] tracking-[0.16em] uppercase text-accent mb-3">
-                        {idn ? tierCopy[tier].id : tierCopy[tier].en}
-                      </h4>
-                      <ul className="border-t border-line">
-                        {rows.map((row) => (
-                          <li key={row.skill.name} className="border-b border-line">
-                            <TierRow row={row} maxCount={maxCount} language={language} onPick={openSkill} />
-                          </li>
-                        ))}
-                      </ul>
-                    </section>
-                  );
-                })}
-              </div>
-            )}
-          </div>
+    <PaperDialog
+      open
+      onClose={onClose}
+      labelledBy="additional-skills-title"
+      size="lg"
+      bodyClassName="flex flex-col !p-0"
+      eyebrow={text('Outside the enterprise core', 'Di luar inti enterprise')}
+      title={text('Additional skills', 'Keterampilan tambahan')}
+      lede={text(
+        'Languages and frameworks from the work and projects already listed on this page.',
+        'Bahasa dan framework dari kerja dan proyek yang sudah tercantum di halaman ini.'
+      )}
+    >
+        <div className="px-6 pt-6 md:px-8">
+          <FolderTabs<TabId>
+            idBase="additional-skills"
+            label={text('Additional skills view', 'Tampilan keterampilan tambahan')}
+            value={tab}
+            onChange={setTab}
+            tabs={[
+              { id: 'all', label: text('All works', 'Semua karya'), count: cards.length },
+              { id: 'tier', label: text('By tier', 'Per tingkat') },
+            ]}
+          />
         </div>
-      </div>
-    </Portal>
+
+        <div
+          key={tab}
+          id={`additional-skills-panel-${tab}`}
+          role="tabpanel"
+          aria-labelledby={`additional-skills-tab-${tab}`}
+          className="ledger-panel p-6 md:p-8"
+        >
+          {tab === 'all' ? (
+            <div>
+              {focus && (
+                <div className="mb-6 flex items-center justify-between gap-4 border border-line px-4 py-3">
+                  <p className="text-sm text-ink">
+                    {text('Showing works that use', 'Menampilkan karya yang memakai')}{' '}
+                    <span className="text-accent">{focus}</span>
+                  </p>
+                  <button type="button" onClick={() => setFocus(null)} className="link-mark min-h-11 text-sm text-ink">
+                    {text('Show all', 'Tampilkan semua')}
+                  </button>
+                </div>
+              )}
+              <ul className="grid gap-6 sm:grid-cols-2" aria-live="polite">
+                {shown.map((card) => (
+                  <li key={card.id} className="border border-line bg-paper">
+                    <div className="relative h-40 border-b border-line bg-raised">
+                      <Image src={card.image} alt="" fill sizes="360px" className="object-contain" />
+                    </div>
+                    <div className="p-5">
+                      <p className="font-mono text-[0.6875rem] uppercase tracking-[0.16em] text-accent">
+                        {card.source === 'work' ? text('Work', 'Kerja') : text('Project', 'Proyek')}
+                      </p>
+                      <h4 className="mt-2 font-serif text-xl font-medium leading-snug text-ink">
+                        {idn && card.titleId ? card.titleId : card.title}
+                      </h4>
+                      <SkillLines
+                        skills={card.skills}
+                        focus={focus}
+                        onPick={openSkill}
+                        languageLabel={text('Language', 'Bahasa')}
+                        frameworkLabel="Framework"
+                      />
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : (
+            <div>
+              <p className="max-w-xl leading-relaxed text-muted">
+                {text(
+                  'Counted once for each work or project outside the enterprise core. Choose a row to see those works.',
+                  'Dihitung sekali untuk tiap kerja atau proyek di luar inti enterprise. Pilih baris untuk melihat karya itu.'
+                )}
+              </p>
+              {(['lead', 'repeat', 'once'] as const).map((tier) => {
+                const rows = tiers.filter((row) => row.tier === tier);
+                if (!rows.length) return null;
+                return (
+                  <section key={tier} className="mt-8">
+                    <h4 className="mb-3 font-mono text-[0.6875rem] uppercase tracking-[0.16em] text-accent">
+                      {idn ? tierCopy[tier].id : tierCopy[tier].en}
+                    </h4>
+                    <ul className="border-t border-line">
+                      {rows.map((row) => (
+                        <li key={row.skill.name} className="border-b border-line">
+                          <TierRow row={row} maxCount={maxCount} language={language} onPick={openSkill} />
+                        </li>
+                      ))}
+                    </ul>
+                  </section>
+                );
+              })}
+            </div>
+          )}
+        </div>
+    </PaperDialog>
   );
 }
 
@@ -262,7 +192,7 @@ function SkillRow({
 }) {
   return (
     <div>
-      <p className="font-jetbrains-mono text-[11px] tracking-[0.14em] uppercase text-muted mb-2">{label}</p>
+      <p className="font-mono text-[0.6875rem] tracking-[0.14em] uppercase text-muted mb-2">{label}</p>
       <ul className="flex flex-wrap gap-2">
         {skills.map((skill) => (
           <li key={skill.name}>
@@ -299,9 +229,9 @@ function TierRow({
   const width = `${Math.round((row.count / maxCount) * 100)}%`;
 
   return (
-    <button type="button" onClick={() => onPick(row.skill.name)} className="read-row w-full px-1 py-4 text-left cursor-pointer">
+    <button type="button" onClick={() => onPick(row.skill.name)} className="read-row min-h-11 w-full cursor-pointer px-1 py-4 text-left">
       <span className="flex items-center gap-4">
-        <span className="font-jetbrains-mono text-[11px] tracking-[0.14em] text-accent w-6">
+        <span className="font-mono text-[0.6875rem] tracking-[0.14em] text-accent w-6">
           {String(row.rank).padStart(2, '0')}
         </span>
         <Image src={row.skill.image} alt="" width={28} height={28} className="h-7 w-7 object-contain" />

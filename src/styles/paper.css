@@ -1,0 +1,597 @@
+/*
+  Paper primitives for the flat-lay sections (DesignRules.md §2.3, §5.4, §7).
+  Every surface is a token consumer; motion follows §10.
+*/
+
+/* Raised sheet: 1 px cut edge plus an offset recess edge that follows --light-x. */
+.paper-sheet {
+  background: var(--color-raised);
+  box-shadow: var(--paper-edge-cut);
+}
+
+/* One fold crease in the top-right corner (max one per card). */
+.fold-tr {
+  position: relative;
+}
+.fold-tr::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 28px;
+  height: 28px;
+  background: linear-gradient(225deg, var(--color-paper) 0 50%, var(--color-recess) 50% 100%);
+  box-shadow: calc(-1px * var(--light-x)) 1px 0 var(--color-line);
+}
+
+/* About arrives over the sticky hero with its top edge lifted (§4 `02`). */
+.sheet-arrival {
+  box-shadow:
+    0 -1px 0 var(--color-line),
+    0 -14px 28px rgb(var(--rgb-scrim) / 0.12);
+}
+
+/* Die-cut index card: hover tints the cut edge (§4 `02`). */
+.index-card {
+  background: var(--color-raised);
+  box-shadow: var(--paper-edge-cut);
+  transition: box-shadow var(--dur-micro) var(--ease-paper);
+}
+.index-card:hover {
+  box-shadow:
+    0 0 0 1px var(--color-accent),
+    calc(2px * var(--light-x)) 2px 0 var(--color-recess);
+}
+
+/* Project card: whole card is one link target via a stretched button (§7 PaperCard). */
+.paper-card {
+  position: relative;
+  background: var(--color-raised);
+  box-shadow: var(--paper-edge-cut);
+  transition:
+    transform var(--dur-micro) var(--ease-paper),
+    box-shadow var(--dur-micro) var(--ease-paper);
+}
+.paper-card:hover,
+.paper-card:focus-within {
+  transform: translateY(-2px);
+  box-shadow:
+    0 0 0 1px var(--color-accent),
+    calc(4px * var(--light-x)) 4px 0 var(--color-recess);
+}
+.stretched::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+.stretched:focus-visible {
+  outline: none;
+}
+.paper-card:has(.stretched:focus-visible) {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* Paper tape holding a screenshot: one per card, slight rotation. */
+.tape {
+  position: absolute;
+  top: -9px;
+  left: 50%;
+  width: 72px;
+  height: 18px;
+  translate: -50% 0;
+  rotate: var(--tape-rotate, -2deg);
+  background: rgb(var(--rgb-recess) / 0.85);
+  box-shadow: 0 0 0 1px rgb(var(--rgb-line) / 0.6);
+}
+
+/* Blueprint board: grid at ≤ 8 % alpha and crop marks (#services only). */
+.blueprint {
+  position: relative;
+  background-color: var(--color-raised);
+  background-image:
+    linear-gradient(rgb(var(--rgb-blueprint) / 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(var(--rgb-blueprint) / 0.08) 1px, transparent 1px);
+  background-size: 24px 24px;
+  box-shadow: 0 0 0 1px var(--color-line);
+}
+.crop-marks > i {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border: 0 solid var(--color-line);
+  pointer-events: none;
+}
+.crop-marks > i:nth-child(1) { top: -6px; left: -6px; border-top-width: 1px; border-left-width: 1px; }
+.crop-marks > i:nth-child(2) { top: -6px; right: -6px; border-top-width: 1px; border-right-width: 1px; }
+.crop-marks > i:nth-child(3) { bottom: -6px; left: -6px; border-bottom-width: 1px; border-left-width: 1px; }
+.crop-marks > i:nth-child(4) { bottom: -6px; right: -6px; border-bottom-width: 1px; border-right-width: 1px; }
+
+/* Die-cut folder tab: trapezoid, the active one joins the panel below. */
+.folder-tab {
+  position: relative;
+  padding: 0.7rem 1.4rem 0.6rem;
+  clip-path: polygon(10px 0, calc(100% - 10px) 0, 100% 100%, 0 100%);
+  background: var(--color-recess);
+  color: var(--color-muted);
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+}
+.folder-tab:hover {
+  color: var(--color-ink);
+}
+.folder-tab[aria-selected="true"] {
+  background: var(--color-raised);
+  color: var(--color-ink);
+  box-shadow: inset 0 2px 0 var(--color-accent);
+}
+.folder-tab:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: -4px;
+}
+
+/* Ledger row: the detail panel's content fades and rises 8 px in 200 ms. */
+.ledger-panel > * {
+  animation: ledger-unfold var(--dur-ui) var(--ease-paper) both;
+}
+@keyframes ledger-unfold {
+  from { opacity: 0; transform: translateY(8px); }
+}
+
+/*
+  PaperDialog standard (§7, v3.6): one anatomy and one motion for every modal.
+  The <dialog> is only the positioned box; .pd-sheet is the paper leaf inside
+  it (header, scrolling body, optional footer). Opening unfolds the sheet from
+  its top edge with the leaf ease; the backdrop is ink, never blur.
+*/
+.paper-dialog {
+  --pd-w: 52rem;
+  margin: auto;
+  padding: 0;
+  width: min(var(--pd-w), calc(100vw - 2rem));
+  max-width: none;
+  max-height: calc(100dvh - 2rem);
+  border: 0;
+  background: none;
+  color: var(--color-ink);
+  overflow: visible;
+}
+.paper-dialog[data-size="sm"] { --pd-w: 36rem; }
+.paper-dialog[data-size="lg"] { --pd-w: 72rem; }
+.paper-dialog::backdrop {
+  background: rgb(var(--rgb-scrim) / 0.45);
+}
+.pd-sheet {
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100dvh - 2rem);
+  border: 1px solid var(--color-line);
+  /* The leaf's veil and grain sit on the sheet's own colour (a beat sheet gets it from bg-raised). */
+  background-color: var(--leaf-tone);
+  box-shadow: var(--leaf-lip), var(--paper-edge-lifted);
+  transform-origin: 50% 0;
+}
+.pd-sheet::after {
+  /* The folded top-right corner every studio sheet has (.fold-tr). */
+  content: "";
+  position: absolute;
+  top: -1px;
+  right: -1px;
+  width: 1.25rem;
+  height: 1.25rem;
+  background: linear-gradient(225deg, var(--color-paper) 50%, var(--color-line) 50%, var(--color-recess));
+  pointer-events: none;
+}
+.pd-head {
+  --pd-head-t: 1.5rem;
+  --pd-head-x: 1.5rem;
+  --pd-head-b: 1.25rem;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: var(--pd-head-t) var(--pd-head-x) var(--pd-head-b);
+  border-bottom: 1px solid var(--color-line);
+}
+/*
+  v3.12: the mark at the far left of a dialog header (a company logo on a role file).
+  v3.13 (owner): exactly as tall as the header. It is a square panel flush with the
+  header's top, bottom and left edges (the negative margins cancel the padding), its
+  width taken from that height, with one rule on its right like a tab of card.
+*/
+.pd-mark {
+  position: relative;
+  flex: none;
+  align-self: stretch;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  min-height: 4.5rem;
+  margin: calc(var(--pd-head-t) * -1) 0 calc(var(--pd-head-b) * -1) calc(var(--pd-head-x) * -1);
+  padding: 0.85rem;
+  background: var(--ill-page);
+  border-inline-end: 1px solid var(--color-line);
+  box-shadow: inset -3px 0 0 rgb(var(--rgb-shadow) / 0.05);
+}
+.pd-mark img { width: 100%; height: 100%; object-fit: contain; }
+.pd-mark-monogram {
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-size: 1.75rem;
+  color: var(--color-accent);
+}
+.pd-eyebrow {
+  margin-bottom: 0.5rem;
+  font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+.pd-title {
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-variation-settings: "SOFT" 50;
+  font-size: 1.875rem;
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--color-ink);
+}
+.pd-lede {
+  margin-top: 0.5rem;
+  max-width: 60ch;
+  line-height: 1.6;
+  color: var(--color-muted);
+}
+.pd-close {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 1px solid var(--color-line);
+  background: var(--color-raised);
+  color: var(--color-ink);
+  transition: background-color var(--dur-ui) var(--ease-paper), color var(--dur-ui) var(--ease-paper);
+}
+.pd-close:hover { background: var(--color-ink); color: var(--color-paper); }
+.pd-close:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+.pd-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 1.5rem;
+}
+.pd-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.5rem;
+  border-top: 1px solid var(--color-line);
+}
+@media (min-width: 768px) {
+  .pd-head { --pd-head-t: 2rem; --pd-head-x: 2rem; --pd-head-b: 1.5rem; }
+  .pd-title { font-size: 2.25rem; }
+  .pd-body { padding: 2rem; }
+  .pd-foot { padding: 1.25rem 2rem; }
+}
+/*
+  Dialog header on a phone (v3.17, owner: too big and not precise): one tidy row. The mark
+  is a fixed 3 rem tile (no longer stretched to the header's height), the title is a
+  heading-sized line or two, the lede is two lines at most, and the close button keeps 44 px.
+*/
+@media (max-width: 767px) {
+  .pd-head {
+    --pd-head-t: 0.875rem;
+    --pd-head-x: 1rem;
+    --pd-head-b: 0.875rem;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .pd-mark {
+    align-self: center;
+    aspect-ratio: auto;
+    width: 3rem;
+    height: 3rem;
+    min-height: 0;
+    margin: 0;
+    padding: 0.5rem;
+    border: 1px solid var(--color-line);
+  }
+  .pd-mark-monogram { font-size: 1.25rem; }
+  .pd-eyebrow { margin-bottom: 0.25rem; font-size: 10px; letter-spacing: 0.12em; line-height: 1.3; }
+  .pd-title { font-size: 1.25rem; line-height: 1.2; }
+  .pd-lede {
+    margin-top: 0.25rem;
+    font-size: 0.8125rem;
+    line-height: 1.45;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .pd-body { padding: 1.25rem 1rem; }
+  .pd-foot { padding: 0.875rem 1rem; }
+}
+.paper-dialog[data-size="drawer"] {
+  width: 100vw;
+  height: 100dvh;
+  max-height: 100dvh;
+  margin: 0;
+}
+.paper-dialog[data-size="drawer"] .pd-sheet {
+  --leaf-tone: var(--color-paper);
+  height: 100%;
+  max-height: 100dvh;
+  border: 0;
+}
+.paper-dialog[data-size="drawer"] :is(.pd-head, .pd-body, .pd-foot) {
+  width: 100%;
+  max-width: 72rem;
+  margin-inline: auto;
+}
+.paper-dialog[data-size="drawer"] .pd-sheet::after { display: none; }
+@media (prefers-reduced-motion: no-preference) {
+  .paper-dialog[open] .pd-sheet { animation: pd-unfold var(--dur-leaf-in) var(--ease-leaf) both; }
+  .paper-dialog[data-size="drawer"][open] .pd-sheet { animation-name: pd-slide; }
+  .paper-dialog[open]::backdrop { animation: pd-scrim var(--dur-ui) var(--ease-paper) both; }
+}
+@keyframes pd-unfold {
+  0% { transform: perspective(1400px) translateY(2.5rem) rotateX(-14deg); opacity: 0; }
+  30% { opacity: 1; }
+  62% { transform: perspective(1400px) translateY(-0.3rem) rotateX(2deg); }
+  to { transform: none; opacity: 1; }
+}
+@keyframes pd-slide {
+  from { transform: translateY(6svh); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+@keyframes pd-scrim {
+  from { opacity: 0; }
+}
+
+/* Frame → sheet morph (§10.2): the case study grows out of the frame that opened it (ProjectShelf). */
+.case-dialog[open] { view-transition-name: case-sheet; }
+:root.is-morphing .paper-dialog[open] .pd-sheet { animation: none; }
+::view-transition-group(case-sheet) {
+  animation-duration: var(--dur-morph);
+  animation-timing-function: var(--ease-paper);
+}
+::view-transition-old(case-sheet),
+::view-transition-new(case-sheet) {
+  height: 100%;
+  object-fit: cover;
+}
+/* Letterpress: name pressed into the card with an inset highlight/shadow pair. */
+.letterpress {
+  color: var(--color-ink);
+  text-shadow:
+    0 1px 0 rgb(var(--rgb-raised) / 0.9),
+    0 -1px 0 rgb(var(--rgb-scrim) / 0.25);
+}
+
+/* Postmark: appears once, only after a real 2xx delivery (§2.3). */
+.postmark {
+  display: inline-grid;
+  place-items: center;
+  width: 92px;
+  height: 92px;
+  border: 2px double var(--color-accent);
+  border-radius: 50%;
+  color: var(--color-accent);
+  rotate: -8deg;
+  animation: postmark-in var(--dur-ui) var(--ease-paper) both;
+}
+@keyframes postmark-in {
+  from { opacity: 0; scale: 1.25; }
+}
+
+/* Certificate folders use <details>: rotate the marker, keep the summary a row. */
+.folio > summary {
+  list-style: none;
+  cursor: pointer;
+}
+.folio > summary::-webkit-details-marker {
+  display: none;
+}
+.folio > summary:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+.folio[open] > summary .folio-mark > svg {
+  rotate: 45deg;
+}
+.folio-mark > svg {
+  transition: rotate var(--dur-ui) var(--ease-paper);
+}
+.folio[open] > .folio-body {
+  animation: ledger-unfold var(--dur-ui) var(--ease-paper) both;
+}
+
+/* Stamped index used by section eyebrows and the rail (§2.3). */
+.stamp {
+  font-family: var(--font-mono);
+  color: var(--color-accent);
+  letter-spacing: 0.14em;
+}
+
+/* Paper clip over the About head crop: two nested wire loops in line ink. */
+.paper-clip {
+  position: absolute;
+  z-index: var(--z-scene-front);
+  top: -14px;
+  left: 28px;
+  width: 18px;
+  height: 52px;
+  border: 2px solid var(--color-muted);
+  border-radius: 9px 9px 9px 9px / 9px 9px 9px 9px;
+  rotate: -6deg;
+}
+.paper-clip::after {
+  content: "";
+  position: absolute;
+  inset: 6px 3px 10px;
+  border: 2px solid var(--color-muted);
+  border-bottom: 0;
+  border-radius: 6px 6px 0 0;
+}
+
+/*
+  ProjectShadowBox (DesignRules.md §4.5 `04`): framed layers that separate on
+  hover / keyboard focus. Layers move with translate only; each device's cast
+  shadow stays on the backing, so the shadow lengthens as the layer lifts.
+*/
+.psb-layer {
+  transition: translate var(--dur-ui) var(--ease-paper);
+}
+.paper-card:is(:hover, :focus-within) .psb-layer {
+  translate: calc(var(--d) * -3px * var(--light-x)) calc(var(--d) * -4px);
+}
+.psb-device,
+.psb-cast {
+  position: absolute;
+}
+.psb-laptop { left: 30%; top: 24%; width: 62%; }
+.psb-phone { left: 62%; top: 10%; width: 25%; }
+.psb-device {
+  padding: 2.5%;
+  background: var(--ill-bezel);
+  border-radius: 3px;
+  box-shadow: 0 0 0 1px rgb(var(--rgb-shadow) / 0.25), calc(1px * var(--light-x)) 1.5px 0 rgb(var(--rgb-shadow) / 0.35);
+}
+.psb-phone.psb-device { padding: 4% 3%; border-radius: 4px; }
+.psb-glass {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  aspect-ratio: 16 / 10;
+  background: var(--ill-screen);
+}
+.psb-phone .psb-glass { aspect-ratio: 9 / 19; }
+.psb-deck {
+  position: absolute;
+  left: -7%;
+  right: -7%;
+  bottom: -8%;
+  height: 8%;
+  background: var(--ill-laptop);
+  clip-path: polygon(5% 0, 95% 0, 100% 100%, 0 100%);
+}
+.psb-cast {
+  aspect-ratio: 16 / 11;
+  background: rgb(var(--rgb-shadow) / 0.34);
+  filter: blur(7px);
+  translate: calc(5px * var(--light-x)) 7px;
+}
+.psb-cast.psb-phone { aspect-ratio: 9 / 20; }
+.psb-lip {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border: 7px solid var(--ill-frame);
+  box-shadow:
+    inset calc(2px * var(--light-x)) 3px 3px rgb(var(--rgb-shadow) / 0.3),
+    inset calc(8px * var(--light-x)) 10px 18px rgb(var(--rgb-shadow) / 0.22);
+}
+
+/* The gallery wall under the Gallery station: the frames hang on the wall colour, not on a white sheet. */
+.gallery-wall {
+  background: var(--ill-wall);
+  box-shadow:
+    calc(3px * var(--light-x)) 4px 6px rgb(var(--rgb-shadow) / 0.18),
+    calc(10px * var(--light-x)) 16px 30px rgb(var(--rgb-shadow) / 0.14);
+}
+
+/* A photograph taped to a sheet (`03` roles, v3.6): white border, a strip of tape, a slight tilt. */
+.role-photo {
+  position: relative;
+  display: block;
+  padding: 6px 6px 18px;
+  background: var(--ill-page, var(--color-raised));
+  border: 1px solid var(--color-line);
+  box-shadow: var(--paper-edge-cut);
+  rotate: 2deg;
+}
+.role-photo::before {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  top: -8px;
+  left: calc(50% - 28px);
+  width: 56px;
+  height: 16px;
+  background: rgb(var(--rgb-raised) / 0.7);
+  border: 1px solid rgb(var(--rgb-shadow) / 0.12);
+  rotate: -4deg;
+}
+.role-photo-image {
+  position: relative;
+  display: block;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: var(--color-recess);
+}
+
+/* v3.9 — the figure's pupils follow the pointer (FigureGaze, DesignRules.md §2.7). */
+.fig-look {
+  translate: calc(var(--gaze-x, 0) * 2.6px) calc(var(--gaze-y, 0) * 1.5px);
+  transition: translate 0.22s cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+@media (prefers-reduced-motion: reduce) {
+  .fig-look { translate: none; transition: none; }
+}
+
+/*
+  v3.9 — livelier paper puppet: the eyes blink every few seconds and the
+  station figure breathes (a 1 % lift of the chest) while on screen. Transform
+  only, composited; off under reduced motion.
+*/
+@media (prefers-reduced-motion: no-preference) {
+  .fig-lid {
+    transform-box: fill-box;
+    transform-origin: 50% 60%;
+    animation: fig-blink 5.6s steps(1, end) infinite;
+  }
+  .station-fig svg[data-gaze] {
+    transform-origin: 50% 96%;
+    animation: fig-breathe 4.2s ease-in-out infinite;
+  }
+}
+@keyframes fig-blink {
+  0%, 96.5%, 100% { scale: 1 1; }
+  97.5% { scale: 1 0.12; }
+}
+@keyframes fig-breathe {
+  0%, 100% { scale: 1 1; }
+  50% { scale: 1.006 1.012; }
+}
+
+/*
+  Role dates (v3.18, owner: highlight the start and end of each role): one ruled band with an
+  accent edge, month in accent and year in ink, an arrow, the end (a lamp for "now") and how
+  long it lasted.
+*/
+.role-dates {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 0.6rem;
+  margin-top: 0.875rem;
+  padding: 0.45rem 0.75rem;
+  border-left: 3px solid var(--color-accent);
+  background: color-mix(in oklab, var(--color-accent) 9%, var(--color-raised));
+  font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  line-height: 1.2;
+  text-transform: uppercase;
+  color: var(--color-ink);
+}
+.role-date { display: inline-flex; align-items: center; gap: 0.35em; white-space: nowrap; }
+.role-date b { font-weight: 600; color: var(--color-accent); }
+.role-arrow { flex: none; color: var(--color-muted); }
+.role-dur { font-size: 0.6875rem; font-weight: 500; letter-spacing: 0.08em; color: var(--color-muted); }
+.role-dur::before { content: "· "; }
